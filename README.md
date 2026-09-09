@@ -1,85 +1,98 @@
 # EcoStep
 
-EcoStep is an Android application designed to help users understand and reduce carbon emissions from everyday travel. The application uses GPS, accelerometer and gyroscope data to record journeys and estimate transport modes. It learns a limited number of recurring journeys and generates personalised low-carbon missions before usual journeys.
+EcoStep is an Android application designed to help users understand and reduce carbon emissions from everyday travel. The application uses GPS, accelerometer and gyroscope data to record journeys, estimate transport mode, and suggest lower-carbon alternatives using AI.
 
 ## Overview
 
 **Project:** COMP90018  
-**Due Date:** 12 October 2026  
-**Current Status:** Planning and initial project setup
+**Final Submission:** 12 October 2026  
+**Feature Freeze:** 27 September 2026  
+**Status:** Development starting 9 September
 
 ## Core User Flow
 
-1. Record a journey using mobile sensors
-2. Estimate transport mode and travel distance
+1. Record a journey using mobile sensors (GPS, accelerometer, gyroscope)
+2. Estimate transport mode and distance
 3. Confirm or correct the journey
-4. Identify or confirm a recurring journey
-5. Retrieve weather, route and public transport information
-6. Calculate lower-carbon alternatives
-7. Send information to AI API for mission personalisation
-8. Accept and complete the mission
-9. Receive EcoPoints and review progress
+4. Identify recurring journeys
+5. Get weather and route information
+6. Calculate carbon emissions and lower-carbon alternatives
+7. AI API suggests EcoMission (personalised journey recommendation)
+8. User accepts mission and completes journey
+9. User receives EcoPoints and reviews progress
 
-## Planned MVP
+## MVP Features
 
-- User registration and login
+- User registration and login (Firebase)
 - GPS journey tracking
-- Accelerometer and gyroscope collection
-- Basic transport mode estimation
+- Sensor data collection (accelerometer, gyroscope)
+- Transport mode estimation (walking, cycling, public transport, car)
 - Manual journey correction
-- Confirmation of a recurring journey
+- Recurring journey detection
 - Weather and route information
-- Basic public transport information
-- Carbon-emission and carbon-saving calculations
-- AI-assisted EcoMission generation
+- Public transport timetables
+- Carbon emission calculations
+- Lower-carbon alternatives with savings
+- AI-generated EcoMission suggestions
 - Mission acceptance and completion tracking
-- EcoPoints
-- Firebase data storage
-- Basic journey history or weekly summary
+- EcoPoints system
+- Journey history and weekly summary
 - Privacy and notification settings
 
 ## Technical Approach
 
-### Sensors
+**Sensors:**
 - GPS for location tracking
 - Accelerometer for motion detection
 - Gyroscope for orientation data
 
-### External Services
-The application integrates with external services for enhanced functionality. See [DEPENDENCIES.md](docs/DEPENDENCIES.md) for details.
+**External Services:**
+- Maps (Google Maps or similar)
+- Weather API
+- Public transport API (e.g., PTV)
+- Firebase (authentication, data storage)
+- AI API for mission personalisation
 
-### AI Role and Limitations
-The AI API personalises, ranks and explains valid mission options only. It does not invent routes, weather, public transport information or carbon values. Carbon calculations and mission verification remain controlled by application logic. The application has a non-AI fallback when the API fails.
+**AI Role:**
+The AI API personalises and ranks mission options based on carbon savings. It does not create routes, weather data, or carbon values — these come from other modules and external services.
 
 ## Team Responsibilities
 
-| Member | Role |
-|--------|------|
-| Chi Hong Tam | Project architecture, code quality, Git workflow and integration |
-| Zongcheng Jiang | GPS, accelerometer, gyroscope, permissions and journey tracking |
-| Jianing Xia | Firebase, external APIs, offline data and secure AI API communication |
-| Rui Fang | Transport detection, route analysis, recurring journey detection and AI result validation |
-| Yu-Han Wang | Android UI, navigation, accessibility and UI states |
-| Duo Lyu | Project organisation, EcoMission rules, carbon calculation, EcoPoints, AI prompt requirements, privacy and testing |
+| Member | Module |
+|--------|--------|
+| Chi Hong Tam | Android architecture and integration |
+| Zongcheng Jiang | Sensors and journey tracking |
+| Jianing Xia | Firebase and external APIs |
+| Rui Fang | Transport detection and AI planning |
+| Yu-Han Wang | Android UI and user flow |
+| Duo Lyu | EcoMission, carbon calculation, EcoPoints, testing and report coordination |
 
-## Milestones
+## Timeline
 
-| Milestone | Date |
-|-----------|------|
-| Project setup | 13 September 2026 |
-| First end-to-end prototype | 20 September 2026 |
-| MVP feature completion | 27 September 2026 |
-| Integration and testing | 4 October 2026 |
-| Feature freeze | 8 October 2026 |
-| Final submission | 12 October 2026 |
+| Phase | Dates | Work |
+|-------|-------|------|
+| Project setup | 9–13 Sep | Android project, architecture, shared interfaces |
+| First prototype | 14–20 Sep | Sensors, journey tracking, basic UI, mock data |
+| MVP development | 21–27 Sep | All features, integration, testing on device |
+| Report and demo prep | 28 Sep–10 Oct | Bug fixes, testing, report writing, video recording |
+| Final submission | 12 Oct | Submit code, report, and demonstration video |
 
-## Development Workflow
+After **27 September**, no new features will be added. Work focuses on:
+- Bug fixing and reliability
+- Testing on physical Android devices
+- Integration between modules
+- Report writing
+- Demonstration preparation
+- Video recording and editing
 
-- Use feature branches for all work
-- Create GitHub issues for all tasks
-- Link pull requests to related issues
-- Require code review before merging
-- Maintain clear commit messages
-- Document dependencies and changes to shared interfaces
+## How We Work
 
-See [WORK_PLAN.md](docs/WORK_PLAN.md) for task planning and [DEPENDENCIES.md](docs/DEPENDENCIES.md) for module architecture and dependencies.
+- One main owner for each module
+- Create GitHub issues for all work
+- Use feature branches (`git checkout -b feature/description`)
+- Link pull requests to issues
+- Code review before merging
+- Clear commit messages
+- Document dependencies when modules change
+
+See [docs/WORK_PLAN.md](docs/WORK_PLAN.md) for tasks and [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md) for module data flow.
