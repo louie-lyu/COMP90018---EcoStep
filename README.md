@@ -1,6 +1,6 @@
 # EcoStep
 
-EcoStep is an Android application designed to help users understand and reduce carbon emissions from everyday travel. The application uses GPS, accelerometer and gyroscope data to record journeys, estimate transport mode, and suggest lower-carbon alternatives using AI.
+EcoStep is an Android application designed to help users understand and reduce carbon emissions from everyday travel. The application uses GPS, accelerometer and gyroscope data to record journeys, [...]
 
 ## Overview
 
@@ -58,14 +58,14 @@ The AI API personalises and ranks mission options based on carbon savings. It do
 
 ## Team Responsibilities
 
-| Member | Module |
-|--------|--------|
-| Chi Hong Tam | Android architecture and integration |
-| Zongcheng Jiang | Sensors and journey tracking |
-| Jianing Xia | Firebase and external APIs |
-| Rui Fang | Transport detection and AI planning |
-| Yu-Han Wang | Android UI and user flow |
-| Duo Lyu | EcoMission, carbon calculation, EcoPoints, testing and report coordination |
+| Member | Main Responsibility |
+|--------|-----|
+| Chi Hong Tam | Android architecture, Git workflow and integration |
+| Zongcheng Jiang | Sensors, journey tracking, authentication and database |
+| Jianing Xia | Weather, maps, routes and public transport APIs |
+| Rui Fang | Real-time performance, algorithm evaluation and testing |
+| Yu-Han Wang | Android UI, navigation and accessibility |
+| Duo Lyu | Algorithms, carbon calculation, EcoMission, EcoPoints and AI personalisation |
 
 ## Timeline
 
