@@ -1,50 +1,58 @@
 # Module Dependencies
 
-This document explains how data flows between the six modules and what mock data to use if a module is delayed.
+This document explains how data flows between the modules and what mock data to use if a module is delayed.
 
 ## Data Flow
 
 ```
-Sensors & Journeys (Zongcheng)
-    ↓ JourneySummary
-Transport Detection (Rui)
-    ↓ Transport mode + confidence
-Carbon Calculation (Duo)
-    ↓ Carbon emissions & alternatives
+Architecture Module (Chi Hong Tam)
+  ↓ provides structure and shared data models
+  
+Sensors & Database Module (Zongcheng)
+    ↓ JourneySummary (with user auth)
+Algorithm & AI Module (Duo)
+    ↓ sensor-data processing, transport classification
     
-Journeys (Zongcheng) + Weather/Route (Jianing) + Carbon (Duo)
-    ↓ MissionContext
-AI Planning (Rui + Jianing)
-    ↓ EcoMission (ranked options)
+External API Module (Jianing)
+    ↓ weather, route, public transport data
+Algorithm & AI Module (Duo)
+    ↓ MissionContext assembly
     
-UI (Yu-Han) receives EcoMission and shows to user
-    ↓ MissionResult (user's choice + actual savings)
-EcoPoints (Duo)
-    ↓ Points awarded
+Algorithm & AI Module (Duo)
+    ↓ Carbon emissions, alternatives, EcoMission
+UI Module (Yu-Han)
+    ↓ displays journeys, missions, points
+
+Performance Evaluation Module (Rui)
+    ↓ tests accuracy, latency, classifications
+    
+Architecture Module (Chi Hong Tam)
+    ↓ integrates all modules
 ```
 
 ## Shared Data Objects
 
 These are the main objects that modules exchange:
 
-**JourneySummary** (from Sensors)
+**JourneySummary** (from Sensors & Database)
 - Journey ID
+- User authentication context
 - Start location (lat/lon)
 - End location (lat/lon)
 - Start and end time
 - Distance (estimated or user-corrected)
 - Transport mode (estimated, pending confirmation)
 
-**TransportResult** (from Transport Detection)
+**TransportResult** (from Algorithm & AI)
 - Transport mode (walking, cycling, public transport, car, unknown)
 - Confidence score (0–100%)
 - Alternatives considered
 
-**CarbonResult** (from Carbon Calculation)
+**CarbonResult** (from Algorithm & AI)
 - Carbon emissions (grams CO2)
 - Lower-carbon alternatives with savings (grams CO2)
 
-**MissionContext** (assembled from Journey + Transport + Carbon + Weather + Route)
+**MissionContext** (assembled by Algorithm & AI from Journey + Transport + Carbon + Weather + Route + Public Transport)
 - Journey summary
 - Transport result
 - Carbon result
@@ -53,7 +61,7 @@ These are the main objects that modules exchange:
 - Public transport timetables
 - User's journey history
 
-**EcoMission** (from AI API)
+**EcoMission** (from Algorithm & AI)
 - Mission ID
 - Recommended transport mode
 - Estimated carbon saving (grams CO2)
@@ -71,12 +79,13 @@ These are the main objects that modules exchange:
 
 | Data | From | Needed By | Due |
 |------|------|-----------|-----|
-| JourneySummary | Zongcheng | Rui, Jianing | 20 Sep |
-| TransportResult | Rui | Duo, Jianing | 27 Sep |
-| CarbonResult | Duo | Jianing, Rui | 27 Sep |
-| Route & Weather | Jianing | Rui, UI | 27 Sep |
-| AI Response | Jianing | Rui, UI | 27 Sep |
-| EcoMission | Rui | Yu-Han | 27 Sep |
+| JourneySummary | Zongcheng | Duo, Jianing | 20 Sep |
+| TransportResult | Duo | Jianing, UI | 27 Sep |
+| CarbonResult | Duo | UI | 27 Sep |
+| Route & Weather | Jianing | Duo, UI | 27 Sep |
+| MissionContext | Duo | Jianing (for AI API) | 27 Sep |
+| AI Response | Jianing | Duo | 27 Sep |
+| EcoMission | Duo | Yu-Han | 27 Sep |
 | MissionResult | Yu-Han | Duo | 4 Oct |
 
 ## Using Mock Data
@@ -94,17 +103,11 @@ TransportMode: "walking" (or cycling, car, etc.)
 ```
 Save in: `app/src/test/assets/mock_journeys.json`
 
-**If Rui isn't ready by 27 Sep:**
-Mock TransportResult and recurring detection:
+**If Duo isn't ready by 20 Sep:**
+Mock transport classification and carbon calculations:
 ```
 TransportMode: "car"
 Confidence: 0.85
-IsRecurring: true
-```
-
-**If Duo isn't ready by 27 Sep:**
-Mock carbon calculations:
-```
 Emissions: 250 grams CO2
 Alternatives: [
   {mode: "public_transport", savings: 180},
@@ -113,13 +116,15 @@ Alternatives: [
 ```
 
 **If Jianing isn't ready by 27 Sep:**
-Mock weather, routes, and AI responses:
+Mock weather, routes, and external API responses:
 ```
 Temperature: 22°C
 Weather: "sunny"
 RouteOptions: [{distance: 2km, duration: 15min}]
-AIResponse: EcoMission with savings
 ```
+
+**If Rui isn't ready (deprecated):**
+Rui is no longer responsible for algorithm implementation. Mock transport results are provided by Duo.
 
 Mock data files should be clearly named with "mock_" prefix and documented in the code.
 
@@ -128,9 +133,10 @@ Mock data files should be clearly named with "mock_" prefix and documented in th
 These milestones block other work:
 
 1. **Project setup by 13 Sep** → Everyone can start coding
-2. **JourneySummary by 20 Sep** → Transport and route work can use real data
-3. **Transport + Carbon + Weather/Route by 27 Sep** → AI can generate missions
-4. **All features by 27 Sep** → Testing phase begins (no new features after this)
+2. **Firebase and authentication by 13 Sep** → Secure user data storage
+3. **JourneySummary by 20 Sep** → Transport classification and external APIs can use real data
+4. **Transport classification and carbon calculation by 20 Sep** → AI can generate missions
+5. **All features by 27 Sep** → Testing phase begins (no new features after this)
 
 If a dependency is delayed, use mock data and continue. Document in the GitHub issue what's being mocked and when it will be replaced.
 
@@ -153,6 +159,7 @@ These items should be cached locally so the app works without internet:
 - Weather forecasts (from last sync)
 - Public transport timetables (updated periodically)
 - Journey history and EcoPoints
+- Sensor data and journey summaries (for sync when online)
 
 Raw GPS and sensor data stays on device only.
 
@@ -161,5 +168,6 @@ Raw GPS and sensor data stays on device only.
 - API keys are not stored in source code
 - Keys fetched at runtime (e.g., Firebase Remote Config)
 - User location data minimised (endpoints only, not full GPS traces)
-- Sensitive data in Firebase has security rules
-- AI API communication is encrypted
+- Sensitive data in Firebase has security rules (managed by Zongcheng)
+- AI API communication is encrypted (handled by Jianing)
+- All external API communication validated and cached (Jianing)
