@@ -40,17 +40,17 @@ Each team member owns one main module. Work is tracked through GitHub issues lin
 | Weather API integration and caching | 27 Sep | To Do | Weather data retrieved and cached |
 | Route/maps API integration and caching | 27 Sep | To Do | Route data retrieved and cached |
 | Public transport API integration | 27 Sep | To Do | PT timetables retrieved and cached |
-| Secure AI API communication | 27 Sep | To Do | API keys handled securely, requests/responses working |
+| Secure AI API communication (no prompt construction) | 27 Sep | To Do | API keys handled securely, requests/responses working |
 | Offline data caching | 27 Sep | To Do | Data available offline, syncs when online |
 | Cloud architecture documentation for report | 8 Oct | To Do | API architecture and security explanation |
 
-### 4. Transport Detection and AI Planning — Rui Fang
+### 4. Transport Detection and Valid Routes — Rui Fang
 
 | Task | Due | Status | Evidence |
 |------|-----|--------|----------|
 | Transport mode detection from sensor data | 27 Sep | To Do | Mode identified with confidence score |
+| Generate valid candidate route/transport combinations | 27 Sep | To Do | List of feasible alternatives from journey data |
 | Recurring journey detection | 27 Sep | To Do | Recurring trips identified and confirmed |
-| EcoMission validation from AI response | 27 Sep | To Do | Missions validated, ranking working |
 | Testing and accuracy metrics | 27 Sep | To Do | Test results showing accuracy |
 | Algorithm and AI explanation for report | 8 Oct | To Do | How detection and AI work explained |
 
@@ -65,16 +65,30 @@ Each team member owns one main module. Work is tracked through GitHub issues lin
 | Physical device testing and fixes | 27 Sep | To Do | All screens working on real devices |
 | UI screenshots and user-flow material for report | 8 Oct | To Do | Screenshots and flow diagrams |
 
-### 6. EcoMission, Carbon Calculation, EcoPoints, and Testing — Duo Lyu
+### 6. EcoMission, Carbon Calculation and AI Personalisation — Duo Lyu
+
+**Owner responsibilities:**
+- Carbon emissions and savings calculations
+- EcoPoints reward system and bonuses
+- AI prompt construction from verified data
+- Mission validation and fallback logic
+- Weekly coach and journey insights
 
 | Task | Due | Status | Evidence |
 |------|-----|--------|----------|
-| Carbon calculation engine (emissions, savings, alternatives) | 27 Sep | To Do | Carbon values calculated and verified |
-| EcoPoints system (points awarded, user balance tracked) | 27 Sep | To Do | Points calculated and stored |
-| End-to-end testing (complete user journey) | 27 Sep | To Do | All features working together, log evidence |
-| Bug fixes and reliability improvements | 4 Oct | To Do | Bugs tracked and fixed |
-| Coordinate report structure and story | 8 Oct | To Do | Report outline and sections assigned |
-| Review and compile final report | 10 Oct | To Do | Final report with all sections |
+| Carbon Calculator module with tests | 14 Sep | To Do | Unit tests passing, calculation validated |
+| EcoPoints Calculator with bonus logic and tests | 17 Sep | To Do | Unit tests passing, points calculated correctly |
+| AI EcoMission Builder (prompt construction, no network) | 20 Sep | To Do | Prompt-building tests passing, example prompts in docs |
+| AI Mission Validator and Fallback (validates responses, generates template missions) | 23 Sep | To Do | Validator tests passing, fallback working |
+| Weekly Coach module (optional: personalised weekly insights) | 27 Sep | To Do | Weekly summary generated, tests passing |
+| Testing and reliability improvements | 27 Sep | To Do | All modules tested on device |
+| Documentation: carbon model, mission rules, AI prompt strategy | 8 Oct | To Do | Explanation of algorithms and design decisions |
+
+**Boundaries with other team members:**
+- **Jianing Xia** owns secure API communication and Firebase data storage. Duo constructs the request, Jianing sends it.
+- **Rui Fang** owns transport detection and generates valid candidate routes. Duo uses these as input to missions.
+- **Yu-Han Wang** owns the general UI system. Duo may implement the Weekly Insight screen after agreeing on the UI structure with Yu-Han.
+- **Chi Hong Tam** owns architecture decisions and final integration testing.
 
 ### 7. Shared Integration Task — All Members
 
@@ -106,6 +120,7 @@ Each team member owns one main module. Work is tracked through GitHub issues lin
 - **Jianing Xia:** Cloud services and API architecture
 - **Rui Fang:** Transport detection algorithm and AI integration
 - **Yu-Han Wang:** UI screenshots, user-flow diagrams
+- **Duo Lyu:** Carbon model, EcoPoints system, AI prompt strategy, mission validation
 
 **Video:**
 - All members: Help record demonstration
@@ -135,8 +150,11 @@ See [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md) for how modules depend on each 
 
 **Key dates:**
 - **13 Sep:** Project setup complete → all modules can start work
-- **20 Sep:** Sensors and journey tracking done → other modules can test with real data
-- **27 Sep:** Feature freeze → all features must be in code, even if not perfect
+- **14 Sep:** Carbon Calculator ready → Duo's first deliverable
+- **17 Sep:** EcoPoints Calculator ready → points system working
+- **20 Sep:** Sensors, AI prompt builder, first prototype → other modules can test with real data
+- **23 Sep:** Mission Validator ready → AI responses validated
+- **27 Sep:** Feature freeze → all features in code, even if not perfect
 - **8 Oct:** Report structure due
 - **10 Oct:** Report and video complete
 - **12 Oct:** Final submission
