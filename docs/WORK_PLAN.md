@@ -40,7 +40,7 @@ Each team member owns one main module. Work is tracked through GitHub issues lin
 | Weather API integration and caching | 27 Sep | To Do | Weather data retrieved and cached |
 | Route/maps API integration and caching | 27 Sep | To Do | Route data retrieved and cached |
 | Public transport API integration | 27 Sep | To Do | PT timetables retrieved and cached |
-| Secure AI API communication (no prompt construction) | 27 Sep | To Do | API keys handled securely, requests/responses working |
+| Secure AI API communication (sends Duo's prompts, handles responses) | 27 Sep | To Do | API keys handled securely, requests/responses working |
 | Offline data caching | 27 Sep | To Do | Data available offline, syncs when online |
 | Cloud architecture documentation for report | 8 Oct | To Do | API architecture and security explanation |
 
@@ -74,18 +74,20 @@ Each team member owns one main module. Work is tracked through GitHub issues lin
 - Mission validation and fallback logic
 - Weekly coach and journey insights
 
+**Five tasks with separate GitHub issues:**
+
 | Task | Due | Status | Evidence |
 |------|-----|--------|----------|
-| Carbon Calculator module with tests | 14 Sep | To Do | Unit tests passing, calculation validated |
-| EcoPoints Calculator with bonus logic and tests | 17 Sep | To Do | Unit tests passing, points calculated correctly |
-| AI EcoMission Builder (prompt construction, no network) | 20 Sep | To Do | Prompt-building tests passing, example prompts in docs |
-| AI Mission Validator and Fallback (validates responses, generates template missions) | 23 Sep | To Do | Validator tests passing, fallback working |
-| Weekly Coach module (optional: personalised weekly insights) | 27 Sep | To Do | Weekly summary generated, tests passing |
+| Carbon Calculator: transport factors, emissions, alternatives, savings | 14 Sep | To Do | Unit tests passing, calculation validated |
+| EcoPoints Calculator: points from savings, bonuses, incomplete handling, max limits | 17 Sep | To Do | Unit tests passing, points calculated correctly |
+| AI EcoMission Builder: MissionContext, prompt construction, structured response | 20 Sep | To Do | Prompt-building tests passing, example prompts in docs |
+| AI Mission Validator: validate responses, reject modifications, generate fallback template | 23 Sep | To Do | Validator tests passing, fallback working |
+| Weekly Coach: weekly summary model, personalised insights, non-AI fallback | 27 Sep | To Do | Weekly summary generated, tests passing |
 | Testing and reliability improvements | 27 Sep | To Do | All modules tested on device |
 | Documentation: carbon model, mission rules, AI prompt strategy | 8 Oct | To Do | Explanation of algorithms and design decisions |
 
 **Boundaries with other team members:**
-- **Jianing Xia** owns secure API communication and Firebase data storage. Duo constructs the request, Jianing sends it.
+- **Jianing Xia** owns secure API communication and Firebase storage. Duo constructs the request, Jianing sends it.
 - **Rui Fang** owns transport detection and generates valid candidate routes. Duo uses these as input to missions.
 - **Yu-Han Wang** owns the general UI system. Duo may implement the Weekly Insight screen after agreeing on the UI structure with Yu-Han.
 - **Chi Hong Tam** owns architecture decisions and final integration testing.
@@ -150,9 +152,9 @@ See [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md) for how modules depend on each 
 
 **Key dates:**
 - **13 Sep:** Project setup complete → all modules can start work
-- **14 Sep:** Carbon Calculator ready → Duo's first deliverable
-- **17 Sep:** EcoPoints Calculator ready → points system working
-- **20 Sep:** Sensors, AI prompt builder, first prototype → other modules can test with real data
+- **14 Sep:** Carbon Calculator ready (Duo's first deliverable)
+- **17 Sep:** EcoPoints Calculator ready
+- **20 Sep:** Sensors, journey tracking, AI prompt builder, first prototype → other modules can test with real data
 - **23 Sep:** Mission Validator ready → AI responses validated
 - **27 Sep:** Feature freeze → all features in code, even if not perfect
 - **8 Oct:** Report structure due
