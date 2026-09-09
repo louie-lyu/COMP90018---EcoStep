@@ -1,130 +1,165 @@
-# Dependencies and Architecture
+# Module Dependencies
 
-## Module Flow
+This document explains how data flows between the six modules and what mock data to use if a module is delayed.
 
-The EcoStep application follows this high-level data flow:
+## Data Flow
 
-1. **Sensor Collection** (Zongcheng Jiang) → Raw GPS, accelerometer and gyroscope data
-2. **Journey Tracking** (Zongcheng Jiang) → JourneySummary
-3. **Transport Detection** (Rui Fang) → TransportResult
-4. **Route and Weather** (Jianing Xia) → MissionContext (with route and weather data)
-5. **Recurring Detection** (Rui Fang) → Confirmed recurring journey identifier
-6. **Carbon Calculation** (Duo Lyu) → CarbonResult
-7. **AI Personalisation** (Jianing Xia) → Ranked options from AI API
-8. **Mission Validation** (Rui Fang) → Validated EcoMission
-9. **Mission Display** (Yu-Han Wang) → User accepts mission
-10. **Completion Tracking** (Yu-Han Wang) → MissionResult
-11. **Points Award** (Duo Lyu) → Final EcoPoints
+```
+Sensors & Journeys (Zongcheng)
+    ↓ JourneySummary
+Transport Detection (Rui)
+    ↓ Transport mode + confidence
+Carbon Calculation (Duo)
+    ↓ Carbon emissions & alternatives
+    
+Journeys (Zongcheng) + Weather/Route (Jianing) + Carbon (Duo)
+    ↓ MissionContext
+AI Planning (Rui + Jianing)
+    ↓ EcoMission (ranked options)
+    
+UI (Yu-Han) receives EcoMission and shows to user
+    ↓ MissionResult (user's choice + actual savings)
+EcoPoints (Duo)
+    ↓ Points awarded
+```
 
-## Shared Interfaces
+## Shared Data Objects
 
-All modules must use these shared interfaces to communicate:
+These are the main objects that modules exchange:
 
-### JourneySummary
+**JourneySummary** (from Sensors)
 - Journey ID
-- Start and end location (lat/lon only)
+- Start location (lat/lon)
+- End location (lat/lon)
 - Start and end time
-- Raw sensor data reference (stored locally)
-- Distance (estimated or confirmed)
+- Distance (estimated or user-corrected)
 - Transport mode (estimated, pending confirmation)
 
-### TransportResult
+**TransportResult** (from Transport Detection)
 - Transport mode (walking, cycling, public transport, car, unknown)
-- Confidence score
-- Alternative modes considered
-- Data quality indicators
+- Confidence score (0–100%)
+- Alternatives considered
 
-### CarbonResult
-- Estimated carbon emissions (grams CO2)
-- Valid lower-carbon alternatives with estimated emissions
-- Carbon savings for each alternative (grams CO2)
-- Calculation method and confidence
+**CarbonResult** (from Carbon Calculation)
+- Carbon emissions (grams CO2)
+- Lower-carbon alternatives with savings (grams CO2)
 
-### MissionContext
+**MissionContext** (assembled from Journey + Transport + Carbon + Weather + Route)
 - Journey summary
 - Transport result
 - Carbon result
-- Route information (distance, duration, stops)
-- Weather data (temperature, conditions, wind)
-- Public transport options and timetables
-- User preferences (journey acceptance history)
+- Route data (distance, duration)
+- Weather data (temperature, conditions)
+- Public transport timetables
+- User's journey history
 
-### EcoMission
+**EcoMission** (from AI API)
 - Mission ID
 - Recommended transport mode
 - Estimated carbon saving (grams CO2)
-- Explanation for recommendation
-- Acceptance deadline
-- Confidence or reliability indicator
+- Explanation
+- Confidence/reliability
 
-### MissionResult
+**MissionResult** (from UI)
 - Mission ID
-- Completion status (completed, abandoned, other)
+- Whether user accepted/completed it
 - Actual transport mode used
 - Actual carbon saving (grams CO2)
-- EcoPoints awarded
-- Timestamp of completion
+- Timestamp
 
-## Module Dependencies
+## Who Provides, Who Needs
 
-| Provider | Output | Consumer | Required Date | Status |
-|----------|--------|----------|----------------|--------|
-| Zongcheng Jiang (Sensor/Journey) | JourneySummary | Rui Fang (Transport Detection) | 20 Sep 2026 | Ready |
-| Rui Fang (Transport Detection) | TransportResult | Duo Lyu (Carbon Calculation) | 27 Sep 2026 | Blocked |
-| Duo Lyu (Carbon Calculation) | CarbonResult | Jianing Xia (AI Communication) | 27 Sep 2026 | Blocked |
-| Jianing Xia (Weather/Route) | Route and weather data | Rui Fang (Mission Validation) | 27 Sep 2026 | Blocked |
-| Rui Fang (Recurring Detection) | Confirmed journey ID | Jianing Xia (Context Assembly) | 27 Sep 2026 | Blocked |
-| Jianing Xia (AI Communication) | AI response | Rui Fang (Mission Validation) | 27 Sep 2026 | Blocked |
-| Rui Fang (Mission Validation) | EcoMission | Yu-Han Wang (UI Display) | 27 Sep 2026 | Blocked |
-| Yu-Han Wang (Mission Completion) | MissionResult | Duo Lyu (Points Award) | 4 Oct 2026 | Blocked |
+| Data | From | Needed By | Due |
+|------|------|-----------|-----|
+| JourneySummary | Zongcheng | Rui, Jianing | 20 Sep |
+| TransportResult | Rui | Duo, Jianing | 27 Sep |
+| CarbonResult | Duo | Jianing, Rui | 27 Sep |
+| Route & Weather | Jianing | Rui, UI | 27 Sep |
+| AI Response | Jianing | Rui, UI | 27 Sep |
+| EcoMission | Rui | Yu-Han | 27 Sep |
+| MissionResult | Yu-Han | Duo | 4 Oct |
 
-## Mock Data
+## Using Mock Data
 
-While real modules are incomplete, teams should:
+If a module isn't ready, use mock data so other modules can continue:
 
-- Create mock data matching shared interface contracts
-- Use mock data in tests and UI development
-- Document mock data location and format
-- Replace mock data with real data when modules are ready
+**If Zongcheng isn't ready by 20 Sep:**
+Create mock JourneySummary objects:
+```
+JourneyID: "mock_1"
+StartLoc: -37.8, 144.9 (Melbourne city)
+EndLoc: -37.81, 145.0
+Distance: 1.5 km
+TransportMode: "walking" (or cycling, car, etc.)
+```
+Save in: `app/src/test/assets/mock_journeys.json`
 
-This allows parallel development and avoids blocking on incomplete dependencies.
+**If Rui isn't ready by 27 Sep:**
+Mock TransportResult and recurring detection:
+```
+TransportMode: "car"
+Confidence: 0.85
+IsRecurring: true
+```
 
-## Interface Changes
+**If Duo isn't ready by 27 Sep:**
+Mock carbon calculations:
+```
+Emissions: 250 grams CO2
+Alternatives: [
+  {mode: "public_transport", savings: 180},
+  {mode: "bike", savings: 250}
+]
+```
 
-Any changes to shared interfaces must be:
-1. Proposed in an issue with tags `interface-change` and affected team members
-2. Discussed and approved by all affected consumers
-3. Implemented with a deprecation period if backward compatibility is needed
-4. Documented in the interface definition with version and date
+**If Jianing isn't ready by 27 Sep:**
+Mock weather, routes, and AI responses:
+```
+Temperature: 22°C
+Weather: "sunny"
+RouteOptions: [{distance: 2km, duration: 15min}]
+AIResponse: EcoMission with savings
+```
 
-Affected members are notified automatically and must review before changes are merged.
+Mock data files should be clearly named with "mock_" prefix and documented in the code.
 
 ## Critical Dependencies
 
-The following dependencies are critical and cannot be delayed without blocking the MVP:
+These milestones block other work:
 
-1. **JourneySummary ready by 20 Sep** → All transport detection and routing work depends on this
-2. **TransportResult stable by 20 Sep** → Carbon calculation cannot begin without transport mode
-3. **CarbonResult and weather/route data ready by 27 Sep** → AI personalisation requires complete context
-4. **AI API communication stable by 27 Sep** → Mission validation and UI display depend on reliable API
-5. **Mission validation complete by 27 Sep** → Completion tracking and points award cannot proceed without validated missions
+1. **Project setup by 13 Sep** → Everyone can start coding
+2. **JourneySummary by 20 Sep** → Transport and route work can use real data
+3. **Transport + Carbon + Weather/Route by 27 Sep** → AI can generate missions
+4. **All features by 27 Sep** → Testing phase begins (no new features after this)
 
-## Offline Data
+If a dependency is delayed, use mock data and continue. Document in the GitHub issue what's being mocked and when it will be replaced.
 
-The application should cache the following locally to support offline journeys:
+## Interface Changes
 
-- User preferences and settings
+If you need to change a shared object (like adding a field to JourneySummary):
+
+1. Create a GitHub issue with `interface-change` label
+2. Mention affected team members
+3. Discuss and get approval
+4. Update the interface definition here
+5. Notify consumers to update their code
+
+## Offline Support
+
+These items should be cached locally so the app works without internet:
+
+- User settings and preferences
 - Recent route data
-- Weather forecasts
-- Public transport timetables (periodic updates)
+- Weather forecasts (from last sync)
+- Public transport timetables (updated periodically)
 - Journey history and EcoPoints
 
-Raw GPS and sensor data should remain local unless explicitly uploaded as part of a journey summary.
+Raw GPS and sensor data stays on device only.
 
-## Security and Privacy
+## Security Notes
 
-- AI API keys must not be stored directly in Android source code
-- API keys must be fetched securely at runtime (e.g., from Firebase Remote Config or backend service)
-- User location data should be minimised and not retained longer than necessary
-- Journey summaries should contain only location endpoints and timestamps, not raw GPS traces
-- Sensitive data in Firebase must use appropriate security rules
+- API keys are not stored in source code
+- Keys fetched at runtime (e.g., Firebase Remote Config)
+- User location data minimised (endpoints only, not full GPS traces)
+- Sensitive data in Firebase has security rules
+- AI API communication is encrypted
