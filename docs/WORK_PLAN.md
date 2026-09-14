@@ -17,7 +17,7 @@ Each team member owns one main module. Work is tracked through GitHub issues lin
 
 | Task | Due | Status | Evidence |
 |------|-----|--------|----------|
-| Set up Android project, build configuration, shared interfaces | 13 Sep | To Do | Project structure, Gradle config, interface files |
+| Set up Android project, build configuration, shared interfaces | 13 Sep | Done | Project structure, Gradle config, interface files — see [docs/ARCHITECTURE.md](ARCHITECTURE.md) |
 | First end-to-end integration test (connect all modules) | 20 Sep | To Do | Prototype running on device, log output |
 | Integration testing and bug fixes | 27 Sep | To Do | Test results, bugs fixed |
 | Provide architecture and integration diagrams for report | 8 Oct | To Do | Diagram files in docs/ |

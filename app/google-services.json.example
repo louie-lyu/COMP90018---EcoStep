@@ -1,0 +1,30 @@
+{
+  "_comment": "Template only — NOT a real Firebase config. Zongcheng: download the real google-services.json from the Firebase console (Project Settings > Your apps > android app com.ecostep.app) and save it as app/google-services.json. That file is gitignored and must never be committed. Once it's in place, uncomment the com.google.gms.google-services plugin in app/build.gradle.kts.",
+  "project_info": {
+    "project_number": "000000000000",
+    "project_id": "ecostep-REPLACE-ME",
+    "storage_bucket": "ecostep-REPLACE-ME.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+        "android_client_info": {
+          "package_name": "com.ecostep.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "REPLACE_ME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

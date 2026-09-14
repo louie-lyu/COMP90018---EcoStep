@@ -1,0 +1,32 @@
+[
+  {
+    "journeyId": "mock_1",
+    "userId": "mock_user",
+    "startLocation": { "latitude": -37.80, "longitude": 144.90 },
+    "endLocation": { "latitude": -37.81, "longitude": 145.00 },
+    "startTimeMillis": 1757800000000,
+    "endTimeMillis": 1757800900000,
+    "distanceMeters": 1500.0,
+    "transportMode": "WALKING"
+  },
+  {
+    "journeyId": "mock_2",
+    "userId": "mock_user",
+    "startLocation": { "latitude": -37.81, "longitude": 144.96 },
+    "endLocation": { "latitude": -37.87, "longitude": 145.09 },
+    "startTimeMillis": 1757803600000,
+    "endTimeMillis": 1757805400000,
+    "distanceMeters": 12800.0,
+    "transportMode": "CAR"
+  },
+  {
+    "journeyId": "mock_3",
+    "userId": "mock_user",
+    "startLocation": { "latitude": -37.82, "longitude": 144.95 },
+    "endLocation": { "latitude": -37.80, "longitude": 144.97 },
+    "startTimeMillis": 1757807200000,
+    "endTimeMillis": 1757807800000,
+    "distanceMeters": 3200.0,
+    "transportMode": "CYCLING"
+  }
+]

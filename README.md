@@ -96,3 +96,12 @@ After **27 September**, no new features will be added. Work focuses on:
 - Document dependencies when modules change
 
 See [docs/WORK_PLAN.md](docs/WORK_PLAN.md) for tasks and [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md) for module data flow.
+
+## Getting Started
+
+1. Clone the repo and open the root folder in Android Studio.
+2. Let Gradle sync run (first sync downloads Gradle 9.7.1 and all dependencies).
+3. Build and run the `app` module on an emulator or device (minSdk 26+).
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the technical decisions, package-ownership
+table, Firebase setup steps, and toolchain notes.
