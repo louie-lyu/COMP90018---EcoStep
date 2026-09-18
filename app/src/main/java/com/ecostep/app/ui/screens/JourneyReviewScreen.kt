@@ -23,17 +23,14 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -42,37 +39,110 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ecostep.app.data.model.GeoPoint
 import com.ecostep.app.data.model.TransportMode
-
-private val BackgroundColour = Color(0xFFF7F5EE)
-private val DarkGreen = Color(0xFF3F7F6B)
-private val LightGreen = Color(0xFFDDEBDD)
-private val MapGreen = Color(0xFFE3ECDE)
-private val SecondaryText = Color(0xFF68716C)
-private val BorderColour = Color(0xFFDDDCD3)
-private val GoldColour = Color(0xFFA66E00)
+import com.ecostep.app.ui.viewmodels.JourneyReviewUiState
+import com.ecostep.app.ui.viewmodels.JourneyReviewViewModel
+import java.util.Locale
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
-fun JourneyReviewScreen() {
-    var selectedMode by remember {
-        mutableStateOf(TransportMode.PUBLIC_TRANSPORT)
-    }
+fun JourneyReviewScreen(
+    viewModel: JourneyReviewViewModel,
+    onBackToMap: () -> Unit = {},
+) {
+    val uiState by viewModel.uiState.collectAsState()
 
-    var showConfirmation by remember {
-        mutableStateOf(false)
-    }
+    when {
+        uiState.isLoading -> {
+            JourneyLoadingContent()
+        }
 
-    val ecoPoints = ecoPointsFor(selectedMode)
-    val carbonSavedKg = carbonSavedFor(selectedMode)
+        uiState.errorMessage != null -> {
+            JourneyErrorContent(
+                message = uiState.errorMessage
+                    ?: "Unable to load journey.",
+            )
+        }
+
+        uiState.journey == null -> {
+            JourneyErrorContent(
+                message = "Journey is unavailable.",
+            )
+        }
+
+        else -> {
+            JourneyReviewLoadedContent(
+                uiState = uiState,
+                onModeSelected = viewModel::selectTransportMode,
+                onConfirmJourney = viewModel::saveJourney,
+            )
+
+            if (uiState.isSaved) {
+                JourneyConfirmedDialog(
+                    ecoPoints = uiState.ecoPoints,
+                    carbonSavedKg = uiState.carbonSavedKg,
+                    onDismiss = {
+                        viewModel.dismissConfirmation()
+                        onBackToMap()
+                    },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun JourneyLoadingContent() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                MaterialTheme.colorScheme.background,
+            ),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "Loading journey...",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground,
+        )
+    }
+}
+
+@Composable
+private fun JourneyErrorContent(
+    message: String,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                MaterialTheme.colorScheme.background,
+            )
+            .padding(24.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.error,
+        )
+    }
+}
+
+@Composable
+private fun JourneyReviewLoadedContent(
+    uiState: JourneyReviewUiState,
+    onModeSelected: (TransportMode) -> Unit,
+    onConfirmJourney: () -> Unit,
+) {
+    val journey = uiState.journey ?: return
 
     Scaffold(
-        containerColor = BackgroundColour,
-        bottomBar = {
-            EcoStepBottomBar()
-        },
+        containerColor = MaterialTheme.colorScheme.background,
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
@@ -80,122 +150,189 @@ fun JourneyReviewScreen() {
                 .padding(innerPadding),
         ) {
             item {
-                JourneyMapPreview()
-            }
-
-            item {
-                JourneyReviewContent(
-                    selectedMode = selectedMode,
-                    ecoPoints = ecoPoints,
-                    carbonSavedKg = carbonSavedKg,
-                    onModeSelected = {
-                        selectedMode = it
-                    },
+                JourneyMapPreview(
+                    startLocation = journey.startLocation,
+                    endLocation = journey.endLocation,
                 )
             }
 
             item {
-                Button(
-                    onClick = {
-                        showConfirmation = true
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = 20.dp,
-                            end = 20.dp,
-                            bottom = 20.dp,
-                        )
-                        .height(52.dp),
-                    shape = RoundedCornerShape(26.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = DarkGreen,
-                        contentColor = Color.White,
-                    ),
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Text(
-                            text = "Confirm Journey",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                        )
+                JourneyReviewContent(
+                    uiState = uiState,
+                    onModeSelected = onModeSelected,
+                )
+            }
 
-                        Text(
-                            text = String.format(
-                                "Save %.2f kg CO₂ · Earn %d EcoPoints",
-                                carbonSavedKg,
-                                ecoPoints,
-                            ),
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Normal,
-                            color = Color.White.copy(alpha = 0.85f),
-                        )
-                    }
-                }
+            item {
+                ConfirmJourneyButton(
+                    ecoPoints = uiState.ecoPoints,
+                    carbonSavedKg = uiState.carbonSavedKg,
+                    isSaving = uiState.isSaving,
+                    onClick = onConfirmJourney,
+                )
             }
         }
-    }
-
-    if (showConfirmation) {
-        JourneyConfirmedDialog(
-            ecoPoints = ecoPoints,
-            carbonSavedKg = carbonSavedKg,
-            onDismiss = {
-                showConfirmation = false
-            },
-        )
     }
 }
 
 @Composable
-private fun JourneyMapPreview() {
+private fun ConfirmJourneyButton(
+    ecoPoints: Int,
+    carbonSavedKg: Double,
+    isSaving: Boolean,
+    onClick: () -> Unit,
+) {
+    Button(
+        onClick = onClick,
+        enabled = !isSaving,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                start = 20.dp,
+                end = 20.dp,
+                bottom = 20.dp,
+            )
+            .height(64.dp),
+        shape = RoundedCornerShape(26.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            disabledContainerColor =
+                MaterialTheme.colorScheme.primary.copy(
+                    alpha = 0.55f,
+                ),
+            disabledContentColor =
+                MaterialTheme.colorScheme.onPrimary.copy(
+                    alpha = 0.75f,
+                ),
+        ),
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = if (isSaving) {
+                    "Saving Journey..."
+                } else {
+                    "Confirm Journey"
+                },
+                style = MaterialTheme.typography.titleMedium,
+            )
+
+            Text(
+                text = String.format(
+                    Locale.US,
+                    "Save %.2f kg CO₂ · Earn %d EcoPoints",
+                    carbonSavedKg,
+                    ecoPoints,
+                ),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onPrimary.copy(
+                    alpha = 0.85f,
+                ),
+            )
+        }
+    }
+}
+
+@Composable
+private fun JourneyMapPreview(
+    startLocation: GeoPoint,
+    endLocation: GeoPoint,
+) {
+    val mapColour = MaterialTheme.colorScheme.surfaceVariant
+    val routeColour = MaterialTheme.colorScheme.primary
+    val destinationColour =
+        MaterialTheme.colorScheme.onSurface
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(220.dp)
-            .background(MapGreen),
+            .background(mapColour),
     ) {
         Canvas(
             modifier = Modifier.fillMaxSize(),
         ) {
             val roadColour = Color.White.copy(alpha = 0.9f)
-            val routeColour = DarkGreen
 
             drawRect(
                 color = roadColour,
-                topLeft = Offset(size.width * 0.22f, 0f),
-                size = Size(size.width * 0.035f, size.height),
-            )
-
-            drawRect(
-                color = roadColour,
-                topLeft = Offset(size.width * 0.68f, 0f),
-                size = Size(size.width * 0.035f, size.height),
-            )
-
-            drawRect(
-                color = roadColour,
-                topLeft = Offset(0f, size.height * 0.36f),
-                size = Size(size.width, size.height * 0.035f),
+                topLeft = Offset(
+                    x = size.width * 0.22f,
+                    y = 0f,
+                ),
+                size = Size(
+                    width = size.width * 0.035f,
+                    height = size.height,
+                ),
             )
 
             drawRect(
                 color = roadColour,
-                topLeft = Offset(0f, size.height * 0.77f),
-                size = Size(size.width, size.height * 0.035f),
+                topLeft = Offset(
+                    x = size.width * 0.68f,
+                    y = 0f,
+                ),
+                size = Size(
+                    width = size.width * 0.035f,
+                    height = size.height,
+                ),
             )
 
-            val start = Offset(
-                x = size.width * 0.27f,
-                y = size.height * 0.72f,
+            drawRect(
+                color = roadColour,
+                topLeft = Offset(
+                    x = 0f,
+                    y = size.height * 0.36f,
+                ),
+                size = Size(
+                    width = size.width,
+                    height = size.height * 0.035f,
+                ),
             )
 
-            val end = Offset(
-                x = size.width * 0.72f,
-                y = size.height * 0.18f,
+            drawRect(
+                color = roadColour,
+                topLeft = Offset(
+                    x = 0f,
+                    y = size.height * 0.77f,
+                ),
+                size = Size(
+                    width = size.width,
+                    height = size.height * 0.035f,
+                ),
             )
+
+            /*
+             * Temporary visual projection for the mock map.
+             * Replace this Canvas with the real map/route API later.
+             */
+            fun GeoPoint.toMapOffset(): Offset {
+                val minimumLongitude = 144.85
+                val maximumLongitude = 145.15
+                val minimumLatitude = -37.95
+                val maximumLatitude = -37.70
+
+                val horizontalPosition = (
+                        (longitude - minimumLongitude) /
+                                (maximumLongitude - minimumLongitude)
+                        ).coerceIn(0.08, 0.92)
+
+                val verticalPosition = (
+                        1.0 -
+                                (latitude - minimumLatitude) /
+                                (maximumLatitude - minimumLatitude)
+                        ).coerceIn(0.10, 0.90)
+
+                return Offset(
+                    x = size.width * horizontalPosition.toFloat(),
+                    y = size.height * verticalPosition.toFloat(),
+                )
+            }
+
+            val start = startLocation.toMapOffset()
+            val end = endLocation.toMapOffset()
 
             drawLine(
                 color = routeColour,
@@ -218,7 +355,7 @@ private fun JourneyMapPreview() {
             )
 
             drawCircle(
-                color = Color(0xFF26332F),
+                color = destinationColour,
                 radius = 13f,
                 center = end,
                 style = Stroke(width = 7f),
@@ -226,10 +363,12 @@ private fun JourneyMapPreview() {
         }
 
         Surface(
-            modifier = Modifier
-                .padding(start = 18.dp, top = 18.dp),
+            modifier = Modifier.padding(
+                start = 18.dp,
+                top = 18.dp,
+            ),
             shape = RoundedCornerShape(20.dp),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.surface,
             shadowElevation = 3.dp,
         ) {
             Text(
@@ -238,9 +377,8 @@ private fun JourneyMapPreview() {
                     horizontal = 16.dp,
                     vertical = 10.dp,
                 ),
-                color = DarkGreen,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Medium,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
             )
         }
     }
@@ -248,16 +386,14 @@ private fun JourneyMapPreview() {
 
 @Composable
 private fun JourneyReviewContent(
-    selectedMode: TransportMode,
-    ecoPoints: Int,
-    carbonSavedKg: Double,
+    uiState: JourneyReviewUiState,
     onModeSelected: (TransportMode) -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = BackgroundColour,
+                color = MaterialTheme.colorScheme.background,
                 shape = RoundedCornerShape(
                     topStart = 28.dp,
                     topEnd = 28.dp,
@@ -270,75 +406,88 @@ private fun JourneyReviewContent(
     ) {
         Text(
             text = "Journey complete",
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF202522),
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.onBackground,
         )
 
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
             text = "Review your journey before saving it.",
-            fontSize = 13.sp,
-            color = SecondaryText,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         Spacer(modifier = Modifier.height(18.dp))
 
-        JourneySummaryCard()
+        JourneySummaryCard(
+            startLocationText = uiState.startLocationText,
+            endLocationText = uiState.endLocationText,
+            durationText = uiState.durationText,
+            distanceText = uiState.distanceText,
+            dateText = uiState.dateText,
+        )
 
         Spacer(modifier = Modifier.height(22.dp))
 
         Text(
             text = "How did you travel?",
-            fontSize = 17.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF202522),
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onBackground,
         )
 
         Spacer(modifier = Modifier.height(4.dp))
 
+        val transportModeMessage =
+            if (uiState.selectedMode == uiState.detectedMode) {
+                "We detected ${
+                    transportModeName(uiState.detectedMode)
+                }."
+            } else {
+                "Changed from ${
+                    transportModeName(uiState.detectedMode)
+                } to ${
+                    transportModeName(uiState.selectedMode)
+                }."
+            }
+
         Text(
-            text = "We detected Public transport.",
-            fontSize = 12.sp,
-            color = SecondaryText,
+            text = transportModeMessage,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         Spacer(modifier = Modifier.height(14.dp))
 
         TransportModeSelector(
-            selectedMode = selectedMode,
+            selectedMode = uiState.selectedMode,
             onModeSelected = onModeSelected,
         )
 
         Spacer(modifier = Modifier.height(18.dp))
 
         EnvironmentalImpactCard(
-            ecoPoints = ecoPoints,
-            carbonSavedKg = carbonSavedKg,
+            ecoPoints = uiState.ecoPoints,
+            carbonSavedKg = uiState.carbonSavedKg,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "The displayed values are mock data for the first prototype.",
-            modifier = Modifier.fillMaxWidth(),
-            color = SecondaryText,
-            fontSize = 11.sp,
-            textAlign = TextAlign.Center,
-        )
-
-        Spacer(modifier = Modifier.height(14.dp))
+        Spacer(modifier = Modifier.height(30.dp))
     }
 }
 
 @Composable
-private fun JourneySummaryCard() {
+private fun JourneySummaryCard(
+    startLocationText: String,
+    endLocationText: String,
+    durationText: String,
+    distanceText: String,
+    dateText: String,
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White,
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 2.dp,
@@ -348,62 +497,63 @@ private fun JourneySummaryCard() {
             modifier = Modifier.padding(18.dp),
         ) {
             Text(
-                text = "University of Melbourne",
-                fontSize = 15.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color(0xFF202522),
+                text = startLocationText,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             Text(
                 text = "Starting point",
-                fontSize = 11.sp,
-                color = SecondaryText,
+                style = MaterialTheme.typography.labelMedium,
+                color =
+                    MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
             Text(
                 text = "↓",
                 modifier = Modifier.padding(vertical = 7.dp),
-                color = DarkGreen,
-                fontSize = 18.sp,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 24.sp,
             )
 
             Text(
-                text = "Home · Carlton North",
-                fontSize = 15.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color(0xFF202522),
+                text = endLocationText,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             Text(
                 text = "Destination",
-                fontSize = 11.sp,
-                color = SecondaryText,
+                style = MaterialTheme.typography.labelMedium,
+                color =
+                    MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
             Spacer(modifier = Modifier.height(14.dp))
 
             HorizontalDivider(
-                color = BorderColour,
+                color = MaterialTheme.colorScheme.outline,
             )
 
             Spacer(modifier = Modifier.height(14.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement =
+                    Arrangement.SpaceBetween,
             ) {
                 JourneyDetail(
-                    value = "18 min",
+                    value = durationText,
                     label = "Duration",
                 )
 
                 JourneyDetail(
-                    value = "3.2 km",
+                    value = distanceText,
                     label = "Distance",
                 )
 
                 JourneyDetail(
-                    value = "18 Sep",
+                    value = dateText,
                     label = "Date",
                 )
             }
@@ -419,17 +569,16 @@ private fun JourneyDetail(
     Column {
         Text(
             text = value,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color(0xFF202522),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface,
         )
 
         Spacer(modifier = Modifier.height(3.dp))
 
         Text(
             text = label,
-            fontSize = 10.sp,
-            color = SecondaryText,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -488,20 +637,26 @@ private fun TransportModeButton(
     modifier: Modifier = Modifier,
 ) {
     val backgroundColour = if (selected) {
-        LightGreen
+        MaterialTheme.colorScheme.primaryContainer
     } else {
-        BackgroundColour
+        MaterialTheme.colorScheme.background
     }
 
     val borderColour = if (selected) {
-        DarkGreen
+        MaterialTheme.colorScheme.primary
     } else {
-        BorderColour
+        MaterialTheme.colorScheme.outline
+    }
+
+    val textColour = if (selected) {
+        MaterialTheme.colorScheme.primary
+    } else {
+        MaterialTheme.colorScheme.onBackground
     }
 
     Box(
         modifier = modifier
-            .height(48.dp)
+            .height(52.dp)
             .background(
                 color = backgroundColour,
                 shape = RoundedCornerShape(15.dp),
@@ -516,17 +671,14 @@ private fun TransportModeButton(
     ) {
         Text(
             text = transportModeName(mode),
-            fontSize = 13.sp,
-            fontWeight = if (selected) {
-                FontWeight.SemiBold
-            } else {
-                FontWeight.Normal
-            },
-            color = if (selected) {
-                DarkGreen
-            } else {
-                Color(0xFF202522)
-            },
+            style = MaterialTheme.typography.labelLarge.copy(
+                fontWeight = if (selected) {
+                    FontWeight.SemiBold
+                } else {
+                    FontWeight.Normal
+                },
+            ),
+            color = textColour,
         )
     }
 }
@@ -540,7 +692,8 @@ private fun EnvironmentalImpactCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(
-            containerColor = LightGreen,
+            containerColor =
+                MaterialTheme.colorScheme.primaryContainer,
         ),
     ) {
         Row(
@@ -548,7 +701,7 @@ private fun EnvironmentalImpactCard(
                 .fillMaxWidth()
                 .padding(
                     horizontal = 18.dp,
-                    vertical = 16.dp,
+                    vertical = 18.dp,
                 ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -557,15 +710,16 @@ private fun EnvironmentalImpactCard(
             ) {
                 Text(
                     text = "+$ecoPoints",
-                    color = GoldColour,
-                    fontSize = 19.sp,
-                    fontWeight = FontWeight.Bold,
+                    style =
+                        MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.secondary,
                 )
 
                 Text(
                     text = "EcoPoints",
-                    color = SecondaryText,
-                    fontSize = 11.sp,
+                    style = MaterialTheme.typography.labelMedium,
+                    color =
+                        MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
 
@@ -573,9 +727,11 @@ private fun EnvironmentalImpactCard(
                 modifier = Modifier
                     .size(
                         width = 1.dp,
-                        height = 42.dp,
+                        height = 48.dp,
                     )
-                    .background(Color(0xFFB9CDBF)),
+                    .background(
+                        MaterialTheme.colorScheme.outlineVariant,
+                    ),
             )
 
             Column(
@@ -584,83 +740,24 @@ private fun EnvironmentalImpactCard(
                     .padding(start = 18.dp),
             ) {
                 Text(
-                    text = String.format("%.2f kg", carbonSavedKg),
-                    color = DarkGreen,
-                    fontSize = 19.sp,
-                    fontWeight = FontWeight.Bold,
+                    text = String.format(
+                        Locale.US,
+                        "%.2f kg",
+                        carbonSavedKg,
+                    ),
+                    style =
+                        MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.primary,
                 )
 
                 Text(
                     text = "CO₂ saved",
-                    color = SecondaryText,
-                    fontSize = 11.sp,
+                    style = MaterialTheme.typography.labelMedium,
+                    color =
+                        MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
-    }
-}
-
-
-@Composable
-private fun EcoStepBottomBar() {
-    NavigationBar(
-        containerColor = Color.White,
-    ) {
-        NavigationBarItem(
-            selected = true,
-            onClick = {},
-            icon = {
-                Text(
-                    text = "⌖",
-                    fontSize = 20.sp,
-                )
-            },
-            label = {
-                Text("Map")
-            },
-        )
-
-        NavigationBarItem(
-            selected = false,
-            onClick = {},
-            icon = {
-                Text(
-                    text = "⚑",
-                    fontSize = 20.sp,
-                )
-            },
-            label = {
-                Text("Missions")
-            },
-        )
-
-        NavigationBarItem(
-            selected = false,
-            onClick = {},
-            icon = {
-                Text(
-                    text = "★",
-                    fontSize = 18.sp,
-                )
-            },
-            label = {
-                Text("Rewards")
-            },
-        )
-
-        NavigationBarItem(
-            selected = false,
-            onClick = {},
-            icon = {
-                Text(
-                    text = "▥",
-                    fontSize = 19.sp,
-                )
-            },
-            label = {
-                Text("Ranking")
-            },
-        )
     }
 }
 
@@ -673,12 +770,14 @@ private fun JourneyConfirmedDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = RoundedCornerShape(24.dp),
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.surface,
         title = {
             Text(
                 text = "Journey saved!",
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF202522),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.onSurface,
             )
         },
         text = {
@@ -690,14 +789,16 @@ private fun JourneyConfirmedDialog(
                     modifier = Modifier
                         .size(58.dp)
                         .background(
-                            color = LightGreen,
+                            color = MaterialTheme
+                                .colorScheme
+                                .primaryContainer,
                             shape = CircleShape,
                         ),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
                         text = "✓",
-                        color = DarkGreen,
+                        color = MaterialTheme.colorScheme.primary,
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                     )
@@ -707,27 +808,31 @@ private fun JourneyConfirmedDialog(
 
                 Text(
                     text = "You earned",
-                    color = SecondaryText,
-                    fontSize = 13.sp,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme
+                        .colorScheme
+                        .onSurfaceVariant,
+                    textAlign = TextAlign.Center,
                 )
 
                 Text(
                     text = "+$ecoPoints EcoPoints",
-                    color = GoldColour,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.secondary,
+                    textAlign = TextAlign.Center,
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
                     text = String.format(
+                        Locale.US,
                         "You saved %.2f kg of CO₂",
                         carbonSavedKg,
                     ),
-                    color = DarkGreen,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Medium,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.Center,
                 )
             }
         },
@@ -737,43 +842,23 @@ private fun JourneyConfirmedDialog(
             ) {
                 Text(
                     text = "Back to Map",
-                    color = DarkGreen,
-                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary,
                 )
             }
         },
     )
 }
 
-private fun ecoPointsFor(mode: TransportMode): Int {
-    return when (mode) {
-        TransportMode.WALKING -> 160
-        TransportMode.CYCLING -> 140
-        TransportMode.PUBLIC_TRANSPORT -> 120
-
-        // CAR 不顯示為選項，但保留處理以符合共用 enum。
-        TransportMode.CAR -> 0
-        TransportMode.UNKNOWN -> 0
-    }
-}
-
-private fun carbonSavedFor(mode: TransportMode): Double {
-    return when (mode) {
-        TransportMode.WALKING -> 0.64
-        TransportMode.CYCLING -> 0.58
-        TransportMode.PUBLIC_TRANSPORT -> 0.31
-
-        // CAR 不顯示為選項，但保留處理以符合共用 enum。
-        TransportMode.CAR -> 0.0
-        TransportMode.UNKNOWN -> 0.0
-    }
-}
-
-private fun transportModeName(mode: TransportMode): String {
+private fun transportModeName(
+    mode: TransportMode,
+): String {
     return when (mode) {
         TransportMode.WALKING -> "Walk"
         TransportMode.CYCLING -> "Cycle"
-        TransportMode.PUBLIC_TRANSPORT -> "Public Transport"
+        TransportMode.PUBLIC_TRANSPORT ->
+            "Public Transport"
+
         TransportMode.CAR -> "Car"
         TransportMode.UNKNOWN -> "Unknown"
     }
