@@ -5,8 +5,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.ecostep.app.core.di.AppContainer
 import com.ecostep.app.data.model.GeoPoint
-import com.ecostep.app.data.repository.DefaultExternalDataRepository
-import com.ecostep.app.data.repository.ExternalDataRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -18,12 +16,7 @@ class OpenMeteoIntegrationTest {
 
     @Test
     fun liveOpenMeteoRequestReturnsMelbourneWeather() = runBlocking {
-        val sharedOkHttpClient = AppContainer().okHttpClient
-        val openMeteoApi = OpenMeteoClient.create(sharedOkHttpClient)
-
-        val repository: ExternalDataRepository = DefaultExternalDataRepository(
-            weatherDataSource = OpenMeteoWeatherDataSource(openMeteoApi),
-        )
+        val repository = AppContainer().externalDataRepository
 
         val weatherData = repository.getWeather(
             location = GeoPoint(

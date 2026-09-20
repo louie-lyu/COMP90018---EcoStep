@@ -3,6 +3,11 @@ package com.ecostep.app.core.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ecostep.app.BuildConfig
+import com.ecostep.app.data.repository.DefaultExternalDataRepository
+import com.ecostep.app.data.repository.ExternalDataRepository
+import com.ecostep.app.network.weather.OpenMeteoApi
+import com.ecostep.app.network.weather.OpenMeteoClient
+import com.ecostep.app.network.weather.OpenMeteoWeatherDataSource
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
@@ -32,10 +37,22 @@ class AppContainer {
             .build()
     }
 
+    private val openMeteoApi: OpenMeteoApi by lazy {
+        OpenMeteoClient.create(okHttpClient)
+    }
+
+    private val weatherDataSource: OpenMeteoWeatherDataSource by lazy {
+        OpenMeteoWeatherDataSource(openMeteoApi)
+    }
+
+    val externalDataRepository: ExternalDataRepository by lazy {
+        DefaultExternalDataRepository(
+            weatherDataSource = weatherDataSource,
+        )
+    }
+
     // TODO(Zongcheng): add `val journeyRepository: JourneyRepository` here once implemented,
     // backed by Firebase Auth + Firestore (usable once app/google-services.json is in place).
-    // TODO(Jianing): add `val externalDataRepository: ExternalDataRepository` here once
-    // implemented, backed by Retrofit clients built on `okHttpClient` above.
 }
 
 /**
