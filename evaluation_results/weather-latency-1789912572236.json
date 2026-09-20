@@ -1,0 +1,730 @@
+{
+  "startedAt": "2026-09-20T13:56:12.236860Z",
+  "finishedAt": "2026-09-20T13:58:27.517829Z",
+  "device": "Google sdk_gphone64_x86_64; Android 16",
+  "plannedRequests": 100,
+  "recordedRequests": 100,
+  "successfulRequests": 100,
+  "averageRequestDurationMs": 361.2452294200001,
+  "averageRequestDurationExcludingFirstMs": 349.123953969697,
+  "requestTimeoutMs": 30000,
+  "requestIntervalMs": 1000,
+  "records": [
+    {
+      "requestNumber": 1,
+      "scenario": "weather.first",
+      "durationMs": 1561.251499,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 2,
+      "scenario": "weather.followup",
+      "durationMs": 328.412338,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 3,
+      "scenario": "weather.followup",
+      "durationMs": 327.641154,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 4,
+      "scenario": "weather.followup",
+      "durationMs": 327.166783,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 5,
+      "scenario": "weather.followup",
+      "durationMs": 328.012315,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 6,
+      "scenario": "weather.followup",
+      "durationMs": 326.079214,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 7,
+      "scenario": "weather.followup",
+      "durationMs": 327.814651,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 8,
+      "scenario": "weather.followup",
+      "durationMs": 421.489004,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 9,
+      "scenario": "weather.followup",
+      "durationMs": 326.991676,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 10,
+      "scenario": "weather.followup",
+      "durationMs": 422.729663,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 11,
+      "scenario": "weather.followup",
+      "durationMs": 329.40374,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 12,
+      "scenario": "weather.followup",
+      "durationMs": 419.561059,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 13,
+      "scenario": "weather.followup",
+      "durationMs": 331.740752,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 14,
+      "scenario": "weather.followup",
+      "durationMs": 331.055692,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 15,
+      "scenario": "weather.followup",
+      "durationMs": 331.213959,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 16,
+      "scenario": "weather.followup",
+      "durationMs": 329.805377,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 17,
+      "scenario": "weather.followup",
+      "durationMs": 327.242606,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 18,
+      "scenario": "weather.followup",
+      "durationMs": 330.977977,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 19,
+      "scenario": "weather.followup",
+      "durationMs": 330.377015,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 20,
+      "scenario": "weather.followup",
+      "durationMs": 332.091466,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 21,
+      "scenario": "weather.followup",
+      "durationMs": 326.927411,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 22,
+      "scenario": "weather.followup",
+      "durationMs": 332.27007,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 23,
+      "scenario": "weather.followup",
+      "durationMs": 328.870704,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 24,
+      "scenario": "weather.followup",
+      "durationMs": 327.641866,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 25,
+      "scenario": "weather.followup",
+      "durationMs": 324.999405,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 26,
+      "scenario": "weather.followup",
+      "durationMs": 328.680476,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 27,
+      "scenario": "weather.followup",
+      "durationMs": 326.445547,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 28,
+      "scenario": "weather.followup",
+      "durationMs": 439.772975,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 29,
+      "scenario": "weather.followup",
+      "durationMs": 328.26688,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 30,
+      "scenario": "weather.followup",
+      "durationMs": 331.632337,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 31,
+      "scenario": "weather.followup",
+      "durationMs": 339.686412,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 32,
+      "scenario": "weather.followup",
+      "durationMs": 328.195577,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 33,
+      "scenario": "weather.followup",
+      "durationMs": 327.679788,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 34,
+      "scenario": "weather.followup",
+      "durationMs": 426.059897,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 35,
+      "scenario": "weather.followup",
+      "durationMs": 423.505983,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 36,
+      "scenario": "weather.followup",
+      "durationMs": 328.571455,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 37,
+      "scenario": "weather.followup",
+      "durationMs": 331.735655,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 38,
+      "scenario": "weather.followup",
+      "durationMs": 331.447818,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 39,
+      "scenario": "weather.followup",
+      "durationMs": 420.63724,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 40,
+      "scenario": "weather.followup",
+      "durationMs": 333.057424,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 41,
+      "scenario": "weather.followup",
+      "durationMs": 426.182097,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 42,
+      "scenario": "weather.followup",
+      "durationMs": 326.999421,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 43,
+      "scenario": "weather.followup",
+      "durationMs": 325.127274,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 44,
+      "scenario": "weather.followup",
+      "durationMs": 417.535535,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 45,
+      "scenario": "weather.followup",
+      "durationMs": 324.83203,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 46,
+      "scenario": "weather.followup",
+      "durationMs": 328.935653,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 47,
+      "scenario": "weather.followup",
+      "durationMs": 324.661745,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 48,
+      "scenario": "weather.followup",
+      "durationMs": 327.034814,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 49,
+      "scenario": "weather.followup",
+      "durationMs": 420.553989,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 50,
+      "scenario": "weather.followup",
+      "durationMs": 323.378122,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 51,
+      "scenario": "weather.followup",
+      "durationMs": 322.561009,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 52,
+      "scenario": "weather.followup",
+      "durationMs": 323.310259,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 53,
+      "scenario": "weather.followup",
+      "durationMs": 325.492989,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 54,
+      "scenario": "weather.followup",
+      "durationMs": 331.751292,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 55,
+      "scenario": "weather.followup",
+      "durationMs": 325.838411,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 56,
+      "scenario": "weather.followup",
+      "durationMs": 327.80666,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 57,
+      "scenario": "weather.followup",
+      "durationMs": 324.820754,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 58,
+      "scenario": "weather.followup",
+      "durationMs": 327.713405,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 59,
+      "scenario": "weather.followup",
+      "durationMs": 522.540568,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 60,
+      "scenario": "weather.followup",
+      "durationMs": 323.97336,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 61,
+      "scenario": "weather.followup",
+      "durationMs": 472.023247,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 62,
+      "scenario": "weather.followup",
+      "durationMs": 324.711037,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 63,
+      "scenario": "weather.followup",
+      "durationMs": 458.197774,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 64,
+      "scenario": "weather.followup",
+      "durationMs": 449.7324,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 65,
+      "scenario": "weather.followup",
+      "durationMs": 326.704571,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 66,
+      "scenario": "weather.followup",
+      "durationMs": 326.263642,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 67,
+      "scenario": "weather.followup",
+      "durationMs": 325.737765,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 68,
+      "scenario": "weather.followup",
+      "durationMs": 329.287904,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 69,
+      "scenario": "weather.followup",
+      "durationMs": 323.357627,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 70,
+      "scenario": "weather.followup",
+      "durationMs": 370.926552,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 71,
+      "scenario": "weather.followup",
+      "durationMs": 332.337501,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 72,
+      "scenario": "weather.followup",
+      "durationMs": 327.205061,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 73,
+      "scenario": "weather.followup",
+      "durationMs": 325.191944,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 74,
+      "scenario": "weather.followup",
+      "durationMs": 325.390982,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 75,
+      "scenario": "weather.followup",
+      "durationMs": 325.326105,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 76,
+      "scenario": "weather.followup",
+      "durationMs": 424.752004,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 77,
+      "scenario": "weather.followup",
+      "durationMs": 337.775642,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 78,
+      "scenario": "weather.followup",
+      "durationMs": 339.382014,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 79,
+      "scenario": "weather.followup",
+      "durationMs": 323.227808,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 80,
+      "scenario": "weather.followup",
+      "durationMs": 327.945136,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 81,
+      "scenario": "weather.followup",
+      "durationMs": 330.118094,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 82,
+      "scenario": "weather.followup",
+      "durationMs": 373.80403,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 83,
+      "scenario": "weather.followup",
+      "durationMs": 329.648349,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 84,
+      "scenario": "weather.followup",
+      "durationMs": 323.748839,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 85,
+      "scenario": "weather.followup",
+      "durationMs": 505.942458,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 86,
+      "scenario": "weather.followup",
+      "durationMs": 325.935485,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 87,
+      "scenario": "weather.followup",
+      "durationMs": 323.712704,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 88,
+      "scenario": "weather.followup",
+      "durationMs": 422.105033,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 89,
+      "scenario": "weather.followup",
+      "durationMs": 323.013825,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 90,
+      "scenario": "weather.followup",
+      "durationMs": 421.84287,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 91,
+      "scenario": "weather.followup",
+      "durationMs": 323.540303,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 92,
+      "scenario": "weather.followup",
+      "durationMs": 323.768603,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 93,
+      "scenario": "weather.followup",
+      "durationMs": 327.426121,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 94,
+      "scenario": "weather.followup",
+      "durationMs": 324.515976,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 95,
+      "scenario": "weather.followup",
+      "durationMs": 331.101986,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 96,
+      "scenario": "weather.followup",
+      "durationMs": 326.367543,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 97,
+      "scenario": "weather.followup",
+      "durationMs": 326.688638,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 98,
+      "scenario": "weather.followup",
+      "durationMs": 328.094696,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 99,
+      "scenario": "weather.followup",
+      "durationMs": 329.892438,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "requestNumber": 100,
+      "scenario": "weather.followup",
+      "durationMs": 329.585988,
+      "outcome": "SUCCESS",
+      "errorType": null
+    }
+  ],
+  "summaries": [
+    {
+      "scenario": "weather.first",
+      "outcome": "SUCCESS",
+      "count": 1,
+      "p50Ms": 1561.251499,
+      "p95Ms": 1561.251499
+    },
+    {
+      "scenario": "weather.followup",
+      "outcome": "SUCCESS",
+      "count": 99,
+      "p50Ms": 328.26688,
+      "p95Ms": 449.7324
+    }
+  ]
+}
