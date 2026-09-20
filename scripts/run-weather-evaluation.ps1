@@ -1,5 +1,6 @@
 param(
-    [string]$AdbPath = "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe"
+    [string]$AdbPath = "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe",
+    [switch]$NetworkRecovery
 )
 
 $ErrorActionPreference = 'Stop'
@@ -7,6 +8,8 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 $package = 'com.ecostep.app'
 $remoteDirectory = 'files/evaluation'
 $outputDirectory = Join-Path $projectRoot 'evaluation_results'
+$testClass = if ($NetworkRecovery) { 'WeatherNetworkRecoveryTest' } else { 'WeatherLatencyEvaluationTest' }
+$reportPattern = if ($NetworkRecovery) { '^weather-recovery-\d+\.json$' } else { '^weather-latency-\d+\.json$' }
 
 if (-not (Test-Path -LiteralPath $AdbPath)) {
     throw 'adb.exe not found. Supply -AdbPath with the full path to your Android SDK platform-tools\adb.exe.'
@@ -29,7 +32,7 @@ function Get-ReportNames {
 
     $listing = & $AdbPath -s $serial shell run-as $package ls $remoteDirectory
     if ($LASTEXITCODE -ne 0) { throw 'Could not list reports on the device.' }
-    $listing | Where-Object { $_ -match '^weather-latency-\d+\.json$' }
+    $listing | Where-Object { $_ -match $reportPattern }
 }
 
 Push-Location $projectRoot
@@ -40,7 +43,7 @@ try {
 
     $previousReports = @(Get-ReportNames)
     $testOutput = & $AdbPath -s $serial shell am instrument -w -r `
-        -e class com.ecostep.app.evaluation.WeatherLatencyEvaluationTest `
+        -e class "com.ecostep.app.evaluation.$testClass" `
         com.ecostep.app.test/androidx.test.runner.AndroidJUnitRunner
     $instrumentExitCode = $LASTEXITCODE
     $testOutput | Write-Host
