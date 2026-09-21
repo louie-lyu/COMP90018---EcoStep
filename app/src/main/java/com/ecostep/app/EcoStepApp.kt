@@ -9,6 +9,6 @@ class EcoStepApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        appContainer = AppContainer()
+        appContainer = AppContainer(applicationContext)
     }
 }
