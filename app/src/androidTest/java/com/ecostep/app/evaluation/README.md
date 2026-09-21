@@ -1,43 +1,27 @@
-﻿# Run the test and save results to your computer
+# Evaluation tests
 
-Start one Android emulator with internet access (API 26+), or connect one phone with USB debugging enabled.
-Open PowerShell in the project root and run:
+Connect one device or emulator (API 26+) and run commands from the project root. JSON reports are saved to `evaluation_results/`.
+
+## Weather latency
+
+Measures 100 weather requests, including success rate and P50/P95 latency. Requires internet access.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\run-weather-evaluation.ps1
 ```
 
-The script installs the app, performs 100 weather requests, and automatically saves the JSON report under the project root:
+## Weather network recovery
 
-```text
-evaluation_results/weather-latency-<timestamp>.json
-```
-
-If your Android SDK is not in the default location, specify the path to `adb.exe`:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\run-weather-evaluation.ps1 -AdbPath 'D:\Android\Sdk\platform-tools\adb.exe'
-```
-
-## Offline and recovery
-
-Start one emulator with internet access, then run:
+Checks online success, expected offline failure, and success after restoring the network. Emulator only; run separately from other network tests.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\run-weather-evaluation.ps1 -NetworkRecovery
 ```
 
-This emulator-only test uses the same real weather repository for three requests: online
-success, expected network failure with Wi-Fi/mobile data disabled, and success after restoring
-the original network switches. Do not run other network tests at the same time.
+## Carbon calculator
 
-Results are exported to `evaluation_results/weather-recovery-<timestamp>.json`. The offline
-record should have outcome `FAILURE`; the overall `passed` field should be `true`.
-
-The test restores network switches in `finally`. If the process is forcibly stopped while
-offline, re-enable networking in emulator settings or run (using your SDK's adb path):
+Checks transport modes, distance boundaries, proportional scaling, and savings consistency. Exports failed cases too; no internet required.
 
 ```powershell
-adb shell svc wifi enable
-adb shell svc data enable
+powershell -ExecutionPolicy Bypass -File .\scripts\run-carbon-calculator-evaluation.ps1
 ```
