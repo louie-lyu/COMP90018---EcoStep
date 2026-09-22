@@ -6,10 +6,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.ecostep.app.core.di.AppContainer
+import com.ecostep.app.data.cache.weather.DataStoreWeatherCache
+import com.ecostep.app.data.cache.weather.weatherDataStore
 import com.ecostep.app.data.model.GeoPoint
-import java.io.File
-import java.time.Instant
-import java.util.Locale
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
@@ -20,6 +19,9 @@ import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.io.File
+import java.time.Instant
+import java.util.Locale
 
 /** Live network evaluation: run on a connected device with internet access. */
 @RunWith(AndroidJUnit4::class)
@@ -29,8 +31,22 @@ class WeatherLatencyEvaluationTest {
     @Test
     fun measureLiveWeatherRequestLatency() = runBlocking {
         val startedAt = Instant.now()
-        val repository = AppContainer().externalDataRepository
-        val location = GeoPoint(latitude = -37.8136, longitude = 144.9631)
+        val context = InstrumentationRegistry
+            .getInstrumentation()
+            .targetContext
+
+        val repository = AppContainer(context).externalDataRepository
+        val location = GeoPoint(
+            latitude = -37.8136,
+            longitude = 144.9631,
+        )
+
+        val weatherCache = DataStoreWeatherCache(
+            dataStore = context.weatherDataStore,
+        )
+        // Make request 1 a real network fetch.
+        weatherCache.remove(location)
+
         val tracker = LatencyTracker(
             context = "${Build.MANUFACTURER} ${Build.MODEL}; Android ${Build.VERSION.RELEASE}",
         )
@@ -38,9 +54,13 @@ class WeatherLatencyEvaluationTest {
 
         try {
             repeat(REQUEST_COUNT) { index ->
-                // A fresh client may establish a connection on the first request.
-                // Later requests share the client, but connection reuse is not guaranteed.
-                val scenario = if (index == 0) "weather.first" else "weather.followup"
+                // Request 1 fetches Open-Meteo and writes the cache.
+                // Later requests should be served by the fresh cache.
+                val scenario = if (index == 0) {
+                    "weather.network.first_fetch"
+                } else {
+                    "weather.cache.hit"
+                }
                 try {
                     tracker.measure(scenario) {
                         withTimeout(REQUEST_TIMEOUT_MS) {
@@ -90,8 +110,19 @@ class WeatherLatencyEvaluationTest {
     private fun saveJsonReport(tracker: LatencyTracker, startedAt: Instant) {
         val records = tracker.snapshot()
         // Request latency includes network waits and parsing, not just connection setup.
-        val successfulRecords = records.filter { it.outcome == Outcome.SUCCESS }
-        val followupRecords = records.drop(1).filter { it.outcome == Outcome.SUCCESS }
+        val successfulRecords = records.filter {
+            it.outcome == Outcome.SUCCESS
+        }
+
+        val networkFirstFetchRecords = records.filter {
+            it.scenario == "weather.network.first_fetch" &&
+                    it.outcome == Outcome.SUCCESS
+        }
+
+        val cacheHitRecords = records.filter {
+            it.scenario == "weather.cache.hit" &&
+                    it.outcome == Outcome.SUCCESS
+        }
         val report = JSONObject().apply {
             put("startedAt", startedAt.toString())
             put("finishedAt", Instant.now().toString())
@@ -99,8 +130,18 @@ class WeatherLatencyEvaluationTest {
             put("plannedRequests", REQUEST_COUNT)
             put("recordedRequests", records.size)
             put("successfulRequests", records.count { it.outcome == Outcome.SUCCESS })
-            put("averageRequestDurationMs", successfulRecords.averageDurationOrNull())
-            put("averageRequestDurationExcludingFirstMs", followupRecords.averageDurationOrNull())
+            put(
+                "averageSuccessfulDurationMs",
+                successfulRecords.averageDurationOrNull(),
+            )
+            put(
+                "averageNetworkFirstFetchDurationMs",
+                networkFirstFetchRecords.averageDurationOrNull(),
+            )
+            put(
+                "averageCacheHitDurationMs",
+                cacheHitRecords.averageDurationOrNull(),
+            )
             put("requestTimeoutMs", REQUEST_TIMEOUT_MS)
             put("requestIntervalMs", REQUEST_INTERVAL_MS)
             put("records", JSONArray().apply {
