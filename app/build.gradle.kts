@@ -73,6 +73,7 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.datastore.preferences)
 
     // Foundational HTTP client for Jianing's weather/route/public-transport/AI clients.
     // Which external services to call is her decision — this just wires up the client.

@@ -8,9 +8,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.ecostep.app.core.di.AppContainer
+import com.ecostep.app.data.cache.weather.DataStoreWeatherCache
+import com.ecostep.app.data.cache.weather.WeatherCacheEntry
+import com.ecostep.app.data.cache.weather.WeatherCachePolicy
+import com.ecostep.app.data.cache.weather.weatherDataStore
 import com.ecostep.app.data.model.GeoPoint
-import java.io.File
-import java.io.IOException
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -18,11 +20,12 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.json.JSONArray
 import org.json.JSONObject
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
-import org.junit.Assert.fail
 import org.junit.Assume.assumeTrue
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.io.File
 
 /** Changes emulator networking only; never run concurrently with other network tests. */
 @RunWith(AndroidJUnit4::class)
@@ -33,50 +36,111 @@ class WeatherNetworkRecoveryTest {
     private val connectivity = context.getSystemService(ConnectivityManager::class.java)
 
     @Test
-    fun weatherRequestFailsOfflineAndSucceedsAfterRecovery() = runBlocking {
-        assumeTrue("This test is emulator-only", shell("getprop ro.kernel.qemu") == "1")
+    fun weatherRequestUsesCacheOfflineAndRefreshesAfterRecovery() = runBlocking {
+        assumeTrue(
+            "This test is emulator-only",
+            shell("getprop ro.kernel.qemu") == "1",
+        )
+
         val wifiEnabled = readSwitch("wifi_on")
         val dataEnabled = readSwitch("mobile_data")
-        val repository = AppContainer().externalDataRepository
+        val repository = AppContainer(context).externalDataRepository
+        val weatherCache = DataStoreWeatherCache(
+            dataStore = context.weatherDataStore,
+        )
         val location = GeoPoint(-37.8136, 144.9631)
         val tracker = LatencyTracker()
         val startedAt = System.currentTimeMillis()
         var passed = false
 
+        // Ensure the first request really comes from the network.
+        weatherCache.remove(location)
+
         try {
-            // Establish a working baseline before changing the network.
             waitForNetwork(online = true)
-            tracker.measure("weather.online") {
-                withTimeout(30_000) { repository.getWeather(location) }
+
+            val firstWeather = tracker.measure(
+                "weather.network.first_fetch",
+            ) {
+                withTimeout(30_000) {
+                    repository.getWeather(location)
+                }
             }
+
+            assertTrue(
+                "First network request must return weather",
+                firstWeather.conditions.isNotBlank(),
+            )
 
             setSwitch("wifi", false)
             setSwitch("data", false)
             waitForNetwork(online = false)
-            try {
-                tracker.measure("weather.offline") {
-                    withTimeout(30_000) { repository.getWeather(location) }
+
+            val offlineWeather = tracker.measure(
+                "weather.cache.hit",
+            ) {
+                withTimeout(30_000) {
+                    repository.getWeather(location)
                 }
-                fail("Weather request unexpectedly succeeded while offline")
-            } catch (_: IOException) {
-                // HTTP/parsing errors and coroutine timeouts are not proof of offline handling.
-                Log.i(TAG, "Offline request failed as expected")
             }
 
-            restoreSwitches(wifiEnabled, dataEnabled)
+            assertEquals(
+                "Offline request must return the cached weather",
+                firstWeather,
+                offlineWeather,
+            )
+
+            Log.i(
+                TAG,
+                "Offline request returned cached weather successfully",
+            )
+
+            restoreSwitches(
+                wifi = wifiEnabled,
+                data = dataEnabled,
+            )
             waitForNetwork(online = true)
-            val weather = tracker.measure("weather.recovered") {
-                withTimeout(30_000) { repository.getWeather(location) }
+
+            // Make the saved entry exactly 30 minutes old so the next request
+            // must refresh it from the network.
+            weatherCache.save(
+                location = location,
+                entry = WeatherCacheEntry(
+                    weatherData = offlineWeather,
+                    fetchedAtMillis = System.currentTimeMillis() -
+                            WeatherCachePolicy.DEFAULT_FRESH_MAX_AGE_MILLIS,
+                ),
+            )
+
+            val refreshedWeather = tracker.measure(
+                "weather.network.refresh",
+            ) {
+                withTimeout(30_000) {
+                    repository.getWeather(location)
+                }
             }
-            assertTrue("Recovered request must return weather", weather.conditions.isNotBlank())
+
+            assertTrue(
+                "Expired cache must refresh after network recovery",
+                refreshedWeather.conditions.isNotBlank(),
+            )
+
             passed = true
         } finally {
-            // Restore on assertion failure or coroutine cancellation, before exporting results.
+            // Always restore emulator networking, including after an assertion
+            // failure or coroutine cancellation.
             withContext(NonCancellable) {
                 try {
-                    restoreSwitches(wifiEnabled, dataEnabled)
+                    restoreSwitches(
+                        wifi = wifiEnabled,
+                        data = dataEnabled,
+                    )
                 } finally {
-                    saveReport(tracker, startedAt, passed)
+                    saveReport(
+                        tracker = tracker,
+                        startedAt = startedAt,
+                        passed = passed,
+                    )
                 }
             }
         }
