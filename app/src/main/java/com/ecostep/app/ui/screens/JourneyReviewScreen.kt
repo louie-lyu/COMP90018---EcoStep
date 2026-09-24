@@ -588,45 +588,52 @@ private fun TransportModeSelector(
     selectedMode: TransportMode,
     onModeSelected: (TransportMode) -> Unit,
 ) {
-    val modes = listOf(
+    val firstRowModes = listOf(
         TransportMode.WALKING,
         TransportMode.CYCLING,
+    )
+
+    val secondRowModes = listOf(
         TransportMode.PUBLIC_TRANSPORT,
+        TransportMode.CAR,
     )
 
-    Row(
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        TransportModeButton(
-            mode = modes[0],
-            selected = selectedMode == modes[0],
-            onClick = {
-                onModeSelected(modes[0])
-            },
-            modifier = Modifier.weight(1f),
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            firstRowModes.forEach { mode ->
+                TransportModeButton(
+                    mode = mode,
+                    selected = selectedMode == mode,
+                    onClick = {
+                        onModeSelected(mode)
+                    },
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
 
-        TransportModeButton(
-            mode = modes[1],
-            selected = selectedMode == modes[1],
-            onClick = {
-                onModeSelected(modes[1])
-            },
-            modifier = Modifier.weight(1f),
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            secondRowModes.forEach { mode ->
+                TransportModeButton(
+                    mode = mode,
+                    selected = selectedMode == mode,
+                    onClick = {
+                        onModeSelected(mode)
+                    },
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
     }
-
-    Spacer(modifier = Modifier.height(10.dp))
-
-    TransportModeButton(
-        mode = modes[2],
-        selected = selectedMode == modes[2],
-        onClick = {
-            onModeSelected(modes[2])
-        },
-        modifier = Modifier.fillMaxWidth(),
-    )
 }
 
 @Composable
