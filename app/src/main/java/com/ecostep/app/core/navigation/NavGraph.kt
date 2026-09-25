@@ -87,7 +87,7 @@ fun EcoStepNavHost(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Routes.journeyReview("mock_3"),
+            startDestination = Routes.HOME,
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(Routes.LOGIN) {

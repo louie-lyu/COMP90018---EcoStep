@@ -318,6 +318,7 @@ fun HomeScreen(
                     onViewMission = {
                         onViewMission(mission.missionId)
                     },
+                    onDismiss = viewModel::dismissUpcomingMission,
                 )
             }
         }

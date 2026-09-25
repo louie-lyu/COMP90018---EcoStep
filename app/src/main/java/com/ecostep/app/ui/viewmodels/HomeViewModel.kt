@@ -105,6 +105,15 @@ class HomeViewModel(
         loadUpcomingMission()
     }
 
+    fun dismissUpcomingMission() {
+        _uiState.update {
+            it.copy(upcomingMission = null)
+        }
+
+        // TODO(Missions): Persist dismissal if the reminder should remain hidden
+        // after the app is restarted.
+    }
+
     private fun loadUpcomingMission() {
         viewModelScope.launch {
             // TODO(Missions): Add error handling when this is connected
