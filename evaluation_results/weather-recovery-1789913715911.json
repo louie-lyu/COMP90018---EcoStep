@@ -1,0 +1,24 @@
+{
+  "startedAtMillis": 1789913715911,
+  "passed": true,
+  "records": [
+    {
+      "scenario": "weather.online",
+      "durationMs": 1882.116071,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "scenario": "weather.offline",
+      "durationMs": 6.697715,
+      "outcome": "FAILURE",
+      "errorType": "ConnectException"
+    },
+    {
+      "scenario": "weather.recovered",
+      "durationMs": 1208.945901,
+      "outcome": "SUCCESS",
+      "errorType": null
+    }
+  ]
+}
