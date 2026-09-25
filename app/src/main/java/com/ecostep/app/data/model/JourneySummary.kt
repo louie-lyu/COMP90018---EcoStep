@@ -19,4 +19,6 @@ data class JourneySummary(
     val distanceMeters: Double,
     /** Estimated transport mode, pending user confirmation. */
     val transportMode: TransportMode,
+    /** Aggregated sensor features; absent for manual and pre-v1 journeys. */
+    val sensorFeatures: SensorFeatures? = null,
 )

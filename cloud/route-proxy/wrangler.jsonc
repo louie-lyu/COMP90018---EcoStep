@@ -1,0 +1,10 @@
+{
+  // EcoStep route proxy. The ORS key is NOT here: set it with `npx wrangler secret put ORS_API_KEY`.
+  "name": "ecostep-route-proxy",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-09-01",
+  "vars": {
+    "FIREBASE_PROJECT_ID": "comp90018-cb523"
+  },
+  "observability": { "enabled": true }
+}

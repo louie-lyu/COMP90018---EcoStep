@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 
 data class JourneyReviewUiState(
     val journey: JourneySummary? = null,
@@ -36,6 +37,8 @@ data class JourneyReviewUiState(
 class JourneyReviewViewModel(
     private val journeyRepository: JourneyRepository,
     private val journeyId: String,
+    /** Optional: turns coordinates into place names; coordinates are shown until it returns. */
+    private val placeNameResolver: (suspend (GeoPoint) -> String?)? = null,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -73,6 +76,7 @@ class JourneyReviewViewModel(
                 }
 
                 _uiState.value = journey.toUiState()
+                resolvePlaceNames(journey)
             } catch (exception: Exception) {
                 _uiState.update {
                     it.copy(
@@ -81,6 +85,20 @@ class JourneyReviewViewModel(
                             exception.message ?: "Unable to load journey.",
                     )
                 }
+            }
+        }
+    }
+
+    private fun resolvePlaceNames(journey: JourneySummary) {
+        val resolver = placeNameResolver ?: return
+        viewModelScope.launch {
+            resolver(journey.startLocation)?.let { name ->
+                _uiState.update { it.copy(startLocationText = name) }
+            }
+        }
+        viewModelScope.launch {
+            resolver(journey.endLocation)?.let { name ->
+                _uiState.update { it.copy(endLocationText = name) }
             }
         }
     }
@@ -120,7 +138,8 @@ class JourneyReviewViewModel(
                     transportMode = currentState.selectedMode,
                 )
 
-                journeyRepository.saveJourney(updatedJourney)
+                // Firestore queues offline writes locally, while the Task can wait for the server.
+                withTimeoutOrNull(3_000) { journeyRepository.saveJourney(updatedJourney) }
 
                 _uiState.update {
                     it.copy(
@@ -186,11 +205,18 @@ private fun formatDuration(
     startTimeMillis: Long,
     endTimeMillis: Long,
 ): String {
-    val durationMinutes =
-        ((endTimeMillis - startTimeMillis) / 60_000L)
+    val totalSeconds =
+        ((endTimeMillis - startTimeMillis) / 1_000L)
             .coerceAtLeast(0L)
+    val hours = totalSeconds / 3_600L
+    val minutes = (totalSeconds % 3_600L) / 60L
+    val seconds = totalSeconds % 60L
 
-    return "$durationMinutes min"
+    return when {
+        hours > 0 -> "${hours}h ${minutes}m ${seconds}s"
+        minutes > 0 -> "${minutes}m ${seconds}s"
+        else -> "${seconds}s"
+    }
 }
 
 private fun formatDistance(distanceMeters: Double): String {

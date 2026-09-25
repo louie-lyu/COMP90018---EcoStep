@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -15,13 +16,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.ecostep.app.EcoStepApp
+import com.ecostep.app.auth.LoginRoute
 import com.ecostep.app.core.di.ViewModelFactory
+import com.ecostep.app.sensors.location.PlaceNameResolver
+import com.ecostep.app.sensors.ui.TrackingRoute
+import com.ecostep.app.sensors.ui.TrackingRoutes
+import com.ecostep.app.sensors.ui.TrackingViewModel
 import com.ecostep.app.ui.components.EcoStepBottomBar
-import com.ecostep.app.ui.mock.MockJourneyRepository
 import com.ecostep.app.ui.screens.HistoryScreen
 import com.ecostep.app.ui.screens.HomeScreen
 import com.ecostep.app.ui.screens.JourneyReviewScreen
-import com.ecostep.app.ui.screens.LoginScreen
 import com.ecostep.app.ui.screens.MissionScreen
 import com.ecostep.app.ui.screens.SettingsScreen
 import com.ecostep.app.ui.viewmodels.JourneyReviewViewModel
@@ -30,14 +35,9 @@ import com.ecostep.app.ui.viewmodels.JourneyReviewViewModel
 fun EcoStepNavHost(
     navController: NavHostController = rememberNavController(),
 ) {
-    /*
-     * Temporary UI mock.
-     * Replace this with appContainer.journeyRepository when the
-     * Firebase-backed repository is available.
-     */
-    val mockJourneyRepository = remember {
-        MockJourneyRepository()
-    }
+    val appContainerContext = LocalContext.current.applicationContext
+    val appContainer = (appContainerContext as EcoStepApp).appContainer
+    val placeNameResolver = remember { PlaceNameResolver(appContainerContext) }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -70,11 +70,37 @@ fun EcoStepNavHost(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Routes.journeyReview("mock_3"),
+            startDestination = Routes.LOGIN,
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(Routes.LOGIN) {
-                LoginScreen()
+                LoginRoute(
+                    authRepository = appContainer.authRepository,
+                    onLoginSuccess = {
+                        navController.navigate(TrackingRoutes.TRACKING) {
+                            popUpTo(Routes.LOGIN) {
+                                inclusive = true
+                            }
+                        }
+                    },
+                )
+            }
+
+            composable(TrackingRoutes.TRACKING) {
+                val trackingViewModel: TrackingViewModel = viewModel(
+                    factory = ViewModelFactory {
+                        TrackingViewModel(
+                            context = appContainerContext,
+                            tracker = appContainer.journeyTracker,
+                            authRepository = appContainer.authRepository,
+                            journeyRepository = appContainer.journeyRepository,
+                        )
+                    },
+                )
+                TrackingRoute(
+                    viewModel = trackingViewModel,
+                    onJourneySaved = { id -> navController.navigate(Routes.journeyReview(id)) },
+                )
             }
 
             composable(Routes.HOME) {
@@ -100,8 +126,9 @@ fun EcoStepNavHost(
                     factory = ViewModelFactory {
                         JourneyReviewViewModel(
                             journeyRepository =
-                                mockJourneyRepository,
+                                appContainer.journeyRepository,
                             journeyId = journeyId,
+                            placeNameResolver = placeNameResolver::resolve,
                         )
                     },
                 )

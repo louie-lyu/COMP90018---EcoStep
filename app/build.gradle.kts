@@ -3,9 +3,7 @@ plugins {
     // AGP 9+ has built-in Kotlin support; org.jetbrains.kotlin.android is no longer used.
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
-    // TODO(Zongcheng): apply `alias(libs.plugins.google.services)` here once app/google-services.json
-    // (the real Firebase config file, gitignored) has been added — applying it without that file
-    // present breaks the build for everyone else.
+    alias(libs.plugins.google.services)
 }
 
 android {
