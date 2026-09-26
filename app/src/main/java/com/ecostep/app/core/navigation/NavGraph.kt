@@ -25,11 +25,20 @@ import com.ecostep.app.ui.screens.LoginScreen
 import com.ecostep.app.ui.screens.MissionScreen
 import com.ecostep.app.ui.screens.SettingsScreen
 import com.ecostep.app.ui.viewmodels.JourneyReviewViewModel
+import androidx.compose.ui.platform.LocalContext
+import com.ecostep.app.EcoStepApp
+import com.ecostep.app.ui.viewmodels.HomeViewModel
+import com.ecostep.app.ui.mock.MockHomeRouteDataSource
+import com.ecostep.app.ui.mock.MockHomeMissionDataSource
 
 @Composable
 fun EcoStepNavHost(
     navController: NavHostController = rememberNavController(),
 ) {
+    val application =
+        LocalContext.current.applicationContext as EcoStepApp
+
+    val appContainer = application.appContainer
     /*
      * Temporary UI mock.
      * Replace this with appContainer.journeyRepository when the
@@ -38,6 +47,14 @@ fun EcoStepNavHost(
     val mockJourneyRepository = remember {
         MockJourneyRepository()
     }
+
+    val mockHomeRouteDataSource = remember {
+        MockHomeRouteDataSource()
+    }
+    val mockHomeMissionDataSource = remember {
+        MockHomeMissionDataSource()
+    }
+
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -70,7 +87,7 @@ fun EcoStepNavHost(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Routes.journeyReview("mock_3"),
+            startDestination = Routes.HOME,
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(Routes.LOGIN) {
@@ -78,7 +95,29 @@ fun EcoStepNavHost(
             }
 
             composable(Routes.HOME) {
-                HomeScreen()
+                val homeViewModel: HomeViewModel = viewModel(
+                    factory = ViewModelFactory {
+                        HomeViewModel(
+                            externalDataRepository =
+                                appContainer.externalDataRepository,
+                            homeRouteDataSource =
+                                mockHomeRouteDataSource,
+                                mockHomeMissionDataSource,
+                        )
+                    },
+                )
+
+                HomeScreen(
+                    viewModel = homeViewModel,
+                    onStartMission = { _ ->
+                        // TODO(Missions/Navigation): Start the selected mission
+                        // when the mission navigation flow is available.
+                    },
+                    onViewMission = { _ ->
+                        // TODO(Missions/Navigation): Open the selected mission details
+                        // when the mission detail route is available.
+                    },
+                )
             }
 
             composable(
