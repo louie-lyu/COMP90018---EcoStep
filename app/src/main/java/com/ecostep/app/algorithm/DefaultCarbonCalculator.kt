@@ -11,8 +11,11 @@ class DefaultCarbonCalculator(
 ) : CarbonCalculator {
 
     override fun calculate(journey: JourneySummary): CarbonResult {
-        require(journey.distanceMeters >= 0) {
-            "Journey distance cannot be negative."
+        require(
+            journey.distanceMeters.isFinite() &&
+                journey.distanceMeters >= 0.0,
+        ) {
+            "Journey distance must be finite and non-negative."
         }
 
         val distanceKm = journey.distanceMeters / 1000.0
