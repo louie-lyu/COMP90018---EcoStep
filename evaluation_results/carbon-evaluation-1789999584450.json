@@ -1,0 +1,1120 @@
+{
+  "schemaVersion": 1,
+  "calculator": "DefaultCarbonCalculator",
+  "startedAtMillis": 1789999584450,
+  "finishedAtMillis": 1789999584456,
+  "device": "Google sdk_gphone64_x86_64; Android 16",
+  "scope": "Correctness with provisional factors: WALKING=0, CYCLING=0, PUBLIC_TRANSPORT=89, CAR=192 g\/km. Not validation of real-world emissions or a latency benchmark.",
+  "nonFiniteEncoding": "NaN and infinities are strings because JSON numbers must be finite.",
+  "totalCases": 56,
+  "passedCases": 51,
+  "failedCases": 5,
+  "passed": false,
+  "records": [
+    {
+      "scenario": "reference",
+      "mode": "WALKING",
+      "distanceMeters": 10000,
+      "expected": "Emissions=0.0 g; savings={} g",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "reference",
+      "mode": "CYCLING",
+      "distanceMeters": 10000,
+      "expected": "Emissions=0.0 g; savings={} g",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "reference",
+      "mode": "PUBLIC_TRANSPORT",
+      "distanceMeters": 10000,
+      "expected": "Emissions=890.0 g; savings={WALKING=890.0, CYCLING=890.0} g",
+      "actual": {
+        "result": {
+          "emissionsGrams": 890,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 890
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 890
+            }
+          ]
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "reference",
+      "mode": "CAR",
+      "distanceMeters": 10000,
+      "expected": "Emissions=1920.0 g; savings={WALKING=1920.0, CYCLING=1920.0, PUBLIC_TRANSPORT=1030.0} g",
+      "actual": {
+        "result": {
+          "emissionsGrams": 1920,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 1920
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 1920
+            },
+            {
+              "mode": "PUBLIC_TRANSPORT",
+              "savingsGrams": 1030
+            }
+          ]
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "reference",
+      "mode": "UNKNOWN",
+      "distanceMeters": 10000,
+      "expected": "Emissions=0.0 g; savings={} g",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "reference",
+      "mode": "CAR",
+      "distanceMeters": 1250.5,
+      "expected": "Emissions=240.096 g; savings={WALKING=240.096, CYCLING=240.096, PUBLIC_TRANSPORT=128.8015} g",
+      "actual": {
+        "result": {
+          "emissionsGrams": 240.096,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 240.096
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 240.096
+            },
+            {
+              "mode": "PUBLIC_TRANSPORT",
+              "savingsGrams": 128.8015
+            }
+          ]
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "reference",
+      "mode": "PUBLIC_TRANSPORT",
+      "distanceMeters": 1250.5,
+      "expected": "Emissions=111.2945 g; savings={WALKING=111.2945, CYCLING=111.2945} g",
+      "actual": {
+        "result": {
+          "emissionsGrams": 111.2945,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 111.2945
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 111.2945
+            }
+          ]
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "zero_distance",
+      "mode": "WALKING",
+      "distanceMeters": 0,
+      "expected": "Zero emissions and zero savings",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "WALKING",
+      "distanceMeters": -1,
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "exception": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "WALKING",
+      "distanceMeters": "NaN",
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "exception": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "WALKING",
+      "distanceMeters": "-Infinity",
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "exception": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "WALKING",
+      "distanceMeters": "Infinity",
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "result": {
+          "emissionsGrams": "NaN",
+          "alternatives": []
+        }
+      },
+      "passed": false,
+      "errorType": "IllegalStateException",
+      "error": "Invalid distance was accepted"
+    },
+    {
+      "scenario": "zero_distance",
+      "mode": "CYCLING",
+      "distanceMeters": 0,
+      "expected": "Zero emissions and zero savings",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "CYCLING",
+      "distanceMeters": -1,
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "exception": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "CYCLING",
+      "distanceMeters": "NaN",
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "exception": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "CYCLING",
+      "distanceMeters": "-Infinity",
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "exception": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "CYCLING",
+      "distanceMeters": "Infinity",
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "result": {
+          "emissionsGrams": "NaN",
+          "alternatives": []
+        }
+      },
+      "passed": false,
+      "errorType": "IllegalStateException",
+      "error": "Invalid distance was accepted"
+    },
+    {
+      "scenario": "zero_distance",
+      "mode": "PUBLIC_TRANSPORT",
+      "distanceMeters": 0,
+      "expected": "Zero emissions and zero savings",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 0
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 0
+            }
+          ]
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "PUBLIC_TRANSPORT",
+      "distanceMeters": -1,
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "exception": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "PUBLIC_TRANSPORT",
+      "distanceMeters": "NaN",
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "exception": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "PUBLIC_TRANSPORT",
+      "distanceMeters": "-Infinity",
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "exception": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "PUBLIC_TRANSPORT",
+      "distanceMeters": "Infinity",
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "result": {
+          "emissionsGrams": "Infinity",
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": "NaN"
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": "NaN"
+            }
+          ]
+        }
+      },
+      "passed": false,
+      "errorType": "IllegalStateException",
+      "error": "Invalid distance was accepted"
+    },
+    {
+      "scenario": "zero_distance",
+      "mode": "CAR",
+      "distanceMeters": 0,
+      "expected": "Zero emissions and zero savings",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 0
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 0
+            },
+            {
+              "mode": "PUBLIC_TRANSPORT",
+              "savingsGrams": 0
+            }
+          ]
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "CAR",
+      "distanceMeters": -1,
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "exception": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "CAR",
+      "distanceMeters": "NaN",
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "exception": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "CAR",
+      "distanceMeters": "-Infinity",
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "exception": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "CAR",
+      "distanceMeters": "Infinity",
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "result": {
+          "emissionsGrams": "Infinity",
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": "NaN"
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": "NaN"
+            },
+            {
+              "mode": "PUBLIC_TRANSPORT",
+              "savingsGrams": "NaN"
+            }
+          ]
+        }
+      },
+      "passed": false,
+      "errorType": "IllegalStateException",
+      "error": "Invalid distance was accepted"
+    },
+    {
+      "scenario": "zero_distance",
+      "mode": "UNKNOWN",
+      "distanceMeters": 0,
+      "expected": "Zero emissions and zero savings",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "UNKNOWN",
+      "distanceMeters": -1,
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "exception": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "UNKNOWN",
+      "distanceMeters": "NaN",
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "exception": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "UNKNOWN",
+      "distanceMeters": "-Infinity",
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "exception": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_distance",
+      "mode": "UNKNOWN",
+      "distanceMeters": "Infinity",
+      "expected": "Reject with IllegalArgumentException",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": false,
+      "errorType": "IllegalStateException",
+      "error": "Invalid distance was accepted"
+    },
+    {
+      "scenario": "large_finite_distance",
+      "mode": "WALKING",
+      "distanceMeters": 1.7976931348623157E308,
+      "expected": "Finite nonnegative emissions; savings within emissions",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "distance_scaling",
+      "mode": "WALKING",
+      "distanceMeters": 1250.5,
+      "expected": "Emissions and savings scale with distance by 2 and 10",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        },
+        "scaled_2.0": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        },
+        "scaled_10.0": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "savings_consistency",
+      "mode": "WALKING",
+      "distanceMeters": 0.001,
+      "expected": "Unique alternatives; 0 <= savings <= emissions; savings = original - alternative",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "savings_consistency",
+      "mode": "WALKING",
+      "distanceMeters": 1,
+      "expected": "Unique alternatives; 0 <= savings <= emissions; savings = original - alternative",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "savings_consistency",
+      "mode": "WALKING",
+      "distanceMeters": 1250.5,
+      "expected": "Unique alternatives; 0 <= savings <= emissions; savings = original - alternative",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "savings_consistency",
+      "mode": "WALKING",
+      "distanceMeters": 1000000000,
+      "expected": "Unique alternatives; 0 <= savings <= emissions; savings = original - alternative",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "large_finite_distance",
+      "mode": "CYCLING",
+      "distanceMeters": 1.7976931348623157E308,
+      "expected": "Finite nonnegative emissions; savings within emissions",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "distance_scaling",
+      "mode": "CYCLING",
+      "distanceMeters": 1250.5,
+      "expected": "Emissions and savings scale with distance by 2 and 10",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        },
+        "scaled_2.0": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        },
+        "scaled_10.0": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "savings_consistency",
+      "mode": "CYCLING",
+      "distanceMeters": 0.001,
+      "expected": "Unique alternatives; 0 <= savings <= emissions; savings = original - alternative",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "savings_consistency",
+      "mode": "CYCLING",
+      "distanceMeters": 1,
+      "expected": "Unique alternatives; 0 <= savings <= emissions; savings = original - alternative",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "savings_consistency",
+      "mode": "CYCLING",
+      "distanceMeters": 1250.5,
+      "expected": "Unique alternatives; 0 <= savings <= emissions; savings = original - alternative",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "savings_consistency",
+      "mode": "CYCLING",
+      "distanceMeters": 1000000000,
+      "expected": "Unique alternatives; 0 <= savings <= emissions; savings = original - alternative",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "large_finite_distance",
+      "mode": "PUBLIC_TRANSPORT",
+      "distanceMeters": 1.7976931348623157E308,
+      "expected": "Finite nonnegative emissions; savings within emissions",
+      "actual": {
+        "result": {
+          "emissionsGrams": 1.5999468900274608E307,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 1.5999468900274608E307
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 1.5999468900274608E307
+            }
+          ]
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "distance_scaling",
+      "mode": "PUBLIC_TRANSPORT",
+      "distanceMeters": 1250.5,
+      "expected": "Emissions and savings scale with distance by 2 and 10",
+      "actual": {
+        "result": {
+          "emissionsGrams": 111.2945,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 111.2945
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 111.2945
+            }
+          ]
+        },
+        "scaled_2.0": {
+          "emissionsGrams": 222.589,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 222.589
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 222.589
+            }
+          ]
+        },
+        "scaled_10.0": {
+          "emissionsGrams": 1112.9450000000002,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 1112.9450000000002
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 1112.9450000000002
+            }
+          ]
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "savings_consistency",
+      "mode": "PUBLIC_TRANSPORT",
+      "distanceMeters": 0.001,
+      "expected": "Unique alternatives; 0 <= savings <= emissions; savings = original - alternative",
+      "actual": {
+        "result": {
+          "emissionsGrams": 8.9E-5,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 8.9E-5
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 8.9E-5
+            }
+          ]
+        },
+        "WALKING": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        },
+        "CYCLING": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "savings_consistency",
+      "mode": "PUBLIC_TRANSPORT",
+      "distanceMeters": 1,
+      "expected": "Unique alternatives; 0 <= savings <= emissions; savings = original - alternative",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0.089,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 0.089
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 0.089
+            }
+          ]
+        },
+        "WALKING": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        },
+        "CYCLING": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "savings_consistency",
+      "mode": "PUBLIC_TRANSPORT",
+      "distanceMeters": 1250.5,
+      "expected": "Unique alternatives; 0 <= savings <= emissions; savings = original - alternative",
+      "actual": {
+        "result": {
+          "emissionsGrams": 111.2945,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 111.2945
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 111.2945
+            }
+          ]
+        },
+        "WALKING": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        },
+        "CYCLING": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "savings_consistency",
+      "mode": "PUBLIC_TRANSPORT",
+      "distanceMeters": 1000000000,
+      "expected": "Unique alternatives; 0 <= savings <= emissions; savings = original - alternative",
+      "actual": {
+        "result": {
+          "emissionsGrams": 89000000,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 89000000
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 89000000
+            }
+          ]
+        },
+        "WALKING": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        },
+        "CYCLING": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "large_finite_distance",
+      "mode": "CAR",
+      "distanceMeters": 1.7976931348623157E308,
+      "expected": "Finite nonnegative emissions; savings within emissions",
+      "actual": {
+        "result": {
+          "emissionsGrams": 3.4515708189356456E307,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 3.4515708189356456E307
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 3.4515708189356456E307
+            },
+            {
+              "mode": "PUBLIC_TRANSPORT",
+              "savingsGrams": 1.8516239289081848E307
+            }
+          ]
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "distance_scaling",
+      "mode": "CAR",
+      "distanceMeters": 1250.5,
+      "expected": "Emissions and savings scale with distance by 2 and 10",
+      "actual": {
+        "result": {
+          "emissionsGrams": 240.096,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 240.096
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 240.096
+            },
+            {
+              "mode": "PUBLIC_TRANSPORT",
+              "savingsGrams": 128.8015
+            }
+          ]
+        },
+        "scaled_2.0": {
+          "emissionsGrams": 480.192,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 480.192
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 480.192
+            },
+            {
+              "mode": "PUBLIC_TRANSPORT",
+              "savingsGrams": 257.603
+            }
+          ]
+        },
+        "scaled_10.0": {
+          "emissionsGrams": 2400.96,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 2400.96
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 2400.96
+            },
+            {
+              "mode": "PUBLIC_TRANSPORT",
+              "savingsGrams": 1288.0149999999999
+            }
+          ]
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "savings_consistency",
+      "mode": "CAR",
+      "distanceMeters": 0.001,
+      "expected": "Unique alternatives; 0 <= savings <= emissions; savings = original - alternative",
+      "actual": {
+        "result": {
+          "emissionsGrams": 1.92E-4,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 1.92E-4
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 1.92E-4
+            },
+            {
+              "mode": "PUBLIC_TRANSPORT",
+              "savingsGrams": 1.0300000000000001E-4
+            }
+          ]
+        },
+        "WALKING": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        },
+        "CYCLING": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        },
+        "PUBLIC_TRANSPORT": {
+          "emissionsGrams": 8.9E-5,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 8.9E-5
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 8.9E-5
+            }
+          ]
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "savings_consistency",
+      "mode": "CAR",
+      "distanceMeters": 1,
+      "expected": "Unique alternatives; 0 <= savings <= emissions; savings = original - alternative",
+      "actual": {
+        "result": {
+          "emissionsGrams": 0.192,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 0.192
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 0.192
+            },
+            {
+              "mode": "PUBLIC_TRANSPORT",
+              "savingsGrams": 0.10300000000000001
+            }
+          ]
+        },
+        "WALKING": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        },
+        "CYCLING": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        },
+        "PUBLIC_TRANSPORT": {
+          "emissionsGrams": 0.089,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 0.089
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 0.089
+            }
+          ]
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "savings_consistency",
+      "mode": "CAR",
+      "distanceMeters": 1250.5,
+      "expected": "Unique alternatives; 0 <= savings <= emissions; savings = original - alternative",
+      "actual": {
+        "result": {
+          "emissionsGrams": 240.096,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 240.096
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 240.096
+            },
+            {
+              "mode": "PUBLIC_TRANSPORT",
+              "savingsGrams": 128.8015
+            }
+          ]
+        },
+        "WALKING": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        },
+        "CYCLING": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        },
+        "PUBLIC_TRANSPORT": {
+          "emissionsGrams": 111.2945,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 111.2945
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 111.2945
+            }
+          ]
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "savings_consistency",
+      "mode": "CAR",
+      "distanceMeters": 1000000000,
+      "expected": "Unique alternatives; 0 <= savings <= emissions; savings = original - alternative",
+      "actual": {
+        "result": {
+          "emissionsGrams": 192000000,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 192000000
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 192000000
+            },
+            {
+              "mode": "PUBLIC_TRANSPORT",
+              "savingsGrams": 103000000
+            }
+          ]
+        },
+        "WALKING": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        },
+        "CYCLING": {
+          "emissionsGrams": 0,
+          "alternatives": []
+        },
+        "PUBLIC_TRANSPORT": {
+          "emissionsGrams": 89000000,
+          "alternatives": [
+            {
+              "mode": "WALKING",
+              "savingsGrams": 89000000
+            },
+            {
+              "mode": "CYCLING",
+              "savingsGrams": 89000000
+            }
+          ]
+        }
+      },
+      "passed": true
+    }
+  ]
+}
