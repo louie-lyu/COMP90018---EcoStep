@@ -48,6 +48,7 @@ import com.ecostep.app.ui.viewmodels.HomeViewModel
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.rotate
 import com.ecostep.app.ui.components.UpcomingMissionCard
+import com.ecostep.app.ui.viewmodels.JourneyTrackingState
 
 @Composable
 fun HomeScreen(
@@ -201,9 +202,58 @@ fun HomeScreen(
                 exit = fadeOut(),
             ) {
                 selectedOption?.let { option ->
-                    RouteImpactChips(
-                        option = option,
-                    )
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        RouteImpactChips(
+                            option = option,
+                        )
+
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(16.dp),
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            shadowElevation = 2.dp,
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(
+                                    horizontal = 14.dp,
+                                    vertical = 10.dp,
+                                ),
+                                verticalArrangement = Arrangement.spacedBy(2.dp),
+                            ) {
+                                Text(
+                                    text =
+                                        if (
+                                            uiState.journeyTrackingState ==
+                                            JourneyTrackingState.IN_PROGRESS
+                                        ) {
+                                            "Journey in progress"
+                                        } else {
+                                            "Ready to go"
+                                        },
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color =
+                                        MaterialTheme.colorScheme.onPrimaryContainer,
+                                )
+                                Text(
+                                    text =
+                                        if (
+                                            uiState.journeyTrackingState ==
+                                            JourneyTrackingState.IN_PROGRESS
+                                        ) {
+                                            "Your journey is being tracked automatically."
+                                        } else {
+                                            "Trip tracking will start automatically " +
+                                                    "when you begin moving."
+                                        },
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color =
+                                        MaterialTheme.colorScheme.onPrimaryContainer,
+                                )
+                            }
+                        }
+                    }
                 }
             }
 
@@ -258,7 +308,7 @@ fun HomeScreen(
 
         AnimatedVisibility(
             visible =
-                uiState.isRouteCardVisible &&
+                uiState.isRoutePlannerVisible &&
                         !uiState.isDirectionsConfirmed,
             modifier = Modifier.align(Alignment.BottomCenter),
             enter = slideInVertically(
@@ -273,6 +323,12 @@ fun HomeScreen(
             ) + fadeOut(),
         ) {
             RouteSelectionCard(
+                startLocation = uiState.startLocation,
+                destination = uiState.destination,
+                onStartLocationChange = viewModel::updateStartLocation,
+                onDestinationChange = viewModel::updateDestination,
+                onFindRoutes = viewModel::findRoutes,
+
                 routeOptions = uiState.routeOptions,
                 selectedOption = selectedOption,
                 isDirectionsConfirmed =
@@ -294,10 +350,7 @@ fun HomeScreen(
         AnimatedVisibility(
             visible =
                 uiState.shouldShowMissionCard &&
-                        !(
-                                uiState.isRouteCardVisible &&
-                                        !uiState.isDirectionsConfirmed
-                                ),
+                        !uiState.isRoutePlannerVisible,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(12.dp),
@@ -589,6 +642,11 @@ private fun WeatherChip(
 
 @Composable
 private fun RouteSelectionCard(
+    startLocation: String,
+    destination: String,
+    onStartLocationChange: (String) -> Unit,
+    onDestinationChange: (String) -> Unit,
+    onFindRoutes: () -> Unit,
     routeOptions: List<HomeRouteOption>,
     selectedOption: HomeRouteOption?,
     isDirectionsConfirmed: Boolean,
@@ -610,33 +668,83 @@ private fun RouteSelectionCard(
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             Text(
+                text = "Plan your route",
+                style = MaterialTheme.typography.titleMedium,
+            )
+
+            OutlinedTextField(
+                value = startLocation,
+                onValueChange = onStartLocationChange,
+                modifier = Modifier.fillMaxWidth(),
+                label = {
+                    Text("Starting point")
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                ),
+            )
+
+            OutlinedTextField(
+                value = destination,
+                onValueChange = onDestinationChange,
+                modifier = Modifier.fillMaxWidth(),
+                label = {
+                    Text("Destination")
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search,
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        onFindRoutes()
+                    },
+                ),
+            )
+
+            Text(
                 text = "Choose how to travel",
                 style = MaterialTheme.typography.titleMedium,
             )
 
-            routeOptions.chunked(2).forEach { optionRow ->
+            val displayedModes =
+                listOf(
+                    TransportMode.WALKING,
+                    TransportMode.CYCLING,
+                    TransportMode.PUBLIC_TRANSPORT,
+                    TransportMode.CAR,
+                )
+
+            val displayedRouteOptions =
+                displayedModes.map { mode ->
+                    mode to routeOptions.firstOrNull { option ->
+                        option.route.mode == mode
+                    }
+                }
+
+            displayedRouteOptions.chunked(2).forEach { modeRow ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement =
-                        Arrangement.spacedBy(10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
-                    optionRow.forEach { option ->
+                    modeRow.forEach { (mode, option) ->
                         RouteModeButton(
                             option = option,
+                            mode = mode,
                             isSelected =
-                                option.route.mode ==
+                                option != null &&
+                                        option.route.mode ==
                                         selectedOption?.route?.mode,
                             onClick = {
-                                onRouteSelected(option)
+                                option?.let(onRouteSelected)
                             },
                             modifier = Modifier.weight(1f),
                         )
                     }
 
-                    if (optionRow.size == 1) {
-                        Spacer(
-                            modifier = Modifier.weight(1f),
-                        )
+                    if (modeRow.size == 1) {
+                        Spacer(modifier = Modifier.weight(1f))
                     }
                 }
             }
@@ -657,7 +765,7 @@ private fun RouteSelectionCard(
                 enabled = selectedOption != null,
             ) {
                 Text(
-                    text = "Directions"
+                    text = "Show route"
                 )
             }
         }
@@ -666,27 +774,48 @@ private fun RouteSelectionCard(
 
 @Composable
 private fun RouteModeButton(
-    option: HomeRouteOption,
+    option: HomeRouteOption?,
+    mode: TransportMode =
+        option?.route?.mode ?: TransportMode.UNKNOWN,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val isAvailable = option != null
+
     val containerColor =
-        if (isSelected) {
-            MaterialTheme.colorScheme.primaryContainer
-        } else {
-            MaterialTheme.colorScheme.surface
+        when {
+            !isAvailable ->
+                MaterialTheme.colorScheme.surfaceVariant
+            isSelected ->
+                MaterialTheme.colorScheme.primaryContainer
+            else ->
+                MaterialTheme.colorScheme.surface
         }
 
     val borderColor =
-        if (isSelected) {
-            MaterialTheme.colorScheme.primary
+        when {
+            !isAvailable ->
+                MaterialTheme.colorScheme.outlineVariant
+            isSelected ->
+                MaterialTheme.colorScheme.primary
+            else ->
+                MaterialTheme.colorScheme.outlineVariant
+        }
+
+    val contentColor =
+        if (isAvailable) {
+            MaterialTheme.colorScheme.onSurface
         } else {
-            MaterialTheme.colorScheme.outlineVariant
+            MaterialTheme.colorScheme.onSurfaceVariant
         }
 
     Surface(
-        modifier = modifier.clickable(onClick = onClick),
+        modifier =
+            modifier.clickable(
+                enabled = isAvailable,
+                onClick = onClick,
+            ),
         shape = RoundedCornerShape(14.dp),
         color = containerColor,
         border = BorderStroke(
@@ -699,18 +828,18 @@ private fun RouteModeButton(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
-                text =
-                    transportModeName(option.route.mode),
+                text = transportModeName(mode),
                 style = MaterialTheme.typography.titleMedium,
+                color = contentColor,
             )
 
             Text(
-                text = durationText(
-                    option.route.durationSeconds,
-                ),
+                text =
+                    option?.let {
+                        durationText(it.route.durationSeconds)
+                    } ?: "No route available",
                 style = MaterialTheme.typography.bodyMedium,
-                color =
-                    MaterialTheme.colorScheme.onSurfaceVariant,
+                color = contentColor,
             )
         }
     }

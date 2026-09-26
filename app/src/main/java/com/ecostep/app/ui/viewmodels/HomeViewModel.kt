@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 import com.ecostep.app.ui.mock.HomeMissionDataSource
 
+
 /*
  * Temporary location used until the location module provides
  * the user's live location.
@@ -42,8 +43,19 @@ data class UpcomingMissionUi(
     val estimatedEcoPoints: Int,
 )
 
+// TODO(Tracking): Connect these UI states to the sensor and
+// journey-tracking module when automatic movement detection is available.
+enum class JourneyTrackingState {
+    READY,
+    IN_PROGRESS,
+}
+
 data class HomeUiState(
+    val startLocation: String = "Current location",
     val destination: String = "",
+    val isRoutePlannerVisible: Boolean = false,
+    // TODO(Location): Replace the mock Melbourne location with the user's
+    // live GPS location from the location-tracking module.
     val currentLocation: GeoPoint = MELBOURNE_LOCATION,
     val weather: WeatherData? = null,
     val isWeatherLoading: Boolean = false,
@@ -53,6 +65,8 @@ data class HomeUiState(
     val isRouteLoading: Boolean = false,
     val routeErrorMessage: String? = null,
     val isDirectionsConfirmed: Boolean = false,
+    val journeyTrackingState: JourneyTrackingState =
+        JourneyTrackingState.READY,
     // TODO(Missions): Populate this from the mission data source
     //// when the mission module exposes scheduled mission data.
     val upcomingMission: UpcomingMissionUi? = null,
@@ -137,6 +151,18 @@ class HomeViewModel(
         }
     }
 
+    fun updateStartLocation(startLocation: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                startLocation = startLocation,
+                routeOptions = emptyList(),
+                selectedMode = null,
+                routeErrorMessage = null,
+                isDirectionsConfirmed = false,
+            )
+        }
+    }
+
     fun updateDestination(destination: String) {
         _uiState.update { currentState ->
             currentState.copy(
@@ -148,6 +174,7 @@ class HomeViewModel(
             )
         }
     }
+
 
     fun findRoutes() {
         if (_uiState.value.destination.isBlank()) {
@@ -185,6 +212,7 @@ class HomeViewModel(
                     currentState.copy(
                         routeOptions = routeOptions,
                         selectedMode = defaultMode,
+                        isRoutePlannerVisible = routeOptions.isNotEmpty(),
                         isRouteLoading = false,
                         routeErrorMessage = if (
                             routeOptions.isEmpty()
@@ -226,6 +254,8 @@ class HomeViewModel(
         _uiState.update { currentState ->
             currentState.copy(
                 isDirectionsConfirmed = true,
+                isRoutePlannerVisible = false,
+                journeyTrackingState = JourneyTrackingState.READY,
             )
         }
     }
