@@ -8,14 +8,36 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
+
 /**
- * Temporary repository used by the UI module while the Firebase-backed
- * JourneyRepository implementation is still being developed.
+ * Creates a JourneySummary when an active mission ends.
  *
- * Replace this class with the repository provided through AppContainer
- * when the production implementation is available.
+ * TODO(Tracking):
+ * Replace this interface with the journey-tracking module's verified
+ * journey result when live sensor and location tracking are available.
  */
-class MockJourneyRepository : JourneyRepository {
+interface MissionJourneyRecorder {
+    suspend fun createPartialJourney(
+        mission: MissionPageItem,
+    ): String
+}
+
+/**
+ * Shared temporary in-memory repository used by the UI while the
+ * Firebase-backed JourneyRepository is unavailable.
+ *
+ * It supplies mock journey history and temporarily stores journeys created
+ * when an active mission ends, allowing JourneyReviewScreen to load them.
+ *
+ * TODO(Journeys): Replace this class with the production JourneyRepository
+ * provided through AppContainer. The production implementation should save
+ * completed or partially completed journeys to Firebase using the signed-in
+ * user's ID and real sensor/location tracking data.
+ */
+
+class MockJourneyRepository :
+    JourneyRepository,
+    MissionJourneyRecorder {
 
     private val journeys = MutableStateFlow(
         listOf(
@@ -104,4 +126,64 @@ class MockJourneyRepository : JourneyRepository {
 
         journeys.value = currentJourneys
     }
+
+    override suspend fun createPartialJourney(
+        mission: MissionPageItem,
+    ): String {
+        val currentTimeMillis = System.currentTimeMillis()
+        val journeyId = "partial_mission_$currentTimeMillis"
+
+        /*
+         * Temporary partial journey used only for the UI prototype.
+         *
+         * TODO(Tracking):
+         * Replace the mock coordinates, duration and distance with verified
+         * values from the sensor and location-tracking modules.
+         */
+        val partialJourney = JourneySummary(
+            journeyId = journeyId,
+            userId = "mock_user",
+            startLocation = GeoPoint(
+                latitude = -37.8136,
+                longitude = 144.9631,
+            ),
+            endLocation = GeoPoint(
+                latitude = -37.8200,
+                longitude = 144.9700,
+            ),
+            startTimeMillis =
+                currentTimeMillis - 10 * 60_000L,
+            endTimeMillis = currentTimeMillis,
+            distanceMeters = 1500.0,
+            // The mission mode is the user's planned transport mode,
+            // not a sensor-verified result.
+            // TODO(Tracking): Replace it with the transport mode detected
+            // by sensors and confirmed by the user during journey review.
+            transportMode =
+                mission.mission.transportLabel
+                    .toTransportMode(),
+        )
+
+        saveJourney(partialJourney)
+
+        return journeyId
+    }
 }
+
+private fun String.toTransportMode(): TransportMode =
+    when (trim().lowercase()) {
+        "walking", "walk" ->
+            TransportMode.WALKING
+
+        "cycling", "cycle", "bike", "bicycle" ->
+            TransportMode.CYCLING
+
+        "public transport", "public_transport" ->
+            TransportMode.PUBLIC_TRANSPORT
+
+        "car", "driving" ->
+            TransportMode.CAR
+
+        else ->
+            TransportMode.UNKNOWN
+    }
