@@ -40,6 +40,7 @@ import com.ecostep.app.ui.viewmodels.RewardsViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.ecostep.app.ui.mock.RewardRedemptionStatus
 
 @Composable
 fun RewardsScreen(
@@ -81,6 +82,16 @@ fun RewardsScreen(
                     Text("My Rewards")
                 },
             )
+
+            Tab(
+                selected = selectedTabIndex == 2,
+                onClick = {
+                    selectedTabIndex = 2
+                },
+                text = {
+                    Text("History")
+                },
+            )
         }
 
         when {
@@ -96,9 +107,15 @@ fun RewardsScreen(
                 )
             }
 
-            else -> {
+            selectedTabIndex == 1 -> {
                 RedeemedRewardsContent(
-                    rewards = uiState.redeemedRewards,
+                    rewards = uiState.activeRedeemedRewards,
+                )
+            }
+
+            else -> {
+                RewardHistoryContent(
+                    rewards = uiState.rewardHistory,
                 )
             }
         }
@@ -498,6 +515,161 @@ private fun RedeemedRewardCard(
         }
     }
 }
+
+@Composable
+private fun RewardHistoryContent(
+    rewards: List<RedeemedReward>,
+) {
+    if (rewards.isEmpty()) {
+        RewardsEmptyState(
+            title = "No reward history",
+            message =
+                "Used and expired rewards will appear here.",
+        )
+        return
+    }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding =
+            androidx.compose.foundation.layout.PaddingValues(
+                horizontal = 18.dp,
+                vertical = 16.dp,
+            ),
+        verticalArrangement =
+            Arrangement.spacedBy(12.dp),
+    ) {
+        item {
+            Text(
+                text = "Reward history",
+                style =
+                    MaterialTheme.typography.headlineMedium,
+            )
+        }
+
+        items(
+            items = rewards,
+            key = { reward ->
+                reward.redemptionId
+            },
+        ) { redeemedReward ->
+            RewardHistoryCard(
+                redeemedReward = redeemedReward,
+            )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+    }
+}
+
+@Composable
+private fun RewardHistoryCard(
+    redeemedReward: RedeemedReward,
+) {
+    val status = redeemedReward.statusAt(
+        currentTimeMillis = System.currentTimeMillis(),
+    )
+
+    val statusLabel =
+        when (status) {
+            RewardRedemptionStatus.USED ->
+                "Used"
+
+            RewardRedemptionStatus.EXPIRED ->
+                "Expired"
+
+            RewardRedemptionStatus.AVAILABLE ->
+                "Available"
+        }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor =
+                MaterialTheme.colorScheme.surfaceVariant,
+        ),
+    ) {
+        Column(
+            modifier = Modifier.padding(18.dp),
+            verticalArrangement =
+                Arrangement.spacedBy(8.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement =
+                    Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = redeemedReward.reward.merchantName,
+                    style =
+                        MaterialTheme.typography.labelLarge,
+                    color =
+                        MaterialTheme.colorScheme
+                            .onSurfaceVariant,
+                )
+
+                Surface(
+                    color =
+                        MaterialTheme.colorScheme
+                            .surfaceContainerHighest,
+                    shape = MaterialTheme.shapes.large,
+                ) {
+                    Text(
+                        text = statusLabel,
+                        modifier = Modifier.padding(
+                            horizontal = 12.dp,
+                            vertical = 6.dp,
+                        ),
+                        style =
+                            MaterialTheme.typography.labelMedium,
+                        color =
+                            MaterialTheme.colorScheme
+                                .onSurfaceVariant,
+                    )
+                }
+            }
+
+            Text(
+                text = redeemedReward.reward.title,
+                style = MaterialTheme.typography.titleMedium,
+                color =
+                    MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+
+            Text(
+                text =
+                    "Redeemed ${formatRewardDate(redeemedReward.redeemedAtMillis)}",
+                style = MaterialTheme.typography.bodyMedium,
+                color =
+                    MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+
+            redeemedReward.expiresAtMillis?.let {
+                Text(
+                    text =
+                        "Expiry date: ${formatRewardDate(it)}",
+                    style =
+                        MaterialTheme.typography.bodyMedium,
+                    color =
+                        MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
+            Text(
+                text =
+                    "Code: ${redeemedReward.redemptionCode}",
+                style = MaterialTheme.typography.labelLarge,
+                color =
+                    MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+
 
 @Composable
 private fun RewardsEmptyState(

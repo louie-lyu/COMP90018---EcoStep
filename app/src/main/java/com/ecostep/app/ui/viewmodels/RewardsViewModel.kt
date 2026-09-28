@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ecostep.app.ui.mock.MockRewardsDataSource
 import com.ecostep.app.ui.mock.RedeemedReward
 import com.ecostep.app.ui.mock.RewardOffer
+import com.ecostep.app.ui.mock.RewardRedemptionStatus
 import com.ecostep.app.ui.mock.RewardsDataSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 data class RewardsUiState(
     val pointsBalance: Int = 0,
     val availableRewards: List<RewardOffer> = emptyList(),
-    val redeemedRewards: List<RedeemedReward> = emptyList(),
+    val activeRedeemedRewards: List<RedeemedReward> = emptyList(),
+    val rewardHistory: List<RedeemedReward> = emptyList(),
     val selectedReward: RewardOffer? = null,
     val recentlyRedeemedReward: RedeemedReward? = null,
     val isLoading: Boolean = true,
@@ -51,13 +53,29 @@ class RewardsViewModel(
                 val rewardsData =
                     rewardsDataSource.getRewardsData()
 
+                val currentTimeMillis =
+                    System.currentTimeMillis()
+
+                val activeRedeemedRewards =
+                    rewardsData.redeemedRewards.filter { redeemedReward ->
+                        redeemedReward.statusAt(currentTimeMillis) ==
+                                RewardRedemptionStatus.AVAILABLE
+                    }
+
+                val rewardHistory =
+                    rewardsData.redeemedRewards.filter { redeemedReward ->
+                        redeemedReward.statusAt(currentTimeMillis) !=
+                                RewardRedemptionStatus.AVAILABLE
+                    }
+
                 _uiState.update {
                     it.copy(
                         pointsBalance = rewardsData.pointsBalance,
                         availableRewards =
                             rewardsData.availableRewards,
-                        redeemedRewards =
-                            rewardsData.redeemedRewards,
+                        activeRedeemedRewards =
+                            activeRedeemedRewards,
+                        rewardHistory = rewardHistory,
                         isLoading = false,
                     )
                 }
@@ -112,12 +130,13 @@ class RewardsViewModel(
          * Temporary in-memory redemption used for the UI prototype.
          *
          * TODO(Rewards):
-         * Replace this block with a secure redemption request through
-         * RewardsRepository. The repository should verify the user's balance,
-         * deduct points atomically, create the voucher and persist the result.
-         * The repository must also enforce reward stock and per-user redemption limits.
+         * Replace this local update with the shared EcoPoints and rewards
+         * data source once its ownership and interface are agreed by the team.
+         * The final implementation should persist the updated balance and
+         * redemption history so they can be restored after an app restart.
          */
-        val currentTimeMillis = System.currentTimeMillis()
+        val currentTimeMillis =
+            System.currentTimeMillis()
 
         val redeemedReward = RedeemedReward(
             redemptionId =
@@ -127,7 +146,8 @@ class RewardsViewModel(
                 "ECO-${currentTimeMillis.toString().takeLast(6)}",
             redeemedAtMillis = currentTimeMillis,
             expiresAtMillis =
-                currentTimeMillis + 30L * 24L * 60L * 60L * 1000L,
+                currentTimeMillis +
+                        30L * 24L * 60L * 60L * 1000L,
             isUsed = false,
         )
 
@@ -135,8 +155,9 @@ class RewardsViewModel(
             it.copy(
                 pointsBalance =
                     it.pointsBalance - reward.pointsRequired,
-                redeemedRewards =
-                    listOf(redeemedReward) + it.redeemedRewards,
+                activeRedeemedRewards =
+                    listOf(redeemedReward) +
+                            it.activeRedeemedRewards,
                 selectedReward = null,
                 recentlyRedeemedReward = redeemedReward,
                 isRedeeming = false,
