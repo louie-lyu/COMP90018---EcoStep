@@ -18,7 +18,7 @@ import androidx.navigation.navArgument
 import com.ecostep.app.core.di.ViewModelFactory
 import com.ecostep.app.ui.components.EcoStepBottomBar
 import com.ecostep.app.ui.mock.MockJourneyRepository
-import com.ecostep.app.ui.screens.HistoryScreen
+import com.ecostep.app.ui.screens.RewardsScreen
 import com.ecostep.app.ui.screens.HomeScreen
 import com.ecostep.app.ui.screens.JourneyReviewScreen
 import com.ecostep.app.ui.screens.LoginScreen
@@ -30,6 +30,7 @@ import com.ecostep.app.EcoStepApp
 import com.ecostep.app.ui.viewmodels.HomeViewModel
 import com.ecostep.app.ui.mock.MockHomeRouteDataSource
 import com.ecostep.app.ui.mock.MockHomeMissionDataSource
+import com.ecostep.app.ui.viewmodels.RewardsViewModel
 
 @Composable
 fun EcoStepNavHost(
@@ -163,8 +164,16 @@ fun EcoStepNavHost(
                 MissionScreen()
             }
 
-            composable(Routes.HISTORY) {
-                HistoryScreen()
+            composable(Routes.REWARDS) {
+                val rewardsViewModel: RewardsViewModel = viewModel(
+                    factory = ViewModelFactory {
+                        RewardsViewModel()
+                    },
+                )
+
+                RewardsScreen(
+                    viewModel = rewardsViewModel,
+                )
             }
 
             composable(Routes.SETTINGS) {
