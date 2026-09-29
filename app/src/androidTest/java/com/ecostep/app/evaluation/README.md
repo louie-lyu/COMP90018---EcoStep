@@ -65,3 +65,43 @@ Checks transport modes, distance boundaries, proportional scaling, and savings c
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\run-carbon-calculator-evaluation.ps1
 ```
+
+## Recurring journey detection
+
+Validates the real `DefaultRecurringJourneyDetector` against synthetic, single-user fixtures
+with manually specified expected patterns. No internet, sensors or stored user journeys are needed.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\run-recurring-journey-evaluation.ps1
+```
+
+Correctness cases cover occurrence counts, start/end location tolerances (199.9, 200 and 200.1 m
+in both directions), departure tolerances (59, 60 and 61 minutes in both directions), reverse
+routes, different destinations, midnight, duplicate IDs, reordered history and invalid timestamps.
+Every positive case compares all output fields: occurrence count, typical departure minute,
+average duration, active weekdays and usual transport mode.
+
+Fixtures use `Australia/Melbourne`, fixed dates and synthetic equatorial coordinates. Location
+offsets use the meridian arc-length formula with a 6,371,000 m spherical Earth radius, independently
+of the detector's Haversine formula. Exactly 200 m is tested without increasing the tolerance.
+The reference counts toward the minimum of three; identical repeated IDs count once. Mode ties
+and conflicting records sharing an ID have no specified expected policy and are outside this dataset.
+See `RecurringJourneyEvaluationCases.kt` for the complete reproducible inputs and expected results.
+
+The report separates full-pattern correctness from detection classification. A positive label
+means a recurring pattern is expected. False-positive rate is FP / (FP + TN), and false-negative
+rate is FN / (FN + TP). Exceptions count as failed and unclassified cases, not as negative detections;
+empty denominators produce null. These are synthetic rule-validation metrics, not real-user accuracy.
+
+Performance groups contain 10, 100, 1,000 and 10,000 history entries, plus one reference, with
+both all-matching and 10%-matching histories. The latter contains reverse routes as nonmatches.
+Defaults are 10 warm-up calls and 50 measured calls per group (`-Warmups` and `-Samples` are
+configurable). Only the synchronous detector call is timed with a monotonic clock; fixture
+generation, validation and JSON writes are excluded. Nearest-rank P50/P95 use successful,
+validated samples. No arbitrary latency threshold is used. Debug emulator timings are descriptive;
+repeat on physical devices for device-performance evidence.
+
+Results are exported as `evaluation_results/recurring-evaluation-<timestamp>.json`, including
+Git commit/dirty state, device/API/build information, rule settings, expected/actual patterns,
+classification counts and individual benchmark samples. Failed evaluations are exported before
+the script returns an error. The evaluation does not modify production code or app data.
