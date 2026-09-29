@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 2,
+  "startedAtMillis": 1790680735684,
+  "gitCommit": "a11b41eb92aa8dcf5d2fe37fdadbfd8fd82c5db6",
+  "workingTreeDirty": true,
+  "device": "Google sdk_gphone64_x86_64",
+  "androidVersion": "16",
+  "apiLevel": 36,
+  "buildType": "debug",
+  "networkConditions": "controlled-provider",
+  "networkAtStart": {
+    "wifi": true,
+    "cellular": false,
+    "ethernet": false,
+    "vpn": false,
+    "validated": true,
+    "metered": false
+  },
+  "scope": "Device integration correctness: real DataStore and repository, controlled provider and clock. Offline cases inject IOException; they do not toggle device networking. Persistence reopens the store in the same process, not across an app restart.",
+  "plannedCases": 9,
+  "totalCases": 9,
+  "passedCases": 9,
+  "failedCases": 0,
+  "passed": true,
+  "provider": "Controlled OpenMeteoApi; no live requests",
+  "records": [
+    {
+      "scenario": "fresh_cache",
+      "expected": "At 30 min minus 1 ms: cached value, zero provider calls",
+      "passed": true,
+      "providerCalls": 0
+    },
+    {
+      "scenario": "refresh_at_fresh_boundary",
+      "expected": "At 30 min: fetch, replace cache and timestamp",
+      "passed": true,
+      "providerCalls": 1
+    },
+    {
+      "scenario": "offline_stale_fallback",
+      "expected": "At 30 min: failed fetch returns cached value without renewing age",
+      "passed": true,
+      "providerCalls": 1
+    },
+    {
+      "scenario": "offline_at_six_hours",
+      "expected": "Exactly 6 hours: failed fetch may still use cached value",
+      "passed": true,
+      "providerCalls": 1
+    },
+    {
+      "scenario": "offline_after_six_hours",
+      "expected": "6 hours plus 1 ms: NETWORK error and expired entry removed",
+      "passed": true,
+      "providerCalls": 1
+    },
+    {
+      "scenario": "offline_without_cache",
+      "expected": "Empty cache: NETWORK error, no fabricated weather",
+      "passed": true,
+      "providerCalls": 1
+    },
+    {
+      "scenario": "online_after_failure",
+      "expected": "An earlier offline failure does not prevent a later fetch",
+      "passed": true,
+      "providerCalls": 2
+    },
+    {
+      "scenario": "persistent_readback",
+      "expected": "Provider result survives closing and reopening DataStore",
+      "passed": true,
+      "providerCalls": 1
+    },
+    {
+      "scenario": "persistent_removal",
+      "expected": "Removed entry stays absent after DataStore reopens",
+      "passed": true,
+      "providerCalls": 0
+    }
+  ],
+  "finishedAtMillis": 1790680735753,
+  "networkAtEnd": {
+    "wifi": true,
+    "cellular": false,
+    "ethernet": false,
+    "vpn": false,
+    "validated": true,
+    "metered": false
+  }
+}

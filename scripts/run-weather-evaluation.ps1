@@ -1,6 +1,20 @@
+[CmdletBinding(DefaultParameterSetName = 'Latency')]
 param(
     [string]$AdbPath = "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe",
-    [switch]$NetworkRecovery
+    [Parameter(ParameterSetName = 'Recovery', Mandatory = $true)]
+    [switch]$NetworkRecovery,
+    [Parameter(ParameterSetName = 'Cache', Mandatory = $true)]
+    [switch]$CacheEvaluation,
+    [Parameter(ParameterSetName = 'Latency')]
+    [ValidateRange(1, 500)][int]$NetworkSamples = 20,
+    [Parameter(ParameterSetName = 'Latency')]
+    [ValidateRange(1, 1000)][int]$CacheSamples = 100,
+    [Parameter(ParameterSetName = 'Latency')]
+    [ValidateRange(0, 60000)][int]$IntervalMs = 1000,
+    [Parameter(ParameterSetName = 'Latency')]
+    [ValidateRange(1, 120000)][int]$TimeoutMs = 30000,
+    [ValidatePattern('^[A-Za-z0-9_.-]+$')]
+    [string]$NetworkConditions = 'unspecified'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -8,8 +22,10 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 $package = 'com.ecostep.app'
 $remoteDirectory = 'files/evaluation'
 $outputDirectory = Join-Path $projectRoot 'evaluation_results'
-$testClass = if ($NetworkRecovery) { 'WeatherNetworkRecoveryTest' } else { 'WeatherLatencyEvaluationTest' }
-$reportPattern = if ($NetworkRecovery) { '^weather-recovery-\d+\.json$' } else { '^weather-latency-\d+\.json$' }
+$testClass = if ($NetworkRecovery) { 'WeatherNetworkRecoveryTest' }
+    elseif ($CacheEvaluation) { 'WeatherCacheEvaluationTest' } else { 'WeatherLatencyEvaluationTest' }
+$reportPattern = if ($NetworkRecovery) { '^weather-recovery-\d+\.json$' }
+    elseif ($CacheEvaluation) { '^weather-cache-\d+\.json$' } else { '^weather-latency-\d+\.json$' }
 
 if (-not (Test-Path -LiteralPath $AdbPath)) {
     throw 'adb.exe not found. Supply -AdbPath with the full path to your Android SDK platform-tools\adb.exe.'
@@ -37,6 +53,12 @@ function Get-ReportNames {
 
 Push-Location $projectRoot
 try {
+    $gitCommit = & git -c "safe.directory=$($projectRoot.Replace('\', '/'))" rev-parse HEAD
+    if ($LASTEXITCODE -ne 0) { throw 'Could not read the Git commit for the evaluation report.' }
+    $gitStatus = & git -c "safe.directory=$($projectRoot.Replace('\', '/'))" status --porcelain
+    if ($LASTEXITCODE -ne 0) { throw 'Could not read the Git working tree status.' }
+    $workingTreeDirty = if ($gitStatus) { 'true' } else { 'false' }
+
     # Install without running Gradle's connected-test cleanup, so reports stay available.
     & .\gradlew.bat installDebug installDebugAndroidTest
     if ($LASTEXITCODE -ne 0) { throw 'Build or installation failed.' }
@@ -44,6 +66,10 @@ try {
     $previousReports = @(Get-ReportNames)
     $testOutput = & $AdbPath -s $serial shell am instrument -w -r `
         -e class "com.ecostep.app.evaluation.$testClass" `
+        -e gitCommit $gitCommit -e workingTreeDirty $workingTreeDirty `
+        -e networkConditions $NetworkConditions `
+        -e networkSamples $NetworkSamples -e cacheSamples $CacheSamples `
+        -e intervalMs $IntervalMs -e timeoutMs $TimeoutMs `
         com.ecostep.app.test/androidx.test.runner.AndroidJUnitRunner
     $instrumentExitCode = $LASTEXITCODE
     $testOutput | Write-Host
@@ -54,18 +80,27 @@ try {
         throw 'No new JSON report was produced. Check the instrumentation output above.'
     }
     New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
+    $evaluationFailed = $false
     foreach ($name in $newReports) {
         $content = & $AdbPath -s $serial exec-out run-as $package cat "$remoteDirectory/$name"
         if ($LASTEXITCODE -ne 0) { throw "Could not read $name from the device." }
         $json = $content -join "`n"
-        $null = $json | ConvertFrom-Json
+        $report = $json | ConvertFrom-Json
         $destination = Join-Path $outputDirectory $name
         [System.IO.File]::WriteAllText($destination, $json, [System.Text.UTF8Encoding]::new($false))
         Write-Host "JSON saved on computer: $destination"
+        if ($report.passed -ne $true) { $evaluationFailed = $true }
+        if ($CacheEvaluation) {
+            Write-Host "Cases: $($report.totalCases); passed: $($report.passedCases); failed: $($report.failedCases)"
+        } elseif (-not $NetworkRecovery) {
+            foreach ($summary in $report.summaries) {
+                Write-Host "$($summary.scenario): $($summary.successfulSamples)/$($summary.recordedSamples) successful; skipped=$($summary.skippedSamples); timeouts=$($summary.timeoutSamples); P50=$($summary.p50Ms) ms; P95=$($summary.p95Ms) ms"
+            }
+        }
     }
 
     # adb can return zero even when AndroidJUnitRunner reports a failed test.
-    if ($instrumentExitCode -ne 0 -or ($testOutput -join "`n") -notmatch 'OK \(\d+ tests?\)') {
+    if ($evaluationFailed -or $instrumentExitCode -ne 0 -or ($testOutput -join "`n") -notmatch 'OK \(\d+ tests?\)') {
         throw 'The test did not pass. Its JSON results were exported for inspection.'
     }
 } finally {
