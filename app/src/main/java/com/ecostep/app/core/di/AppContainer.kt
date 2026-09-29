@@ -1,5 +1,8 @@
 package com.ecostep.app.core.di
 
+import com.ecostep.app.network.route.RouteAccessTokenProvider
+import com.ecostep.app.network.route.RouteProxyClient
+import com.ecostep.app.network.route.RouteProxyDataSource
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -64,10 +67,27 @@ class AppContainer(context: Context) {
         )
     }
 
+    private val routeProxyApi by lazy {
+        RouteProxyClient.create(
+            okHttpClient = okHttpClient,
+            baseUrl = BuildConfig.ROUTE_PROXY_BASE_URL,
+        )
+    }
+
+    private val routeDataSource by lazy {
+        RouteProxyDataSource(
+            routeProxyApi = routeProxyApi,
+            accessTokenProvider = RouteAccessTokenProvider {
+                authRepository.getIdToken()
+            },
+        )
+    }
+
     val externalDataRepository: ExternalDataRepository by lazy {
         DefaultExternalDataRepository(
             weatherDataSource = weatherDataSource,
             weatherCache = weatherCache,
+            routeDataSource = routeDataSource,
         )
     }
 
