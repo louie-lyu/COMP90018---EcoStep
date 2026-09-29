@@ -1,7 +1,5 @@
 package com.ecostep.app.ui.mock
 
-import android.content.Context
-
 data class UserProfileUi(
     val userId: String,
     val displayName: String,
