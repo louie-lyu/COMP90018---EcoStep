@@ -87,11 +87,21 @@ fun EcoStepNavHost(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Routes.HOME,
+            startDestination = Routes.LOGIN,
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(Routes.LOGIN) {
-                LoginScreen()
+                LoginScreen(
+                    onAuthenticated = {
+                        navController.navigate(Routes.HOME) {
+                            popUpTo(Routes.LOGIN) {
+                                inclusive = true
+                            }
+
+                            launchSingleTop = true
+                        }
+                    },
+                )
             }
 
             composable(Routes.HOME) {
