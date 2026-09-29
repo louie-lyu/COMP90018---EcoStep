@@ -17,6 +17,8 @@ import com.ecostep.app.network.weather.OpenMeteoClient
 import com.ecostep.app.network.weather.OpenMeteoWeatherDataSource
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import com.ecostep.app.network.publictransport.TransitousClient
+import com.ecostep.app.network.publictransport.TransitousPublicTransportDataSource
 
 /**
  * Manual dependency provisioning (no DI framework) — see docs/ARCHITECTURE.md for why.
@@ -40,6 +42,8 @@ class AppContainer(context: Context) {
                     redactQueryParams(
                         "latitude",
                         "longitude",
+                        "fromPlace",
+                        "toPlace",
                     )
 
                     // Never log request/response details in release builds.
@@ -67,6 +71,18 @@ class AppContainer(context: Context) {
         )
     }
 
+    private val transitousApi by lazy {
+        TransitousClient.create(
+            okHttpClient = okHttpClient,
+        )
+    }
+
+    private val publicTransportDataSource by lazy {
+        TransitousPublicTransportDataSource(
+            transitousApi = transitousApi,
+        )
+    }
+
     private val routeProxyApi by lazy {
         RouteProxyClient.create(
             okHttpClient = okHttpClient,
@@ -88,6 +104,8 @@ class AppContainer(context: Context) {
             weatherDataSource = weatherDataSource,
             weatherCache = weatherCache,
             routeDataSource = routeDataSource,
+            publicTransportDataSource =
+                publicTransportDataSource,
         )
     }
 

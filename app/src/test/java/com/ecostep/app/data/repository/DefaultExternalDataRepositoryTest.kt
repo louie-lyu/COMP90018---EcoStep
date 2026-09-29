@@ -1,5 +1,11 @@
 package com.ecostep.app.data.repository
 
+
+import com.ecostep.app.network.publictransport.TransitousApi
+import com.ecostep.app.network.publictransport.TransitousItinerary
+import com.ecostep.app.network.publictransport.TransitousLeg
+import com.ecostep.app.network.publictransport.TransitousPublicTransportDataSource
+import com.ecostep.app.network.publictransport.TransitousResponse
 import com.ecostep.app.data.model.TransportMode
 import com.ecostep.app.network.route.OpenRouteServiceResponse
 import com.ecostep.app.network.route.OpenRouteServiceRoute
@@ -325,15 +331,155 @@ class DefaultExternalDataRepositoryTest {
         }
     }
 
+    @Test
+    fun `public transport options are returned from Transitous`() =
+        runTest {
+            val transitousApi = FakeTransitousApi {
+                successfulTransitousResponse()
+            }
+
+            val repository = repository(
+                api = FakeOpenMeteoApi {
+                    successfulResponse()
+                },
+                cache = FakeWeatherCache(),
+                publicTransportDataSource =
+                    TransitousPublicTransportDataSource(
+                        transitousApi = transitousApi,
+                    ),
+            )
+
+            val options =
+                repository.getPublicTransportOptions(
+                    start = location,
+                    end = destination,
+                )
+
+            assertEquals(1, options.size)
+            assertEquals(
+                "Tram 19",
+                options.first().line,
+            )
+            assertEquals(
+                1_800_000_000_000L,
+                options.first().departureTimeMillis,
+            )
+            assertEquals(
+                1_200L,
+                options.first().estimatedDurationSeconds,
+            )
+        }
+
+    @Test
+    fun `public transport network failure becomes network exception`() =
+        runTest {
+            val networkFailure =
+                IOException("Transitous network unavailable")
+
+            val transitousApi = FakeTransitousApi {
+                throw networkFailure
+            }
+
+            val repository = repository(
+                api = FakeOpenMeteoApi {
+                    successfulResponse()
+                },
+                cache = FakeWeatherCache(),
+                publicTransportDataSource =
+                    TransitousPublicTransportDataSource(
+                        transitousApi = transitousApi,
+                    ),
+            )
+
+            val actual = captureExternalDataException {
+                repository.getPublicTransportOptions(
+                    start = location,
+                    end = destination,
+                )
+            }
+
+            assertEquals(
+                ExternalDataException.Reason.NETWORK,
+                actual.reason,
+            )
+            assertSame(
+                networkFailure,
+                actual.cause,
+            )
+        }
+
+    @Test
+    fun `public transport cancellation is propagated unchanged`() =
+        runTest {
+            val cancellation =
+                CancellationException(
+                    "Transitous request cancelled",
+                )
+
+            val transitousApi = FakeTransitousApi {
+                throw cancellation
+            }
+
+            val repository = repository(
+                api = FakeOpenMeteoApi {
+                    successfulResponse()
+                },
+                cache = FakeWeatherCache(),
+                publicTransportDataSource =
+                    TransitousPublicTransportDataSource(
+                        transitousApi = transitousApi,
+                    ),
+            )
+
+            try {
+                repository.getPublicTransportOptions(
+                    start = location,
+                    end = destination,
+                )
+
+                throw AssertionError(
+                    "Expected CancellationException",
+                )
+            } catch (actual: CancellationException) {
+                assertSame(
+                    cancellation,
+                    actual,
+                )
+            }
+        }
+
+    private class FakeTransitousApi(
+        private val response:
+        suspend () -> TransitousResponse,
+    ) : TransitousApi {
+
+        override suspend fun planJourney(
+            fromPlace: String,
+            toPlace: String,
+            arriveBy: Boolean,
+            maxTransfers: Int,
+            detailedLegs: Boolean,
+            detailedTransfers: Boolean,
+            userAgent: String,
+        ): TransitousResponse {
+            return response()
+        }
+    }
+
     private fun repository(
         api: OpenMeteoApi,
         cache: WeatherCache,
         routeDataSource: RouteProxyDataSource? = null,
+        publicTransportDataSource:
+        TransitousPublicTransportDataSource? = null,
     ): DefaultExternalDataRepository {
         return DefaultExternalDataRepository(
-            weatherDataSource = OpenMeteoWeatherDataSource(api),
+            weatherDataSource =
+                OpenMeteoWeatherDataSource(api),
             weatherCache = cache,
             routeDataSource = routeDataSource,
+            publicTransportDataSource =
+                publicTransportDataSource,
             currentTimeMillis = {
                 currentTimeMillis
             },
@@ -345,6 +491,33 @@ class DefaultExternalDataRepositoryTest {
             current = OpenMeteoCurrentWeather(
                 temperatureCelsius = 18.6,
                 weatherCode = 2,
+            ),
+        )
+    }
+
+    private fun successfulTransitousResponse():
+            TransitousResponse {
+        return TransitousResponse(
+            itineraries = listOf(
+                TransitousItinerary(
+                    duration = 1_200L,
+                    startTime =
+                        "2027-01-15T08:00:00Z",
+                    endTime =
+                        "2027-01-15T08:20:00Z",
+                    transfers = 0,
+                    legs = listOf(
+                        TransitousLeg(
+                            mode = "TRAM",
+                            startTime =
+                                "2027-01-15T08:00:00Z",
+                            endTime =
+                                "2027-01-15T08:20:00Z",
+                            routeShortName = "19",
+                            displayName = "19",
+                        ),
+                    ),
+                ),
             ),
         )
     }
