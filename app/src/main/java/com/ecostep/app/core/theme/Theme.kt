@@ -1,38 +1,77 @@
 package com.ecostep.app.core.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 
 private val LightColors = lightColorScheme(
-    primary = EcoGreen40,
-    secondary = EcoGreenGrey40,
+    primary = EcoGreen,
+    onPrimary = EcoOnGreen,
+
+    primaryContainer = EcoGreenContainer,
+    onPrimaryContainer = EcoOnGreenContainer,
+
+    secondary = EcoGold,
+    onSecondary = EcoOnGold,
+
+    secondaryContainer = EcoGoldContainer,
+    onSecondaryContainer = EcoOnGoldContainer,
+
+    background = EcoBackground,
+    onBackground = EcoOnBackground,
+
+    surface = EcoSurface,
+    onSurface = EcoOnSurface,
+
+    surfaceVariant = EcoSurfaceVariant,
+    onSurfaceVariant = EcoOnSurfaceVariant,
+
+    outline = EcoOutline,
+    outlineVariant = EcoOutlineVariant,
+
+    error = EcoError,
+    onError = EcoOnError,
+
+    errorContainer = EcoErrorContainer,
+    onErrorContainer = EcoOnErrorContainer,
 )
 
 private val DarkColors = darkColorScheme(
-    primary = EcoGreen80,
-    secondary = EcoGreenGrey80,
+    primary = EcoDarkGreen,
+    onPrimary = EcoDarkOnGreen,
+
+    primaryContainer = EcoDarkGreenContainer,
+    onPrimaryContainer = EcoDarkOnGreenContainer,
+
+    secondary = EcoDarkGold,
+    onSecondary = EcoDarkOnGold,
+
+    background = EcoDarkBackground,
+    onBackground = EcoDarkOnBackground,
+
+    surface = EcoDarkSurface,
+    onSurface = EcoDarkOnSurface,
+
+    surfaceVariant = EcoDarkSurfaceVariant,
+    onSurfaceVariant = EcoDarkOnSurfaceVariant,
+
+    outline = EcoDarkOutline,
+
+    error = EcoErrorContainer,
+    onError = EcoOnErrorContainer,
 )
 
 @Composable
 fun EcoStepTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit,
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        darkTheme -> DarkColors
-        else -> LightColors
+    val colorScheme = if (darkTheme) {
+        DarkColors
+    } else {
+        LightColors
     }
 
     MaterialTheme(

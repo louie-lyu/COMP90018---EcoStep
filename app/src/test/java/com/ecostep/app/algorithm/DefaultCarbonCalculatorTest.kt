@@ -72,6 +72,18 @@ class DefaultCarbonCalculatorTest {
     }
 
     @Test
+    fun `positive infinity distance is rejected`() {
+        assertThrows(IllegalArgumentException::class.java) {
+            calculator.calculate(
+                createJourney(
+                    distanceMeters = Double.POSITIVE_INFINITY,
+                    mode = TransportMode.CAR,
+                ),
+            )
+        }
+    }
+
+    @Test
     fun `unknown transport mode returns safe empty result`() {
         val result = calculator.calculate(
             createJourney(
