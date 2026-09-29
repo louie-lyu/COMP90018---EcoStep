@@ -27,9 +27,9 @@ class MockHomeMissionDataSource : HomeMissionDataSource {
             currentTimeMillis + 10 * 60_000L
 
         return UpcomingMissionUi(
-            missionId = "mock_upcoming_mission",
+            missionId = "mock_upcoming_mission-1",
             routeTitle = "University → Home",
-            transportLabel = "Public transport + walk",
+            transportLabel = "Public transport",
             startTimeMillis = startTimeMillis,
             endTimeMillis =
                 startTimeMillis + 60 * 60_000L,

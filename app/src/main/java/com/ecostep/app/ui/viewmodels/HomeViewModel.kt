@@ -8,19 +8,22 @@ import com.ecostep.app.data.model.WeatherData
 import com.ecostep.app.data.repository.ExternalDataRepository
 import com.ecostep.app.ui.mock.HomeRouteDataSource
 import com.ecostep.app.ui.mock.HomeRouteOption
+import com.ecostep.app.ui.mock.MissionDay
+import com.ecostep.app.ui.mock.MissionPageItem
+import com.ecostep.app.ui.mock.MissionRepository
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
-import com.ecostep.app.ui.mock.HomeMissionDataSource
-
+import java.util.Calendar
 
 /*
- * Temporary location used until the location module provides
- * the user's live location.
+ * TODO(Location): Replace this fixed Melbourne coordinate with the
+ * signed-in user's live location from the location-tracking module.
+ * Permission denial and unavailable-location states must also be handled.
  */
 private val MELBOURNE_LOCATION = GeoPoint(
     latitude = -37.8136,
@@ -30,8 +33,8 @@ private val MELBOURNE_LOCATION = GeoPoint(
 /**
  * Mission information displayed by the Home screen.
  *
- * This is a UI-specific model so HomeScreen does not depend directly
- * on the mission module's internal data structure.
+ * This remains a Home-specific UI model so HomeScreen does not
+ * depend on the Mission screen's presentation structure.
  */
 data class UpcomingMissionUi(
     val missionId: String,
@@ -43,8 +46,6 @@ data class UpcomingMissionUi(
     val estimatedEcoPoints: Int,
 )
 
-// TODO(Tracking): Connect these UI states to the sensor and
-// journey-tracking module when automatic movement detection is available.
 enum class JourneyTrackingState {
     READY,
     IN_PROGRESS,
@@ -54,27 +55,29 @@ data class HomeUiState(
     val startLocation: String = "Current location",
     val destination: String = "",
     val isRoutePlannerVisible: Boolean = false,
-    // TODO(Location): Replace the mock Melbourne location with the user's
-    // live GPS location from the location-tracking module.
+
+    // TODO(Location): Replace this with live location data.
     val currentLocation: GeoPoint = MELBOURNE_LOCATION,
+
     val weather: WeatherData? = null,
     val isWeatherLoading: Boolean = false,
     val weatherErrorMessage: String? = null,
+
     val routeOptions: List<HomeRouteOption> = emptyList(),
     val selectedMode: TransportMode? = null,
     val isRouteLoading: Boolean = false,
     val routeErrorMessage: String? = null,
     val isDirectionsConfirmed: Boolean = false,
+
     val journeyTrackingState: JourneyTrackingState =
         JourneyTrackingState.READY,
-    // TODO(Missions): Populate this from the mission data source
-    //// when the mission module exposes scheduled mission data.
+
     val upcomingMission: UpcomingMissionUi? = null,
 
-    // TODO(Settings): Replace these defaults with the user's saved
-    // mission notification preferences from persistent settings.
-    val missionRemindersEnabled: Boolean = false,
+    // TODO(Settings): Replace these values with saved user settings.
+    val missionRemindersEnabled: Boolean = true,
     val missionReminderLeadMinutes: Int = 15,
+
     val currentTimeMillis: Long = System.currentTimeMillis(),
 ) {
     val selectedRouteOption: HomeRouteOption?
@@ -105,7 +108,7 @@ data class HomeUiState(
 class HomeViewModel(
     private val externalDataRepository: ExternalDataRepository,
     private val homeRouteDataSource: HomeRouteDataSource,
-    private val homeMissionDataSource: HomeMissionDataSource,
+    private val missionRepository: MissionRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -113,42 +116,173 @@ class HomeViewModel(
     val uiState: StateFlow<HomeUiState> =
         _uiState.asStateFlow()
 
+    /*
+ * Keeps a dismissed Home reminder hidden without removing its recurring
+ * mission from MissionScreen.
+ *
+ * TODO(Missions): Persist dismissal by mission occurrence, using both
+ * mission ID and scheduled start time. Using only the mission ID in this
+ * prototype can keep future occurrences of the same mission hidden until
+ * the ViewModel is recreated.
+ */
+    private var dismissedReminderMissionId: String? = null
+
+    private var loadedActiveMissionId: String? = null
+
     init {
         loadWeather()
         startMissionClock()
-        loadUpcomingMission()
+        observeMissions()
+    }
+
+    private fun observeMissions() {
+        viewModelScope.launch {
+            missionRepository.state.collect { repositoryState ->
+                val activeMission = repositoryState.activeMission
+
+                if (activeMission != null) {
+                    showActiveMission(activeMission)
+                } else {
+                    val missionWasActive =
+                        loadedActiveMissionId != null
+
+                    loadedActiveMissionId = null
+
+                    val nextMission =
+                        repositoryState.upcomingMissions
+                            .mapNotNull { mission ->
+                                mission.toUpcomingMissionUi()
+                            }
+                            .minByOrNull { mission ->
+                                mission.startTimeMillis
+                            }
+
+                    val visibleMission =
+                        if (
+                            nextMission?.missionId ==
+                            dismissedReminderMissionId
+                        ) {
+                            null
+                        } else {
+                            nextMission
+                        }
+
+                    _uiState.update { currentState ->
+                        if (missionWasActive) {
+                            currentState.copy(
+                                startLocation = "Current location",
+                                destination = "",
+                                upcomingMission = visibleMission,
+                                routeOptions = emptyList(),
+                                selectedMode = null,
+                                isRoutePlannerVisible = false,
+                                isDirectionsConfirmed = false,
+                                journeyTrackingState =
+                                    JourneyTrackingState.READY,
+                                routeErrorMessage = null,
+                            )
+                        } else {
+                            currentState.copy(
+                                upcomingMission = visibleMission,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun showActiveMission(
+        item: MissionPageItem,
+    ) {
+        if (loadedActiveMissionId == item.mission.missionId) {
+            return
+        }
+
+        loadedActiveMissionId = item.mission.missionId
+        dismissedReminderMissionId = item.mission.missionId
+
+        /*
+         * TODO(Routing): Request route options using item.startLocation and
+         * item.destination. The current mock source returns fixed routes.
+         *
+         * TODO(Error handling): Expose a route error when production route
+         * loading fails instead of silently returning an empty list.
+         */
+        val routeOptions =
+            try {
+                homeRouteDataSource.getRouteOptions()
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                emptyList()
+            }
+
+        val selectedMode =
+            transportModeFromLabel(
+                item.mission.transportLabel,
+            )
+
+        /*
+         * Keep HomeScreen's active-mission impact values consistent with
+         * the mission selected by the user.
+         *
+         * TODO(Algorithm): Replace these mission estimates with live values
+         * calculated from verified journey progress.
+         */
+        val activeMissionRouteOptions =
+            routeOptions.map { option ->
+                if (option.route.mode == selectedMode) {
+                    option.copy(
+                        estimatedCarbonSavedKg =
+                            item.mission.estimatedCarbonSavedKg,
+                        estimatedEcoPoints =
+                            item.mission.estimatedEcoPoints,
+                    )
+                } else {
+                    option
+                }
+            }
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                startLocation = item.startLocation,
+                destination = item.destination,
+                upcomingMission = null,
+                routeOptions = activeMissionRouteOptions,
+                selectedMode = selectedMode,
+                isRoutePlannerVisible = false,
+                isDirectionsConfirmed = true,
+                journeyTrackingState =
+                    JourneyTrackingState.IN_PROGRESS,
+                routeErrorMessage = null,
+            )
+        }
+    }
+
+    fun startMission(missionId: String) {
+        /*
+         * Updating the shared repository automatically updates both
+         * HomeScreen and MissionScreen.
+         *
+         * TODO(Tracking): Ask the production tracking coordinator to start
+         * sensor and location tracking for this mission. MissionRepository
+         * should continue to manage mission state rather than sensors directly.
+         */
+        missionRepository.startMission(missionId)
     }
 
     fun dismissUpcomingMission() {
-        _uiState.update {
-            it.copy(upcomingMission = null)
+        dismissedReminderMissionId =
+            _uiState.value.upcomingMission?.missionId
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                upcomingMission = null,
+            )
         }
 
-        // TODO(Missions): Persist dismissal if the reminder should remain hidden
-        // after the app is restarted.
-    }
-
-    private fun loadUpcomingMission() {
-        viewModelScope.launch {
-            // TODO(Missions): Add error handling when this is connected
-            // to the production mission data source.
-            val currentTimeMillis = System.currentTimeMillis()
-            val mission =
-                homeMissionDataSource.getUpcomingMission(
-                    currentTimeMillis = currentTimeMillis,
-                )
-
-            _uiState.update { currentState ->
-                currentState.copy(
-                    upcomingMission = mission,
-
-                    // TODO(Settings): Replace these temporary values with
-                    // the user's saved reminder preferences.
-                    missionRemindersEnabled = true,
-                    missionReminderLeadMinutes = 15,
-                )
-            }
-        }
+        // The recurring mission remains available on MissionScreen.
     }
 
     fun updateStartLocation(startLocation: String) {
@@ -175,7 +309,6 @@ class HomeViewModel(
         }
     }
 
-
     fun findRoutes() {
         if (_uiState.value.destination.isBlank()) {
             _uiState.update { currentState ->
@@ -198,6 +331,10 @@ class HomeViewModel(
             }
 
             try {
+                /*
+                 * TODO(Routing): Pass the selected start location and destination
+                 * to the production route data source.
+                 */
                 val routeOptions =
                     homeRouteDataSource.getRouteOptions()
 
@@ -212,15 +349,15 @@ class HomeViewModel(
                     currentState.copy(
                         routeOptions = routeOptions,
                         selectedMode = defaultMode,
-                        isRoutePlannerVisible = routeOptions.isNotEmpty(),
+                        isRoutePlannerVisible =
+                            routeOptions.isNotEmpty(),
                         isRouteLoading = false,
-                        routeErrorMessage = if (
-                            routeOptions.isEmpty()
-                        ) {
-                            "No route options were found."
-                        } else {
-                            null
-                        },
+                        routeErrorMessage =
+                            if (routeOptions.isEmpty()) {
+                                "No route options were found."
+                            } else {
+                                null
+                            },
                     )
                 }
             } catch (cancelled: CancellationException) {
@@ -255,20 +392,19 @@ class HomeViewModel(
             currentState.copy(
                 isDirectionsConfirmed = true,
                 isRoutePlannerVisible = false,
-                journeyTrackingState = JourneyTrackingState.READY,
+                journeyTrackingState =
+                    JourneyTrackingState.READY,
             )
         }
     }
 
-    // Updates the in-app Mission card while HomeScreen is active.
-    // TODO(Notifications): Background reminders must be handled separately
-    // by the notification scheduling implementation.
     private fun startMissionClock() {
         viewModelScope.launch {
             while (true) {
                 _uiState.update { currentState ->
                     currentState.copy(
-                        currentTimeMillis = System.currentTimeMillis(),
+                        currentTimeMillis =
+                            System.currentTimeMillis(),
                     )
                 }
 
@@ -311,4 +447,106 @@ class HomeViewModel(
             }
         }
     }
+
+    /**
+     * Calculates the nearest future occurrence of a recurring mission.
+     *
+     * TODO(Missions): Move this scheduling logic into the production
+     * MissionRepository when its persistent implementation is available.
+     */
+    private fun MissionPageItem.toUpcomingMissionUi():
+            UpcomingMissionUi? {
+        val nextStartTime =
+            calculateNextOccurrenceMillis(
+                repeatDays = repeatDays,
+                scheduledHour = scheduledHour,
+                scheduledMinute = scheduledMinute,
+            ) ?: return null
+
+        return UpcomingMissionUi(
+            missionId = mission.missionId,
+            routeTitle = mission.routeTitle,
+            transportLabel = mission.transportLabel,
+            startTimeMillis = nextStartTime,
+
+            // TODO(Missions/Routing): Replace the fixed one-hour duration
+            // with the estimated duration of the selected route.
+            endTimeMillis = nextStartTime + 60 * 60_000L,
+            estimatedCarbonSavedKg =
+                mission.estimatedCarbonSavedKg,
+            estimatedEcoPoints =
+                mission.estimatedEcoPoints,
+        )
+    }
+
+    private fun calculateNextOccurrenceMillis(
+        repeatDays: Set<MissionDay>,
+        scheduledHour: Int,
+        scheduledMinute: Int,
+    ): Long? {
+        if (repeatDays.isEmpty()) {
+            return null
+        }
+
+        val now = Calendar.getInstance()
+        var nearestOccurrence: Long? = null
+
+        repeatDays.forEach { missionDay ->
+            val occurrence =
+                Calendar.getInstance().apply {
+                    set(Calendar.DAY_OF_WEEK, missionDay.calendarDay)
+                    set(Calendar.HOUR_OF_DAY, scheduledHour)
+                    set(Calendar.MINUTE, scheduledMinute)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+
+                    if (timeInMillis <= now.timeInMillis) {
+                        add(Calendar.WEEK_OF_YEAR, 1)
+                    }
+                }.timeInMillis
+
+            if (
+                nearestOccurrence == null ||
+                occurrence < nearestOccurrence!!
+            ) {
+                nearestOccurrence = occurrence
+            }
+        }
+
+        return nearestOccurrence
+    }
+
+    private val MissionDay.calendarDay: Int
+        get() = when (this) {
+            MissionDay.MONDAY -> Calendar.MONDAY
+            MissionDay.TUESDAY -> Calendar.TUESDAY
+            MissionDay.WEDNESDAY -> Calendar.WEDNESDAY
+            MissionDay.THURSDAY -> Calendar.THURSDAY
+            MissionDay.FRIDAY -> Calendar.FRIDAY
+            MissionDay.SATURDAY -> Calendar.SATURDAY
+            MissionDay.SUNDAY -> Calendar.SUNDAY
+        }
+
+    /*
+     * TODO(Missions): Store TransportMode directly in the production
+     * mission model and remove this string-to-enum conversion.
+     */
+    private fun transportModeFromLabel(
+        label: String,
+    ): TransportMode? =
+        when (label.trim().lowercase()) {
+            "walking", "walk" ->
+                TransportMode.WALKING
+
+            "cycling", "cycle", "bike", "bicycle" ->
+                TransportMode.CYCLING
+
+            "public transport", "public_transport" ->
+                TransportMode.PUBLIC_TRANSPORT
+
+            "car", "driving" ->
+                TransportMode.CAR
+
+            else -> null
+        }
 }

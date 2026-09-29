@@ -29,7 +29,8 @@ import androidx.compose.ui.platform.LocalContext
 import com.ecostep.app.EcoStepApp
 import com.ecostep.app.ui.viewmodels.HomeViewModel
 import com.ecostep.app.ui.mock.MockHomeRouteDataSource
-import com.ecostep.app.ui.mock.MockHomeMissionDataSource
+import com.ecostep.app.ui.mock.MockMissionRepository
+import com.ecostep.app.ui.viewmodels.MissionViewModel
 
 @Composable
 fun EcoStepNavHost(
@@ -40,19 +41,36 @@ fun EcoStepNavHost(
 
     val appContainer = application.appContainer
     /*
-     * Temporary UI mock.
-     * Replace this with appContainer.journeyRepository when the
-     * Firebase-backed repository is available.
+     * TODO(Journeys/DI): Replace this shared MockJourneyRepository with
+     * production journey persistence and tracking dependencies supplied
+     * through AppContainer.
+     *
+     * MissionViewModel and JourneyReviewViewModel must continue to access
+     * the same saved journey data so a journey created when a mission ends
+     * can be loaded immediately by JourneyReviewScreen.
      */
     val mockJourneyRepository = remember {
         MockJourneyRepository()
     }
 
+    /*
+     * TODO(Routing/DI): Replace this mock source with the production
+     * routing data source supplied through AppContainer.
+     */
     val mockHomeRouteDataSource = remember {
         MockHomeRouteDataSource()
     }
-    val mockHomeMissionDataSource = remember {
-        MockHomeMissionDataSource()
+
+    /*
+     * Shared mission state for Home and Mission screens.
+     *
+     * TODO(Missions/DI): Replace MockMissionRepository with the
+     * production Firebase-backed MissionRepository supplied through
+     * AppContainer. Both screens must continue to receive the same
+     * repository instance.
+     */
+    val missionRepository = remember {
+        MockMissionRepository()
     }
 
 
@@ -102,20 +120,21 @@ fun EcoStepNavHost(
                                 appContainer.externalDataRepository,
                             homeRouteDataSource =
                                 mockHomeRouteDataSource,
-                                mockHomeMissionDataSource,
+                            missionRepository =
+                                missionRepository,
                         )
                     },
                 )
 
                 HomeScreen(
                     viewModel = homeViewModel,
-                    onStartMission = { _ ->
-                        // TODO(Missions/Navigation): Start the selected mission
-                        // when the mission navigation flow is available.
+                    onStartMission = { missionId ->
+                        homeViewModel.startMission(missionId)
                     },
                     onViewMission = { _ ->
-                        // TODO(Missions/Navigation): Open the selected mission details
-                        // when the mission detail route is available.
+                        navController.navigate(Routes.MISSIONS) {
+                            launchSingleTop = true
+                        }
                     },
                 )
             }
@@ -145,10 +164,7 @@ fun EcoStepNavHost(
                     },
                 )
 
-                /*
-                 * The ViewModel is created here first.
-                 * The next step connects it to JourneyReviewScreen.
-                 */
+
                 JourneyReviewScreen(
                     viewModel = journeyReviewViewModel,
                     onBackToMap = {
@@ -160,7 +176,37 @@ fun EcoStepNavHost(
             }
 
             composable(Routes.MISSIONS) {
-                MissionScreen()
+                val missionViewModel: MissionViewModel = viewModel(
+                    factory = ViewModelFactory {
+                        MissionViewModel(
+                            missionRepository = missionRepository,
+                            missionJourneyRecorder = mockJourneyRepository,
+                        )
+                    },
+                )
+
+                MissionScreen(
+                    missionViewModel = missionViewModel,
+                    onStartMission = {
+                        navController.navigate(Routes.HOME) {
+                            popUpTo(
+                                navController.graph
+                                    .findStartDestination()
+                                    .id,
+                            ) {
+                                inclusive = false
+                            }
+
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                    onOpenJourneyReview = { journeyId ->
+                        navController.navigate(
+                            Routes.journeyReview(journeyId),
+                        )
+                    },
+                )
             }
 
             composable(Routes.HISTORY) {
