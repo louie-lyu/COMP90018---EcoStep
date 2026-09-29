@@ -23,20 +23,27 @@ import com.ecostep.app.ui.screens.HomeScreen
 import com.ecostep.app.ui.screens.JourneyReviewScreen
 import com.ecostep.app.ui.screens.LoginScreen
 import com.ecostep.app.ui.screens.MissionScreen
-import com.ecostep.app.ui.screens.SettingsScreen
+import com.ecostep.app.ui.screens.ProfileScreen
 import com.ecostep.app.ui.viewmodels.JourneyReviewViewModel
 import androidx.compose.ui.platform.LocalContext
 import com.ecostep.app.EcoStepApp
 import com.ecostep.app.ui.viewmodels.HomeViewModel
 import com.ecostep.app.ui.mock.MockHomeRouteDataSource
 import com.ecostep.app.ui.mock.MockHomeMissionDataSource
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import com.ecostep.app.ui.screens.JourneyHistoryScreen
+import com.ecostep.app.ui.viewmodels.JourneyHistoryViewModel
 
 @Composable
 fun EcoStepNavHost(
     navController: NavHostController = rememberNavController(),
 ) {
+    val context = LocalContext.current
+
     val application =
-        LocalContext.current.applicationContext as EcoStepApp
+        context.applicationContext as EcoStepApp
 
     val appContainer = application.appContainer
     /*
@@ -60,7 +67,12 @@ fun EcoStepNavHost(
     val currentRoute = navBackStackEntry?.destination?.route
 
     val showBottomBar =
-        currentRoute != null && currentRoute != Routes.LOGIN
+        currentRoute in setOf(
+            Routes.HOME,
+            Routes.MISSIONS,
+            Routes.HISTORY,
+            Routes.PROFILE,
+        )
 
     Scaffold(
         bottomBar = {
@@ -126,6 +138,10 @@ fun EcoStepNavHost(
                     navArgument(Routes.JOURNEY_ID_ARGUMENT) {
                         type = NavType.StringType
                     },
+                    navArgument(Routes.READ_ONLY_ARGUMENT) {
+                        type = NavType.BoolType
+                        defaultValue = false
+                    },
                 ),
             ) { backStackEntry ->
                 val journeyId =
@@ -133,9 +149,14 @@ fun EcoStepNavHost(
                         ?.getString(Routes.JOURNEY_ID_ARGUMENT)
                         ?: return@composable
 
+                val readOnly =
+                    backStackEntry.arguments
+                        ?.getBoolean(Routes.READ_ONLY_ARGUMENT)
+                        ?: false
+
                 val journeyReviewViewModel:
                         JourneyReviewViewModel = viewModel(
-                    key = journeyId,
+                    key = "$journeyId-$readOnly",
                     factory = ViewModelFactory {
                         JourneyReviewViewModel(
                             journeyRepository =
@@ -145,16 +166,11 @@ fun EcoStepNavHost(
                     },
                 )
 
-                /*
-                 * The ViewModel is created here first.
-                 * The next step connects it to JourneyReviewScreen.
-                 */
                 JourneyReviewScreen(
                     viewModel = journeyReviewViewModel,
-                    onBackToMap = {
-                        navController.navigate(Routes.HOME) {
-                            launchSingleTop = true
-                        }
+                    readOnly = readOnly,
+                    onBack = {
+                        navController.popBackStack()
                     },
                 )
             }
@@ -167,8 +183,74 @@ fun EcoStepNavHost(
                 HistoryScreen()
             }
 
-            composable(Routes.SETTINGS) {
-                SettingsScreen()
+            composable(Routes.JOURNEY_HISTORY) {
+                val journeyHistoryViewModel:
+                        JourneyHistoryViewModel = viewModel(
+                    factory = ViewModelFactory {
+                        JourneyHistoryViewModel(
+                            journeyRepository =
+                                mockJourneyRepository,
+
+                            /*
+                             * TODO(Profile/Auth):
+                             * Replace this mock user ID with the signed-in
+                             * user's ID from the authentication module.
+                             */
+                            userId = "mock_user",
+                        )
+                    },
+                )
+
+                JourneyHistoryScreen(
+                    viewModel = journeyHistoryViewModel,
+                    onBack = {
+                        navController.popBackStack()
+                    },
+                    onJourneySelected = { journeyId ->
+                        navController.navigate(
+                            Routes.journeyHistoryDetail(journeyId),
+                        )
+                    },
+                )
+            }
+
+            composable(Routes.PROFILE) {
+                ProfileScreen(
+                    onViewJourneyHistory = {
+                        navController.navigate(
+                            Routes.JOURNEY_HISTORY,
+                        ) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onOpenLocationSettings = {
+                        val intent = Intent(
+                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        ).apply {
+                            data = Uri.fromParts(
+                                "package",
+                                context.packageName,
+                                null,
+                            )
+                        }
+
+                        context.startActivity(intent)
+                    },
+                    onSignOut = {
+                        /*
+                         * TODO(Profile/Auth):
+                         * Call the authentication module's sign-out function
+                         * before navigating to LoginScreen.
+                         */
+                        navController.navigate(Routes.LOGIN) {
+                            popUpTo(navController.graph.id) {
+                                inclusive = true
+                            }
+
+                            launchSingleTop = true
+                        }
+                    },
+                )
             }
         }
     }

@@ -6,14 +6,41 @@ object Routes {
 
     const val JOURNEY_REVIEW = "journey_review"
     const val JOURNEY_ID_ARGUMENT = "journeyId"
+    const val READ_ONLY_ARGUMENT = "readOnly"
+
     const val JOURNEY_REVIEW_WITH_ID =
-        "$JOURNEY_REVIEW/{$JOURNEY_ID_ARGUMENT}"
+        "$JOURNEY_REVIEW/{$JOURNEY_ID_ARGUMENT}" +
+                "?$READ_ONLY_ARGUMENT={$READ_ONLY_ARGUMENT}"
 
     const val MISSIONS = "missions"
     const val HISTORY = "history"
-    const val SETTINGS = "settings"
+    const val JOURNEY_HISTORY = "journey_history"
+    const val PROFILE = "profile"
 
-    fun journeyReview(journeyId: String): String {
-        return "$JOURNEY_REVIEW/$journeyId"
+    /**
+     * Opens Journey Review after a newly completed journey.
+     *
+     * The user can confirm the detected transport mode before saving.
+     */
+    fun journeyReview(
+        journeyId: String,
+        readOnly: Boolean = false,
+    ): String {
+        return "$JOURNEY_REVIEW/$journeyId" +
+                "?$READ_ONLY_ARGUMENT=$readOnly"
+    }
+
+    /**
+     * Opens an existing saved journey from Journey History.
+     *
+     * Existing records are displayed without editing or confirming again.
+     */
+    fun journeyHistoryDetail(
+        journeyId: String,
+    ): String {
+        return journeyReview(
+            journeyId = journeyId,
+            readOnly = true,
+        )
     }
 }

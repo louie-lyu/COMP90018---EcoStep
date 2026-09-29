@@ -51,46 +51,83 @@ import androidx.compose.ui.text.style.TextAlign
 @Composable
 fun JourneyReviewScreen(
     viewModel: JourneyReviewViewModel,
-    onBackToMap: () -> Unit = {},
+    readOnly: Boolean = false,
+    onBack: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    when {
-        uiState.isLoading -> {
-            JourneyLoadingContent()
-        }
+    Box(
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        when {
+            uiState.isLoading -> {
+                JourneyLoadingContent()
+            }
 
-        uiState.errorMessage != null -> {
-            JourneyErrorContent(
-                message = uiState.errorMessage
-                    ?: "Unable to load journey.",
-            )
-        }
-
-        uiState.journey == null -> {
-            JourneyErrorContent(
-                message = "Journey is unavailable.",
-            )
-        }
-
-        else -> {
-            JourneyReviewLoadedContent(
-                uiState = uiState,
-                onModeSelected = viewModel::selectTransportMode,
-                onConfirmJourney = viewModel::saveJourney,
-            )
-
-            if (uiState.isSaved) {
-                JourneyConfirmedDialog(
-                    ecoPoints = uiState.ecoPoints,
-                    carbonSavedKg = uiState.carbonSavedKg,
-                    onDismiss = {
-                        viewModel.dismissConfirmation()
-                        onBackToMap()
-                    },
+            uiState.errorMessage != null -> {
+                JourneyErrorContent(
+                    message = uiState.errorMessage
+                        ?: "Unable to load journey.",
                 )
             }
+
+            uiState.journey == null -> {
+                JourneyErrorContent(
+                    message = "Journey is unavailable.",
+                )
+            }
+
+            else -> {
+                JourneyReviewLoadedContent(
+                    uiState = uiState,
+                    readOnly = readOnly,
+                    onModeSelected =
+                        viewModel::selectTransportMode,
+                    onConfirmJourney =
+                        viewModel::saveJourney,
+                )
+
+                if (!readOnly && uiState.isSaved) {
+                    JourneyConfirmedDialog(
+                        ecoPoints = uiState.ecoPoints,
+                        carbonSavedKg =
+                            uiState.carbonSavedKg,
+                        onDismiss = {
+                            viewModel.dismissConfirmation()
+                            onBack()
+                        },
+                    )
+                }
+            }
         }
+
+        JourneyReviewBackButton(
+            onClick = onBack,
+            modifier = Modifier.align(Alignment.TopStart),
+        )
+    }
+}
+
+@Composable
+private fun JourneyReviewBackButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    TextButton(
+        onClick = onClick,
+        modifier = modifier
+            .padding(
+                start = 4.dp,
+                top = 4.dp,
+            )
+            .size(56.dp),
+    ) {
+        Text(
+            text = "←",
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Normal,
+            color = MaterialTheme.colorScheme.primary,
+        )
     }
 }
 
@@ -136,6 +173,7 @@ private fun JourneyErrorContent(
 @Composable
 private fun JourneyReviewLoadedContent(
     uiState: JourneyReviewUiState,
+    readOnly: Boolean,
     onModeSelected: (TransportMode) -> Unit,
     onConfirmJourney: () -> Unit,
 ) {
@@ -159,22 +197,25 @@ private fun JourneyReviewLoadedContent(
             item {
                 JourneyReviewContent(
                     uiState = uiState,
+                    readOnly = readOnly,
                     onModeSelected = onModeSelected,
                 )
             }
 
-            item {
-                ConfirmJourneyButton(
-                    ecoPoints = uiState.ecoPoints,
-                    carbonSavedKg = uiState.carbonSavedKg,
-                    isSaving = uiState.isSaving,
-                    onClick = onConfirmJourney,
-                )
+            if (!readOnly) {
+                item {
+                    ConfirmJourneyButton(
+                        ecoPoints = uiState.ecoPoints,
+                        carbonSavedKg =
+                            uiState.carbonSavedKg,
+                        isSaving = uiState.isSaving,
+                        onClick = onConfirmJourney,
+                    )
+                }
             }
         }
     }
 }
-
 @Composable
 private fun ConfirmJourneyButton(
     ecoPoints: Int,
@@ -387,6 +428,7 @@ private fun JourneyMapPreview(
 @Composable
 private fun JourneyReviewContent(
     uiState: JourneyReviewUiState,
+    readOnly: Boolean,
     onModeSelected: (TransportMode) -> Unit,
 ) {
     Column(
@@ -405,7 +447,11 @@ private fun JourneyReviewContent(
             ),
     ) {
         Text(
-            text = "Journey complete",
+            text = if (readOnly) {
+                "Journey details"
+            } else {
+                "Journey complete"
+            },
             style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.onBackground,
         )
@@ -413,7 +459,11 @@ private fun JourneyReviewContent(
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-            text = "Review your journey before saving it.",
+            text = if (readOnly) {
+                "Your saved journey information."
+            } else {
+                "Review your journey before saving it."
+            },
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -430,39 +480,67 @@ private fun JourneyReviewContent(
 
         Spacer(modifier = Modifier.height(22.dp))
 
-        Text(
-            text = "How did you travel?",
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
+        if (readOnly) {
+            Text(
+                text = "Transport mode",
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
 
-        Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
-        val transportModeMessage =
-            if (uiState.selectedMode == uiState.detectedMode) {
-                "We detected ${
-                    transportModeName(uiState.detectedMode)
-                }."
-            } else {
-                "Changed from ${
-                    transportModeName(uiState.detectedMode)
-                } to ${
-                    transportModeName(uiState.selectedMode)
-                }."
-            }
+            Text(
+                text = transportModeName(
+                    uiState.selectedMode,
+                ),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        } else {
+            Text(
+                text = "How did you travel?",
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
 
-        Text(
-            text = transportModeMessage,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
+            Spacer(modifier = Modifier.height(4.dp))
 
-        Spacer(modifier = Modifier.height(14.dp))
+            val transportModeMessage =
+                if (
+                    uiState.selectedMode ==
+                    uiState.detectedMode
+                ) {
+                    "We detected ${
+                        transportModeName(
+                            uiState.detectedMode,
+                        )
+                    }."
+                } else {
+                    "Changed from ${
+                        transportModeName(
+                            uiState.detectedMode,
+                        )
+                    } to ${
+                        transportModeName(
+                            uiState.selectedMode,
+                        )
+                    }."
+                }
 
-        TransportModeSelector(
-            selectedMode = uiState.selectedMode,
-            onModeSelected = onModeSelected,
-        )
+            Text(
+                text = transportModeMessage,
+                style = MaterialTheme.typography.bodyLarge,
+                color =
+                    MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            TransportModeSelector(
+                selectedMode = uiState.selectedMode,
+                onModeSelected = onModeSelected,
+            )
+        }
 
         Spacer(modifier = Modifier.height(18.dp))
 
