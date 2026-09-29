@@ -29,14 +29,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.app.ActivityCompat
-import java.util.Locale
 
 @Composable
 fun TrackingRoute(viewModel: TrackingViewModel, onJourneySaved: (String) -> Unit) {
     val context = LocalContext.current
+    val locale = LocalLocale.current.platformLocale
     val state by viewModel.tracking.collectAsState()
     val ui by viewModel.ui.collectAsState()
     var askedLocation by remember { mutableStateOf(false) }
@@ -76,10 +77,20 @@ fun TrackingRoute(viewModel: TrackingViewModel, onJourneySaved: (String) -> Unit
         Text("Journey tracking")
         Text(if (state.isRecording) "Recording" else "Ready to record")
         Text("Duration: ${state.elapsedSeconds / 60}:${(state.elapsedSeconds % 60).toString().padStart(2, '0')}")
-        Text(String.format(Locale.getDefault(), "Distance: %.0f m", state.distanceMeters))
+        Text(
+            String.format(
+                locale,
+                "Distance: %.0f m",
+                state.distanceMeters,
+            ),
+        )
         Text(
             state.lastAccuracyMeters?.let {
-                String.format(Locale.getDefault(), "GPS accuracy: %.0f m", it)
+                String.format(
+                    locale,
+                    "GPS accuracy: %.0f m",
+                    it,
+                )
             } ?: "GPS: waiting for a valid fix",
         )
         Text("GPS samples: ${state.gpsCount}")
