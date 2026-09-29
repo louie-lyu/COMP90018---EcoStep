@@ -1,24 +1,37 @@
 package com.ecostep.app.core.di
 
-import com.ecostep.app.network.route.RouteAccessTokenProvider
-import com.ecostep.app.network.route.RouteProxyClient
-import com.ecostep.app.network.route.RouteProxyDataSource
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ecostep.app.BuildConfig
+import com.ecostep.app.data.cache.publictransport.DataStorePublicTransportCache
+import com.ecostep.app.data.cache.publictransport.PublicTransportCache
+import com.ecostep.app.data.cache.publictransport.publicTransportDataStore
+import com.ecostep.app.data.cache.route.DataStoreRouteCache
+import com.ecostep.app.data.cache.route.RouteCache
+import com.ecostep.app.data.cache.route.routeDataStore
 import com.ecostep.app.data.cache.weather.DataStoreWeatherCache
 import com.ecostep.app.data.cache.weather.WeatherCache
 import com.ecostep.app.data.cache.weather.weatherDataStore
+import com.ecostep.app.data.firebase.FirebaseAuthRepository
+import com.ecostep.app.data.firebase.FirestoreJourneyRepository
+import com.ecostep.app.data.repository.AuthRepository
 import com.ecostep.app.data.repository.DefaultExternalDataRepository
 import com.ecostep.app.data.repository.ExternalDataRepository
+import com.ecostep.app.data.repository.JourneyRepository
+import com.ecostep.app.network.publictransport.TransitousClient
+import com.ecostep.app.network.publictransport.TransitousPublicTransportDataSource
+import com.ecostep.app.network.route.RouteAccessTokenProvider
+import com.ecostep.app.network.route.RouteProxyClient
+import com.ecostep.app.network.route.RouteProxyDataSource
 import com.ecostep.app.network.weather.OpenMeteoApi
 import com.ecostep.app.network.weather.OpenMeteoClient
 import com.ecostep.app.network.weather.OpenMeteoWeatherDataSource
+import com.ecostep.app.sensors.tracking.JourneyTracker
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import com.ecostep.app.network.publictransport.TransitousClient
-import com.ecostep.app.network.publictransport.TransitousPublicTransportDataSource
 
 /**
  * Manual dependency provisioning (no DI framework) — see docs/ARCHITECTURE.md for why.
@@ -27,26 +40,21 @@ import com.ecostep.app.network.publictransport.TransitousPublicTransportDataSour
 class AppContainer(context: Context) {
 
     private val applicationContext = context.applicationContext
-    val journeyTracker by lazy { com.ecostep.app.sensors.tracking.JourneyTracker() }
 
-    /**
-     * Shared HTTP client. Jianing builds per-API Retrofit instances (weather/route/public
-     * transport/AI) on top of this, so every network client shares one connection pool and
-     * one logging policy instead of each owner configuring OkHttp separately.
-     */
+    val journeyTracker: JourneyTracker by lazy {
+        JourneyTracker()
+    }
+
     val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
-                    // Keep the HTTP method and response status while hiding location data.
                     redactQueryParams(
                         "latitude",
                         "longitude",
                         "fromPlace",
                         "toPlace",
                     )
-
-                    // Never log request/response details in release builds.
                     level = if (BuildConfig.DEBUG) {
                         HttpLoggingInterceptor.Level.BASIC
                     } else {
@@ -68,6 +76,18 @@ class AppContainer(context: Context) {
     private val weatherCache: WeatherCache by lazy {
         DataStoreWeatherCache(
             dataStore = applicationContext.weatherDataStore,
+        )
+    }
+
+    private val routeCache: RouteCache by lazy {
+        DataStoreRouteCache(
+            dataStore = applicationContext.routeDataStore,
+        )
+    }
+
+    private val publicTransportCache: PublicTransportCache by lazy {
+        DataStorePublicTransportCache(
+            dataStore = applicationContext.publicTransportDataStore,
         )
     }
 
@@ -104,35 +124,31 @@ class AppContainer(context: Context) {
             weatherDataSource = weatherDataSource,
             weatherCache = weatherCache,
             routeDataSource = routeDataSource,
-            publicTransportDataSource =
-                publicTransportDataSource,
+            publicTransportDataSource = publicTransportDataSource,
+            routeCache = routeCache,
+            publicTransportCache = publicTransportCache,
         )
     }
 
-    val authRepository: com.ecostep.app.data.repository.AuthRepository by lazy {
-        com.ecostep.app.data.firebase.FirebaseAuthRepository(
-            firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance(),
+    val authRepository: AuthRepository by lazy {
+        FirebaseAuthRepository(
+            firebaseAuth = FirebaseAuth.getInstance(),
         )
     }
 
-    val journeyRepository: com.ecostep.app.data.repository.JourneyRepository by lazy {
-        com.ecostep.app.data.firebase.FirestoreJourneyRepository(
+    val journeyRepository: JourneyRepository by lazy {
+        FirestoreJourneyRepository(
             authRepository = authRepository,
-            firestore = com.google.firebase.firestore.FirebaseFirestore.getInstance(),
+            firestore = FirebaseFirestore.getInstance(),
         )
     }
 }
 
-/**
- * Generic ViewModel factory so every screen constructs its ViewModel the same documented way:
- *
- * ```
- * val viewModel: HomeViewModel = viewModel(
- *     factory = ViewModelFactory { HomeViewModel(appContainer.journeyRepository) },
- * )
- * ```
- */
-class ViewModelFactory<T : ViewModel>(private val creator: () -> T) : ViewModelProvider.Factory {
+class ViewModelFactory<T : ViewModel>(
+    private val creator: () -> T,
+) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <VM : ViewModel> create(modelClass: Class<VM>): VM = creator() as VM
+    override fun <VM : ViewModel> create(
+        modelClass: Class<VM>,
+    ): VM = creator() as VM
 }
