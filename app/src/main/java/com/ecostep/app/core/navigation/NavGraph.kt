@@ -24,8 +24,9 @@ import com.ecostep.app.sensors.ui.TrackingRoute
 import com.ecostep.app.sensors.ui.TrackingRoutes
 import com.ecostep.app.sensors.ui.TrackingViewModel
 import com.ecostep.app.ui.components.EcoStepBottomBar
-import com.ecostep.app.ui.mock.MockHomeMissionDataSource
 import com.ecostep.app.ui.mock.MockHomeRouteDataSource
+import com.ecostep.app.ui.mock.MockJourneyRepository
+import com.ecostep.app.ui.mock.MockMissionRepository
 import com.ecostep.app.ui.screens.HistoryScreen
 import com.ecostep.app.ui.screens.HomeScreen
 import com.ecostep.app.ui.screens.JourneyReviewScreen
@@ -33,6 +34,7 @@ import com.ecostep.app.ui.screens.MissionScreen
 import com.ecostep.app.ui.screens.SettingsScreen
 import com.ecostep.app.ui.viewmodels.HomeViewModel
 import com.ecostep.app.ui.viewmodels.JourneyReviewViewModel
+import com.ecostep.app.ui.viewmodels.MissionViewModel
 
 @Composable
 fun EcoStepNavHost(
@@ -48,12 +50,16 @@ fun EcoStepNavHost(
         PlaceNameResolver(appContainerContext)
     }
 
+    val mockJourneyRepository = remember {
+        MockJourneyRepository()
+    }
+
     val mockHomeRouteDataSource = remember {
         MockHomeRouteDataSource()
     }
 
-    val mockHomeMissionDataSource = remember {
-        MockHomeMissionDataSource()
+    val missionRepository = remember {
+        MockMissionRepository()
     }
 
     val navBackStackEntry by
@@ -99,12 +105,12 @@ fun EcoStepNavHost(
                 LoginRoute(
                     authRepository = appContainer.authRepository,
                     onLoginSuccess = {
-                        navController.navigate(
-                            TrackingRoutes.TRACKING,
-                        ) {
+                        navController.navigate(Routes.HOME) {
                             popUpTo(Routes.LOGIN) {
                                 inclusive = true
                             }
+
+                            launchSingleTop = true
                         }
                     },
                 )
@@ -146,23 +152,21 @@ fun EcoStepNavHost(
                                         .externalDataRepository,
                                 homeRouteDataSource =
                                     mockHomeRouteDataSource,
-                                homeMissionDataSource =
-                                    mockHomeMissionDataSource,
+                                missionRepository =
+                                    missionRepository,
                             )
                         },
                     )
 
                 HomeScreen(
                     viewModel = homeViewModel,
-                    onStartMission = { _ ->
-                        // TODO(Missions/Navigation):
-                        // Start the selected mission when the
-                        // mission navigation flow is available.
+                    onStartMission = { missionId ->
+                        homeViewModel.startMission(missionId)
                     },
                     onViewMission = { _ ->
-                        // TODO(Missions/Navigation):
-                        // Open the selected mission details when
-                        // the mission detail route is available.
+                        navController.navigate(Routes.MISSIONS) {
+                            launchSingleTop = true
+                        }
                     },
                 )
             }
@@ -191,8 +195,7 @@ fun EcoStepNavHost(
                         factory = ViewModelFactory {
                             JourneyReviewViewModel(
                                 journeyRepository =
-                                    appContainer
-                                        .journeyRepository,
+                                    mockJourneyRepository,
                                 journeyId = journeyId,
                                 placeNameResolver =
                                     placeNameResolver::resolve,
@@ -213,7 +216,38 @@ fun EcoStepNavHost(
             }
 
             composable(Routes.MISSIONS) {
-                MissionScreen()
+                val missionViewModel: MissionViewModel = viewModel(
+                    factory = ViewModelFactory {
+                        MissionViewModel(
+                            missionRepository = missionRepository,
+                            missionJourneyRecorder =
+                                mockJourneyRepository,
+                        )
+                    },
+                )
+
+                MissionScreen(
+                    missionViewModel = missionViewModel,
+                    onStartMission = {
+                        navController.navigate(Routes.HOME) {
+                            popUpTo(
+                                navController.graph
+                                    .findStartDestination()
+                                    .id,
+                            ) {
+                                inclusive = false
+                            }
+
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                    onOpenJourneyReview = { journeyId ->
+                        navController.navigate(
+                            Routes.journeyReview(journeyId),
+                        )
+                    },
+                )
             }
 
             composable(Routes.HISTORY) {

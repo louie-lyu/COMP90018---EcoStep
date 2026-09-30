@@ -109,6 +109,9 @@ class JourneyReviewViewModel(
         _uiState.update {
             it.copy(
                 selectedMode = mode,
+                // TODO(Algorithm): Recalculate these values through the
+                // production EcoPointsCalculator and CarbonCalculator after
+                // the user corrects the detected transport mode.
                 ecoPoints = calculateMockEcoPoints(
                     mode = mode,
                     distanceMeters = journey.distanceMeters,
@@ -141,6 +144,13 @@ class JourneyReviewViewModel(
                 // Firestore queues offline writes locally, while the Task can wait for the server.
                 withTimeoutOrNull(3_000) { journeyRepository.saveJourney(updatedJourney) }
 
+                /*
+                 * TODO(Algorithm/Database):
+                 * Persist the final EcoPoints and carbon-saving result after the
+                 * production calculators are connected. JourneySummary currently
+                 * stores only the user-confirmed transport mode, so these calculated
+                 * values remain in the UI state and are not saved.
+                 */
                 _uiState.update {
                     it.copy(
                         journey = updatedJourney,
@@ -171,6 +181,9 @@ private fun JourneySummary.toUiState(): JourneyReviewUiState {
     return JourneyReviewUiState(
         journey = this,
         selectedMode = transportMode,
+
+        // TODO(Tracking): JourneySummary currently contains the planned or
+        // mockmode. Use the sensor-detected mode when tracking is available.
         detectedMode = transportMode,
         startLocationText = startLocation.toDisplayText(),
         endLocationText = endLocation.toDisplayText(),
@@ -241,7 +254,11 @@ private fun formatDate(timeMillis: Long): String {
 }
 
 /**
- * Temporary UI mock until the Algorithm & AI module provides EcoPoints.
+ * Temporary UI-only EcoPoints estimate.
+ *
+ * TODO(Algorithm): Replace this function and its hard-coded rates with
+ * the production EcoPointsCalculator. The calculation should use the
+ * verified journey distance and user-confirmed transport mode.
  */
 private fun calculateMockEcoPoints(
     mode: TransportMode,

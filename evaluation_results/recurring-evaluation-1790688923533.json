@@ -1,0 +1,3114 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": 1,
+  "detector": "DefaultRecurringJourneyDetector",
+  "startedAtMillis": 1790688923533,
+  "gitCommit": "b0506c3dcd04ab9fafacbac94a0dfdc05ca47247",
+  "workingTreeDirty": true,
+  "device": "Google sdk_gphone64_x86_64",
+  "androidVersion": "16",
+  "apiLevel": 36,
+  "buildType": "debug",
+  "timeZone": "Australia\/Melbourne",
+  "scope": "Synthetic single-user rule validation with manually specified expected patterns; not real-world accuracy.",
+  "rules": {
+    "locationToleranceMeters": 200,
+    "departureToleranceMinutes": 60,
+    "minimumOccurrences": 3,
+    "referenceCountsAsOccurrence": true,
+    "duplicatePolicy": "Identical copies of a journey ID count once"
+  },
+  "benchmarkMethod": "Sequential calls using System.nanoTime; warm-ups, fixture generation, assertions and JSON writes excluded. Allocation and GC inside detect are included. Nearest-rank percentiles use successful, validated samples only.",
+  "plannedCases": 41,
+  "totalCases": 41,
+  "passedCases": 41,
+  "failedCases": 0,
+  "casePassRate": 1,
+  "classification": {
+    "unit": "One synthetic scenario; positive means detect returns a pattern",
+    "truePositives": 26,
+    "trueNegatives": 15,
+    "falsePositives": 0,
+    "falseNegatives": 0,
+    "unclassifiedCases": 0,
+    "falsePositiveRate": 0,
+    "falseNegativeRate": 0
+  },
+  "records": [
+    {
+      "scenario": "empty_history",
+      "description": "Reference alone is one occurrence",
+      "historySize": 0,
+      "expectedDetected": false,
+      "expected": null,
+      "passed": true,
+      "actualDetected": false,
+      "actual": null
+    },
+    {
+      "scenario": "two_occurrences",
+      "description": "Reference plus one history entry is below three",
+      "historySize": 1,
+      "expectedDetected": false,
+      "expected": null,
+      "passed": true,
+      "actualDetected": false,
+      "actual": null
+    },
+    {
+      "scenario": "three_occurrences",
+      "description": "Reference plus two history entries meets the minimum",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "five_occurrences",
+      "description": "Count all five unique matching journeys",
+      "historySize": 4,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 5,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY",
+          "THURSDAY",
+          "FRIDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 5,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY",
+          "THURSDAY",
+          "FRIDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "location_start_-200.1",
+      "description": "start displacement -200.1 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": false,
+      "expected": null,
+      "passed": true,
+      "actualDetected": false,
+      "actual": null
+    },
+    {
+      "scenario": "location_start_-200.0",
+      "description": "start displacement -200.0 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "location_start_-199.9",
+      "description": "start displacement -199.9 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "location_start_199.9",
+      "description": "start displacement 199.9 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "location_start_200.0",
+      "description": "start displacement 200.0 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "location_start_200.1",
+      "description": "start displacement 200.1 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": false,
+      "expected": null,
+      "passed": true,
+      "actualDetected": false,
+      "actual": null
+    },
+    {
+      "scenario": "location_end_-200.1",
+      "description": "end displacement -200.1 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": false,
+      "expected": null,
+      "passed": true,
+      "actualDetected": false,
+      "actual": null
+    },
+    {
+      "scenario": "location_end_-200.0",
+      "description": "end displacement -200.0 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "location_end_-199.9",
+      "description": "end displacement -199.9 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "location_end_199.9",
+      "description": "end displacement 199.9 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "location_end_200.0",
+      "description": "end displacement 200.0 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "location_end_200.1",
+      "description": "end displacement 200.1 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": false,
+      "expected": null,
+      "passed": true,
+      "actualDetected": false,
+      "actual": null
+    },
+    {
+      "scenario": "location_both_-200.1",
+      "description": "both displacement -200.1 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": false,
+      "expected": null,
+      "passed": true,
+      "actualDetected": false,
+      "actual": null
+    },
+    {
+      "scenario": "location_both_-200.0",
+      "description": "both displacement -200.0 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "location_both_-199.9",
+      "description": "both displacement -199.9 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "location_both_199.9",
+      "description": "both displacement 199.9 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "location_both_200.0",
+      "description": "both displacement 200.0 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "location_both_200.1",
+      "description": "both displacement 200.1 m; inclusive 200 m tolerance",
+      "historySize": 2,
+      "expectedDetected": false,
+      "expected": null,
+      "passed": true,
+      "actualDetected": false,
+      "actual": null
+    },
+    {
+      "scenario": "departure_offset_-61",
+      "description": "Departure offset -61 min; inclusive 60 min tolerance",
+      "historySize": 2,
+      "expectedDetected": false,
+      "expected": null,
+      "passed": true,
+      "actualDetected": false,
+      "actual": null
+    },
+    {
+      "scenario": "departure_offset_-60",
+      "description": "Departure offset -60 min; inclusive 60 min tolerance",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 440,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 440,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "departure_offset_-59",
+      "description": "Departure offset -59 min; inclusive 60 min tolerance",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 441,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 441,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "departure_offset_59",
+      "description": "Departure offset 59 min; inclusive 60 min tolerance",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 519,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 519,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "departure_offset_60",
+      "description": "Departure offset 60 min; inclusive 60 min tolerance",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 520,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 520,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "departure_offset_61",
+      "description": "Departure offset 61 min; inclusive 60 min tolerance",
+      "historySize": 2,
+      "expectedDetected": false,
+      "expected": null,
+      "passed": true,
+      "actualDetected": false,
+      "actual": null
+    },
+    {
+      "scenario": "different_destination",
+      "description": "One distant destination leaves only two matches",
+      "historySize": 2,
+      "expectedDetected": false,
+      "expected": null,
+      "passed": true,
+      "actualDetected": false,
+      "actual": null
+    },
+    {
+      "scenario": "reverse_direction",
+      "description": "Return trips must not count as outbound journeys",
+      "historySize": 2,
+      "expectedDetected": false,
+      "expected": null,
+      "passed": true,
+      "actualDetected": false,
+      "actual": null
+    },
+    {
+      "scenario": "cross_midnight",
+      "description": "23:50, 00:10 and 00:00 average to midnight",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 0,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 0,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "duplicate_id_below_minimum",
+      "description": "Repeated copies do not create additional occurrences",
+      "historySize": 3,
+      "expectedDetected": false,
+      "expected": null,
+      "passed": true,
+      "actualDetected": false,
+      "actual": null
+    },
+    {
+      "scenario": "duplicate_id_with_pattern",
+      "description": "Repeated history IDs count once",
+      "historySize": 4,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "reference_already_in_history",
+      "description": "Reference ID counts once even when present in history",
+      "historySize": 3,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "invalid_candidate",
+      "description": "End before start excludes the candidate",
+      "historySize": 2,
+      "expectedDetected": false,
+      "expected": null,
+      "passed": true,
+      "actualDetected": false,
+      "actual": null
+    },
+    {
+      "scenario": "ignore_invalid_extra",
+      "description": "An invalid extra entry does not change a valid pattern",
+      "historySize": 3,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "invalid_reference",
+      "description": "End before start on the reference produces no pattern",
+      "historySize": 2,
+      "expectedDetected": false,
+      "expected": null,
+      "passed": true,
+      "actualDetected": false,
+      "actual": null
+    },
+    {
+      "scenario": "zero_duration",
+      "description": "Equal start and end timestamps are allowed by the current contract",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 0,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 0,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    },
+    {
+      "scenario": "output_fields",
+      "description": "Mean departure 08:10, mean duration 30 min, public transport majority",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 490,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "PUBLIC_TRANSPORT"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 490,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "PUBLIC_TRANSPORT"
+      }
+    },
+    {
+      "scenario": "history_reversed",
+      "description": "Reordering distinct IDs with an unambiguous mode majority preserves all fields",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 490,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "PUBLIC_TRANSPORT"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 490,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY"
+        ],
+        "usualTransportMode": "PUBLIC_TRANSPORT"
+      }
+    },
+    {
+      "scenario": "active_days_across_week",
+      "description": "Departure weekdays follow the fixed Melbourne time zone",
+      "historySize": 2,
+      "expectedDetected": true,
+      "expected": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "WEDNESDAY",
+          "SUNDAY"
+        ],
+        "usualTransportMode": "CAR"
+      },
+      "passed": true,
+      "actualDetected": true,
+      "actual": {
+        "occurrenceCount": 3,
+        "typicalDepartureMinuteOfDay": 480,
+        "averageDurationMinutes": 30,
+        "activeDays": [
+          "MONDAY",
+          "WEDNESDAY",
+          "SUNDAY"
+        ],
+        "usualTransportMode": "CAR"
+      }
+    }
+  ],
+  "plannedBenchmarkGroups": 8,
+  "benchmarks": [
+    {
+      "historySize": 10,
+      "distribution": "all_matching",
+      "expectedOccurrences": 11,
+      "plannedSamples": 50,
+      "warmupIterations": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "skippedSamples": 0,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "p50Ms": 0.261445,
+      "p95Ms": 0.405164,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "durationMs": 0.405164
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "durationMs": 0.34146
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "durationMs": 0.440469
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "durationMs": 0.3121
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "durationMs": 0.201206
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "durationMs": 0.223146
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "durationMs": 0.278289
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "durationMs": 0.326166
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "durationMs": 0.318364
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "durationMs": 0.242515
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "durationMs": 0.188166
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "durationMs": 0.315538
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "durationMs": 0.343197
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "durationMs": 0.38519
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "durationMs": 0.233797
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "durationMs": 0.318182
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "durationMs": 0.25386
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "durationMs": 0.23842
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "durationMs": 0.279538
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "durationMs": 0.191616
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "durationMs": 0.217697
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "durationMs": 0.193101
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "durationMs": 0.187902
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "durationMs": 0.214263
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "durationMs": 0.200078
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "durationMs": 0.267623
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "durationMs": 0.254661
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "durationMs": 0.323435
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "durationMs": 0.293175
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "durationMs": 0.261445
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "durationMs": 0.437999
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "durationMs": 0.24497
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "durationMs": 0.293645
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "durationMs": 0.309734
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "durationMs": 0.341272
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "durationMs": 0.274868
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "durationMs": 0.267243
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "durationMs": 0.327962
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "durationMs": 0.192
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "durationMs": 0.186711
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "durationMs": 0.18552
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "durationMs": 0.214032
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "durationMs": 0.303544
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "durationMs": 0.229537
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "durationMs": 0.191099
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "durationMs": 0.18709
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "durationMs": 0.191175
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "durationMs": 0.365881
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "durationMs": 0.270107
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "durationMs": 0.237699
+        }
+      ]
+    },
+    {
+      "historySize": 10,
+      "distribution": "ten_percent_matching",
+      "expectedOccurrences": 2,
+      "plannedSamples": 50,
+      "warmupIterations": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "skippedSamples": 0,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "p50Ms": 0.371587,
+      "p95Ms": 0.888989,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "durationMs": 0.848867
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "durationMs": 0.120946
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "durationMs": 0.397008
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "durationMs": 0.38467
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "durationMs": 0.932784
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "durationMs": 0.466279
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "durationMs": 0.442652
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "durationMs": 0.454396
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "durationMs": 0.499846
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "durationMs": 0.102388
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "durationMs": 0.116281
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "durationMs": 0.490819
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "durationMs": 0.888989
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "durationMs": 0.440993
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "durationMs": 0.362922
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "durationMs": 0.172083
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "durationMs": 0.111924
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "durationMs": 1.025249
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "durationMs": 0.343875
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "durationMs": 0.49608
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "durationMs": 0.421354
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "durationMs": 0.34081
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "durationMs": 0.176332
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "durationMs": 0.153199
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "durationMs": 0.452164
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "durationMs": 0.434711
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "durationMs": 0.422762
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "durationMs": 0.349081
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "durationMs": 0.398861
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "durationMs": 0.484229
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "durationMs": 0.296588
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "durationMs": 0.274349
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "durationMs": 0.337185
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "durationMs": 0.334871
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "durationMs": 0.371587
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "durationMs": 0.288976
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "durationMs": 0.129326
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "durationMs": 0.114361
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "durationMs": 0.279348
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "durationMs": 0.322541
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "durationMs": 0.463417
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "durationMs": 0.376144
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "durationMs": 0.411847
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "durationMs": 0.416468
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "durationMs": 0.389275
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "durationMs": 0.296513
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "durationMs": 0.331402
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "durationMs": 0.508361
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "durationMs": 0.184741
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "durationMs": 0.308817
+        }
+      ]
+    },
+    {
+      "historySize": 100,
+      "distribution": "all_matching",
+      "expectedOccurrences": 101,
+      "plannedSamples": 50,
+      "warmupIterations": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "skippedSamples": 0,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "p50Ms": 2.124044,
+      "p95Ms": 3.43079,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "durationMs": 2.29881
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "durationMs": 2.211785
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "durationMs": 2.285232
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "durationMs": 2.294309
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "durationMs": 2.310454
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "durationMs": 2.025847
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "durationMs": 2.368648
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "durationMs": 2.277906
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "durationMs": 2.091379
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "durationMs": 2.563225
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "durationMs": 2.118452
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "durationMs": 2.104989
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "durationMs": 1.886304
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "durationMs": 2.398898
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "durationMs": 2.069779
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "durationMs": 2.519592
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "durationMs": 2.251805
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "durationMs": 2.184876
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "durationMs": 2.391492
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "durationMs": 2.124044
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "durationMs": 2.043662
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "durationMs": 2.518548
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "durationMs": 2.218891
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "durationMs": 1.683266
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "durationMs": 2.205047
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "durationMs": 2.508516
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "durationMs": 2.409622
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "durationMs": 2.311522
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "durationMs": 1.962334
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "durationMs": 2.201158
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "durationMs": 2.054011
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "durationMs": 2.916983
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "durationMs": 4.752338
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "durationMs": 2.215868
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "durationMs": 1.088761
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "durationMs": 0.986018
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "durationMs": 0.663328
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "durationMs": 0.711876
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "durationMs": 1.128639
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "durationMs": 1.02119
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "durationMs": 0.889175
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "durationMs": 0.92012
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "durationMs": 0.72206
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "durationMs": 0.765102
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "durationMs": 0.673599
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "durationMs": 0.773903
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "durationMs": 0.770183
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "durationMs": 0.814484
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "durationMs": 3.43079
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "durationMs": 3.643745
+        }
+      ]
+    },
+    {
+      "historySize": 100,
+      "distribution": "ten_percent_matching",
+      "expectedOccurrences": 11,
+      "plannedSamples": 50,
+      "warmupIterations": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "skippedSamples": 0,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "p50Ms": 2.227322,
+      "p95Ms": 3.556087,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "durationMs": 2.365179
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "durationMs": 2.533471
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "durationMs": 1.095812
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "durationMs": 2.522616
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "durationMs": 2.343427
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "durationMs": 2.717707
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "durationMs": 2.69349
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "durationMs": 1.572436
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "durationMs": 0.76512
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "durationMs": 0.738961
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "durationMs": 0.65967
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "durationMs": 0.645051
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "durationMs": 0.792179
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "durationMs": 0.601519
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "durationMs": 2.490255
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "durationMs": 2.311138
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "durationMs": 2.72435
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "durationMs": 4.071374
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "durationMs": 2.353476
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "durationMs": 3.640388
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "durationMs": 0.633972
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "durationMs": 2.761104
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "durationMs": 3.406856
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "durationMs": 3.556087
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "durationMs": 2.697334
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "durationMs": 2.418496
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "durationMs": 2.227322
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "durationMs": 2.322554
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "durationMs": 2.602179
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "durationMs": 0.77071
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "durationMs": 0.730749
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "durationMs": 1.471814
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "durationMs": 1.767974
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "durationMs": 2.516684
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "durationMs": 2.397128
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "durationMs": 2.047881
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "durationMs": 2.590852
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "durationMs": 0.749612
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "durationMs": 0.63237
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "durationMs": 0.854313
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "durationMs": 0.790935
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "durationMs": 0.788342
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "durationMs": 0.79795
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "durationMs": 1.277876
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "durationMs": 2.504199
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "durationMs": 1.015853
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "durationMs": 0.827679
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "durationMs": 1.045402
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "durationMs": 2.944693
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "durationMs": 2.405946
+        }
+      ]
+    },
+    {
+      "historySize": 1000,
+      "distribution": "all_matching",
+      "expectedOccurrences": 1001,
+      "plannedSamples": 50,
+      "warmupIterations": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "skippedSamples": 0,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "p50Ms": 13.807653,
+      "p95Ms": 32.800965,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "durationMs": 12.234033
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "durationMs": 12.307751
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "durationMs": 24.130403
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "durationMs": 6.8479
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "durationMs": 5.956205
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "durationMs": 5.453778
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "durationMs": 5.125006
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "durationMs": 5.590977
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "durationMs": 29.666084
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "durationMs": 22.348832
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "durationMs": 13.807653
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "durationMs": 14.495158
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "durationMs": 14.295763
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "durationMs": 22.13688
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "durationMs": 23.544511
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "durationMs": 32.581961
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "durationMs": 32.800965
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "durationMs": 28.217214
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "durationMs": 22.11782
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "durationMs": 14.403504
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "durationMs": 29.009318
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "durationMs": 12.901759
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "durationMs": 21.912587
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "durationMs": 29.118253
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "durationMs": 6.95027
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "durationMs": 6.944289
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "durationMs": 24.069395
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "durationMs": 21.394196
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "durationMs": 25.559048
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "durationMs": 33.178107
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "durationMs": 36.012804
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "durationMs": 32.372825
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "durationMs": 14.378062
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "durationMs": 22.888073
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "durationMs": 19.31464
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "durationMs": 26.49494
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "durationMs": 8.360589
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "durationMs": 3.771812
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "durationMs": 4.016745
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "durationMs": 4.286506
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "durationMs": 4.310263
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "durationMs": 4.279857
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "durationMs": 3.81783
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "durationMs": 3.929729
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "durationMs": 4.032628
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "durationMs": 4.314679
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "durationMs": 4.113942
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "durationMs": 3.983591
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "durationMs": 4.267824
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "durationMs": 9.520736
+        }
+      ]
+    },
+    {
+      "historySize": 1000,
+      "distribution": "ten_percent_matching",
+      "expectedOccurrences": 101,
+      "plannedSamples": 50,
+      "warmupIterations": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "skippedSamples": 0,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "p50Ms": 3.637854,
+      "p95Ms": 5.844978,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "durationMs": 3.679918
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "durationMs": 2.180276
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "durationMs": 3.252712
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "durationMs": 5.192732
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "durationMs": 3.394722
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "durationMs": 3.599196
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "durationMs": 3.580622
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "durationMs": 4.922083
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "durationMs": 3.637854
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "durationMs": 5.181959
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "durationMs": 3.163943
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "durationMs": 3.805835
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "durationMs": 5.153494
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "durationMs": 3.233381
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "durationMs": 3.695952
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "durationMs": 3.279193
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "durationMs": 4.830837
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "durationMs": 3.318027
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "durationMs": 3.659017
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "durationMs": 5.844978
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "durationMs": 3.021943
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "durationMs": 3.59576
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "durationMs": 5.612367
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "durationMs": 2.929322
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "durationMs": 3.817795
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "durationMs": 4.983327
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "durationMs": 3.243199
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "durationMs": 3.74512
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "durationMs": 4.783838
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "durationMs": 3.386146
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "durationMs": 3.270019
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "durationMs": 3.461826
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "durationMs": 5.308234
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "durationMs": 4.609496
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "durationMs": 6.285909
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "durationMs": 4.585541
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "durationMs": 4.567072
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "durationMs": 5.42853
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "durationMs": 2.955996
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "durationMs": 2.699316
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "durationMs": 3.259021
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "durationMs": 5.86497
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "durationMs": 2.928369
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "durationMs": 3.23799
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "durationMs": 5.173382
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "durationMs": 3.46526
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "durationMs": 3.67198
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "durationMs": 3.417208
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "durationMs": 4.277131
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "durationMs": 2.535498
+        }
+      ]
+    },
+    {
+      "historySize": 10000,
+      "distribution": "all_matching",
+      "expectedOccurrences": 10001,
+      "plannedSamples": 50,
+      "warmupIterations": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "skippedSamples": 0,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "p50Ms": 44.350463,
+      "p95Ms": 48.047071,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "durationMs": 43.975939
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "durationMs": 43.34889
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "durationMs": 45.813167
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "durationMs": 46.576656
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "durationMs": 45.702346
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "durationMs": 45.941485
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "durationMs": 48.047071
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "durationMs": 46.8732
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "durationMs": 45.1913
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "durationMs": 44.380085
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "durationMs": 41.049892
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "durationMs": 40.850366
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "durationMs": 43.118864
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "durationMs": 42.267382
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "durationMs": 45.412792
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "durationMs": 43.23619
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "durationMs": 46.0279
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "durationMs": 44.406558
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "durationMs": 43.749636
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "durationMs": 45.152947
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "durationMs": 44.717015
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "durationMs": 44.22477
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "durationMs": 45.603719
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "durationMs": 46.874078
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "durationMs": 46.159603
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "durationMs": 45.221704
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "durationMs": 47.290152
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "durationMs": 48.533818
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "durationMs": 44.896351
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "durationMs": 43.003928
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "durationMs": 46.701939
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "durationMs": 44.085051
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "durationMs": 42.589357
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "durationMs": 40.841926
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "durationMs": 41.133034
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "durationMs": 40.605592
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "durationMs": 41.82484
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "durationMs": 46.233818
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "durationMs": 48.970882
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "durationMs": 42.706459
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "durationMs": 44.350463
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "durationMs": 46.114691
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "durationMs": 43.773709
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "durationMs": 43.912253
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "durationMs": 42.574356
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "durationMs": 44.561226
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "durationMs": 42.141757
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "durationMs": 43.399451
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "durationMs": 42.818717
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "durationMs": 43.715215
+        }
+      ]
+    },
+    {
+      "historySize": 10000,
+      "distribution": "ten_percent_matching",
+      "expectedOccurrences": 1001,
+      "plannedSamples": 50,
+      "warmupIterations": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "skippedSamples": 0,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "p50Ms": 31.278697,
+      "p95Ms": 35.664393,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "durationMs": 31.120284
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "durationMs": 30.602572
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "durationMs": 32.364622
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "durationMs": 31.595894
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "durationMs": 31.985951
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "durationMs": 31.29875
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "durationMs": 33.252342
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "durationMs": 32.115749
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "durationMs": 31.905493
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "durationMs": 32.98008
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "durationMs": 31.714687
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "durationMs": 30.478272
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "durationMs": 30.942111
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "durationMs": 31.508615
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "durationMs": 30.490043
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "durationMs": 31.914705
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "durationMs": 30.890474
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "durationMs": 31.51125
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "durationMs": 31.184491
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "durationMs": 30.998425
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "durationMs": 30.343728
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "durationMs": 30.628836
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "durationMs": 30.859115
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "durationMs": 30.252163
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "durationMs": 31.736028
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "durationMs": 31.785919
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "durationMs": 30.883129
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "durationMs": 29.95915
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "durationMs": 30.830425
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "durationMs": 30.726357
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "durationMs": 30.824093
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "durationMs": 32.526583
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "durationMs": 29.064092
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "durationMs": 29.880393
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "durationMs": 29.976078
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "durationMs": 34.172184
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "durationMs": 35.831841
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "durationMs": 35.664393
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "durationMs": 31.718403
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "durationMs": 31.278697
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "durationMs": 30.165984
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "durationMs": 30.408597
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "durationMs": 31.365254
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "durationMs": 38.458927
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "durationMs": 31.387291
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "durationMs": 30.8445
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "durationMs": 31.509658
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "durationMs": 31.733566
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "durationMs": 30.858564
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "durationMs": 31.382641
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "finishedAtMillis": 1790688929822
+}

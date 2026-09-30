@@ -242,7 +242,8 @@ fun HomeScreen(
                                             uiState.journeyTrackingState ==
                                             JourneyTrackingState.IN_PROGRESS
                                         ) {
-                                            "Your journey is being tracked automatically."
+                                            "${transportModeName(option.route.mode)} · " +
+                                                    "Tracking automatically"
                                         } else {
                                             "Trip tracking will start automatically " +
                                                     "when you begin moving."
@@ -774,12 +775,13 @@ private fun RouteSelectionCard(
 
 @Composable
 private fun RouteModeButton(
+    modifier: Modifier = Modifier,
     option: HomeRouteOption?,
     mode: TransportMode =
         option?.route?.mode ?: TransportMode.UNKNOWN,
     isSelected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
+
 ) {
     val isAvailable = option != null
 

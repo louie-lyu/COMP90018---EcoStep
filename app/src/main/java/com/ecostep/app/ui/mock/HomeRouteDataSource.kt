@@ -4,10 +4,11 @@ import com.ecostep.app.data.model.RouteInfo
 import com.ecostep.app.data.model.TransportMode
 
 /**
- * UI data needed to preview a planned route.
+ * UI data used to compare a planned route and its estimated impact.
  *
- * Carbon savings and EcoPoints are temporary estimates while
- * the production planning calculations are unavailable.
+ * TODO(Algorithm): Replace the mock EcoPoints and carbon-saving values
+ * with results from the production calculators using route distance
+ * and transport mode.
  */
 data class HomeRouteOption(
     val route: RouteInfo,
@@ -16,17 +17,22 @@ data class HomeRouteOption(
 )
 
 /**
- * Temporary route source used by the Home screen.
+ * Supplies route options required by HomeScreen.
  *
- * Replace this with the production route and impact data
- * when those implementations are available.
+ * TODO(Routing): Update this interface to accept the selected origin
+ * and destination, then return route distance, duration and geometry
+ * from the production routing module.
  */
 interface HomeRouteDataSource {
     suspend fun getRouteOptions(): List<HomeRouteOption>
 }
 
 /**
- * Mock route previews for Home screen development.
+ * Supplies fixed route options for HomeScreen prototype development.
+ *
+ * TODO(Routing/Algorithm): Replace this mock implementation with
+ * production routing results and calculate each option's EcoPoints
+ * and carbon savings through the production calculators.
  */
 class MockHomeRouteDataSource : HomeRouteDataSource {
 
