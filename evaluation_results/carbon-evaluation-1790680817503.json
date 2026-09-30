@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "calculator": "DefaultCarbonCalculator",
-  "startedAtMillis": 1789999584450,
-  "finishedAtMillis": 1789999584456,
+  "startedAtMillis": 1790680817503,
+  "finishedAtMillis": 1790680817507,
   "device": "Google sdk_gphone64_x86_64; Android 16",
   "scope": "Correctness with provisional factors: WALKING=0, CYCLING=0, PUBLIC_TRANSPORT=89, CAR=192 g\/km. Not validation of real-world emissions or a latency benchmark.",
   "nonFiniteEncoding": "NaN and infinities are strings because JSON numbers must be finite.",
   "totalCases": 56,
-  "passedCases": 51,
-  "failedCases": 5,
-  "passed": false,
+  "passedCases": 56,
+  "failedCases": 0,
+  "passed": true,
   "records": [
     {
       "scenario": "reference",
@@ -195,14 +195,9 @@
       "distanceMeters": "Infinity",
       "expected": "Reject with IllegalArgumentException",
       "actual": {
-        "result": {
-          "emissionsGrams": "NaN",
-          "alternatives": []
-        }
+        "exception": "IllegalArgumentException"
       },
-      "passed": false,
-      "errorType": "IllegalStateException",
-      "error": "Invalid distance was accepted"
+      "passed": true
     },
     {
       "scenario": "zero_distance",
@@ -253,14 +248,9 @@
       "distanceMeters": "Infinity",
       "expected": "Reject with IllegalArgumentException",
       "actual": {
-        "result": {
-          "emissionsGrams": "NaN",
-          "alternatives": []
-        }
+        "exception": "IllegalArgumentException"
       },
-      "passed": false,
-      "errorType": "IllegalStateException",
-      "error": "Invalid distance was accepted"
+      "passed": true
     },
     {
       "scenario": "zero_distance",
@@ -320,23 +310,9 @@
       "distanceMeters": "Infinity",
       "expected": "Reject with IllegalArgumentException",
       "actual": {
-        "result": {
-          "emissionsGrams": "Infinity",
-          "alternatives": [
-            {
-              "mode": "WALKING",
-              "savingsGrams": "NaN"
-            },
-            {
-              "mode": "CYCLING",
-              "savingsGrams": "NaN"
-            }
-          ]
-        }
+        "exception": "IllegalArgumentException"
       },
-      "passed": false,
-      "errorType": "IllegalStateException",
-      "error": "Invalid distance was accepted"
+      "passed": true
     },
     {
       "scenario": "zero_distance",
@@ -400,27 +376,9 @@
       "distanceMeters": "Infinity",
       "expected": "Reject with IllegalArgumentException",
       "actual": {
-        "result": {
-          "emissionsGrams": "Infinity",
-          "alternatives": [
-            {
-              "mode": "WALKING",
-              "savingsGrams": "NaN"
-            },
-            {
-              "mode": "CYCLING",
-              "savingsGrams": "NaN"
-            },
-            {
-              "mode": "PUBLIC_TRANSPORT",
-              "savingsGrams": "NaN"
-            }
-          ]
-        }
+        "exception": "IllegalArgumentException"
       },
-      "passed": false,
-      "errorType": "IllegalStateException",
-      "error": "Invalid distance was accepted"
+      "passed": true
     },
     {
       "scenario": "zero_distance",
@@ -471,14 +429,9 @@
       "distanceMeters": "Infinity",
       "expected": "Reject with IllegalArgumentException",
       "actual": {
-        "result": {
-          "emissionsGrams": 0,
-          "alternatives": []
-        }
+        "exception": "IllegalArgumentException"
       },
-      "passed": false,
-      "errorType": "IllegalStateException",
-      "error": "Invalid distance was accepted"
+      "passed": true
     },
     {
       "scenario": "large_finite_distance",
