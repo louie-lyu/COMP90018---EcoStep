@@ -1,0 +1,2406 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": 1,
+  "startedAtMillis": 1790785308986,
+  "gitCommit": "7b26fa8ec554e6f23db06c52fdc8dd7fa17de4bf",
+  "workingTreeDirty": true,
+  "device": "Google sdk_gphone64_x86_64",
+  "androidVersion": "16",
+  "apiLevel": 36,
+  "buildType": "debug",
+  "scope": "Synthetic journey -> real carbon calculator -> filtered candidate context -> real fallback\/validator -> synthetic completion -> real EcoPoints -> real weekly summary. Candidate availability and completion are supplied by the harness. No UI, sensors, Firebase, network or AI. Prototype carbon factors only. Timing includes context\/result construction and all local stages.",
+  "benchmarkMethod": "Sequential groups; System.nanoTime around batches. Local calls, coroutine\/loop overhead and result-list writes included. Fixtures, warm-ups, verification and JSON excluded. Nearest-rank P50\/P95 use successful batches. Per-call values are batch averages, not individual-call tail latency. No performance threshold; emulator JIT\/GC and group order affect timings.",
+  "plannedCases": 25,
+  "totalCases": 25,
+  "passedCases": 25,
+  "failedCases": 0,
+  "records": [
+    {
+      "scenario": "car_to_walking",
+      "expected": {
+        "emissionsGrams": 960,
+        "missionMode": "WALKING",
+        "missionSavingGrams": 960,
+        "actualSavingGrams": 960,
+        "points": 116,
+        "weeklyAccepted": 1,
+        "weeklyCompleted": 1,
+        "weeklyRate": 100,
+        "weeklySavingGrams": 960,
+        "weeklyMode": "WALKING"
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "CAR",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 960,
+              "missionId": "fallback-private_flow_car_to_walking-walking",
+              "missionMode": "WALKING",
+              "missionSavingGrams": 960,
+              "actualMode": "WALKING",
+              "actualSavingGrams": 960,
+              "points": 116
+            }
+          ],
+          "totalPoints": 116,
+          "weekly": {
+            "acceptedMissions": 1,
+            "completedMissions": 1,
+            "completionRate": 100,
+            "savingsGrams": 960,
+            "mode": "WALKING",
+            "summary": "Completed 1 of 1 accepted missions (100.0%) and saved approximately 960.0 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 1\n- Completed missions: 1\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 960.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "car_to_cycling",
+      "expected": {
+        "emissionsGrams": 960,
+        "missionMode": "CYCLING",
+        "missionSavingGrams": 960,
+        "actualSavingGrams": 960,
+        "points": 111,
+        "weeklyAccepted": 1,
+        "weeklyCompleted": 1,
+        "weeklyRate": 100,
+        "weeklySavingGrams": 960,
+        "weeklyMode": "CYCLING"
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "CAR",
+        "actualMode": "CYCLING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "CYCLING"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 960,
+              "missionId": "fallback-private_flow_car_to_cycling-cycling",
+              "missionMode": "CYCLING",
+              "missionSavingGrams": 960,
+              "actualMode": "CYCLING",
+              "actualSavingGrams": 960,
+              "points": 111
+            }
+          ],
+          "totalPoints": 111,
+          "weekly": {
+            "acceptedMissions": 1,
+            "completedMissions": 1,
+            "completionRate": 100,
+            "savingsGrams": 960,
+            "mode": "CYCLING",
+            "summary": "Completed 1 of 1 accepted missions (100.0%) and saved approximately 960.0 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 1\n- Completed missions: 1\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 960.0 grams\n- Most used completed transport mode: CYCLING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "car_to_public_transport",
+      "expected": {
+        "emissionsGrams": 960,
+        "missionMode": "PUBLIC_TRANSPORT",
+        "missionSavingGrams": 515,
+        "actualSavingGrams": 515,
+        "points": 57,
+        "weeklyAccepted": 1,
+        "weeklyCompleted": 1,
+        "weeklyRate": 100,
+        "weeklySavingGrams": 515,
+        "weeklyMode": "PUBLIC_TRANSPORT"
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "CAR",
+        "actualMode": "PUBLIC_TRANSPORT",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 960,
+              "missionId": "fallback-private_flow_car_to_public_transport-public_transport",
+              "missionMode": "PUBLIC_TRANSPORT",
+              "missionSavingGrams": 515,
+              "actualMode": "PUBLIC_TRANSPORT",
+              "actualSavingGrams": 515,
+              "points": 57
+            }
+          ],
+          "totalPoints": 57,
+          "weekly": {
+            "acceptedMissions": 1,
+            "completedMissions": 1,
+            "completionRate": 100,
+            "savingsGrams": 515,
+            "mode": "PUBLIC_TRANSPORT",
+            "summary": "Completed 1 of 1 accepted missions (100.0%) and saved approximately 515.0 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 1\n- Completed missions: 1\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 515.0 grams\n- Most used completed transport mode: PUBLIC_TRANSPORT\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "public_transport_to_walking",
+      "expected": {
+        "emissionsGrams": 445,
+        "missionMode": "WALKING",
+        "missionSavingGrams": 445,
+        "actualSavingGrams": 445,
+        "points": 65,
+        "weeklyAccepted": 1,
+        "weeklyCompleted": 1,
+        "weeklyRate": 100,
+        "weeklySavingGrams": 445,
+        "weeklyMode": "WALKING"
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "PUBLIC_TRANSPORT",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 445,
+              "missionId": "fallback-private_flow_public_transport_to_walking-walking",
+              "missionMode": "WALKING",
+              "missionSavingGrams": 445,
+              "actualMode": "WALKING",
+              "actualSavingGrams": 445,
+              "points": 65
+            }
+          ],
+          "totalPoints": 65,
+          "weekly": {
+            "acceptedMissions": 1,
+            "completedMissions": 1,
+            "completionRate": 100,
+            "savingsGrams": 445,
+            "mode": "WALKING",
+            "summary": "Completed 1 of 1 accepted missions (100.0%) and saved approximately 445.0 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 1\n- Completed missions: 1\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 445.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "public_transport_to_cycling",
+      "expected": {
+        "emissionsGrams": 445,
+        "missionMode": "CYCLING",
+        "missionSavingGrams": 445,
+        "actualSavingGrams": 445,
+        "points": 60,
+        "weeklyAccepted": 1,
+        "weeklyCompleted": 1,
+        "weeklyRate": 100,
+        "weeklySavingGrams": 445,
+        "weeklyMode": "CYCLING"
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "PUBLIC_TRANSPORT",
+        "actualMode": "CYCLING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "CYCLING"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 445,
+              "missionId": "fallback-private_flow_public_transport_to_cycling-cycling",
+              "missionMode": "CYCLING",
+              "missionSavingGrams": 445,
+              "actualMode": "CYCLING",
+              "actualSavingGrams": 445,
+              "points": 60
+            }
+          ],
+          "totalPoints": 60,
+          "weekly": {
+            "acceptedMissions": 1,
+            "completedMissions": 1,
+            "completionRate": 100,
+            "savingsGrams": 445,
+            "mode": "CYCLING",
+            "summary": "Completed 1 of 1 accepted missions (100.0%) and saved approximately 445.0 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 1\n- Completed missions: 1\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 445.0 grams\n- Most used completed transport mode: CYCLING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "fractional_distance",
+      "expected": {
+        "emissionsGrams": 240.096,
+        "missionMode": "WALKING",
+        "missionSavingGrams": 240.096,
+        "actualSavingGrams": 240.096,
+        "points": 44,
+        "weeklyAccepted": 1,
+        "weeklyCompleted": 1,
+        "weeklyRate": 100,
+        "weeklySavingGrams": 240.096,
+        "weeklyMode": "WALKING"
+      },
+      "actual": {
+        "distanceMeters": 1250.5,
+        "originalMode": "CAR",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 240.096,
+              "missionId": "fallback-private_flow_fractional_distance-walking",
+              "missionMode": "WALKING",
+              "missionSavingGrams": 240.096,
+              "actualMode": "WALKING",
+              "actualSavingGrams": 240.096,
+              "points": 44
+            }
+          ],
+          "totalPoints": 44,
+          "weekly": {
+            "acceptedMissions": 1,
+            "completedMissions": 1,
+            "completionRate": 100,
+            "savingsGrams": 240.096,
+            "mode": "WALKING",
+            "summary": "Completed 1 of 1 accepted missions (100.0%) and saved approximately 240.1 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 1\n- Completed missions: 1\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 240.1 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "points_cap",
+      "expected": {
+        "emissionsGrams": 5760,
+        "missionMode": "WALKING",
+        "missionSavingGrams": 5760,
+        "actualSavingGrams": 5760,
+        "points": 500,
+        "weeklyAccepted": 1,
+        "weeklyCompleted": 1,
+        "weeklyRate": 100,
+        "weeklySavingGrams": 5760,
+        "weeklyMode": "WALKING"
+      },
+      "actual": {
+        "distanceMeters": 30000,
+        "originalMode": "CAR",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 5760,
+              "missionId": "fallback-private_flow_points_cap-walking",
+              "missionMode": "WALKING",
+              "missionSavingGrams": 5760,
+              "actualMode": "WALKING",
+              "actualSavingGrams": 5760,
+              "points": 500
+            }
+          ],
+          "totalPoints": 500,
+          "weekly": {
+            "acceptedMissions": 1,
+            "completedMissions": 1,
+            "completionRate": 100,
+            "savingsGrams": 5760,
+            "mode": "WALKING",
+            "summary": "Completed 1 of 1 accepted missions (100.0%) and saved approximately 5760.0 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 1\n- Completed missions: 1\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 5760.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "short_positive_journey",
+      "expected": {
+        "emissionsGrams": 0.192,
+        "missionMode": "WALKING",
+        "missionSavingGrams": 0.192,
+        "actualSavingGrams": 0.192,
+        "points": 20,
+        "weeklyAccepted": 1,
+        "weeklyCompleted": 1,
+        "weeklyRate": 100,
+        "weeklySavingGrams": 0.192,
+        "weeklyMode": "WALKING"
+      },
+      "actual": {
+        "distanceMeters": 1,
+        "originalMode": "CAR",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 0.192,
+              "missionId": "fallback-private_flow_short_positive_journey-walking",
+              "missionMode": "WALKING",
+              "missionSavingGrams": 0.192,
+              "actualMode": "WALKING",
+              "actualSavingGrams": 0.192,
+              "points": 20
+            }
+          ],
+          "totalPoints": 20,
+          "weekly": {
+            "acceptedMissions": 1,
+            "completedMissions": 1,
+            "completionRate": 100,
+            "savingsGrams": 0.192,
+            "mode": "WALKING",
+            "summary": "Completed 1 of 1 accepted missions (100.0%) and saved approximately 0.2 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 1\n- Completed missions: 1\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 0.2 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "rejected_mission",
+      "expected": {
+        "emissionsGrams": 960,
+        "missionMode": "WALKING",
+        "missionSavingGrams": 960,
+        "actualSavingGrams": 960,
+        "points": 0,
+        "weeklyAccepted": 0,
+        "weeklyCompleted": 0,
+        "weeklyRate": 0,
+        "weeklySavingGrams": 0,
+        "weeklyMode": null
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "CAR",
+        "actualMode": "WALKING",
+        "accepted": false,
+        "completed": false,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 960,
+              "missionId": "fallback-private_flow_rejected_mission-walking",
+              "missionMode": "WALKING",
+              "missionSavingGrams": 960,
+              "actualMode": "WALKING",
+              "actualSavingGrams": 960,
+              "points": 0
+            }
+          ],
+          "totalPoints": 0,
+          "weekly": {
+            "acceptedMissions": 0,
+            "completedMissions": 0,
+            "completionRate": 0,
+            "savingsGrams": 0,
+            "mode": null,
+            "summary": "Completed 0 of 0 accepted missions (0.0%) and saved approximately 0.0 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 0\n- Completed missions: 0\n- Completion rate: 0.0%\n- Recorded estimated carbon saved: 0.0 grams\n- Most used completed transport mode: NONE\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "rejected_but_marked_completed",
+      "expected": {
+        "emissionsGrams": 960,
+        "missionMode": "WALKING",
+        "missionSavingGrams": 960,
+        "actualSavingGrams": 960,
+        "points": 0,
+        "weeklyAccepted": 0,
+        "weeklyCompleted": 0,
+        "weeklyRate": 0,
+        "weeklySavingGrams": 0,
+        "weeklyMode": null
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "CAR",
+        "actualMode": "WALKING",
+        "accepted": false,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 960,
+              "missionId": "fallback-private_flow_rejected_but_marked_completed-walking",
+              "missionMode": "WALKING",
+              "missionSavingGrams": 960,
+              "actualMode": "WALKING",
+              "actualSavingGrams": 960,
+              "points": 0
+            }
+          ],
+          "totalPoints": 0,
+          "weekly": {
+            "acceptedMissions": 0,
+            "completedMissions": 0,
+            "completionRate": 0,
+            "savingsGrams": 0,
+            "mode": null,
+            "summary": "Completed 0 of 0 accepted missions (0.0%) and saved approximately 0.0 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 0\n- Completed missions: 0\n- Completion rate: 0.0%\n- Recorded estimated carbon saved: 0.0 grams\n- Most used completed transport mode: NONE\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "accepted_not_completed",
+      "expected": {
+        "emissionsGrams": 960,
+        "missionMode": "WALKING",
+        "missionSavingGrams": 960,
+        "actualSavingGrams": 960,
+        "points": 0,
+        "weeklyAccepted": 1,
+        "weeklyCompleted": 0,
+        "weeklyRate": 0,
+        "weeklySavingGrams": 0,
+        "weeklyMode": null
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "CAR",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": false,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 960,
+              "missionId": "fallback-private_flow_accepted_not_completed-walking",
+              "missionMode": "WALKING",
+              "missionSavingGrams": 960,
+              "actualMode": "WALKING",
+              "actualSavingGrams": 960,
+              "points": 0
+            }
+          ],
+          "totalPoints": 0,
+          "weekly": {
+            "acceptedMissions": 1,
+            "completedMissions": 0,
+            "completionRate": 0,
+            "savingsGrams": 0,
+            "mode": null,
+            "summary": "Completed 0 of 1 accepted missions (0.0%) and saved approximately 0.0 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 1\n- Completed missions: 0\n- Completion rate: 0.0%\n- Recorded estimated carbon saved: 0.0 grams\n- Most used completed transport mode: NONE\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "corrected_to_public_transport",
+      "expected": {
+        "emissionsGrams": 960,
+        "missionMode": "WALKING",
+        "missionSavingGrams": 960,
+        "actualSavingGrams": 515,
+        "points": 57,
+        "weeklyAccepted": 1,
+        "weeklyCompleted": 1,
+        "weeklyRate": 100,
+        "weeklySavingGrams": 515,
+        "weeklyMode": "PUBLIC_TRANSPORT"
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "CAR",
+        "actualMode": "PUBLIC_TRANSPORT",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 960,
+              "missionId": "fallback-private_flow_corrected_to_public_transport-walking",
+              "missionMode": "WALKING",
+              "missionSavingGrams": 960,
+              "actualMode": "PUBLIC_TRANSPORT",
+              "actualSavingGrams": 515,
+              "points": 57
+            }
+          ],
+          "totalPoints": 57,
+          "weekly": {
+            "acceptedMissions": 1,
+            "completedMissions": 1,
+            "completionRate": 100,
+            "savingsGrams": 515,
+            "mode": "PUBLIC_TRANSPORT",
+            "summary": "Completed 1 of 1 accepted missions (100.0%) and saved approximately 515.0 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 1\n- Completed missions: 1\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 515.0 grams\n- Most used completed transport mode: PUBLIC_TRANSPORT\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "corrected_to_car",
+      "expected": {
+        "emissionsGrams": 960,
+        "missionMode": "WALKING",
+        "missionSavingGrams": 960,
+        "actualSavingGrams": 0,
+        "points": 0,
+        "weeklyAccepted": 1,
+        "weeklyCompleted": 1,
+        "weeklyRate": 100,
+        "weeklySavingGrams": 0,
+        "weeklyMode": "CAR"
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "CAR",
+        "actualMode": "CAR",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 960,
+              "missionId": "fallback-private_flow_corrected_to_car-walking",
+              "missionMode": "WALKING",
+              "missionSavingGrams": 960,
+              "actualMode": "CAR",
+              "actualSavingGrams": 0,
+              "points": 0
+            }
+          ],
+          "totalPoints": 0,
+          "weekly": {
+            "acceptedMissions": 1,
+            "completedMissions": 1,
+            "completionRate": 100,
+            "savingsGrams": 0,
+            "mode": "CAR",
+            "summary": "Completed 1 of 1 accepted missions (100.0%) and saved approximately 0.0 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 1\n- Completed missions: 1\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 0.0 grams\n- Most used completed transport mode: CAR\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "before_week",
+      "expected": {
+        "emissionsGrams": 960,
+        "missionMode": "WALKING",
+        "missionSavingGrams": 960,
+        "actualSavingGrams": 960,
+        "points": 116,
+        "weeklyAccepted": 0,
+        "weeklyCompleted": 0,
+        "weeklyRate": 0,
+        "weeklySavingGrams": 0,
+        "weeklyMode": null
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "CAR",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 999,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 960,
+              "missionId": "fallback-private_flow_before_week-walking",
+              "missionMode": "WALKING",
+              "missionSavingGrams": 960,
+              "actualMode": "WALKING",
+              "actualSavingGrams": 960,
+              "points": 116
+            }
+          ],
+          "totalPoints": 116,
+          "weekly": {
+            "acceptedMissions": 0,
+            "completedMissions": 0,
+            "completionRate": 0,
+            "savingsGrams": 0,
+            "mode": null,
+            "summary": "Completed 0 of 0 accepted missions (0.0%) and saved approximately 0.0 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 0\n- Completed missions: 0\n- Completion rate: 0.0%\n- Recorded estimated carbon saved: 0.0 grams\n- Most used completed transport mode: NONE\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "after_week",
+      "expected": {
+        "emissionsGrams": 960,
+        "missionMode": "WALKING",
+        "missionSavingGrams": 960,
+        "actualSavingGrams": 960,
+        "points": 116,
+        "weeklyAccepted": 0,
+        "weeklyCompleted": 0,
+        "weeklyRate": 0,
+        "weeklySavingGrams": 0,
+        "weeklyMode": null
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "CAR",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 2001,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 960,
+              "missionId": "fallback-private_flow_after_week-walking",
+              "missionMode": "WALKING",
+              "missionSavingGrams": 960,
+              "actualMode": "WALKING",
+              "actualSavingGrams": 960,
+              "points": 116
+            }
+          ],
+          "totalPoints": 116,
+          "weekly": {
+            "acceptedMissions": 0,
+            "completedMissions": 0,
+            "completionRate": 0,
+            "savingsGrams": 0,
+            "mode": null,
+            "summary": "Completed 0 of 0 accepted missions (0.0%) and saved approximately 0.0 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 0\n- Completed missions: 0\n- Completion rate: 0.0%\n- Recorded estimated carbon saved: 0.0 grams\n- Most used completed transport mode: NONE\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "week_start_included",
+      "expected": {
+        "emissionsGrams": 960,
+        "missionMode": "WALKING",
+        "missionSavingGrams": 960,
+        "actualSavingGrams": 960,
+        "points": 116,
+        "weeklyAccepted": 1,
+        "weeklyCompleted": 1,
+        "weeklyRate": 100,
+        "weeklySavingGrams": 960,
+        "weeklyMode": "WALKING"
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "CAR",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1000,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 960,
+              "missionId": "fallback-private_flow_week_start_included-walking",
+              "missionMode": "WALKING",
+              "missionSavingGrams": 960,
+              "actualMode": "WALKING",
+              "actualSavingGrams": 960,
+              "points": 116
+            }
+          ],
+          "totalPoints": 116,
+          "weekly": {
+            "acceptedMissions": 1,
+            "completedMissions": 1,
+            "completionRate": 100,
+            "savingsGrams": 960,
+            "mode": "WALKING",
+            "summary": "Completed 1 of 1 accepted missions (100.0%) and saved approximately 960.0 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 1\n- Completed missions: 1\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 960.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "week_end_included",
+      "expected": {
+        "emissionsGrams": 960,
+        "missionMode": "WALKING",
+        "missionSavingGrams": 960,
+        "actualSavingGrams": 960,
+        "points": 116,
+        "weeklyAccepted": 1,
+        "weeklyCompleted": 1,
+        "weeklyRate": 100,
+        "weeklySavingGrams": 960,
+        "weeklyMode": "WALKING"
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "CAR",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 2000,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "weekly",
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 960,
+              "missionId": "fallback-private_flow_week_end_included-walking",
+              "missionMode": "WALKING",
+              "missionSavingGrams": 960,
+              "actualMode": "WALKING",
+              "actualSavingGrams": 960,
+              "points": 116
+            }
+          ],
+          "totalPoints": 116,
+          "weekly": {
+            "acceptedMissions": 1,
+            "completedMissions": 1,
+            "completionRate": 100,
+            "savingsGrams": 960,
+            "mode": "WALKING",
+            "summary": "Completed 1 of 1 accepted missions (100.0%) and saved approximately 960.0 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 1\n- Completed missions: 1\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 960.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "zero_distance_no_mission",
+      "expected": {
+        "error": "IllegalArgumentException",
+        "errorStage": "fallback"
+      },
+      "actual": {
+        "distanceMeters": 0,
+        "originalMode": "CAR",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "fallback",
+        "error": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "no_lower_carbon_WALKING",
+      "expected": {
+        "error": "IllegalArgumentException",
+        "errorStage": "fallback"
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "WALKING",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "fallback",
+        "error": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "no_lower_carbon_CYCLING",
+      "expected": {
+        "error": "IllegalArgumentException",
+        "errorStage": "fallback"
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "CYCLING",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "fallback",
+        "error": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "no_lower_carbon_UNKNOWN",
+      "expected": {
+        "error": "IllegalArgumentException",
+        "errorStage": "fallback"
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "UNKNOWN",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "fallback",
+        "error": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "no_available_alternative",
+      "expected": {
+        "error": "IllegalArgumentException",
+        "errorStage": "fallback"
+      },
+      "actual": {
+        "distanceMeters": 5000,
+        "originalMode": "CAR",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [],
+        "stage": "fallback",
+        "error": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "negative_distance_rejected",
+      "expected": {
+        "error": "IllegalArgumentException",
+        "errorStage": "carbon"
+      },
+      "actual": {
+        "distanceMeters": -1,
+        "originalMode": "CAR",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "carbon",
+        "error": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "nonfinite_distance_rejected",
+      "expected": {
+        "error": "IllegalArgumentException",
+        "errorStage": "carbon"
+      },
+      "actual": {
+        "distanceMeters": "NaN",
+        "originalMode": "CAR",
+        "actualMode": "WALKING",
+        "accepted": true,
+        "completed": true,
+        "timestampMillis": 1500,
+        "availableModes": [
+          "WALKING",
+          "CYCLING",
+          "PUBLIC_TRANSPORT"
+        ],
+        "stage": "carbon",
+        "error": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "mixed_week_totals",
+      "expected": {
+        "points": 266,
+        "weeklyAccepted": 3,
+        "weeklyCompleted": 3,
+        "weeklySavingGrams": 2112,
+        "weeklyMode": "WALKING"
+      },
+      "actual": {
+        "flow": {
+          "journeys": [
+            {
+              "emissionsGrams": 192,
+              "missionId": "fallback-private_flow_mixed_short_walk-walking",
+              "missionMode": "WALKING",
+              "missionSavingGrams": 192,
+              "actualMode": "WALKING",
+              "actualSavingGrams": 192,
+              "points": 39
+            },
+            {
+              "emissionsGrams": 960,
+              "missionId": "fallback-private_flow_mixed_walk-walking",
+              "missionMode": "WALKING",
+              "missionSavingGrams": 960,
+              "actualMode": "WALKING",
+              "actualSavingGrams": 960,
+              "points": 116
+            },
+            {
+              "emissionsGrams": 960,
+              "missionId": "fallback-private_flow_mixed_cycle-cycling",
+              "missionMode": "CYCLING",
+              "missionSavingGrams": 960,
+              "actualMode": "CYCLING",
+              "actualSavingGrams": 960,
+              "points": 111
+            }
+          ],
+          "totalPoints": 266,
+          "weekly": {
+            "acceptedMissions": 3,
+            "completedMissions": 3,
+            "completionRate": 100,
+            "savingsGrams": 2112,
+            "mode": "WALKING",
+            "summary": "Completed 3 of 3 accepted missions (100.0%) and saved approximately 2112.0 g of CO2.",
+            "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 3\n- Completed missions: 3\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 2112.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+          }
+        }
+      },
+      "passed": true
+    }
+  ],
+  "plannedBenchmarkGroups": 4,
+  "benchmarks": [
+    {
+      "scenario": "car_to_walking",
+      "inputSize": 1,
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.692843,
+      "p95BatchMs": 4.433364,
+      "p50AveragePerCallUs": 69.2843,
+      "p95AveragePerCallUs": 443.3364,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 4.076588,
+          "averagePerCallUs": 407.65880000000004
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 4.195618,
+          "averagePerCallUs": 419.56179999999995
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 4.286316,
+          "averagePerCallUs": 428.6316
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 4.202822,
+          "averagePerCallUs": 420.2822
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 3.932918,
+          "averagePerCallUs": 393.2918
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 4.042193,
+          "averagePerCallUs": 404.21930000000003
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 4.845102,
+          "averagePerCallUs": 484.5102
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 4.746415,
+          "averagePerCallUs": 474.6415
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 4.433364,
+          "averagePerCallUs": 443.3364
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 3.844038,
+          "averagePerCallUs": 384.4038
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 3.408668,
+          "averagePerCallUs": 340.8668
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 1.849342,
+          "averagePerCallUs": 184.9342
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 1.245122,
+          "averagePerCallUs": 124.5122
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 1.376878,
+          "averagePerCallUs": 137.6878
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 0.913177,
+          "averagePerCallUs": 91.3177
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.661266,
+          "averagePerCallUs": 66.12660000000001
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.658354,
+          "averagePerCallUs": 65.8354
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.748857,
+          "averagePerCallUs": 74.8857
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 0.677081,
+          "averagePerCallUs": 67.7081
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.634013,
+          "averagePerCallUs": 63.401300000000006
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 0.635626,
+          "averagePerCallUs": 63.562599999999996
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.619177,
+          "averagePerCallUs": 61.9177
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.693786,
+          "averagePerCallUs": 69.3786
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.650781,
+          "averagePerCallUs": 65.0781
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.855945,
+          "averagePerCallUs": 85.5945
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.677574,
+          "averagePerCallUs": 67.75739999999999
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.648755,
+          "averagePerCallUs": 64.8755
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.976127,
+          "averagePerCallUs": 97.61269999999999
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.655925,
+          "averagePerCallUs": 65.5925
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.685613,
+          "averagePerCallUs": 68.5613
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.757804,
+          "averagePerCallUs": 75.78040000000001
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 1.03883,
+          "averagePerCallUs": 103.883
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.593899,
+          "averagePerCallUs": 59.3899
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.571543,
+          "averagePerCallUs": 57.1543
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.692843,
+          "averagePerCallUs": 69.2843
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.641356,
+          "averagePerCallUs": 64.1356
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.634988,
+          "averagePerCallUs": 63.498799999999996
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.582831,
+          "averagePerCallUs": 58.283100000000005
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.565606,
+          "averagePerCallUs": 56.56060000000001
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.631871,
+          "averagePerCallUs": 63.1871
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.638188,
+          "averagePerCallUs": 63.818799999999996
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.644558,
+          "averagePerCallUs": 64.4558
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.609978,
+          "averagePerCallUs": 60.997800000000005
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.543596,
+          "averagePerCallUs": 54.3596
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.786606,
+          "averagePerCallUs": 78.6606
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.624193,
+          "averagePerCallUs": 62.4193
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.807604,
+          "averagePerCallUs": 80.7604
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.577952,
+          "averagePerCallUs": 57.7952
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.718306,
+          "averagePerCallUs": 71.8306
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.841843,
+          "averagePerCallUs": 84.1843
+        }
+      ]
+    },
+    {
+      "scenario": "car_to_cycling",
+      "inputSize": 1,
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.494704,
+      "p95BatchMs": 0.724762,
+      "p50AveragePerCallUs": 49.4704,
+      "p95AveragePerCallUs": 72.4762,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 0.520615,
+          "averagePerCallUs": 52.0615
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 0.499277,
+          "averagePerCallUs": 49.9277
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 0.481016,
+          "averagePerCallUs": 48.101600000000005
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 0.485859,
+          "averagePerCallUs": 48.585899999999995
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 0.576549,
+          "averagePerCallUs": 57.6549
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 0.727667,
+          "averagePerCallUs": 72.76669999999999
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 0.512296,
+          "averagePerCallUs": 51.22959999999999
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 0.494704,
+          "averagePerCallUs": 49.4704
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 0.471147,
+          "averagePerCallUs": 47.1147
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 0.551808,
+          "averagePerCallUs": 55.1808
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 0.497394,
+          "averagePerCallUs": 49.7394
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 0.724762,
+          "averagePerCallUs": 72.4762
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 0.487323,
+          "averagePerCallUs": 48.732299999999995
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 0.492817,
+          "averagePerCallUs": 49.2817
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 0.49411,
+          "averagePerCallUs": 49.411
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.497281,
+          "averagePerCallUs": 49.7281
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.689653,
+          "averagePerCallUs": 68.96529999999998
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.522279,
+          "averagePerCallUs": 52.2279
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 0.494297,
+          "averagePerCallUs": 49.4297
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.542423,
+          "averagePerCallUs": 54.2423
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 0.486698,
+          "averagePerCallUs": 48.6698
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.495596,
+          "averagePerCallUs": 49.5596
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.499698,
+          "averagePerCallUs": 49.9698
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.498773,
+          "averagePerCallUs": 49.877300000000005
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.471619,
+          "averagePerCallUs": 47.1619
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.559213,
+          "averagePerCallUs": 55.921299999999995
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.504486,
+          "averagePerCallUs": 50.4486
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.489166,
+          "averagePerCallUs": 48.9166
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.707888,
+          "averagePerCallUs": 70.7888
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.486588,
+          "averagePerCallUs": 48.6588
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.576791,
+          "averagePerCallUs": 57.679100000000005
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.447033,
+          "averagePerCallUs": 44.7033
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.472306,
+          "averagePerCallUs": 47.230599999999995
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.463425,
+          "averagePerCallUs": 46.342499999999994
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.463139,
+          "averagePerCallUs": 46.313900000000004
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.468023,
+          "averagePerCallUs": 46.8023
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.488862,
+          "averagePerCallUs": 48.8862
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.554109,
+          "averagePerCallUs": 55.41089999999999
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.497085,
+          "averagePerCallUs": 49.7085
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.499765,
+          "averagePerCallUs": 49.9765
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.478684,
+          "averagePerCallUs": 47.8684
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.497082,
+          "averagePerCallUs": 49.708200000000005
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 1.051459,
+          "averagePerCallUs": 105.14589999999998
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.481403,
+          "averagePerCallUs": 48.1403
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.467317,
+          "averagePerCallUs": 46.731700000000004
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.464786,
+          "averagePerCallUs": 46.4786
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.457089,
+          "averagePerCallUs": 45.7089
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.452323,
+          "averagePerCallUs": 45.232299999999995
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.474673,
+          "averagePerCallUs": 47.4673
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.578328,
+          "averagePerCallUs": 57.8328
+        }
+      ]
+    },
+    {
+      "scenario": "car_to_public_transport",
+      "inputSize": 1,
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.575622,
+      "p95BatchMs": 1.338442,
+      "p50AveragePerCallUs": 57.5622,
+      "p95AveragePerCallUs": 133.8442,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 0.452615,
+          "averagePerCallUs": 45.2615
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 0.604778,
+          "averagePerCallUs": 60.4778
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 0.438574,
+          "averagePerCallUs": 43.8574
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 0.5513,
+          "averagePerCallUs": 55.13000000000001
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 0.575622,
+          "averagePerCallUs": 57.5622
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 0.434295,
+          "averagePerCallUs": 43.4295
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 0.458853,
+          "averagePerCallUs": 45.8853
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 0.463274,
+          "averagePerCallUs": 46.3274
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 0.451596,
+          "averagePerCallUs": 45.1596
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 0.658656,
+          "averagePerCallUs": 65.8656
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 0.486421,
+          "averagePerCallUs": 48.6421
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 0.61485,
+          "averagePerCallUs": 61.485
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 0.4589,
+          "averagePerCallUs": 45.89
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 0.496036,
+          "averagePerCallUs": 49.6036
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 0.460133,
+          "averagePerCallUs": 46.0133
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.470023,
+          "averagePerCallUs": 47.002300000000005
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.408199,
+          "averagePerCallUs": 40.8199
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.476469,
+          "averagePerCallUs": 47.6469
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 0.576064,
+          "averagePerCallUs": 57.606399999999994
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.472666,
+          "averagePerCallUs": 47.2666
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 0.480798,
+          "averagePerCallUs": 48.0798
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.468755,
+          "averagePerCallUs": 46.8755
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.486884,
+          "averagePerCallUs": 48.688399999999994
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.607863,
+          "averagePerCallUs": 60.786300000000004
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.602219,
+          "averagePerCallUs": 60.22189999999999
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 1.625235,
+          "averagePerCallUs": 162.52349999999998
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 1.338442,
+          "averagePerCallUs": 133.8442
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 1.014663,
+          "averagePerCallUs": 101.46630000000002
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 1.342054,
+          "averagePerCallUs": 134.2054
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.653392,
+          "averagePerCallUs": 65.33919999999999
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.91538,
+          "averagePerCallUs": 91.538
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.617708,
+          "averagePerCallUs": 61.77080000000001
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.877496,
+          "averagePerCallUs": 87.74960000000002
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.96883,
+          "averagePerCallUs": 96.883
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 1.222156,
+          "averagePerCallUs": 122.2156
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.973686,
+          "averagePerCallUs": 97.3686
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 1.093423,
+          "averagePerCallUs": 109.3423
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.82554,
+          "averagePerCallUs": 82.554
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.523789,
+          "averagePerCallUs": 52.3789
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.916392,
+          "averagePerCallUs": 91.63919999999999
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.978478,
+          "averagePerCallUs": 97.84779999999999
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.969399,
+          "averagePerCallUs": 96.9399
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.675556,
+          "averagePerCallUs": 67.5556
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.548282,
+          "averagePerCallUs": 54.8282
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.468342,
+          "averagePerCallUs": 46.834199999999996
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.472308,
+          "averagePerCallUs": 47.2308
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.529981,
+          "averagePerCallUs": 52.9981
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.839427,
+          "averagePerCallUs": 83.9427
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.613707,
+          "averagePerCallUs": 61.3707
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.470098,
+          "averagePerCallUs": 47.0098
+        }
+      ]
+    },
+    {
+      "scenario": "mixed_week_totals",
+      "inputSize": 3,
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.723137,
+      "p95BatchMs": 1.626574,
+      "p50AveragePerCallUs": 72.31370000000001,
+      "p95AveragePerCallUs": 162.6574,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 0.629894,
+          "averagePerCallUs": 62.9894
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 0.617954,
+          "averagePerCallUs": 61.795399999999994
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 0.978388,
+          "averagePerCallUs": 97.8388
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 0.626443,
+          "averagePerCallUs": 62.6443
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 0.723137,
+          "averagePerCallUs": 72.31370000000001
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 0.728989,
+          "averagePerCallUs": 72.8989
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 0.815235,
+          "averagePerCallUs": 81.5235
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 1.384353,
+          "averagePerCallUs": 138.43529999999998
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 1.377995,
+          "averagePerCallUs": 137.79950000000002
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 1.48067,
+          "averagePerCallUs": 148.06699999999998
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 0.612025,
+          "averagePerCallUs": 61.20250000000001
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 0.599269,
+          "averagePerCallUs": 59.9269
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 0.588402,
+          "averagePerCallUs": 58.840199999999996
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 0.595821,
+          "averagePerCallUs": 59.582100000000004
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 0.967756,
+          "averagePerCallUs": 96.7756
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.627014,
+          "averagePerCallUs": 62.7014
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.610306,
+          "averagePerCallUs": 61.03060000000001
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.748393,
+          "averagePerCallUs": 74.83930000000001
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 0.701439,
+          "averagePerCallUs": 70.1439
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.795793,
+          "averagePerCallUs": 79.5793
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 0.645771,
+          "averagePerCallUs": 64.5771
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.743896,
+          "averagePerCallUs": 74.3896
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.589554,
+          "averagePerCallUs": 58.9554
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.985115,
+          "averagePerCallUs": 98.5115
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.731917,
+          "averagePerCallUs": 73.1917
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.618165,
+          "averagePerCallUs": 61.8165
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.658442,
+          "averagePerCallUs": 65.8442
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.644701,
+          "averagePerCallUs": 64.4701
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.731775,
+          "averagePerCallUs": 73.1775
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.664535,
+          "averagePerCallUs": 66.45349999999999
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.621217,
+          "averagePerCallUs": 62.1217
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.64795,
+          "averagePerCallUs": 64.795
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 1.951257,
+          "averagePerCallUs": 195.1257
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 1.761083,
+          "averagePerCallUs": 176.10829999999999
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 1.626574,
+          "averagePerCallUs": 162.6574
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.94433,
+          "averagePerCallUs": 94.433
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.590305,
+          "averagePerCallUs": 59.030499999999996
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.584632,
+          "averagePerCallUs": 58.46320000000001
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.736426,
+          "averagePerCallUs": 73.6426
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.794666,
+          "averagePerCallUs": 79.4666
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.628269,
+          "averagePerCallUs": 62.8269
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.767783,
+          "averagePerCallUs": 76.7783
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.749622,
+          "averagePerCallUs": 74.9622
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.757968,
+          "averagePerCallUs": 75.79679999999999
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.832616,
+          "averagePerCallUs": 83.2616
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.730458,
+          "averagePerCallUs": 73.04580000000001
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.919205,
+          "averagePerCallUs": 91.9205
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.041605,
+          "averagePerCallUs": 4.160500000000001
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.553322,
+          "averagePerCallUs": 55.3322
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.535843,
+          "averagePerCallUs": 53.5843
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "finishedAtMillis": 1790785309268
+}
