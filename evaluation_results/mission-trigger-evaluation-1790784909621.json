@@ -1,0 +1,2389 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": 1,
+  "startedAtMillis": 1790784909621,
+  "gitCommit": "1b8da3e7460442d39a776b55ace360c8481bcfad",
+  "workingTreeDirty": true,
+  "device": "Google sdk_gphone64_x86_64",
+  "androidVersion": "16",
+  "apiLevel": 36,
+  "buildType": "debug",
+  "scope": "Fixed offset-timestamp references for local departure\/notification planning, weekday selection and DST. Missing times shift forward; repeated times use the earlier offset. Does not test Android notification delivery or background scheduling.",
+  "benchmarkMethod": "Sequential groups; System.nanoTime around batches. Local calls, coroutine\/loop overhead and result-list writes included. Fixtures, warm-ups, verification and JSON excluded. Nearest-rank P50\/P95 use successful batches. Per-call values are batch averages, not individual-call tail latency. No performance threshold; emulator JIT\/GC and group order affect timings.",
+  "plannedCases": 29,
+  "totalCases": 29,
+  "passedCases": 29,
+  "failedCases": 0,
+  "records": [
+    {
+      "scenario": "five_minutes_before_departure",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1789941600000,
+        "notificationMillis": 1789941300000,
+        "departureUtc": "2026-09-20T22:00:00Z",
+        "notificationUtc": "2026-09-20T21:55:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-21T07:00:00+10:00",
+        "minuteOfDay": 480,
+        "leadMinutes": 5,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1789941600000,
+          "notificationMillis": 1789941300000,
+          "departureUtc": "2026-09-20T22:00:00Z",
+          "notificationUtc": "2026-09-20T21:55:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "exact_notification_boundary",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1789941600000,
+        "notificationMillis": 1789941300000,
+        "departureUtc": "2026-09-20T22:00:00Z",
+        "notificationUtc": "2026-09-20T21:55:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-21T07:55:00+10:00",
+        "minuteOfDay": 480,
+        "leadMinutes": 5,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1789941600000,
+          "notificationMillis": 1789941300000,
+          "departureUtc": "2026-09-20T22:00:00Z",
+          "notificationUtc": "2026-09-20T21:55:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "inside_notification_window",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1789941600000,
+        "notificationMillis": 1789941480000,
+        "departureUtc": "2026-09-20T22:00:00Z",
+        "notificationUtc": "2026-09-20T21:58:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-21T07:58:00+10:00",
+        "minuteOfDay": 480,
+        "leadMinutes": 5,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1789941600000,
+          "notificationMillis": 1789941480000,
+          "departureUtc": "2026-09-20T22:00:00Z",
+          "notificationUtc": "2026-09-20T21:58:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "exact_departure",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1789941600000,
+        "notificationMillis": 1789941600000,
+        "departureUtc": "2026-09-20T22:00:00Z",
+        "notificationUtc": "2026-09-20T22:00:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-21T08:00:00+10:00",
+        "minuteOfDay": 480,
+        "leadMinutes": 5,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1789941600000,
+          "notificationMillis": 1789941600000,
+          "departureUtc": "2026-09-20T22:00:00Z",
+          "notificationUtc": "2026-09-20T22:00:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "one_millisecond_after_departure",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1790546400000,
+        "notificationMillis": 1790546100000,
+        "departureUtc": "2026-09-27T22:00:00Z",
+        "notificationUtc": "2026-09-27T21:55:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-21T08:00:00.001+10:00",
+        "minuteOfDay": 480,
+        "leadMinutes": 5,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1790546400000,
+          "notificationMillis": 1790546100000,
+          "departureUtc": "2026-09-27T22:00:00Z",
+          "notificationUtc": "2026-09-27T21:55:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "next_active_weekday",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1790114400000,
+        "notificationMillis": 1790114100000,
+        "departureUtc": "2026-09-22T22:00:00Z",
+        "notificationUtc": "2026-09-22T21:55:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-22T12:00:00+10:00",
+        "minuteOfDay": 480,
+        "leadMinutes": 5,
+        "activeDays": [
+          "MONDAY",
+          "WEDNESDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1790114400000,
+          "notificationMillis": 1790114100000,
+          "departureUtc": "2026-09-22T22:00:00Z",
+          "notificationUtc": "2026-09-22T21:55:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "nearest_of_multiple_weekdays",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1790028000000,
+        "notificationMillis": 1790027700000,
+        "departureUtc": "2026-09-21T22:00:00Z",
+        "notificationUtc": "2026-09-21T21:55:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-21T08:01:00+10:00",
+        "minuteOfDay": 480,
+        "leadMinutes": 5,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "FRIDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1790028000000,
+          "notificationMillis": 1790027700000,
+          "departureUtc": "2026-09-21T22:00:00Z",
+          "notificationUtc": "2026-09-21T21:55:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "sunday_to_monday",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1789941600000,
+        "notificationMillis": 1789941300000,
+        "departureUtc": "2026-09-20T22:00:00Z",
+        "notificationUtc": "2026-09-20T21:55:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-20T21:00:00+10:00",
+        "minuteOfDay": 480,
+        "leadMinutes": 5,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1789941600000,
+          "notificationMillis": 1789941300000,
+          "departureUtc": "2026-09-20T22:00:00Z",
+          "notificationUtc": "2026-09-20T21:55:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "cross_month",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1791187200000,
+        "notificationMillis": 1791186900000,
+        "departureUtc": "2026-10-05T08:00:00Z",
+        "notificationUtc": "2026-10-05T07:55:00Z"
+      },
+      "actual": {
+        "zone": "UTC",
+        "now": "2026-09-28T08:01:00Z",
+        "minuteOfDay": 480,
+        "leadMinutes": 5,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1791187200000,
+          "notificationMillis": 1791186900000,
+          "departureUtc": "2026-10-05T08:00:00Z",
+          "notificationUtc": "2026-10-05T07:55:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "cross_year",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1799308800000,
+        "notificationMillis": 1799308500000,
+        "departureUtc": "2027-01-07T08:00:00Z",
+        "notificationUtc": "2027-01-07T07:55:00Z"
+      },
+      "actual": {
+        "zone": "UTC",
+        "now": "2026-12-31T08:01:00Z",
+        "minuteOfDay": 480,
+        "leadMinutes": 5,
+        "activeDays": [
+          "THURSDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1799308800000,
+          "notificationMillis": 1799308500000,
+          "departureUtc": "2027-01-07T08:00:00Z",
+          "notificationUtc": "2027-01-07T07:55:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "midnight_departure",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1789912800000,
+        "notificationMillis": 1789912500000,
+        "departureUtc": "2026-09-20T14:00:00Z",
+        "notificationUtc": "2026-09-20T13:55:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-20T23:50:00+10:00",
+        "minuteOfDay": 0,
+        "leadMinutes": 5,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1789912800000,
+          "notificationMillis": 1789912500000,
+          "departureUtc": "2026-09-20T14:00:00Z",
+          "notificationUtc": "2026-09-20T13:55:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "midnight_immediate_notification",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1789912800000,
+        "notificationMillis": 1789912680000,
+        "departureUtc": "2026-09-20T14:00:00Z",
+        "notificationUtc": "2026-09-20T13:58:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-20T23:58:00+10:00",
+        "minuteOfDay": 0,
+        "leadMinutes": 5,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1789912800000,
+          "notificationMillis": 1789912680000,
+          "departureUtc": "2026-09-20T14:00:00Z",
+          "notificationUtc": "2026-09-20T13:58:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "zero_lead",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1789941600000,
+        "notificationMillis": 1789941600000,
+        "departureUtc": "2026-09-20T22:00:00Z",
+        "notificationUtc": "2026-09-20T22:00:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-21T07:00:00+10:00",
+        "minuteOfDay": 480,
+        "leadMinutes": 0,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1789941600000,
+          "notificationMillis": 1789941600000,
+          "departureUtc": "2026-09-20T22:00:00Z",
+          "notificationUtc": "2026-09-20T22:00:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "maximum_lead",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1789941600000,
+        "notificationMillis": 1789855200000,
+        "departureUtc": "2026-09-20T22:00:00Z",
+        "notificationUtc": "2026-09-19T22:00:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-20T07:00:00+10:00",
+        "minuteOfDay": 480,
+        "leadMinutes": 1440,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1789941600000,
+          "notificationMillis": 1789855200000,
+          "departureUtc": "2026-09-20T22:00:00Z",
+          "notificationUtc": "2026-09-19T22:00:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "negative_lead_rejected",
+      "expected": {
+        "error": "IllegalArgumentException"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-21T07:00:00+10:00",
+        "minuteOfDay": 480,
+        "leadMinutes": -1,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "error": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "excessive_lead_rejected",
+      "expected": {
+        "error": "IllegalArgumentException"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-21T07:00:00+10:00",
+        "minuteOfDay": 480,
+        "leadMinutes": 1441,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "error": "IllegalArgumentException"
+      },
+      "passed": true
+    },
+    {
+      "scenario": "no_active_days",
+      "expected": {
+        "hasTrigger": false,
+        "departureMillis": null,
+        "notificationMillis": null,
+        "departureUtc": null,
+        "notificationUtc": null
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-21T07:00:00+10:00",
+        "minuteOfDay": 480,
+        "leadMinutes": 5,
+        "activeDays": [],
+        "trigger": {
+          "hasTrigger": false,
+          "departureMillis": null,
+          "notificationMillis": null,
+          "departureUtc": null,
+          "notificationUtc": null
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "negative_departure_minute",
+      "expected": {
+        "hasTrigger": false,
+        "departureMillis": null,
+        "notificationMillis": null,
+        "departureUtc": null,
+        "notificationUtc": null
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-21T07:00:00+10:00",
+        "minuteOfDay": -1,
+        "leadMinutes": 5,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "trigger": {
+          "hasTrigger": false,
+          "departureMillis": null,
+          "notificationMillis": null,
+          "departureUtc": null,
+          "notificationUtc": null
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "excessive_departure_minute",
+      "expected": {
+        "hasTrigger": false,
+        "departureMillis": null,
+        "notificationMillis": null,
+        "departureUtc": null,
+        "notificationUtc": null
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-21T07:00:00+10:00",
+        "minuteOfDay": 1440,
+        "leadMinutes": 5,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "trigger": {
+          "hasTrigger": false,
+          "departureMillis": null,
+          "notificationMillis": null,
+          "departureUtc": null,
+          "notificationUtc": null
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "all_weekdays",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1790028000000,
+        "notificationMillis": 1790027700000,
+        "departureUtc": "2026-09-21T22:00:00Z",
+        "notificationUtc": "2026-09-21T21:55:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-09-21T08:01:00+10:00",
+        "minuteOfDay": 480,
+        "leadMinutes": 5,
+        "activeDays": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY",
+          "THURSDAY",
+          "FRIDAY",
+          "SATURDAY",
+          "SUNDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1790028000000,
+          "notificationMillis": 1790027700000,
+          "departureUtc": "2026-09-21T22:00:00Z",
+          "notificationUtc": "2026-09-21T21:55:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "utc_zone",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1789977600000,
+        "notificationMillis": 1789977300000,
+        "departureUtc": "2026-09-21T08:00:00Z",
+        "notificationUtc": "2026-09-21T07:55:00Z"
+      },
+      "actual": {
+        "zone": "UTC",
+        "now": "2026-09-21T07:00:00Z",
+        "minuteOfDay": 480,
+        "leadMinutes": 5,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1789977600000,
+          "notificationMillis": 1789977300000,
+          "departureUtc": "2026-09-21T08:00:00Z",
+          "notificationUtc": "2026-09-21T07:55:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "half_hour_offset",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1789957800000,
+        "notificationMillis": 1789957500000,
+        "departureUtc": "2026-09-21T02:30:00Z",
+        "notificationUtc": "2026-09-21T02:25:00Z"
+      },
+      "actual": {
+        "zone": "Asia\/Kolkata",
+        "now": "2026-09-21T07:00:00+05:30",
+        "minuteOfDay": 480,
+        "leadMinutes": 5,
+        "activeDays": [
+          "MONDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1789957800000,
+          "notificationMillis": 1789957500000,
+          "departureUtc": "2026-09-21T02:30:00Z",
+          "notificationUtc": "2026-09-21T02:25:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "spring_gap_shifted_forward",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1791045000000,
+        "notificationMillis": 1791044700000,
+        "departureUtc": "2026-10-03T16:30:00Z",
+        "notificationUtc": "2026-10-03T16:25:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-10-04T01:00:00+10:00",
+        "minuteOfDay": 150,
+        "leadMinutes": 5,
+        "activeDays": [
+          "SUNDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1791045000000,
+          "notificationMillis": 1791044700000,
+          "departureUtc": "2026-10-03T16:30:00Z",
+          "notificationUtc": "2026-10-03T16:25:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "spring_local_departure",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1791061200000,
+        "notificationMillis": 1791060900000,
+        "departureUtc": "2026-10-03T21:00:00Z",
+        "notificationUtc": "2026-10-03T20:55:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-10-04T01:00:00+10:00",
+        "minuteOfDay": 480,
+        "leadMinutes": 5,
+        "activeDays": [
+          "SUNDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1791061200000,
+          "notificationMillis": 1791060900000,
+          "departureUtc": "2026-10-03T21:00:00Z",
+          "notificationUtc": "2026-10-03T20:55:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "spring_resolved_departure_missed",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1791646200000,
+        "notificationMillis": 1791645900000,
+        "departureUtc": "2026-10-10T15:30:00Z",
+        "notificationUtc": "2026-10-10T15:25:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-10-04T03:45:00+11:00",
+        "minuteOfDay": 150,
+        "leadMinutes": 5,
+        "activeDays": [
+          "SUNDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1791646200000,
+          "notificationMillis": 1791645900000,
+          "departureUtc": "2026-10-10T15:30:00Z",
+          "notificationUtc": "2026-10-10T15:25:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "autumn_overlap_earlier_offset",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1775316600000,
+        "notificationMillis": 1775316300000,
+        "departureUtc": "2026-04-04T15:30:00Z",
+        "notificationUtc": "2026-04-04T15:25:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-04-05T01:00:00+11:00",
+        "minuteOfDay": 150,
+        "leadMinutes": 5,
+        "activeDays": [
+          "SUNDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1775316600000,
+          "notificationMillis": 1775316300000,
+          "departureUtc": "2026-04-04T15:30:00Z",
+          "notificationUtc": "2026-04-04T15:25:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "autumn_local_departure",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1775340000000,
+        "notificationMillis": 1775339700000,
+        "departureUtc": "2026-04-04T22:00:00Z",
+        "notificationUtc": "2026-04-04T21:55:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-04-05T01:00:00+11:00",
+        "minuteOfDay": 480,
+        "leadMinutes": 5,
+        "activeDays": [
+          "SUNDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1775340000000,
+          "notificationMillis": 1775339700000,
+          "departureUtc": "2026-04-04T22:00:00Z",
+          "notificationUtc": "2026-04-04T21:55:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "autumn_earlier_departure_missed",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1775925000000,
+        "notificationMillis": 1775924700000,
+        "departureUtc": "2026-04-11T16:30:00Z",
+        "notificationUtc": "2026-04-11T16:25:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-04-05T02:45:00+11:00",
+        "minuteOfDay": 150,
+        "leadMinutes": 5,
+        "activeDays": [
+          "SUNDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1775925000000,
+          "notificationMillis": 1775924700000,
+          "departureUtc": "2026-04-11T16:30:00Z",
+          "notificationUtc": "2026-04-11T16:25:00Z"
+        }
+      },
+      "passed": true
+    },
+    {
+      "scenario": "notification_crosses_spring_gap",
+      "expected": {
+        "hasTrigger": true,
+        "departureMillis": 1791043200000,
+        "notificationMillis": 1791042900000,
+        "departureUtc": "2026-10-03T16:00:00Z",
+        "notificationUtc": "2026-10-03T15:55:00Z"
+      },
+      "actual": {
+        "zone": "Australia\/Melbourne",
+        "now": "2026-10-04T01:50:00+10:00",
+        "minuteOfDay": 180,
+        "leadMinutes": 5,
+        "activeDays": [
+          "SUNDAY"
+        ],
+        "trigger": {
+          "hasTrigger": true,
+          "departureMillis": 1791043200000,
+          "notificationMillis": 1791042900000,
+          "departureUtc": "2026-10-03T16:00:00Z",
+          "notificationUtc": "2026-10-03T15:55:00Z"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "plannedBenchmarkGroups": 5,
+  "benchmarks": [
+    {
+      "scenario": "five_minutes_before_departure",
+      "inputSize": 1,
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.264688,
+      "p95BatchMs": 0.637286,
+      "p50AveragePerCallUs": 26.468799999999998,
+      "p95AveragePerCallUs": 63.72860000000001,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 0.272777,
+          "averagePerCallUs": 27.2777
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 0.39936,
+          "averagePerCallUs": 39.936
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 0.302599,
+          "averagePerCallUs": 30.2599
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 0.418967,
+          "averagePerCallUs": 41.896699999999996
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 0.458544,
+          "averagePerCallUs": 45.8544
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 0.27169,
+          "averagePerCallUs": 27.169
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 0.354057,
+          "averagePerCallUs": 35.4057
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 0.37938,
+          "averagePerCallUs": 37.938
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 0.307016,
+          "averagePerCallUs": 30.701600000000003
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 0.373044,
+          "averagePerCallUs": 37.3044
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 0.447695,
+          "averagePerCallUs": 44.7695
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 0.637286,
+          "averagePerCallUs": 63.72860000000001
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 0.729395,
+          "averagePerCallUs": 72.9395
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 0.283885,
+          "averagePerCallUs": 28.3885
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 0.323341,
+          "averagePerCallUs": 32.3341
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.277384,
+          "averagePerCallUs": 27.738400000000002
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.615192,
+          "averagePerCallUs": 61.5192
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.243533,
+          "averagePerCallUs": 24.353299999999997
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 1.008714,
+          "averagePerCallUs": 100.87140000000001
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.38209,
+          "averagePerCallUs": 38.208999999999996
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 0.312061,
+          "averagePerCallUs": 31.2061
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.25871,
+          "averagePerCallUs": 25.871
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.264148,
+          "averagePerCallUs": 26.414799999999996
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.135024,
+          "averagePerCallUs": 13.5024
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.185749,
+          "averagePerCallUs": 18.5749
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.164081,
+          "averagePerCallUs": 16.4081
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.179732,
+          "averagePerCallUs": 17.9732
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.434744,
+          "averagePerCallUs": 43.4744
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.15907,
+          "averagePerCallUs": 15.907
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.196828,
+          "averagePerCallUs": 19.6828
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.163383,
+          "averagePerCallUs": 16.3383
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.138044,
+          "averagePerCallUs": 13.804400000000001
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.218752,
+          "averagePerCallUs": 21.8752
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.221871,
+          "averagePerCallUs": 22.1871
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.366359,
+          "averagePerCallUs": 36.6359
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.227777,
+          "averagePerCallUs": 22.777700000000003
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.267582,
+          "averagePerCallUs": 26.7582
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.252669,
+          "averagePerCallUs": 25.2669
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.218502,
+          "averagePerCallUs": 21.8502
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.223569,
+          "averagePerCallUs": 22.3569
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.138453,
+          "averagePerCallUs": 13.8453
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.264688,
+          "averagePerCallUs": 26.468799999999998
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.232823,
+          "averagePerCallUs": 23.2823
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.188177,
+          "averagePerCallUs": 18.817700000000002
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.221064,
+          "averagePerCallUs": 22.1064
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.183547,
+          "averagePerCallUs": 18.3547
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.284916,
+          "averagePerCallUs": 28.4916
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.128152,
+          "averagePerCallUs": 12.815199999999999
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.273981,
+          "averagePerCallUs": 27.3981
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.13759,
+          "averagePerCallUs": 13.759
+        }
+      ]
+    },
+    {
+      "scenario": "one_millisecond_after_departure",
+      "inputSize": 1,
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.089748,
+      "p95BatchMs": 0.414492,
+      "p50AveragePerCallUs": 8.974799999999998,
+      "p95AveragePerCallUs": 41.449200000000005,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 0.292532,
+          "averagePerCallUs": 29.253200000000003
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 0.43207,
+          "averagePerCallUs": 43.207
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 0.414327,
+          "averagePerCallUs": 41.4327
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 0.366258,
+          "averagePerCallUs": 36.6258
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 0.38824,
+          "averagePerCallUs": 38.824
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 0.338529,
+          "averagePerCallUs": 33.8529
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 0.300976,
+          "averagePerCallUs": 30.0976
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 0.414492,
+          "averagePerCallUs": 41.449200000000005
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 0.495134,
+          "averagePerCallUs": 49.513400000000004
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 0.292107,
+          "averagePerCallUs": 29.210700000000003
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 0.21482,
+          "averagePerCallUs": 21.482000000000003
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 0.340419,
+          "averagePerCallUs": 34.041900000000005
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 0.167165,
+          "averagePerCallUs": 16.716500000000003
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 0.17306,
+          "averagePerCallUs": 17.306
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 0.128931,
+          "averagePerCallUs": 12.893099999999999
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.100843,
+          "averagePerCallUs": 10.0843
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.070205,
+          "averagePerCallUs": 7.0205
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.090719,
+          "averagePerCallUs": 9.0719
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 0.068886,
+          "averagePerCallUs": 6.888599999999999
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.089748,
+          "averagePerCallUs": 8.974799999999998
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 0.069759,
+          "averagePerCallUs": 6.9759
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.119811,
+          "averagePerCallUs": 11.981100000000001
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.118375,
+          "averagePerCallUs": 11.8375
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.093836,
+          "averagePerCallUs": 9.3836
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.124184,
+          "averagePerCallUs": 12.4184
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.089782,
+          "averagePerCallUs": 8.9782
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.074916,
+          "averagePerCallUs": 7.4916
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.092881,
+          "averagePerCallUs": 9.2881
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.065888,
+          "averagePerCallUs": 6.588800000000001
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.043017,
+          "averagePerCallUs": 4.3017
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.042735,
+          "averagePerCallUs": 4.2735
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.044063,
+          "averagePerCallUs": 4.4063
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.042202,
+          "averagePerCallUs": 4.2202
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.039952,
+          "averagePerCallUs": 3.9951999999999996
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.091772,
+          "averagePerCallUs": 9.177200000000001
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.1158,
+          "averagePerCallUs": 11.58
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.0639,
+          "averagePerCallUs": 6.39
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.04419,
+          "averagePerCallUs": 4.419
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.041707,
+          "averagePerCallUs": 4.1707
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.043476,
+          "averagePerCallUs": 4.3476
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.042619,
+          "averagePerCallUs": 4.2619
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.047814,
+          "averagePerCallUs": 4.7814
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.044187,
+          "averagePerCallUs": 4.418699999999999
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.043502,
+          "averagePerCallUs": 4.3502
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.045402,
+          "averagePerCallUs": 4.5402000000000005
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.042916,
+          "averagePerCallUs": 4.291600000000001
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.044474,
+          "averagePerCallUs": 4.4474
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.043943,
+          "averagePerCallUs": 4.3943
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.042546,
+          "averagePerCallUs": 4.2546
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.042925,
+          "averagePerCallUs": 4.2924999999999995
+        }
+      ]
+    },
+    {
+      "scenario": "all_weekdays",
+      "inputSize": 7,
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.03822,
+      "p95BatchMs": 0.05237,
+      "p50AveragePerCallUs": 3.822,
+      "p95AveragePerCallUs": 5.237,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 0.038624,
+          "averagePerCallUs": 3.8623999999999996
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 0.039793,
+          "averagePerCallUs": 3.9793
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 0.037773,
+          "averagePerCallUs": 3.7773000000000003
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 0.040786,
+          "averagePerCallUs": 4.0786
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 0.05237,
+          "averagePerCallUs": 5.237
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 0.037875,
+          "averagePerCallUs": 3.7875
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 0.158761,
+          "averagePerCallUs": 15.876100000000003
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 0.038522,
+          "averagePerCallUs": 3.8522
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 0.03822,
+          "averagePerCallUs": 3.822
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 0.085308,
+          "averagePerCallUs": 8.5308
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 0.039336,
+          "averagePerCallUs": 3.9336000000000007
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 0.038203,
+          "averagePerCallUs": 3.8203000000000005
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 0.040031,
+          "averagePerCallUs": 4.0031
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 0.03878,
+          "averagePerCallUs": 3.878
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 0.038256,
+          "averagePerCallUs": 3.8256
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.039076,
+          "averagePerCallUs": 3.9076
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.038795,
+          "averagePerCallUs": 3.8795
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.038242,
+          "averagePerCallUs": 3.8242
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 0.038911,
+          "averagePerCallUs": 3.8911000000000002
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.03814,
+          "averagePerCallUs": 3.814
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 0.03826,
+          "averagePerCallUs": 3.8260000000000005
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.042285,
+          "averagePerCallUs": 4.2285
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.037848,
+          "averagePerCallUs": 3.7847999999999997
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.038253,
+          "averagePerCallUs": 3.8253
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.036249,
+          "averagePerCallUs": 3.6249000000000002
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.035306,
+          "averagePerCallUs": 3.5305999999999997
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.036764,
+          "averagePerCallUs": 3.6763999999999997
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.035736,
+          "averagePerCallUs": 3.5736
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.034935,
+          "averagePerCallUs": 3.4935
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.038636,
+          "averagePerCallUs": 3.8635999999999995
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.038316,
+          "averagePerCallUs": 3.8316000000000003
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.037544,
+          "averagePerCallUs": 3.7544000000000004
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.043201,
+          "averagePerCallUs": 4.3201
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.036272,
+          "averagePerCallUs": 3.6271999999999998
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.035201,
+          "averagePerCallUs": 3.5201000000000002
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.036391,
+          "averagePerCallUs": 3.6391
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.034614,
+          "averagePerCallUs": 3.4614
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.034371,
+          "averagePerCallUs": 3.4371
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.035518,
+          "averagePerCallUs": 3.5518
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.034991,
+          "averagePerCallUs": 3.4991
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.034548,
+          "averagePerCallUs": 3.4548
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.034581,
+          "averagePerCallUs": 3.4581000000000004
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.037923,
+          "averagePerCallUs": 3.7923
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.036845,
+          "averagePerCallUs": 3.6845000000000008
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.035672,
+          "averagePerCallUs": 3.5672000000000006
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.037763,
+          "averagePerCallUs": 3.7763
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.03925,
+          "averagePerCallUs": 3.925
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.038221,
+          "averagePerCallUs": 3.8221
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.039305,
+          "averagePerCallUs": 3.9305
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.043742,
+          "averagePerCallUs": 4.3742
+        }
+      ]
+    },
+    {
+      "scenario": "spring_gap_shifted_forward",
+      "inputSize": 1,
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.035459,
+      "p95BatchMs": 0.042988,
+      "p50AveragePerCallUs": 3.5458999999999996,
+      "p95AveragePerCallUs": 4.2988,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 0.037875,
+          "averagePerCallUs": 3.7875
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 0.038685,
+          "averagePerCallUs": 3.8684999999999996
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 0.037474,
+          "averagePerCallUs": 3.7474000000000003
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 0.035037,
+          "averagePerCallUs": 3.5037
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 0.039559,
+          "averagePerCallUs": 3.9558999999999997
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 0.038479,
+          "averagePerCallUs": 3.8479
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 0.127979,
+          "averagePerCallUs": 12.797900000000002
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 0.042988,
+          "averagePerCallUs": 4.2988
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 0.046519,
+          "averagePerCallUs": 4.6518999999999995
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 0.038584,
+          "averagePerCallUs": 3.8584000000000005
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 0.035459,
+          "averagePerCallUs": 3.5458999999999996
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 0.037812,
+          "averagePerCallUs": 3.7811999999999997
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 0.03893,
+          "averagePerCallUs": 3.893
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 0.03665,
+          "averagePerCallUs": 3.665
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 0.038112,
+          "averagePerCallUs": 3.8112000000000004
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.042984,
+          "averagePerCallUs": 4.2984
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.035089,
+          "averagePerCallUs": 3.5088999999999997
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.041705,
+          "averagePerCallUs": 4.1705
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 0.037485,
+          "averagePerCallUs": 3.7485
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.037641,
+          "averagePerCallUs": 3.7641
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 0.036139,
+          "averagePerCallUs": 3.6138999999999997
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.034372,
+          "averagePerCallUs": 3.4372
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.034614,
+          "averagePerCallUs": 3.4614
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.03805,
+          "averagePerCallUs": 3.8049999999999997
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.03701,
+          "averagePerCallUs": 3.7009999999999996
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.03487,
+          "averagePerCallUs": 3.4869999999999997
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.035384,
+          "averagePerCallUs": 3.5384
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.042006,
+          "averagePerCallUs": 4.2006
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.034324,
+          "averagePerCallUs": 3.4324
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.037236,
+          "averagePerCallUs": 3.7236
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.035724,
+          "averagePerCallUs": 3.5723999999999996
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.03394,
+          "averagePerCallUs": 3.3939999999999997
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.034301,
+          "averagePerCallUs": 3.4300999999999995
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.031563,
+          "averagePerCallUs": 3.1563000000000003
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.032066,
+          "averagePerCallUs": 3.2065999999999995
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.034208,
+          "averagePerCallUs": 3.4208000000000007
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.033963,
+          "averagePerCallUs": 3.3963
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.034478,
+          "averagePerCallUs": 3.4478
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.032002,
+          "averagePerCallUs": 3.2002
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.037172,
+          "averagePerCallUs": 3.7171999999999996
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.034625,
+          "averagePerCallUs": 3.4625
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.035197,
+          "averagePerCallUs": 3.5196999999999994
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.034627,
+          "averagePerCallUs": 3.4626999999999994
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.033991,
+          "averagePerCallUs": 3.3991
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.034218,
+          "averagePerCallUs": 3.4217999999999997
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.034265,
+          "averagePerCallUs": 3.4264999999999994
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.034291,
+          "averagePerCallUs": 3.4291000000000005
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.034555,
+          "averagePerCallUs": 3.4555
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.034177,
+          "averagePerCallUs": 3.4177
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.037298,
+          "averagePerCallUs": 3.7297999999999996
+        }
+      ]
+    },
+    {
+      "scenario": "autumn_overlap_earlier_offset",
+      "inputSize": 1,
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.032493,
+      "p95BatchMs": 0.048866,
+      "p50AveragePerCallUs": 3.2493000000000003,
+      "p95AveragePerCallUs": 4.8866,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 0.030269,
+          "averagePerCallUs": 3.0269000000000004
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 0.036715,
+          "averagePerCallUs": 3.6714999999999995
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 0.030593,
+          "averagePerCallUs": 3.0593
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 0.029224,
+          "averagePerCallUs": 2.9224
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 0.033053,
+          "averagePerCallUs": 3.3053
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 0.030936,
+          "averagePerCallUs": 3.0936
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 0.034668,
+          "averagePerCallUs": 3.4668
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 0.030334,
+          "averagePerCallUs": 3.0334
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 0.032896,
+          "averagePerCallUs": 3.2896
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 0.032682,
+          "averagePerCallUs": 3.2682
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 0.032609,
+          "averagePerCallUs": 3.2609000000000004
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 0.169275,
+          "averagePerCallUs": 16.927500000000002
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 0.033296,
+          "averagePerCallUs": 3.3296
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 0.049259,
+          "averagePerCallUs": 4.9259
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 0.032377,
+          "averagePerCallUs": 3.2377000000000002
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.032972,
+          "averagePerCallUs": 3.2972
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.032125,
+          "averagePerCallUs": 3.2125
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.032493,
+          "averagePerCallUs": 3.2493000000000003
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 0.030154,
+          "averagePerCallUs": 3.0154
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.029749,
+          "averagePerCallUs": 2.9749000000000003
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 0.048866,
+          "averagePerCallUs": 4.8866
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.032551,
+          "averagePerCallUs": 3.2550999999999997
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.032999,
+          "averagePerCallUs": 3.2999
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.032995,
+          "averagePerCallUs": 3.2994999999999997
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.033558,
+          "averagePerCallUs": 3.3558
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.032907,
+          "averagePerCallUs": 3.2906999999999997
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.033026,
+          "averagePerCallUs": 3.3025999999999995
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.032203,
+          "averagePerCallUs": 3.2203000000000004
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.033367,
+          "averagePerCallUs": 3.3366999999999996
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.031574,
+          "averagePerCallUs": 3.1574
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.030447,
+          "averagePerCallUs": 3.0446999999999997
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.030654,
+          "averagePerCallUs": 3.0654
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.030272,
+          "averagePerCallUs": 3.0272
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.032854,
+          "averagePerCallUs": 3.2854
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.030394,
+          "averagePerCallUs": 3.0394
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.03028,
+          "averagePerCallUs": 3.028
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.031084,
+          "averagePerCallUs": 3.1084
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.030472,
+          "averagePerCallUs": 3.0471999999999997
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.030052,
+          "averagePerCallUs": 3.0052
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.03396,
+          "averagePerCallUs": 3.3959999999999995
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.033372,
+          "averagePerCallUs": 3.3372
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.029856,
+          "averagePerCallUs": 2.9856000000000003
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.030213,
+          "averagePerCallUs": 3.0213
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.034688,
+          "averagePerCallUs": 3.4687999999999994
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.034413,
+          "averagePerCallUs": 3.4412999999999996
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.037,
+          "averagePerCallUs": 3.7
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.030649,
+          "averagePerCallUs": 3.0649
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.030602,
+          "averagePerCallUs": 3.0602
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.030084,
+          "averagePerCallUs": 3.0084
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.034126,
+          "averagePerCallUs": 3.4126
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "finishedAtMillis": 1790784909829
+}

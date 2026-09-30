@@ -49,14 +49,14 @@ class DefaultMissionTriggerPlanner(
                 continue
             }
 
+            // Resolve the local clock time directly; elapsed minutes from midnight drift on DST days.
             val departureTime =
                 candidateDate
-                    .atStartOfDay(zoneId)
-                    .plusMinutes(
-                        pattern
-                            .typicalDepartureMinuteOfDay
-                            .toLong(),
+                    .atTime(
+                        pattern.typicalDepartureMinuteOfDay / 60,
+                        pattern.typicalDepartureMinuteOfDay % 60,
                     )
+                    .atZone(zoneId)
 
             if (departureTime.isBefore(now)) {
                 continue
