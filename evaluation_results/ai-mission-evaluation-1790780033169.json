@@ -1,0 +1,2267 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": 2,
+  "startedAtMillis": 1790780033169,
+  "gitCommit": "3fe00b7b7929a0f6dc1495149d02a0c76e8e0b40",
+  "workingTreeDirty": true,
+  "device": "Google sdk_gphone64_x86_64",
+  "androidVersion": "16",
+  "apiLevel": 36,
+  "buildType": "debug",
+  "scope": "Synthetic local mission validation, retries, fallback and prompt checks with controlled AiGateway replies. No live Gemini, Firebase, Worker\/HTTP integration or AI text-quality evaluation.",
+  "benchmarkMethod": "Sequential validator\/fallback groups; System.nanoTime around batches. Includes local calls, coroutine\/loop overhead and result-list writes. Setup, warm-ups, output validation and JSON excluded. Nearest-rank P50\/P95 use successful batches only. Per-call values are batch averages, not individual-call tail latency or real AI request latency. JIT\/GC and group order affect comparisons; no latency threshold.",
+  "plannedCases": 34,
+  "totalCases": 34,
+  "passedCases": 34,
+  "failedCases": 0,
+  "expectedFallbackCases": 19,
+  "passedFallbackCases": 19,
+  "fallbackCasePassRate": 1,
+  "records": [
+    {
+      "scenario": "valid_cycling",
+      "expected": {
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "usedAi": true,
+        "providerCalls": 1,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": true,
+        "missionId": "ai-private_evaluation_journey-cycling",
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "explanation": "Choose this available low-carbon option.",
+        "confidence": 80,
+        "notificationTitle": "Your low-carbon journey",
+        "notificationMessage": "Try an available alternative today."
+      },
+      "providerCalls": 1,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "valid_walking",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": true,
+        "providerCalls": 1,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": true,
+        "missionId": "ai-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Choose this available low-carbon option.",
+        "confidence": 80,
+        "notificationTitle": "Your low-carbon journey",
+        "notificationMessage": "Try an available alternative today."
+      },
+      "providerCalls": 1,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "WALKING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "valid_public_transport",
+      "expected": {
+        "mode": "PUBLIC_TRANSPORT",
+        "savingsGrams": 250,
+        "usedAi": true,
+        "providerCalls": 1,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 1,
+      "passed": true,
+      "actual": {
+        "usedAi": true,
+        "missionId": "ai-private_evaluation_journey-public_transport",
+        "mode": "PUBLIC_TRANSPORT",
+        "savingsGrams": 250,
+        "explanation": "Choose this available low-carbon option.",
+        "confidence": 80,
+        "notificationTitle": "Your low-carbon journey",
+        "notificationMessage": "Try an available alternative today."
+      },
+      "providerCalls": 1,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "trim_text",
+      "expected": {
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "usedAi": true,
+        "providerCalls": 1,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": true,
+        "missionId": "ai-private_evaluation_journey-cycling",
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "explanation": "Try cycling.",
+        "confidence": 80,
+        "notificationTitle": "EcoStep",
+        "notificationMessage": "Cycle today."
+      },
+      "providerCalls": 1,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CYCLING",
+          "explanation": "  Try cycling.  ",
+          "confidence": 80,
+          "notificationTitle": "  EcoStep  ",
+          "notificationMessage": "  Cycle today.  "
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "confidence_0.0",
+      "expected": {
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "usedAi": true,
+        "providerCalls": 1,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": true,
+        "missionId": "ai-private_evaluation_journey-cycling",
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "explanation": "Choose this available low-carbon option.",
+        "confidence": 0,
+        "notificationTitle": "Your low-carbon journey",
+        "notificationMessage": "Try an available alternative today."
+      },
+      "providerCalls": 1,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 0,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "confidence_100.0",
+      "expected": {
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "usedAi": true,
+        "providerCalls": 1,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": true,
+        "missionId": "ai-private_evaluation_journey-cycling",
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "explanation": "Choose this available low-carbon option.",
+        "confidence": 100,
+        "notificationTitle": "Your low-carbon journey",
+        "notificationMessage": "Try an available alternative today."
+      },
+      "providerCalls": 1,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 100,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "explanation_at_limit",
+      "expected": {
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "usedAi": true,
+        "providerCalls": 1,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": true,
+        "missionId": "ai-private_evaluation_journey-cycling",
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "explanation": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "confidence": 80,
+        "notificationTitle": "Your low-carbon journey",
+        "notificationMessage": "Try an available alternative today."
+      },
+      "providerCalls": 1,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CYCLING",
+          "explanation": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "explanation_over_limit",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 2,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CYCLING",
+          "explanation": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        },
+        {
+          "mode": "CYCLING",
+          "explanation": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "explanation_blank",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 2,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CYCLING",
+          "explanation": " ",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        },
+        {
+          "mode": "CYCLING",
+          "explanation": " ",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "title_at_limit",
+      "expected": {
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "usedAi": true,
+        "providerCalls": 1,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": true,
+        "missionId": "ai-private_evaluation_journey-cycling",
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "explanation": "Choose this available low-carbon option.",
+        "confidence": 80,
+        "notificationTitle": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "notificationMessage": "Try an available alternative today."
+      },
+      "providerCalls": 1,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "title_over_limit",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 2,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "notificationMessage": "Try an available alternative today."
+        },
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "title_blank",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 2,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": " ",
+          "notificationMessage": "Try an available alternative today."
+        },
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": " ",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "message_at_limit",
+      "expected": {
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "usedAi": true,
+        "providerCalls": 1,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": true,
+        "missionId": "ai-private_evaluation_journey-cycling",
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "explanation": "Choose this available low-carbon option.",
+        "confidence": 80,
+        "notificationTitle": "Your low-carbon journey",
+        "notificationMessage": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "providerCalls": 1,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "message_over_limit",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 2,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "message_blank",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 2,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": " "
+        },
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": " "
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "invalid_confidence_-1.0",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 2,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": -1,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        },
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": -1,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "invalid_confidence_101.0",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 2,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 101,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        },
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 101,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "unlisted_car",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 2,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CAR",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        },
+        {
+          "mode": "CAR",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "unknown_mode",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 2,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "UNKNOWN",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        },
+        {
+          "mode": "UNKNOWN",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "invalid_then_valid",
+      "expected": {
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "usedAi": true,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": true,
+        "missionId": "ai-private_evaluation_journey-cycling",
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "explanation": "Choose this available low-carbon option.",
+        "confidence": 80,
+        "notificationTitle": "Your low-carbon journey",
+        "notificationMessage": "Try an available alternative today."
+      },
+      "providerCalls": 2,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "CAR",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        },
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "network_failure_then_valid",
+      "expected": {
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "usedAi": true,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": true,
+        "missionId": "ai-private_evaluation_journey-cycling",
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "explanation": "Choose this available low-carbon option.",
+        "confidence": 80,
+        "notificationTitle": "Your low-carbon journey",
+        "notificationMessage": "Try an available alternative today."
+      },
+      "providerCalls": 2,
+      "providerErrors": [
+        "IOException"
+      ],
+      "replies": [
+        {
+          "mode": "CYCLING",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "network_failure",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 2,
+      "providerErrors": [
+        "IOException",
+        "IOException"
+      ],
+      "replies": [],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "socket_timeout",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 2,
+      "providerErrors": [
+        "SocketTimeoutException",
+        "SocketTimeoutException"
+      ],
+      "replies": [],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "missing_response_fields",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 2,
+      "providerErrors": [
+        "MissingFieldException",
+        "MissingFieldException"
+      ],
+      "replies": [],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "http_401",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 1,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 1,
+      "providerErrors": [
+        "HttpException"
+      ],
+      "replies": [],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "http_403",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 1,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 1,
+      "providerErrors": [
+        "HttpException"
+      ],
+      "replies": [],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "http_429",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 1,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 1,
+      "providerErrors": [
+        "HttpException"
+      ],
+      "replies": [],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "http_503",
+      "expected": {
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "usedAi": false,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-walking",
+        "mode": "WALKING",
+        "savingsGrams": 500,
+        "explanation": "Try walking for this journey to save about 500 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try walking for this journey to save about 500 g of CO2."
+      },
+      "providerCalls": 2,
+      "providerErrors": [
+        "HttpException",
+        "HttpException"
+      ],
+      "replies": [],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "cancelled",
+      "expected": {
+        "mode": null,
+        "savingsGrams": null,
+        "usedAi": null,
+        "providerCalls": 1,
+        "error": "CancellationException"
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "error": {
+        "type": "CancellationException",
+        "message": "Controlled cancellation"
+      },
+      "providerCalls": 1,
+      "providerErrors": [
+        "CancellationException"
+      ],
+      "replies": [],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "empty_journey_id",
+      "expected": {
+        "mode": null,
+        "savingsGrams": null,
+        "usedAi": null,
+        "providerCalls": 0,
+        "error": "IllegalArgumentException"
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "A journey ID is required."
+      },
+      "providerCalls": 0,
+      "providerErrors": [],
+      "replies": [],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "no_alternatives",
+      "expected": {
+        "mode": null,
+        "savingsGrams": null,
+        "usedAi": null,
+        "providerCalls": 0,
+        "error": "IllegalArgumentException"
+      },
+      "alternatives": [],
+      "publicTransportServices": 0,
+      "passed": true,
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "No valid lower-carbon alternative is available."
+      },
+      "providerCalls": 0,
+      "providerErrors": [],
+      "replies": [],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "public_transport_without_service",
+      "expected": {
+        "mode": null,
+        "savingsGrams": null,
+        "usedAi": null,
+        "providerCalls": 0,
+        "error": "IllegalArgumentException"
+      },
+      "alternatives": [
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 250
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "No valid lower-carbon alternative is available."
+      },
+      "providerCalls": 0,
+      "providerErrors": [],
+      "replies": [],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "public_transport_filtered_from_fallback",
+      "expected": {
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "usedAi": false,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "savingsGrams": 900
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 350.25
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-cycling",
+        "mode": "CYCLING",
+        "savingsGrams": 350.25,
+        "explanation": "Try cycling for this journey to save about 350 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try cycling for this journey to save about 350 g of CO2."
+      },
+      "providerCalls": 2,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        },
+        {
+          "mode": "PUBLIC_TRANSPORT",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    },
+    {
+      "scenario": "fallback_greatest_saving",
+      "expected": {
+        "mode": "CYCLING",
+        "savingsGrams": 600,
+        "usedAi": false,
+        "providerCalls": 2,
+        "error": null
+      },
+      "alternatives": [
+        {
+          "mode": "WALKING",
+          "savingsGrams": 500
+        },
+        {
+          "mode": "CYCLING",
+          "savingsGrams": 600
+        }
+      ],
+      "publicTransportServices": 0,
+      "passed": true,
+      "actual": {
+        "usedAi": false,
+        "missionId": "fallback-private_evaluation_journey-cycling",
+        "mode": "CYCLING",
+        "savingsGrams": 600,
+        "explanation": "Try cycling for this journey to save about 600 g of CO2.",
+        "confidence": 100,
+        "notificationTitle": "Your EcoStep mission",
+        "notificationMessage": "Try cycling for this journey to save about 600 g of CO2."
+      },
+      "providerCalls": 2,
+      "providerErrors": [],
+      "replies": [
+        {
+          "mode": "UNKNOWN",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        },
+        {
+          "mode": "UNKNOWN",
+          "explanation": "Choose this available low-carbon option.",
+          "confidence": 80,
+          "notificationTitle": "Your low-carbon journey",
+          "notificationMessage": "Try an available alternative today."
+        }
+      ],
+      "promptChecksPassed": true
+    }
+  ],
+  "plannedBenchmarkGroups": 2,
+  "benchmarks": [
+    {
+      "scenario": "validator",
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 100,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.484722,
+      "p95BatchMs": 0.593559,
+      "p50AveragePerCallUs": 4.84722,
+      "p95AveragePerCallUs": 5.9355899999999995,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 0.398659,
+          "averagePerCallUs": 3.98659
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 0.507086,
+          "averagePerCallUs": 5.07086
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 0.455796,
+          "averagePerCallUs": 4.55796
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 0.423153,
+          "averagePerCallUs": 4.23153
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 0.478364,
+          "averagePerCallUs": 4.78364
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 0.430397,
+          "averagePerCallUs": 4.30397
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 0.526973,
+          "averagePerCallUs": 5.269730000000001
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 0.40924,
+          "averagePerCallUs": 4.0924000000000005
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 0.478864,
+          "averagePerCallUs": 4.78864
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 0.532525,
+          "averagePerCallUs": 5.32525
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 0.471422,
+          "averagePerCallUs": 4.71422
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 0.557511,
+          "averagePerCallUs": 5.57511
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 0.49472,
+          "averagePerCallUs": 4.9472
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 0.396393,
+          "averagePerCallUs": 3.9639299999999995
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 0.510493,
+          "averagePerCallUs": 5.1049299999999995
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.422712,
+          "averagePerCallUs": 4.22712
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.58635,
+          "averagePerCallUs": 5.8635
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.593559,
+          "averagePerCallUs": 5.9355899999999995
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 0.432125,
+          "averagePerCallUs": 4.32125
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.476576,
+          "averagePerCallUs": 4.76576
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 0.477693,
+          "averagePerCallUs": 4.77693
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.493595,
+          "averagePerCallUs": 4.93595
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.452791,
+          "averagePerCallUs": 4.52791
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.554126,
+          "averagePerCallUs": 5.541259999999999
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.443609,
+          "averagePerCallUs": 4.43609
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.422994,
+          "averagePerCallUs": 4.22994
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.52606,
+          "averagePerCallUs": 5.260599999999999
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.544574,
+          "averagePerCallUs": 5.44574
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.590307,
+          "averagePerCallUs": 5.9030700000000005
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.42764,
+          "averagePerCallUs": 4.276400000000001
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.484722,
+          "averagePerCallUs": 4.84722
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.44336,
+          "averagePerCallUs": 4.433599999999999
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.505227,
+          "averagePerCallUs": 5.05227
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.616352,
+          "averagePerCallUs": 6.16352
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.514532,
+          "averagePerCallUs": 5.145320000000001
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.529632,
+          "averagePerCallUs": 5.29632
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.518284,
+          "averagePerCallUs": 5.18284
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.559437,
+          "averagePerCallUs": 5.5943700000000005
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.511438,
+          "averagePerCallUs": 5.11438
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.477055,
+          "averagePerCallUs": 4.77055
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.46639,
+          "averagePerCallUs": 4.663900000000001
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.581374,
+          "averagePerCallUs": 5.813739999999999
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.566809,
+          "averagePerCallUs": 5.668089999999999
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.446172,
+          "averagePerCallUs": 4.461720000000001
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.508865,
+          "averagePerCallUs": 5.08865
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.469437,
+          "averagePerCallUs": 4.69437
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.464128,
+          "averagePerCallUs": 4.64128
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.497356,
+          "averagePerCallUs": 4.97356
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 1.182027,
+          "averagePerCallUs": 11.82027
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.476748,
+          "averagePerCallUs": 4.76748
+        }
+      ]
+    },
+    {
+      "scenario": "fallback",
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 100,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.511983,
+      "p95BatchMs": 1.238927,
+      "p50AveragePerCallUs": 5.119829999999999,
+      "p95AveragePerCallUs": 12.38927,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 1.290146,
+          "averagePerCallUs": 12.90146
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 1.238927,
+          "averagePerCallUs": 12.38927
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 1.054582,
+          "averagePerCallUs": 10.545819999999999
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 0.857544,
+          "averagePerCallUs": 8.57544
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 0.997758,
+          "averagePerCallUs": 9.97758
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 0.942089,
+          "averagePerCallUs": 9.42089
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 0.943171,
+          "averagePerCallUs": 9.431709999999999
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 0.828409,
+          "averagePerCallUs": 8.284089999999999
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 0.946955,
+          "averagePerCallUs": 9.46955
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 0.676668,
+          "averagePerCallUs": 6.76668
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 0.698958,
+          "averagePerCallUs": 6.98958
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 0.824001,
+          "averagePerCallUs": 8.24001
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 0.810894,
+          "averagePerCallUs": 8.10894
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 1.010304,
+          "averagePerCallUs": 10.10304
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 1.182622,
+          "averagePerCallUs": 11.826220000000001
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.7884,
+          "averagePerCallUs": 7.8839999999999995
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.818951,
+          "averagePerCallUs": 8.18951
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.711167,
+          "averagePerCallUs": 7.11167
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 0.506779,
+          "averagePerCallUs": 5.06779
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.69027,
+          "averagePerCallUs": 6.902700000000001
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 1.756615,
+          "averagePerCallUs": 17.56615
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.618786,
+          "averagePerCallUs": 6.18786
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.449141,
+          "averagePerCallUs": 4.49141
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.45953,
+          "averagePerCallUs": 4.5953
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.511672,
+          "averagePerCallUs": 5.11672
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.416394,
+          "averagePerCallUs": 4.16394
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.445266,
+          "averagePerCallUs": 4.45266
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.443886,
+          "averagePerCallUs": 4.43886
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.419965,
+          "averagePerCallUs": 4.19965
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.415611,
+          "averagePerCallUs": 4.15611
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.692839,
+          "averagePerCallUs": 6.928389999999999
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.422672,
+          "averagePerCallUs": 4.226719999999999
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.784033,
+          "averagePerCallUs": 7.84033
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.551576,
+          "averagePerCallUs": 5.515759999999999
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.370621,
+          "averagePerCallUs": 3.70621
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.402204,
+          "averagePerCallUs": 4.0220400000000005
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.403258,
+          "averagePerCallUs": 4.032579999999999
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.357662,
+          "averagePerCallUs": 3.5766199999999997
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.511983,
+          "averagePerCallUs": 5.119829999999999
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.426693,
+          "averagePerCallUs": 4.2669299999999994
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.348229,
+          "averagePerCallUs": 3.48229
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.458017,
+          "averagePerCallUs": 4.58017
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.359408,
+          "averagePerCallUs": 3.59408
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.377546,
+          "averagePerCallUs": 3.77546
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.803422,
+          "averagePerCallUs": 8.03422
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.374397,
+          "averagePerCallUs": 3.74397
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.360829,
+          "averagePerCallUs": 3.60829
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.387878,
+          "averagePerCallUs": 3.87878
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.415198,
+          "averagePerCallUs": 4.15198
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.350191,
+          "averagePerCallUs": 3.5019099999999996
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "finishedAtMillis": 1790780033322
+}
