@@ -1,14 +1,14 @@
 package com.ecostep.app.evaluation
 
-import android.os.Build
-import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.ecostep.app.core.di.AppContainer
-import com.ecostep.app.data.cache.weather.DataStoreWeatherCache
-import com.ecostep.app.data.cache.weather.weatherDataStore
 import com.ecostep.app.data.model.GeoPoint
+import com.ecostep.app.data.repository.DefaultExternalDataRepository
+import com.ecostep.app.network.weather.OpenMeteoClient
+import com.ecostep.app.network.weather.OpenMeteoWeatherDataSource
+import java.net.SocketTimeoutException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
@@ -16,176 +16,147 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import org.json.JSONArray
 import org.json.JSONObject
-import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.io.File
-import java.time.Instant
-import java.util.Locale
 
-/** Live network evaluation: run on a connected device with internet access. */
+/** Live provider timings and verified disk-cache timings, collected in separate groups. */
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class WeatherLatencyEvaluationTest {
-
     @Test
     fun measureLiveWeatherRequestLatency() = runBlocking {
-        val startedAt = Instant.now()
-        val context = InstrumentationRegistry
-            .getInstrumentation()
-            .targetContext
-
-        val repository = AppContainer(context).externalDataRepository
-        val location = GeoPoint(
-            latitude = -37.8136,
-            longitude = 144.9631,
+        val startedAt = System.currentTimeMillis()
+        val arguments = InstrumentationRegistry.getArguments()
+        fun argument(name: String, default: Int, range: IntRange): Int {
+            val value = arguments.getString(name)?.toInt() ?: default
+            require(value in range) { "$name must be in $range" }
+            return value
+        }
+        val networkSamples = argument("networkSamples", 20, 1..500)
+        val cacheSamples = argument("cacheSamples", 100, 1..1000)
+        val intervalMs = argument("intervalMs", 1000, 0..60000).toLong()
+        val timeoutMs = argument("timeoutMs", 30000, 1..120000).toLong()
+        val report = weatherEvaluationReport(
+            startedAt,
+            "Sequential repository latency on a debug build; network includes parsing and disk writes. " +
+                "Cache removal, warm-up and pacing are excluded from sample percentiles. " +
+                "HTTP connections may be reused; this is not a cold-connection benchmark.",
         )
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val api = CountingWeatherApi(OpenMeteoClient.create(AppContainer(context).okHttpClient))
+        val store = EvaluationWeatherCache()
+        val repository = DefaultExternalDataRepository(OpenMeteoWeatherDataSource(api), store.cache)
+        val location = GeoPoint(-37.8136, 144.9631)
+        val tracker = LatencyTracker()
+        val records = JSONArray()
+        var warmupPassed = false
+        var cacheSkipReason: String? = "Network group did not complete"
+        var completed = false
 
-        val weatherCache = DataStoreWeatherCache(
-            dataStore = context.weatherDataStore,
-        )
-        // Make request 1 a real network fetch.
-        weatherCache.remove(location)
-
-        val tracker = LatencyTracker(
-            context = "${Build.MANUFACTURER} ${Build.MODEL}; Android ${Build.VERSION.RELEASE}",
-        )
-        Log.i(TAG, "Device: ${tracker.context}; requests=$REQUEST_COUNT")
+        suspend fun sample(scenario: String, expectedCalls: Int): Boolean {
+            val callsBefore = api.calls
+            var failure: Throwable? = null
+            try {
+                tracker.measure(scenario) {
+                    withTimeout(timeoutMs) {
+                        val weather = repository.getWeather(location)
+                        check(weather.conditions.isNotBlank()) { "Empty weather conditions" }
+                        check(api.calls - callsBefore == expectedCalls) { "Unexpected weather source" }
+                    }
+                }
+            } catch (error: Exception) {
+                failure = error
+                if (error is CancellationException && error !is TimeoutCancellationException) throw error
+            } finally {
+                val record = tracker.snapshot().last()
+                records.put(JSONObject().apply {
+                    put("scenario", scenario)
+                    put("durationMs", record.durationMs)
+                    put("outcome", record.outcome.name)
+                    put("expectedProviderCalls", expectedCalls)
+                    put("providerCalls", api.calls - callsBefore)
+                    put("error", failure?.let(::evaluationError) ?: JSONObject.NULL)
+                    put("timedOut", failure is TimeoutCancellationException ||
+                        failure is SocketTimeoutException || failure?.cause is SocketTimeoutException)
+                })
+            }
+            return failure == null
+        }
 
         try {
-            repeat(REQUEST_COUNT) { index ->
-                // Request 1 fetches Open-Meteo and writes the cache.
-                // Later requests should be served by the fresh cache.
-                val scenario = if (index == 0) {
-                    "weather.network.first_fetch"
-                } else {
-                    "weather.cache.hit"
-                }
-                try {
-                    tracker.measure(scenario) {
-                        withTimeout(REQUEST_TIMEOUT_MS) {
-                            repository.getWeather(location)
-                        }
-                    }
-                } catch (_: TimeoutCancellationException) {
-                    // Already recorded by the tracker; continue collecting samples.
-                } catch (cancelled: CancellationException) {
-                    throw cancelled
-                } catch (_: Exception) {
-                    // Keep failures in the results instead of stopping at the first one.
-                }
-
-                val record = tracker.snapshot().last()
-                Log.i(
-                    TAG,
-                    "Request ${index + 1}/$REQUEST_COUNT: ${record.scenario} " +
-                        "${record.outcome}, ${record.durationMs.formatMs()} ms, " +
-                        "error=${record.errorType ?: "none"}",
-                )
-                // Pacing is outside the measurement and does not affect reported latency.
-                if (index < REQUEST_COUNT - 1) delay(REQUEST_INTERVAL_MS)
+            repeat(networkSamples) { index ->
+                withTimeout(timeoutMs) { store.cache.remove(location) }
+                sample(NETWORK, expectedCalls = 1)
+                if (index < networkSamples - 1) delay(intervalMs)
             }
+
+            // A separate successful warm-up is required even if every network sample failed.
+            cacheSkipReason = "Warm-up did not complete"
+            withTimeout(timeoutMs) { store.cache.remove(location) }
+            delay(intervalMs)
+            warmupPassed = sample(WARMUP, expectedCalls = 1)
+            cacheSkipReason = "Warm-up failed"
+            if (warmupPassed) {
+                cacheSkipReason = "Warm-up did not persist weather"
+                check(withTimeout(timeoutMs) { store.cache.get(location) } != null) {
+                    "Warm-up did not persist weather"
+                }
+                cacheSkipReason = "Cache group did not complete"
+                repeat(cacheSamples) { sample(CACHE, expectedCalls = 0) }
+                cacheSkipReason = null
+            }
+            completed = true
+        } catch (error: Throwable) {
+            report.put("runError", evaluationError(error))
+            throw error
         } finally {
-            for (summary in tracker.summaries()) {
-                Log.i(
-                    TAG,
-                    "Summary: ${summary.scenario} ${summary.outcome}, n=${summary.count}, " +
-                        "P50=${summary.p50Ms.formatMs()} ms, P95=${summary.p95Ms.formatMs()} ms",
-                )
+            val summaries = JSONArray()
+            for ((scenario, planned) in listOf(NETWORK to networkSamples, CACHE to cacheSamples)) {
+                val samples = tracker.snapshot().filter { it.scenario == scenario }
+                val successful = tracker.summaries().find { it.scenario == scenario && it.outcome == Outcome.SUCCESS }
+                val scenarioRecords = (0 until records.length()).map { records.getJSONObject(it) }
+                    .filter { it.getString("scenario") == scenario }
+                summaries.put(JSONObject().apply {
+                    put("scenario", scenario)
+                    put("plannedSamples", planned)
+                    put("recordedSamples", samples.size)
+                    put("skippedSamples", planned - samples.size)
+                    put("successfulSamples", successful?.count ?: 0)
+                    put("failedSamples", samples.count { it.outcome != Outcome.SUCCESS })
+                    put("timeoutSamples", scenarioRecords.count { it.getBoolean("timedOut") })
+                    put("successRate", if (samples.isEmpty()) JSONObject.NULL else
+                        samples.count { it.outcome == Outcome.SUCCESS }.toDouble() / samples.size)
+                    put("p50Ms", successful?.p50Ms ?: JSONObject.NULL)
+                    put("p95Ms", successful?.p95Ms ?: JSONObject.NULL)
+                    put("skipReason", if (scenario == CACHE) cacheSkipReason ?: JSONObject.NULL else
+                        if (samples.size < planned) "Network group did not complete" else JSONObject.NULL)
+                })
             }
-            val records = tracker.snapshot()
-            Log.i(TAG, "Successful requests: ${records.count { it.outcome == Outcome.SUCCESS }}/${records.size}")
-            saveJsonReport(tracker, startedAt)
+            report.put("passed", completed && warmupPassed &&
+                tracker.snapshot().count { it.outcome == Outcome.SUCCESS } == networkSamples + cacheSamples + 1)
+            report.put("requestTimeoutMs", timeoutMs)
+            report.put("networkIntervalMs", intervalMs)
+            report.put("percentileMethod", "Nearest rank, successful samples only; warm-up excluded")
+            report.put("warmupPassed", warmupPassed)
+            report.put("records", records)
+            report.put("summaries", summaries)
+            try {
+                store.close()
+            } catch (error: Exception) {
+                report.put("passed", false)
+                report.put("cleanupError", evaluationError(error))
+                throw error
+            } finally {
+                saveWeatherEvaluationReport("weather-latency", startedAt, report)
+            }
         }
-
-        // No arbitrary speed threshold: this evaluates latency under the current network.
-        assertEquals(
-            "Some weather requests failed. See Logcat tag $TAG for measurements.",
-            REQUEST_COUNT,
-            tracker.snapshot().count { it.outcome == Outcome.SUCCESS },
-        )
+        assertTrue("Weather evaluation failed; inspect the JSON report", report.getBoolean("passed"))
     }
-
-    /** Runs outside measured requests, including when a request fails or is cancelled. */
-    private fun saveJsonReport(tracker: LatencyTracker, startedAt: Instant) {
-        val records = tracker.snapshot()
-        // Request latency includes network waits and parsing, not just connection setup.
-        val successfulRecords = records.filter {
-            it.outcome == Outcome.SUCCESS
-        }
-
-        val networkFirstFetchRecords = records.filter {
-            it.scenario == "weather.network.first_fetch" &&
-                    it.outcome == Outcome.SUCCESS
-        }
-
-        val cacheHitRecords = records.filter {
-            it.scenario == "weather.cache.hit" &&
-                    it.outcome == Outcome.SUCCESS
-        }
-        val report = JSONObject().apply {
-            put("startedAt", startedAt.toString())
-            put("finishedAt", Instant.now().toString())
-            put("device", tracker.context)
-            put("plannedRequests", REQUEST_COUNT)
-            put("recordedRequests", records.size)
-            put("successfulRequests", records.count { it.outcome == Outcome.SUCCESS })
-            put(
-                "averageSuccessfulDurationMs",
-                successfulRecords.averageDurationOrNull(),
-            )
-            put(
-                "averageNetworkFirstFetchDurationMs",
-                networkFirstFetchRecords.averageDurationOrNull(),
-            )
-            put(
-                "averageCacheHitDurationMs",
-                cacheHitRecords.averageDurationOrNull(),
-            )
-            put("requestTimeoutMs", REQUEST_TIMEOUT_MS)
-            put("requestIntervalMs", REQUEST_INTERVAL_MS)
-            put("records", JSONArray().apply {
-                records.forEachIndexed { index, record ->
-                    put(JSONObject().apply {
-                        put("requestNumber", index + 1)
-                        put("scenario", record.scenario)
-                        put("durationMs", record.durationMs)
-                        put("outcome", record.outcome.name)
-                        put("errorType", record.errorType ?: JSONObject.NULL)
-                    })
-                }
-            })
-            put("summaries", JSONArray().apply {
-                tracker.summaries().forEach { summary ->
-                    put(JSONObject().apply {
-                        put("scenario", summary.scenario)
-                        put("outcome", summary.outcome.name)
-                        put("count", summary.count)
-                        put("p50Ms", summary.p50Ms)
-                        put("p95Ms", summary.p95Ms)
-                    })
-                }
-            })
-        }
-
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val directory = File(context.filesDir, "evaluation")
-        check(directory.isDirectory || directory.mkdirs()) { "Cannot create $directory" }
-        val file = File(directory, "weather-latency-${startedAt.toEpochMilli()}.json")
-        file.writeText(report.toString(2), Charsets.UTF_8)
-        Log.i(TAG, "JSON saved: ${file.absolutePath}")
-    }
-
-    private fun Double.formatMs(): String = String.format(Locale.US, "%.2f", this)
-
-    /** No successful samples means no average, represented by JSON null. */
-    private fun List<LatencyRecord>.averageDurationOrNull(): Any =
-        if (isEmpty()) JSONObject.NULL else map { it.durationMs }.average()
 
     private companion object {
-        const val TAG = "WeatherLatency"
-        const val REQUEST_COUNT = 100
-        const val REQUEST_TIMEOUT_MS = 30_000L
-        const val REQUEST_INTERVAL_MS = 1_000L
+        const val NETWORK = "weather.network.fetch"
+        const val CACHE = "weather.cache.hit"
+        const val WARMUP = "weather.cache.warmup"
     }
 }
