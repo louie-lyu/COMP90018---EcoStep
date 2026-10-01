@@ -33,7 +33,7 @@ private val bottomNavigationItems = listOf(
     BottomNavigationItem(
         label = "Profile",
         icon = "●",
-        route = Routes.SETTINGS,
+        route = Routes.PROFILE,
     ),
 )
 

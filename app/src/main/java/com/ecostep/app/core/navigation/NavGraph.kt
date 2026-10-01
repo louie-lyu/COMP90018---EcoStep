@@ -30,18 +30,25 @@ import com.ecostep.app.ui.mock.MockMissionRepository
 import com.ecostep.app.ui.screens.HomeScreen
 import com.ecostep.app.ui.screens.JourneyReviewScreen
 import com.ecostep.app.ui.screens.MissionScreen
-import com.ecostep.app.ui.screens.SettingsScreen
+import com.ecostep.app.ui.screens.ProfileScreen
+import com.ecostep.app.ui.viewmodels.JourneyReviewViewModel
 import com.ecostep.app.ui.viewmodels.HomeViewModel
 import com.ecostep.app.ui.mock.MockHomeRouteDataSource
 import com.ecostep.app.ui.mock.MockHomeMissionDataSource
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import com.ecostep.app.ui.screens.JourneyHistoryScreen
+import com.ecostep.app.ui.viewmodels.JourneyHistoryViewModel
 import com.ecostep.app.ui.viewmodels.RewardsViewModel
-import com.ecostep.app.ui.viewmodels.JourneyReviewViewModel
 import com.ecostep.app.ui.viewmodels.MissionViewModel
 
 @Composable
 fun EcoStepNavHost(
     navController: NavHostController = rememberNavController(),
 ) {
+    val context = LocalContext.current
+  
     val appContainerContext =
         LocalContext.current.applicationContext
 
@@ -71,9 +78,12 @@ fun EcoStepNavHost(
         navBackStackEntry?.destination?.route
 
     val showBottomBar =
-        currentRoute != null &&
-                currentRoute != Routes.LOGIN &&
-                currentRoute != TrackingRoutes.TRACKING
+        currentRoute in setOf(
+            Routes.HOME,
+            Routes.MISSIONS,
+            Routes.REWARDS,
+            Routes.PROFILE,
+        )
 
     Scaffold(
         bottomBar = {
@@ -173,60 +183,70 @@ fun EcoStepNavHost(
                 )
             }
 
-            composable(
+                        composable(
                 route = Routes.JOURNEY_REVIEW_WITH_ID,
                 arguments = listOf(
-                    navArgument(
-                        Routes.JOURNEY_ID_ARGUMENT,
-                    ) {
+                    navArgument(Routes.JOURNEY_ID_ARGUMENT) {
                         type = NavType.StringType
+                    },
+                    navArgument(Routes.READ_ONLY_ARGUMENT) {
+                        type = NavType.BoolType
+                        defaultValue = false
                     },
                 ),
             ) { backStackEntry ->
                 val journeyId =
                     backStackEntry.arguments
-                        ?.getString(
-                            Routes.JOURNEY_ID_ARGUMENT,
-                        )
+                        ?.getString(Routes.JOURNEY_ID_ARGUMENT)
                         ?: return@composable
 
-                val journeyReviewViewModel:
-                        JourneyReviewViewModel =
+                val readOnly =
+                    backStackEntry.arguments
+                        ?.getBoolean(Routes.READ_ONLY_ARGUMENT)
+                        ?: false
+
+                val journeyReviewViewModel: JourneyReviewViewModel =
                     viewModel(
-                        key = journeyId,
+                        key = "$journeyId-$readOnly",
                         factory = ViewModelFactory {
                             JourneyReviewViewModel(
-                                journeyRepository =
-                                    mockJourneyRepository,
+                                journeyRepository = mockJourneyRepository,
                                 journeyId = journeyId,
-                                placeNameResolver =
-                                    placeNameResolver::resolve,
+                                placeNameResolver = placeNameResolver::resolve,
                             )
                         },
                     )
 
                 JourneyReviewScreen(
                     viewModel = journeyReviewViewModel,
+                    readOnly = readOnly,
                     onBackToMap = {
-                        navController.navigate(
-                            Routes.HOME,
-                        ) {
+                        navController.navigate(Routes.HOME) {
                             launchSingleTop = true
+                        }
+                    },
+                    onBack = {
+                        if (readOnly) {
+                            navController.popBackStack()
+                        } else {
+                            navController.navigate(Routes.HOME) {
+                                launchSingleTop = true
+                            }
                         }
                     },
                 )
             }
 
             composable(Routes.MISSIONS) {
-                val missionViewModel: MissionViewModel = viewModel(
-                    factory = ViewModelFactory {
-                        MissionViewModel(
-                            missionRepository = missionRepository,
-                            missionJourneyRecorder =
-                                mockJourneyRepository,
-                        )
-                    },
-                )
+                val missionViewModel: MissionViewModel =
+                    viewModel(
+                        factory = ViewModelFactory {
+                            MissionViewModel(
+                                missionRepository = missionRepository,
+                                missionJourneyRecorder = mockJourneyRepository,
+                            )
+                        },
+                    )
 
                 MissionScreen(
                     missionViewModel = missionViewModel,
@@ -251,7 +271,7 @@ fun EcoStepNavHost(
                     },
                 )
             }
-
+            
             composable(Routes.REWARDS) {
                 val rewardsViewModel: RewardsViewModel = viewModel(
                     factory = ViewModelFactory {
@@ -264,8 +284,74 @@ fun EcoStepNavHost(
                 )
             }
 
-            composable(Routes.SETTINGS) {
-                SettingsScreen()
+            composable(Routes.JOURNEY_HISTORY) {
+                val journeyHistoryViewModel:
+                        JourneyHistoryViewModel = viewModel(
+                    factory = ViewModelFactory {
+                        JourneyHistoryViewModel(
+                            journeyRepository =
+                                mockJourneyRepository,
+
+                            /*
+                             * TODO(Profile/Auth):
+                             * Replace this mock user ID with the signed-in
+                             * user's ID from the authentication module.
+                             */
+                            userId = "mock_user",
+                        )
+                    },
+                )
+
+                JourneyHistoryScreen(
+                    viewModel = journeyHistoryViewModel,
+                    onBack = {
+                        navController.popBackStack()
+                    },
+                    onJourneySelected = { journeyId ->
+                        navController.navigate(
+                            Routes.journeyHistoryDetail(journeyId),
+                        )
+                    },
+                )
+            }
+
+            composable(Routes.PROFILE) {
+                ProfileScreen(
+                    onViewJourneyHistory = {
+                        navController.navigate(
+                            Routes.JOURNEY_HISTORY,
+                        ) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onOpenLocationSettings = {
+                        val intent = Intent(
+                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        ).apply {
+                            data = Uri.fromParts(
+                                "package",
+                                context.packageName,
+                                null,
+                            )
+                        }
+
+                        context.startActivity(intent)
+                    },
+                    onSignOut = {
+                        /*
+                         * TODO(Profile/Auth):
+                         * Call the authentication module's sign-out function
+                         * before navigating to LoginScreen.
+                         */
+                        navController.navigate(Routes.LOGIN) {
+                            popUpTo(navController.graph.id) {
+                                inclusive = true
+                            }
+
+                            launchSingleTop = true
+                        }
+                    },
+                )
             }
         }
     }
