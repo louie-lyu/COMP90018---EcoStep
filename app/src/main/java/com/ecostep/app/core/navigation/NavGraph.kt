@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -15,70 +16,62 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.ecostep.app.EcoStepApp
+import com.ecostep.app.auth.LoginRoute
 import com.ecostep.app.core.di.ViewModelFactory
+import com.ecostep.app.sensors.location.PlaceNameResolver
+import com.ecostep.app.sensors.ui.TrackingRoute
+import com.ecostep.app.sensors.ui.TrackingRoutes
+import com.ecostep.app.sensors.ui.TrackingViewModel
 import com.ecostep.app.ui.components.EcoStepBottomBar
+import com.ecostep.app.ui.mock.MockHomeRouteDataSource
 import com.ecostep.app.ui.mock.MockJourneyRepository
+import com.ecostep.app.ui.mock.MockMissionRepository
 import com.ecostep.app.ui.screens.HistoryScreen
 import com.ecostep.app.ui.screens.HomeScreen
 import com.ecostep.app.ui.screens.JourneyReviewScreen
-import com.ecostep.app.ui.screens.LoginScreen
 import com.ecostep.app.ui.screens.MissionScreen
 import com.ecostep.app.ui.screens.SettingsScreen
-import com.ecostep.app.ui.viewmodels.JourneyReviewViewModel
-import androidx.compose.ui.platform.LocalContext
-import com.ecostep.app.EcoStepApp
 import com.ecostep.app.ui.viewmodels.HomeViewModel
-import com.ecostep.app.ui.mock.MockHomeRouteDataSource
-import com.ecostep.app.ui.mock.MockMissionRepository
+import com.ecostep.app.ui.viewmodels.JourneyReviewViewModel
 import com.ecostep.app.ui.viewmodels.MissionViewModel
 
 @Composable
 fun EcoStepNavHost(
     navController: NavHostController = rememberNavController(),
 ) {
-    val application =
-        LocalContext.current.applicationContext as EcoStepApp
+    val appContainerContext =
+        LocalContext.current.applicationContext
 
-    val appContainer = application.appContainer
-    /*
-     * TODO(Journeys/DI): Replace this shared MockJourneyRepository with
-     * production journey persistence and tracking dependencies supplied
-     * through AppContainer.
-     *
-     * MissionViewModel and JourneyReviewViewModel must continue to access
-     * the same saved journey data so a journey created when a mission ends
-     * can be loaded immediately by JourneyReviewScreen.
-     */
+    val appContainer =
+        (appContainerContext as EcoStepApp).appContainer
+
+    val placeNameResolver = remember {
+        PlaceNameResolver(appContainerContext)
+    }
+
     val mockJourneyRepository = remember {
         MockJourneyRepository()
     }
 
-    /*
-     * TODO(Routing/DI): Replace this mock source with the production
-     * routing data source supplied through AppContainer.
-     */
     val mockHomeRouteDataSource = remember {
         MockHomeRouteDataSource()
     }
 
-    /*
-     * Shared mission state for Home and Mission screens.
-     *
-     * TODO(Missions/DI): Replace MockMissionRepository with the
-     * production Firebase-backed MissionRepository supplied through
-     * AppContainer. Both screens must continue to receive the same
-     * repository instance.
-     */
     val missionRepository = remember {
         MockMissionRepository()
     }
 
+    val navBackStackEntry by
+    navController.currentBackStackEntryAsState()
 
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val currentRoute =
+        navBackStackEntry?.destination?.route
 
     val showBottomBar =
-        currentRoute != null && currentRoute != Routes.LOGIN
+        currentRoute != null &&
+                currentRoute != Routes.LOGIN &&
+                currentRoute != TrackingRoutes.TRACKING
 
     Scaffold(
         bottomBar = {
@@ -109,8 +102,9 @@ fun EcoStepNavHost(
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(Routes.LOGIN) {
-                LoginScreen(
-                    onAuthenticated = {
+                LoginRoute(
+                    authRepository = appContainer.authRepository,
+                    onLoginSuccess = {
                         navController.navigate(Routes.HOME) {
                             popUpTo(Routes.LOGIN) {
                                 inclusive = true
@@ -122,19 +116,47 @@ fun EcoStepNavHost(
                 )
             }
 
-            composable(Routes.HOME) {
-                val homeViewModel: HomeViewModel = viewModel(
-                    factory = ViewModelFactory {
-                        HomeViewModel(
-                            externalDataRepository =
-                                appContainer.externalDataRepository,
-                            homeRouteDataSource =
-                                mockHomeRouteDataSource,
-                            missionRepository =
-                                missionRepository,
+            composable(TrackingRoutes.TRACKING) {
+                val trackingViewModel: TrackingViewModel =
+                    viewModel(
+                        factory = ViewModelFactory {
+                            TrackingViewModel(
+                                context = appContainerContext,
+                                tracker =
+                                    appContainer.journeyTracker,
+                                authRepository =
+                                    appContainer.authRepository,
+                                journeyRepository =
+                                    appContainer.journeyRepository,
+                            )
+                        },
+                    )
+
+                TrackingRoute(
+                    viewModel = trackingViewModel,
+                    onJourneySaved = { journeyId ->
+                        navController.navigate(
+                            Routes.journeyReview(journeyId),
                         )
                     },
                 )
+            }
+
+            composable(Routes.HOME) {
+                val homeViewModel: HomeViewModel =
+                    viewModel(
+                        factory = ViewModelFactory {
+                            HomeViewModel(
+                                externalDataRepository =
+                                    appContainer
+                                        .externalDataRepository,
+                                homeRouteDataSource =
+                                    mockHomeRouteDataSource,
+                                missionRepository =
+                                    missionRepository,
+                            )
+                        },
+                    )
 
                 HomeScreen(
                     viewModel = homeViewModel,
@@ -152,33 +174,41 @@ fun EcoStepNavHost(
             composable(
                 route = Routes.JOURNEY_REVIEW_WITH_ID,
                 arguments = listOf(
-                    navArgument(Routes.JOURNEY_ID_ARGUMENT) {
+                    navArgument(
+                        Routes.JOURNEY_ID_ARGUMENT,
+                    ) {
                         type = NavType.StringType
                     },
                 ),
             ) { backStackEntry ->
                 val journeyId =
                     backStackEntry.arguments
-                        ?.getString(Routes.JOURNEY_ID_ARGUMENT)
+                        ?.getString(
+                            Routes.JOURNEY_ID_ARGUMENT,
+                        )
                         ?: return@composable
 
                 val journeyReviewViewModel:
-                        JourneyReviewViewModel = viewModel(
-                    key = journeyId,
-                    factory = ViewModelFactory {
-                        JourneyReviewViewModel(
-                            journeyRepository =
-                                mockJourneyRepository,
-                            journeyId = journeyId,
-                        )
-                    },
-                )
-
+                        JourneyReviewViewModel =
+                    viewModel(
+                        key = journeyId,
+                        factory = ViewModelFactory {
+                            JourneyReviewViewModel(
+                                journeyRepository =
+                                    mockJourneyRepository,
+                                journeyId = journeyId,
+                                placeNameResolver =
+                                    placeNameResolver::resolve,
+                            )
+                        },
+                    )
 
                 JourneyReviewScreen(
                     viewModel = journeyReviewViewModel,
                     onBackToMap = {
-                        navController.navigate(Routes.HOME) {
+                        navController.navigate(
+                            Routes.HOME,
+                        ) {
                             launchSingleTop = true
                         }
                     },
@@ -190,7 +220,8 @@ fun EcoStepNavHost(
                     factory = ViewModelFactory {
                         MissionViewModel(
                             missionRepository = missionRepository,
-                            missionJourneyRecorder = mockJourneyRepository,
+                            missionJourneyRecorder =
+                                mockJourneyRepository,
                         )
                     },
                 )
