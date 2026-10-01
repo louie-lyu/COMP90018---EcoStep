@@ -219,6 +219,28 @@ class RouteAndPublicTransportCacheRepositoryTest {
     }
 
     @Test
+    fun `public transport network failure returns legitimately empty offline cache`() = runTest {
+        val failure = IOException("Transitous unavailable")
+        val cache = FakePublicTransportCache(
+            entry = PublicTransportCacheEntry(
+                options = emptyList(),
+                fetchedAtMillis = now -
+                        PublicTransportCachePolicy.DEFAULT_FRESH_MAX_AGE_MILLIS - 1L,
+            ),
+        )
+        val transitousApi = FakeTransitousApi(failure = failure)
+        val repository = repository(
+            transitousApi = transitousApi,
+            publicTransportCache = cache,
+        )
+
+        val options = repository.getPublicTransportOptions(start, end)
+
+        assertEquals(emptyList<PublicTransportInfo>(), options)
+        assertEquals(1, transitousApi.requestCount)
+        assertNull(cache.removedStart)
+    }
+    @Test
     fun `public transport failure with only departed cache exposes error`() = runTest {
         val failure = IOException("Transitous unavailable")
         val cache = FakePublicTransportCache(

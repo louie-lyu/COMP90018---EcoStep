@@ -222,7 +222,7 @@ internal class DefaultExternalDataRepository(
 
             if (
                 cachedEntry != null &&
-                fallbackOptions.isNotEmpty() &&
+                (cachedEntry.options.isEmpty() || fallbackOptions.isNotEmpty()) &&
                 publicTransportCachePolicy.canUseAsOfflineFallback(
                     entry = cachedEntry,
                     currentTimeMillis = failureTimeMillis,
