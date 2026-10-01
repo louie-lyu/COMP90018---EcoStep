@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 
 data class JourneyReviewUiState(
     val journey: JourneySummary? = null,
@@ -36,6 +37,8 @@ data class JourneyReviewUiState(
 class JourneyReviewViewModel(
     private val journeyRepository: JourneyRepository,
     private val journeyId: String,
+    /** Optional: turns coordinates into place names; coordinates are shown until it returns. */
+    private val placeNameResolver: (suspend (GeoPoint) -> String?)? = null,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -73,6 +76,7 @@ class JourneyReviewViewModel(
                 }
 
                 _uiState.value = journey.toUiState()
+                resolvePlaceNames(journey)
             } catch (exception: Exception) {
                 _uiState.update {
                     it.copy(
@@ -85,12 +89,29 @@ class JourneyReviewViewModel(
         }
     }
 
+    private fun resolvePlaceNames(journey: JourneySummary) {
+        val resolver = placeNameResolver ?: return
+        viewModelScope.launch {
+            resolver(journey.startLocation)?.let { name ->
+                _uiState.update { it.copy(startLocationText = name) }
+            }
+        }
+        viewModelScope.launch {
+            resolver(journey.endLocation)?.let { name ->
+                _uiState.update { it.copy(endLocationText = name) }
+            }
+        }
+    }
+
     fun selectTransportMode(mode: TransportMode) {
         val journey = _uiState.value.journey ?: return
 
         _uiState.update {
             it.copy(
                 selectedMode = mode,
+                // TODO(Algorithm): Recalculate these values through the
+                // production EcoPointsCalculator and CarbonCalculator after
+                // the user corrects the detected transport mode.
                 ecoPoints = calculateMockEcoPoints(
                     mode = mode,
                     distanceMeters = journey.distanceMeters,
@@ -120,8 +141,16 @@ class JourneyReviewViewModel(
                     transportMode = currentState.selectedMode,
                 )
 
-                journeyRepository.saveJourney(updatedJourney)
+                // Firestore queues offline writes locally, while the Task can wait for the server.
+                withTimeoutOrNull(3_000) { journeyRepository.saveJourney(updatedJourney) }
 
+                /*
+                 * TODO(Algorithm/Database):
+                 * Persist the final EcoPoints and carbon-saving result after the
+                 * production calculators are connected. JourneySummary currently
+                 * stores only the user-confirmed transport mode, so these calculated
+                 * values remain in the UI state and are not saved.
+                 */
                 _uiState.update {
                     it.copy(
                         journey = updatedJourney,
@@ -152,6 +181,9 @@ private fun JourneySummary.toUiState(): JourneyReviewUiState {
     return JourneyReviewUiState(
         journey = this,
         selectedMode = transportMode,
+
+        // TODO(Tracking): JourneySummary currently contains the planned or
+        // mockmode. Use the sensor-detected mode when tracking is available.
         detectedMode = transportMode,
         startLocationText = startLocation.toDisplayText(),
         endLocationText = endLocation.toDisplayText(),
@@ -186,11 +218,18 @@ private fun formatDuration(
     startTimeMillis: Long,
     endTimeMillis: Long,
 ): String {
-    val durationMinutes =
-        ((endTimeMillis - startTimeMillis) / 60_000L)
+    val totalSeconds =
+        ((endTimeMillis - startTimeMillis) / 1_000L)
             .coerceAtLeast(0L)
+    val hours = totalSeconds / 3_600L
+    val minutes = (totalSeconds % 3_600L) / 60L
+    val seconds = totalSeconds % 60L
 
-    return "$durationMinutes min"
+    return when {
+        hours > 0 -> "${hours}h ${minutes}m ${seconds}s"
+        minutes > 0 -> "${minutes}m ${seconds}s"
+        else -> "${seconds}s"
+    }
 }
 
 private fun formatDistance(distanceMeters: Double): String {
@@ -215,7 +254,11 @@ private fun formatDate(timeMillis: Long): String {
 }
 
 /**
- * Temporary UI mock until the Algorithm & AI module provides EcoPoints.
+ * Temporary UI-only EcoPoints estimate.
+ *
+ * TODO(Algorithm): Replace this function and its hard-coded rates with
+ * the production EcoPointsCalculator. The calculation should use the
+ * verified journey distance and user-confirmed transport mode.
  */
 private fun calculateMockEcoPoints(
     mode: TransportMode,

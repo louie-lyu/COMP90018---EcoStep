@@ -28,7 +28,7 @@ private val bottomNavigationItems = listOf(
     BottomNavigationItem(
         label = "Rewards",
         icon = "★",
-        route = Routes.HISTORY,
+        route = Routes.REWARDS,
     ),
     BottomNavigationItem(
         label = "Profile",

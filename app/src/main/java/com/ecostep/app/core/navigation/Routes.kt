@@ -13,7 +13,7 @@ object Routes {
                 "?$READ_ONLY_ARGUMENT={$READ_ONLY_ARGUMENT}"
 
     const val MISSIONS = "missions"
-    const val HISTORY = "history"
+    const val REWARDS = "rewards"
     const val JOURNEY_HISTORY = "journey_history"
     const val PROFILE = "profile"
 

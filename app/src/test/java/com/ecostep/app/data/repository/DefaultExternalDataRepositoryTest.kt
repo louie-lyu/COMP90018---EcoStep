@@ -1,5 +1,19 @@
 package com.ecostep.app.data.repository
 
+
+import com.ecostep.app.network.publictransport.TransitousApi
+import com.ecostep.app.network.publictransport.TransitousItinerary
+import com.ecostep.app.network.publictransport.TransitousLeg
+import com.ecostep.app.network.publictransport.TransitousPublicTransportDataSource
+import com.ecostep.app.network.publictransport.TransitousResponse
+import com.ecostep.app.data.model.TransportMode
+import com.ecostep.app.network.route.OpenRouteServiceResponse
+import com.ecostep.app.network.route.OpenRouteServiceRoute
+import com.ecostep.app.network.route.OpenRouteServiceRouteSummary
+import com.ecostep.app.network.route.RouteAccessTokenProvider
+import com.ecostep.app.network.route.RouteProxyApi
+import com.ecostep.app.network.route.RouteProxyDataSource
+import com.ecostep.app.network.route.RouteProxyRequest
 import com.ecostep.app.data.cache.weather.WeatherCache
 import com.ecostep.app.data.cache.weather.WeatherCacheEntry
 import com.ecostep.app.data.cache.weather.WeatherCachePolicy
@@ -22,6 +36,11 @@ class DefaultExternalDataRepositoryTest {
     private val location = GeoPoint(
         latitude = -37.8136,
         longitude = 144.9631,
+    )
+
+    private val destination = GeoPoint(
+        latitude = -37.7963,
+        longitude = 144.9614,
     )
 
     private val currentTimeMillis = 1_800_000_000_000L
@@ -198,14 +217,272 @@ class DefaultExternalDataRepositoryTest {
         }
     }
 
+    @Test
+    fun `route options are returned in walking cycling car order`() = runTest {
+        val routeApi = FakeRouteProxyApi()
+        val repository = repository(
+            api = FakeOpenMeteoApi {
+                successfulResponse()
+            },
+            cache = FakeWeatherCache(),
+            routeDataSource = RouteProxyDataSource(
+                routeProxyApi = routeApi,
+                accessTokenProvider = RouteAccessTokenProvider {
+                    "token"
+                },
+            ),
+        )
+
+        val routes = repository.getRouteOptions(
+            start = location,
+            end = destination,
+        )
+
+        assertEquals(
+            listOf(
+                TransportMode.WALKING,
+                TransportMode.CYCLING,
+                TransportMode.CAR,
+            ),
+            routes.map { it.mode },
+        )
+        assertEquals(
+            listOf(
+                "foot-walking",
+                "cycling-regular",
+                "driving-car",
+            ),
+            routeApi.profiles,
+        )
+    }
+
+    @Test
+    fun `route network failure becomes ExternalDataException network reason`() =
+        runTest {
+            val networkFailure = IOException(
+                "Route network unavailable",
+            )
+            val routeApi = FakeRouteProxyApi(
+                failure = networkFailure,
+            )
+            val repository = repository(
+                api = FakeOpenMeteoApi {
+                    successfulResponse()
+                },
+                cache = FakeWeatherCache(),
+                routeDataSource = RouteProxyDataSource(
+                    routeProxyApi = routeApi,
+                    accessTokenProvider = RouteAccessTokenProvider {
+                        "token"
+                    },
+                ),
+            )
+
+            val actual = captureExternalDataException {
+                repository.getRouteOptions(
+                    location,
+                    destination,
+                )
+            }
+
+            assertEquals(
+                ExternalDataException.Reason.NETWORK,
+                actual.reason,
+            )
+            assertSame(
+                networkFailure,
+                actual.cause,
+            )
+        }
+
+    @Test
+    fun `route cancellation is propagated unchanged`() = runTest {
+        val cancellation = CancellationException(
+            "Route request cancelled",
+        )
+        val repository = repository(
+            api = FakeOpenMeteoApi {
+                successfulResponse()
+            },
+            cache = FakeWeatherCache(),
+            routeDataSource = RouteProxyDataSource(
+                routeProxyApi = FakeRouteProxyApi(
+                    failure = cancellation,
+                ),
+                accessTokenProvider = RouteAccessTokenProvider {
+                    "token"
+                },
+            ),
+        )
+
+        try {
+            repository.getRouteOptions(
+                location,
+                destination,
+            )
+            throw AssertionError(
+                "Expected CancellationException",
+            )
+        } catch (actual: CancellationException) {
+            assertSame(
+                cancellation,
+                actual,
+            )
+        }
+    }
+
+    @Test
+    fun `public transport options are returned from Transitous`() =
+        runTest {
+            val transitousApi = FakeTransitousApi {
+                successfulTransitousResponse()
+            }
+
+            val repository = repository(
+                api = FakeOpenMeteoApi {
+                    successfulResponse()
+                },
+                cache = FakeWeatherCache(),
+                publicTransportDataSource =
+                    TransitousPublicTransportDataSource(
+                        transitousApi = transitousApi,
+                    ),
+            )
+
+            val options =
+                repository.getPublicTransportOptions(
+                    start = location,
+                    end = destination,
+                )
+
+            assertEquals(1, options.size)
+            assertEquals(
+                "Tram 19",
+                options.first().line,
+            )
+            assertEquals(
+                1_800_000_000_000L,
+                options.first().departureTimeMillis,
+            )
+            assertEquals(
+                1_200L,
+                options.first().estimatedDurationSeconds,
+            )
+        }
+
+    @Test
+    fun `public transport network failure becomes network exception`() =
+        runTest {
+            val networkFailure =
+                IOException("Transitous network unavailable")
+
+            val transitousApi = FakeTransitousApi {
+                throw networkFailure
+            }
+
+            val repository = repository(
+                api = FakeOpenMeteoApi {
+                    successfulResponse()
+                },
+                cache = FakeWeatherCache(),
+                publicTransportDataSource =
+                    TransitousPublicTransportDataSource(
+                        transitousApi = transitousApi,
+                    ),
+            )
+
+            val actual = captureExternalDataException {
+                repository.getPublicTransportOptions(
+                    start = location,
+                    end = destination,
+                )
+            }
+
+            assertEquals(
+                ExternalDataException.Reason.NETWORK,
+                actual.reason,
+            )
+            assertSame(
+                networkFailure,
+                actual.cause,
+            )
+        }
+
+    @Test
+    fun `public transport cancellation is propagated unchanged`() =
+        runTest {
+            val cancellation =
+                CancellationException(
+                    "Transitous request cancelled",
+                )
+
+            val transitousApi = FakeTransitousApi {
+                throw cancellation
+            }
+
+            val repository = repository(
+                api = FakeOpenMeteoApi {
+                    successfulResponse()
+                },
+                cache = FakeWeatherCache(),
+                publicTransportDataSource =
+                    TransitousPublicTransportDataSource(
+                        transitousApi = transitousApi,
+                    ),
+            )
+
+            try {
+                repository.getPublicTransportOptions(
+                    start = location,
+                    end = destination,
+                )
+
+                throw AssertionError(
+                    "Expected CancellationException",
+                )
+            } catch (actual: CancellationException) {
+                assertSame(
+                    cancellation,
+                    actual,
+                )
+            }
+        }
+
+    private class FakeTransitousApi(
+        private val response:
+        suspend () -> TransitousResponse,
+    ) : TransitousApi {
+
+        override suspend fun planJourney(
+            fromPlace: String,
+            toPlace: String,
+            arriveBy: Boolean,
+            maxTransfers: Int,
+            detailedLegs: Boolean,
+            detailedTransfers: Boolean,
+            userAgent: String,
+        ): TransitousResponse {
+            return response()
+        }
+    }
+
     private fun repository(
         api: OpenMeteoApi,
         cache: WeatherCache,
+        routeDataSource: RouteProxyDataSource? = null,
+        publicTransportDataSource:
+        TransitousPublicTransportDataSource? = null,
     ): DefaultExternalDataRepository {
         return DefaultExternalDataRepository(
-            weatherDataSource = OpenMeteoWeatherDataSource(api),
+            weatherDataSource =
+                OpenMeteoWeatherDataSource(api),
             weatherCache = cache,
-            currentTimeMillis = { currentTimeMillis },
+            routeDataSource = routeDataSource,
+            publicTransportDataSource =
+                publicTransportDataSource,
+            currentTimeMillis = {
+                currentTimeMillis
+            },
         )
     }
 
@@ -214,6 +491,33 @@ class DefaultExternalDataRepositoryTest {
             current = OpenMeteoCurrentWeather(
                 temperatureCelsius = 18.6,
                 weatherCode = 2,
+            ),
+        )
+    }
+
+    private fun successfulTransitousResponse():
+            TransitousResponse {
+        return TransitousResponse(
+            itineraries = listOf(
+                TransitousItinerary(
+                    duration = 1_200L,
+                    startTime =
+                        "2027-01-15T08:00:00Z",
+                    endTime =
+                        "2027-01-15T08:20:00Z",
+                    transfers = 0,
+                    legs = listOf(
+                        TransitousLeg(
+                            mode = "TRAM",
+                            startTime =
+                                "2027-01-15T08:00:00Z",
+                            endTime =
+                                "2027-01-15T08:20:00Z",
+                            routeShortName = "19",
+                            displayName = "19",
+                        ),
+                    ),
+                ),
             ),
         )
     }
@@ -285,6 +589,35 @@ class DefaultExternalDataRepositoryTest {
         ) {
             removedLocation = location
             entry = null
+        }
+    }
+
+    private class FakeRouteProxyApi(
+        private val failure: Exception? = null,
+    ) : RouteProxyApi {
+
+        val profiles = mutableListOf<String>()
+
+        override suspend fun getRoute(
+            authorization: String,
+            request: RouteProxyRequest,
+        ): OpenRouteServiceResponse {
+            failure?.let {
+                throw it
+            }
+
+            profiles += request.profile
+
+            return OpenRouteServiceResponse(
+                routes = listOf(
+                    OpenRouteServiceRoute(
+                        summary = OpenRouteServiceRouteSummary(
+                            distance = 2_000.0 + profiles.size,
+                            duration = 600.0 + profiles.size,
+                        ),
+                    ),
+                ),
+            )
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.ecostep.app.core.di
 
+import com.ecostep.app.network.route.RouteAccessTokenProvider
+import com.ecostep.app.network.route.RouteProxyClient
+import com.ecostep.app.network.route.RouteProxyDataSource
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +17,8 @@ import com.ecostep.app.network.weather.OpenMeteoClient
 import com.ecostep.app.network.weather.OpenMeteoWeatherDataSource
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import com.ecostep.app.network.publictransport.TransitousClient
+import com.ecostep.app.network.publictransport.TransitousPublicTransportDataSource
 
 /**
  * Manual dependency provisioning (no DI framework) — see docs/ARCHITECTURE.md for why.
@@ -22,6 +27,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 class AppContainer(context: Context) {
 
     private val applicationContext = context.applicationContext
+    val journeyTracker by lazy { com.ecostep.app.sensors.tracking.JourneyTracker() }
 
     /**
      * Shared HTTP client. Jianing builds per-API Retrofit instances (weather/route/public
@@ -36,6 +42,8 @@ class AppContainer(context: Context) {
                     redactQueryParams(
                         "latitude",
                         "longitude",
+                        "fromPlace",
+                        "toPlace",
                     )
 
                     // Never log request/response details in release builds.
@@ -63,15 +71,56 @@ class AppContainer(context: Context) {
         )
     }
 
+    private val transitousApi by lazy {
+        TransitousClient.create(
+            okHttpClient = okHttpClient,
+        )
+    }
+
+    private val publicTransportDataSource by lazy {
+        TransitousPublicTransportDataSource(
+            transitousApi = transitousApi,
+        )
+    }
+
+    private val routeProxyApi by lazy {
+        RouteProxyClient.create(
+            okHttpClient = okHttpClient,
+            baseUrl = BuildConfig.ROUTE_PROXY_BASE_URL,
+        )
+    }
+
+    private val routeDataSource by lazy {
+        RouteProxyDataSource(
+            routeProxyApi = routeProxyApi,
+            accessTokenProvider = RouteAccessTokenProvider {
+                authRepository.getIdToken()
+            },
+        )
+    }
+
     val externalDataRepository: ExternalDataRepository by lazy {
         DefaultExternalDataRepository(
             weatherDataSource = weatherDataSource,
             weatherCache = weatherCache,
+            routeDataSource = routeDataSource,
+            publicTransportDataSource =
+                publicTransportDataSource,
         )
     }
 
-    // TODO(Zongcheng): add `val journeyRepository: JourneyRepository` here once implemented,
-    // backed by Firebase Auth + Firestore (usable once app/google-services.json is in place).
+    val authRepository: com.ecostep.app.data.repository.AuthRepository by lazy {
+        com.ecostep.app.data.firebase.FirebaseAuthRepository(
+            firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance(),
+        )
+    }
+
+    val journeyRepository: com.ecostep.app.data.repository.JourneyRepository by lazy {
+        com.ecostep.app.data.firebase.FirestoreJourneyRepository(
+            authRepository = authRepository,
+            firestore = com.google.firebase.firestore.FirebaseFirestore.getInstance(),
+        )
+    }
 }
 
 /**
