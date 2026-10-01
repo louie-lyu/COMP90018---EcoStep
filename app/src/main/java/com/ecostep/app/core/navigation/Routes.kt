@@ -10,6 +10,7 @@ object Routes {
         "$JOURNEY_REVIEW/{$JOURNEY_ID_ARGUMENT}"
 
     const val MISSIONS = "missions"
+    const val WEEKLY_INSIGHT = "weekly_insight"
     const val HISTORY = "history"
     const val SETTINGS = "settings"
 
