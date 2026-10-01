@@ -1,0 +1,2398 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": 1,
+  "startedAtMillis": 1790784652502,
+  "gitCommit": "e3a1c2ce64962b42d7daa0b25605fb6e10fbcd84",
+  "workingTreeDirty": true,
+  "device": "Google sdk_gphone64_x86_64",
+  "androidVersion": "16",
+  "apiLevel": 36,
+  "buildType": "debug",
+  "scope": "Fixed synthetic mission histories; local weekly aggregation, fallback and prompt checks. No Gemini, Firebase, UI or user-data accuracy evaluation.",
+  "benchmarkMethod": "Sequential groups; System.nanoTime around batches. Local calls, coroutine\/loop overhead and result-list writes included. Fixtures, warm-ups, verification and JSON excluded. Nearest-rank P50\/P95 use successful batches. Per-call values are batch averages, not individual-call tail latency. No performance threshold; emulator JIT\/GC and group order affect timings.",
+  "plannedCases": 19,
+  "totalCases": 19,
+  "passedCases": 19,
+  "failedCases": 0,
+  "records": [
+    {
+      "scenario": "empty_week",
+      "expected": {
+        "acceptedMissions": 0,
+        "completedMissions": 0,
+        "completionRate": 0,
+        "savingsGrams": 0,
+        "mode": null,
+        "fallbackMessage": "Try accepting one small low-carbon mission next week."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 0,
+          "completedMissions": 0,
+          "completionRate": 0,
+          "savingsGrams": 0,
+          "mode": null,
+          "summary": "Completed 0 of 0 accepted missions (0.0%) and saved approximately 0.0 g of CO2.",
+          "fallbackMessage": "Try accepting one small low-carbon mission next week.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 0\n- Completed missions: 0\n- Completion rate: 0.0%\n- Recorded estimated carbon saved: 0.0 grams\n- Most used completed transport mode: NONE\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "mixed_mission_states",
+      "expected": {
+        "acceptedMissions": 4,
+        "completedMissions": 3,
+        "completionRate": 75,
+        "savingsGrams": 450,
+        "mode": "WALKING",
+        "fallbackMessage": "Good progress this week. Try completing one more achievable mission next week."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 4,
+          "completedMissions": 3,
+          "completionRate": 75,
+          "savingsGrams": 450,
+          "mode": "WALKING",
+          "summary": "Completed 3 of 4 accepted missions (75.0%) and saved approximately 450.0 g of CO2.",
+          "fallbackMessage": "Good progress this week. Try completing one more achievable mission next week.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 4\n- Completed missions: 3\n- Completion rate: 75.0%\n- Recorded estimated carbon saved: 450.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "inclusive_week_boundaries",
+      "expected": {
+        "acceptedMissions": 2,
+        "completedMissions": 2,
+        "completionRate": 100,
+        "savingsGrams": 200,
+        "mode": "WALKING",
+        "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 2,
+          "completedMissions": 2,
+          "completionRate": 100,
+          "savingsGrams": 200,
+          "mode": "WALKING",
+          "summary": "Completed 2 of 2 accepted missions (100.0%) and saved approximately 200.0 g of CO2.",
+          "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 2\n- Completed missions: 2\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 200.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "single_instant_week",
+      "expected": {
+        "acceptedMissions": 1,
+        "completedMissions": 1,
+        "completionRate": 100,
+        "savingsGrams": 100,
+        "mode": "WALKING",
+        "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 1,
+          "completedMissions": 1,
+          "completionRate": 100,
+          "savingsGrams": 100,
+          "mode": "WALKING",
+          "summary": "Completed 1 of 1 accepted missions (100.0%) and saved approximately 100.0 g of CO2.",
+          "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 1\n- Completed missions: 1\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 100.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "all_outside_week",
+      "expected": {
+        "acceptedMissions": 0,
+        "completedMissions": 0,
+        "completionRate": 0,
+        "savingsGrams": 0,
+        "mode": null,
+        "fallbackMessage": "Try accepting one small low-carbon mission next week."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 0,
+          "completedMissions": 0,
+          "completionRate": 0,
+          "savingsGrams": 0,
+          "mode": null,
+          "summary": "Completed 0 of 0 accepted missions (0.0%) and saved approximately 0.0 g of CO2.",
+          "fallbackMessage": "Try accepting one small low-carbon mission next week.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 0\n- Completed missions: 0\n- Completion rate: 0.0%\n- Recorded estimated carbon saved: 0.0 grams\n- Most used completed transport mode: NONE\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "rejected_completed_mission",
+      "expected": {
+        "acceptedMissions": 0,
+        "completedMissions": 0,
+        "completionRate": 0,
+        "savingsGrams": 0,
+        "mode": null,
+        "fallbackMessage": "Try accepting one small low-carbon mission next week."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 0,
+          "completedMissions": 0,
+          "completionRate": 0,
+          "savingsGrams": 0,
+          "mode": null,
+          "summary": "Completed 0 of 0 accepted missions (0.0%) and saved approximately 0.0 g of CO2.",
+          "fallbackMessage": "Try accepting one small low-carbon mission next week.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 0\n- Completed missions: 0\n- Completion rate: 0.0%\n- Recorded estimated carbon saved: 0.0 grams\n- Most used completed transport mode: NONE\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "accepted_none_completed",
+      "expected": {
+        "acceptedMissions": 2,
+        "completedMissions": 0,
+        "completionRate": 0,
+        "savingsGrams": 0,
+        "mode": null,
+        "fallbackMessage": "Start with one achievable mission and build from there."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 2,
+          "completedMissions": 0,
+          "completionRate": 0,
+          "savingsGrams": 0,
+          "mode": null,
+          "summary": "Completed 0 of 2 accepted missions (0.0%) and saved approximately 0.0 g of CO2.",
+          "fallbackMessage": "Start with one achievable mission and build from there.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 2\n- Completed missions: 0\n- Completion rate: 0.0%\n- Recorded estimated carbon saved: 0.0 grams\n- Most used completed transport mode: NONE\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "invalid_savings_ignored",
+      "expected": {
+        "acceptedMissions": 6,
+        "completedMissions": 6,
+        "completionRate": 100,
+        "savingsGrams": 80,
+        "mode": "WALKING",
+        "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 6,
+          "completedMissions": 6,
+          "completionRate": 100,
+          "savingsGrams": 80,
+          "mode": "WALKING",
+          "summary": "Completed 6 of 6 accepted missions (100.0%) and saved approximately 80.0 g of CO2.",
+          "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 6\n- Completed missions: 6\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 80.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "missing_and_unknown_modes",
+      "expected": {
+        "acceptedMissions": 2,
+        "completedMissions": 2,
+        "completionRate": 100,
+        "savingsGrams": 200,
+        "mode": null,
+        "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 2,
+          "completedMissions": 2,
+          "completionRate": 100,
+          "savingsGrams": 200,
+          "mode": null,
+          "summary": "Completed 2 of 2 accepted missions (100.0%) and saved approximately 200.0 g of CO2.",
+          "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 2\n- Completed missions: 2\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 200.0 grams\n- Most used completed transport mode: NONE\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "most_used_completed_mode",
+      "expected": {
+        "acceptedMissions": 4,
+        "completedMissions": 3,
+        "completionRate": 75,
+        "savingsGrams": 300,
+        "mode": "CYCLING",
+        "fallbackMessage": "Good progress this week. Try completing one more achievable mission next week."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 4,
+          "completedMissions": 3,
+          "completionRate": 75,
+          "savingsGrams": 300,
+          "mode": "CYCLING",
+          "summary": "Completed 3 of 4 accepted missions (75.0%) and saved approximately 300.0 g of CO2.",
+          "fallbackMessage": "Good progress this week. Try completing one more achievable mission next week.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 4\n- Completed missions: 3\n- Completion rate: 75.0%\n- Recorded estimated carbon saved: 300.0 grams\n- Most used completed transport mode: CYCLING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "fractional_savings",
+      "expected": {
+        "acceptedMissions": 2,
+        "completedMissions": 2,
+        "completionRate": 100,
+        "savingsGrams": 100.25,
+        "mode": "WALKING",
+        "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 2,
+          "completedMissions": 2,
+          "completionRate": 100,
+          "savingsGrams": 100.25,
+          "mode": "WALKING",
+          "summary": "Completed 2 of 2 accepted missions (100.0%) and saved approximately 100.3 g of CO2.",
+          "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 2\n- Completed missions: 2\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 100.3 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "unsorted_history",
+      "expected": {
+        "acceptedMissions": 3,
+        "completedMissions": 3,
+        "completionRate": 100,
+        "savingsGrams": 600,
+        "mode": "CYCLING",
+        "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 3,
+          "completedMissions": 3,
+          "completionRate": 100,
+          "savingsGrams": 600,
+          "mode": "CYCLING",
+          "summary": "Completed 3 of 3 accepted missions (100.0%) and saved approximately 600.0 g of CO2.",
+          "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 3\n- Completed missions: 3\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 600.0 grams\n- Most used completed transport mode: CYCLING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "completion_rate_49",
+      "expected": {
+        "acceptedMissions": 100,
+        "completedMissions": 49,
+        "completionRate": 49,
+        "savingsGrams": 4900,
+        "mode": "WALKING",
+        "fallbackMessage": "You have made a start. Choose one simple mission next week and focus on completing it."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 100,
+          "completedMissions": 49,
+          "completionRate": 49,
+          "savingsGrams": 4900,
+          "mode": "WALKING",
+          "summary": "Completed 49 of 100 accepted missions (49.0%) and saved approximately 4900.0 g of CO2.",
+          "fallbackMessage": "You have made a start. Choose one simple mission next week and focus on completing it.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 100\n- Completed missions: 49\n- Completion rate: 49.0%\n- Recorded estimated carbon saved: 4900.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "completion_rate_50",
+      "expected": {
+        "acceptedMissions": 100,
+        "completedMissions": 50,
+        "completionRate": 50,
+        "savingsGrams": 5000,
+        "mode": "WALKING",
+        "fallbackMessage": "Good progress this week. Try completing one more achievable mission next week."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 100,
+          "completedMissions": 50,
+          "completionRate": 50,
+          "savingsGrams": 5000,
+          "mode": "WALKING",
+          "summary": "Completed 50 of 100 accepted missions (50.0%) and saved approximately 5000.0 g of CO2.",
+          "fallbackMessage": "Good progress this week. Try completing one more achievable mission next week.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 100\n- Completed missions: 50\n- Completion rate: 50.0%\n- Recorded estimated carbon saved: 5000.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "completion_rate_79",
+      "expected": {
+        "acceptedMissions": 100,
+        "completedMissions": 79,
+        "completionRate": 79,
+        "savingsGrams": 7900,
+        "mode": "WALKING",
+        "fallbackMessage": "Good progress this week. Try completing one more achievable mission next week."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 100,
+          "completedMissions": 79,
+          "completionRate": 79,
+          "savingsGrams": 7900,
+          "mode": "WALKING",
+          "summary": "Completed 79 of 100 accepted missions (79.0%) and saved approximately 7900.0 g of CO2.",
+          "fallbackMessage": "Good progress this week. Try completing one more achievable mission next week.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 100\n- Completed missions: 79\n- Completion rate: 79.0%\n- Recorded estimated carbon saved: 7900.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "completion_rate_80",
+      "expected": {
+        "acceptedMissions": 100,
+        "completedMissions": 80,
+        "completionRate": 80,
+        "savingsGrams": 8000,
+        "mode": "WALKING",
+        "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 100,
+          "completedMissions": 80,
+          "completionRate": 80,
+          "savingsGrams": 8000,
+          "mode": "WALKING",
+          "summary": "Completed 80 of 100 accepted missions (80.0%) and saved approximately 8000.0 g of CO2.",
+          "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 100\n- Completed missions: 80\n- Completion rate: 80.0%\n- Recorded estimated carbon saved: 8000.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "all_completed",
+      "expected": {
+        "acceptedMissions": 1,
+        "completedMissions": 1,
+        "completionRate": 100,
+        "savingsGrams": 100,
+        "mode": "WALKING",
+        "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 1,
+          "completedMissions": 1,
+          "completionRate": 100,
+          "savingsGrams": 100,
+          "mode": "WALKING",
+          "summary": "Completed 1 of 1 accepted missions (100.0%) and saved approximately 100.0 g of CO2.",
+          "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 1\n- Completed missions: 1\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 100.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "valid_mode_among_unknowns",
+      "expected": {
+        "acceptedMissions": 3,
+        "completedMissions": 3,
+        "completionRate": 100,
+        "savingsGrams": 300,
+        "mode": "WALKING",
+        "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals."
+      },
+      "actual": {
+        "report": {
+          "acceptedMissions": 3,
+          "completedMissions": 3,
+          "completionRate": 100,
+          "savingsGrams": 300,
+          "mode": "WALKING",
+          "summary": "Completed 3 of 3 accepted missions (100.0%) and saved approximately 300.0 g of CO2.",
+          "fallbackMessage": "Great work completing your missions this week. Keep choosing achievable low-carbon goals.",
+          "aiPrompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 3\n- Completed missions: 3\n- Completion rate: 100.0%\n- Recorded estimated carbon saved: 300.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+        },
+        "promptPrivacyPassed": true
+      },
+      "passed": true
+    },
+    {
+      "scenario": "reversed_week_rejected",
+      "expected": {
+        "error": "IllegalArgumentException"
+      },
+      "actual": {
+        "error": "IllegalArgumentException"
+      },
+      "passed": true
+    }
+  ],
+  "plannedBenchmarkGroups": 6,
+  "benchmarks": [
+    {
+      "scenario": "all_in_week_0",
+      "inputSize": 0,
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 2.100963,
+      "p95BatchMs": 7.030735,
+      "p50AveragePerCallUs": 210.0963,
+      "p95AveragePerCallUs": 703.0735,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 7.870378,
+          "averagePerCallUs": 787.0378
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 7.27261,
+          "averagePerCallUs": 727.2610000000001
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 6.444187,
+          "averagePerCallUs": 644.4187
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 7.030735,
+          "averagePerCallUs": 703.0735
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 6.068743,
+          "averagePerCallUs": 606.8743000000001
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 6.0146,
+          "averagePerCallUs": 601.4599999999999
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 6.902245,
+          "averagePerCallUs": 690.2245
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 5.993369,
+          "averagePerCallUs": 599.3369
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 5.252944,
+          "averagePerCallUs": 525.2944
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 4.848986,
+          "averagePerCallUs": 484.8986
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 5.637211,
+          "averagePerCallUs": 563.7211
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 3.5812,
+          "averagePerCallUs": 358.12
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 2.895929,
+          "averagePerCallUs": 289.5929
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 1.956361,
+          "averagePerCallUs": 195.6361
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 2.089174,
+          "averagePerCallUs": 208.9174
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 1.862671,
+          "averagePerCallUs": 186.2671
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 2.202006,
+          "averagePerCallUs": 220.20059999999998
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 2.418421,
+          "averagePerCallUs": 241.8421
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 1.726575,
+          "averagePerCallUs": 172.6575
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 1.894739,
+          "averagePerCallUs": 189.47390000000001
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 2.480391,
+          "averagePerCallUs": 248.03910000000002
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 1.661809,
+          "averagePerCallUs": 166.1809
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 1.805137,
+          "averagePerCallUs": 180.5137
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 2.169073,
+          "averagePerCallUs": 216.9073
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 1.564439,
+          "averagePerCallUs": 156.44389999999999
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 2.06336,
+          "averagePerCallUs": 206.33599999999996
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 1.55564,
+          "averagePerCallUs": 155.564
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 2.030802,
+          "averagePerCallUs": 203.0802
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 2.433314,
+          "averagePerCallUs": 243.33140000000003
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 1.787174,
+          "averagePerCallUs": 178.7174
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 2.393097,
+          "averagePerCallUs": 239.30970000000002
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 1.894716,
+          "averagePerCallUs": 189.47160000000002
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 2.169895,
+          "averagePerCallUs": 216.9895
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 1.934083,
+          "averagePerCallUs": 193.4083
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 2.100963,
+          "averagePerCallUs": 210.0963
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 2.446551,
+          "averagePerCallUs": 244.6551
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 1.906782,
+          "averagePerCallUs": 190.6782
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 2.161405,
+          "averagePerCallUs": 216.14049999999997
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 2.557645,
+          "averagePerCallUs": 255.7645
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 1.855641,
+          "averagePerCallUs": 185.5641
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 1.455594,
+          "averagePerCallUs": 145.5594
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 1.906385,
+          "averagePerCallUs": 190.6385
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 1.705259,
+          "averagePerCallUs": 170.5259
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 1.51145,
+          "averagePerCallUs": 151.145
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 1.67538,
+          "averagePerCallUs": 167.538
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 1.461386,
+          "averagePerCallUs": 146.1386
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 2.345016,
+          "averagePerCallUs": 234.5016
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 2.015127,
+          "averagePerCallUs": 201.51270000000002
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 2.342509,
+          "averagePerCallUs": 234.2509
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 1.808478,
+          "averagePerCallUs": 180.8478
+        }
+      ]
+    },
+    {
+      "scenario": "all_in_week_10",
+      "inputSize": 10,
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 2.019548,
+      "p95BatchMs": 2.508575,
+      "p50AveragePerCallUs": 201.9548,
+      "p95AveragePerCallUs": 250.8575,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 1.721645,
+          "averagePerCallUs": 172.1645
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 1.702418,
+          "averagePerCallUs": 170.24179999999998
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 2.039973,
+          "averagePerCallUs": 203.99729999999997
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 1.870244,
+          "averagePerCallUs": 187.02439999999999
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 2.378372,
+          "averagePerCallUs": 237.83720000000002
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 1.745481,
+          "averagePerCallUs": 174.5481
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 1.530774,
+          "averagePerCallUs": 153.0774
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 1.696074,
+          "averagePerCallUs": 169.6074
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 1.654974,
+          "averagePerCallUs": 165.4974
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 1.961763,
+          "averagePerCallUs": 196.1763
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 2.072428,
+          "averagePerCallUs": 207.2428
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 1.693297,
+          "averagePerCallUs": 169.3297
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 1.909511,
+          "averagePerCallUs": 190.9511
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 1.90487,
+          "averagePerCallUs": 190.48700000000002
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 1.492472,
+          "averagePerCallUs": 149.2472
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 1.703982,
+          "averagePerCallUs": 170.39820000000003
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 1.943922,
+          "averagePerCallUs": 194.3922
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 2.394279,
+          "averagePerCallUs": 239.4279
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 1.703506,
+          "averagePerCallUs": 170.3506
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 1.783068,
+          "averagePerCallUs": 178.3068
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 2.218729,
+          "averagePerCallUs": 221.87290000000002
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 2.409286,
+          "averagePerCallUs": 240.92859999999996
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 2.716948,
+          "averagePerCallUs": 271.6948
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 2.425849,
+          "averagePerCallUs": 242.58489999999998
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 2.106578,
+          "averagePerCallUs": 210.6578
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 1.587595,
+          "averagePerCallUs": 158.7595
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 1.964913,
+          "averagePerCallUs": 196.4913
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 2.269413,
+          "averagePerCallUs": 226.9413
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 2.024173,
+          "averagePerCallUs": 202.41729999999998
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 2.1642,
+          "averagePerCallUs": 216.42000000000002
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 1.9739,
+          "averagePerCallUs": 197.39000000000001
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 2.19843,
+          "averagePerCallUs": 219.84300000000002
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 2.547608,
+          "averagePerCallUs": 254.76079999999996
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 2.212497,
+          "averagePerCallUs": 221.2497
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 2.078908,
+          "averagePerCallUs": 207.89080000000004
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 2.351173,
+          "averagePerCallUs": 235.11730000000003
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 1.839124,
+          "averagePerCallUs": 183.9124
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 2.019548,
+          "averagePerCallUs": 201.9548
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 2.129599,
+          "averagePerCallUs": 212.95989999999998
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 1.595194,
+          "averagePerCallUs": 159.5194
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 1.948418,
+          "averagePerCallUs": 194.84179999999998
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 2.503648,
+          "averagePerCallUs": 250.3648
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 1.769566,
+          "averagePerCallUs": 176.9566
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 2.041168,
+          "averagePerCallUs": 204.11679999999998
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 2.138182,
+          "averagePerCallUs": 213.81820000000002
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 2.306682,
+          "averagePerCallUs": 230.66819999999998
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 1.989746,
+          "averagePerCallUs": 198.9746
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 2.229482,
+          "averagePerCallUs": 222.94819999999999
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 2.508575,
+          "averagePerCallUs": 250.8575
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 2.208197,
+          "averagePerCallUs": 220.8197
+        }
+      ]
+    },
+    {
+      "scenario": "all_in_week_100",
+      "inputSize": 100,
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 2.237931,
+      "p95BatchMs": 7.607677,
+      "p50AveragePerCallUs": 223.7931,
+      "p95AveragePerCallUs": 760.7677,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 2.716345,
+          "averagePerCallUs": 271.6345
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 2.959498,
+          "averagePerCallUs": 295.9498
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 2.623487,
+          "averagePerCallUs": 262.3487
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 2.984968,
+          "averagePerCallUs": 298.4968
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 2.421463,
+          "averagePerCallUs": 242.14630000000002
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 3.214533,
+          "averagePerCallUs": 321.4533
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 2.155431,
+          "averagePerCallUs": 215.5431
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 2.242941,
+          "averagePerCallUs": 224.29410000000001
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 1.94559,
+          "averagePerCallUs": 194.559
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 2.465473,
+          "averagePerCallUs": 246.5473
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 2.773827,
+          "averagePerCallUs": 277.3827
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 2.812385,
+          "averagePerCallUs": 281.2385
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 2.641805,
+          "averagePerCallUs": 264.18050000000005
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 2.237931,
+          "averagePerCallUs": 223.7931
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 2.014107,
+          "averagePerCallUs": 201.41070000000002
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 2.538177,
+          "averagePerCallUs": 253.8177
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 2.931358,
+          "averagePerCallUs": 293.13579999999996
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 2.910221,
+          "averagePerCallUs": 291.0221
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 2.698321,
+          "averagePerCallUs": 269.83209999999997
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 3.061515,
+          "averagePerCallUs": 306.1515
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 2.607379,
+          "averagePerCallUs": 260.73789999999997
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 2.938537,
+          "averagePerCallUs": 293.8537
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 3.258988,
+          "averagePerCallUs": 325.8988
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 2.292339,
+          "averagePerCallUs": 229.2339
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 1.981441,
+          "averagePerCallUs": 198.1441
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 1.288914,
+          "averagePerCallUs": 128.8914
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.625742,
+          "averagePerCallUs": 62.574200000000005
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.673333,
+          "averagePerCallUs": 67.3333
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.655711,
+          "averagePerCallUs": 65.5711
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.629739,
+          "averagePerCallUs": 62.9739
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.92442,
+          "averagePerCallUs": 92.44200000000001
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.708237,
+          "averagePerCallUs": 70.8237
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 1.182183,
+          "averagePerCallUs": 118.2183
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.648627,
+          "averagePerCallUs": 64.86269999999999
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.62994,
+          "averagePerCallUs": 62.99400000000001
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.626372,
+          "averagePerCallUs": 62.63720000000001
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.884203,
+          "averagePerCallUs": 88.4203
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 1.136207,
+          "averagePerCallUs": 113.62069999999999
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 7.607677,
+          "averagePerCallUs": 760.7677
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.851684,
+          "averagePerCallUs": 85.16839999999999
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 4.914203,
+          "averagePerCallUs": 491.42029999999994
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 11.701132,
+          "averagePerCallUs": 1170.1132
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 10.267081,
+          "averagePerCallUs": 1026.7081
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 7.321981,
+          "averagePerCallUs": 732.1981
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.704767,
+          "averagePerCallUs": 70.47670000000001
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.633852,
+          "averagePerCallUs": 63.3852
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.868986,
+          "averagePerCallUs": 86.8986
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.585138,
+          "averagePerCallUs": 58.5138
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.616867,
+          "averagePerCallUs": 61.68670000000001
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.621659,
+          "averagePerCallUs": 62.1659
+        }
+      ]
+    },
+    {
+      "scenario": "all_in_week_1000",
+      "inputSize": 1000,
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 3.56374,
+      "p95BatchMs": 19.376588,
+      "p50AveragePerCallUs": 356.374,
+      "p95AveragePerCallUs": 1937.6588000000004,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 29.829145,
+          "averagePerCallUs": 2982.9145
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 13.396052,
+          "averagePerCallUs": 1339.6052
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 13.487525,
+          "averagePerCallUs": 1348.7525
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 2.431392,
+          "averagePerCallUs": 243.13920000000002
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 17.670147,
+          "averagePerCallUs": 1767.0147000000002
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 15.491858,
+          "averagePerCallUs": 1549.1858
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 19.376588,
+          "averagePerCallUs": 1937.6588000000004
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 7.12927,
+          "averagePerCallUs": 712.927
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 3.96992,
+          "averagePerCallUs": 396.992
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 4.488391,
+          "averagePerCallUs": 448.8391
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 48.472828,
+          "averagePerCallUs": 4847.2828
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 3.438881,
+          "averagePerCallUs": 343.8881
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 3.529123,
+          "averagePerCallUs": 352.91229999999996
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 3.557115,
+          "averagePerCallUs": 355.7115
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 5.703423,
+          "averagePerCallUs": 570.3423
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 4.633114,
+          "averagePerCallUs": 463.31139999999994
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 2.663582,
+          "averagePerCallUs": 266.3582
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 5.570081,
+          "averagePerCallUs": 557.0081
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 3.065516,
+          "averagePerCallUs": 306.5516
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 4.497033,
+          "averagePerCallUs": 449.7033
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 3.27025,
+          "averagePerCallUs": 327.025
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 3.183131,
+          "averagePerCallUs": 318.31309999999996
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 6.300137,
+          "averagePerCallUs": 630.0137000000001
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 2.921127,
+          "averagePerCallUs": 292.1127
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 2.884376,
+          "averagePerCallUs": 288.43760000000003
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 5.802834,
+          "averagePerCallUs": 580.2834
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 2.920233,
+          "averagePerCallUs": 292.0233
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 2.545322,
+          "averagePerCallUs": 254.53220000000002
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 6.034006,
+          "averagePerCallUs": 603.4005999999999
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 2.933489,
+          "averagePerCallUs": 293.34889999999996
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 3.369263,
+          "averagePerCallUs": 336.92629999999997
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 5.741951,
+          "averagePerCallUs": 574.1951
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 2.546542,
+          "averagePerCallUs": 254.6542
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 4.20623,
+          "averagePerCallUs": 420.62299999999993
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 9.086269,
+          "averagePerCallUs": 908.6269
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 2.920223,
+          "averagePerCallUs": 292.0223
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 3.476556,
+          "averagePerCallUs": 347.6556
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 14.018181,
+          "averagePerCallUs": 1401.8181
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 2.501781,
+          "averagePerCallUs": 250.1781
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 3.168179,
+          "averagePerCallUs": 316.81789999999995
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 6.119186,
+          "averagePerCallUs": 611.9186
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 2.656086,
+          "averagePerCallUs": 265.6086
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 2.307248,
+          "averagePerCallUs": 230.72480000000002
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 11.93509,
+          "averagePerCallUs": 1193.509
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 2.829116,
+          "averagePerCallUs": 282.9116
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 4.610359,
+          "averagePerCallUs": 461.03589999999997
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 2.379992,
+          "averagePerCallUs": 237.99920000000003
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 3.37821,
+          "averagePerCallUs": 337.821
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 17.826405,
+          "averagePerCallUs": 1782.6405000000002
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 3.56374,
+          "averagePerCallUs": 356.374
+        }
+      ]
+    },
+    {
+      "scenario": "all_in_week_10000",
+      "inputSize": 10000,
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 33.415747,
+      "p95BatchMs": 38.152069,
+      "p50AveragePerCallUs": 3341.5747,
+      "p95AveragePerCallUs": 3815.2068999999997,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 32.16038,
+          "averagePerCallUs": 3216.0380000000005
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 36.232283,
+          "averagePerCallUs": 3623.2283
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 33.022264,
+          "averagePerCallUs": 3302.2264000000005
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 33.230081,
+          "averagePerCallUs": 3323.0081
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 32.849571,
+          "averagePerCallUs": 3284.9570999999996
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 35.496389,
+          "averagePerCallUs": 3549.6389000000004
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 32.645597,
+          "averagePerCallUs": 3264.5597000000002
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 32.132481,
+          "averagePerCallUs": 3213.2481
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 34.05827,
+          "averagePerCallUs": 3405.8269999999998
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 32.774537,
+          "averagePerCallUs": 3277.4537000000005
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 32.322038,
+          "averagePerCallUs": 3232.2038000000002
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 31.299222,
+          "averagePerCallUs": 3129.9222
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 28.957542,
+          "averagePerCallUs": 2895.7542000000003
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 32.123543,
+          "averagePerCallUs": 3212.3543
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 32.544814,
+          "averagePerCallUs": 3254.4814
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 35.922493,
+          "averagePerCallUs": 3592.2493000000004
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 36.023866,
+          "averagePerCallUs": 3602.3865999999994
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 32.430083,
+          "averagePerCallUs": 3243.0083000000004
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 36.452732,
+          "averagePerCallUs": 3645.2731999999996
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 39.410399,
+          "averagePerCallUs": 3941.0398999999998
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 39.348323,
+          "averagePerCallUs": 3934.8323000000005
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 37.034586,
+          "averagePerCallUs": 3703.4585999999995
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 35.922751,
+          "averagePerCallUs": 3592.2751
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 34.064356,
+          "averagePerCallUs": 3406.4356
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 33.829687,
+          "averagePerCallUs": 3382.9687
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 35.475317,
+          "averagePerCallUs": 3547.5316999999995
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 31.686526,
+          "averagePerCallUs": 3168.6526000000003
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 34.324963,
+          "averagePerCallUs": 3432.4963
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 34.732128,
+          "averagePerCallUs": 3473.2128000000002
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 31.95498,
+          "averagePerCallUs": 3195.498
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 35.619556,
+          "averagePerCallUs": 3561.9556000000002
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 36.766337,
+          "averagePerCallUs": 3676.6337
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 33.86647,
+          "averagePerCallUs": 3386.647
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 33.988384,
+          "averagePerCallUs": 3398.8384000000005
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 34.229876,
+          "averagePerCallUs": 3422.9875999999995
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 30.745247,
+          "averagePerCallUs": 3074.5247
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 35.241912,
+          "averagePerCallUs": 3524.1911999999998
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 30.818211,
+          "averagePerCallUs": 3081.8211
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 31.482019,
+          "averagePerCallUs": 3148.2019
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 37.888262,
+          "averagePerCallUs": 3788.8261999999995
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 32.723378,
+          "averagePerCallUs": 3272.3378
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 38.152069,
+          "averagePerCallUs": 3815.2068999999997
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 34.113627,
+          "averagePerCallUs": 3411.3627
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 30.54844,
+          "averagePerCallUs": 3054.844
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 33.181243,
+          "averagePerCallUs": 3318.1243000000004
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 31.964054,
+          "averagePerCallUs": 3196.4054
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 34.090933,
+          "averagePerCallUs": 3409.0932999999995
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 31.448762,
+          "averagePerCallUs": 3144.8761999999997
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 32.482391,
+          "averagePerCallUs": 3248.2391
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 33.415747,
+          "averagePerCallUs": 3341.5747
+        }
+      ]
+    },
+    {
+      "scenario": "ten_percent_in_week_10000",
+      "inputSize": 10000,
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 10,
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 5.835376,
+      "p95BatchMs": 9.077486,
+      "p50AveragePerCallUs": 583.5376,
+      "p95AveragePerCallUs": 907.7486000000001,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 5.040311,
+          "averagePerCallUs": 504.0311
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 3.746246,
+          "averagePerCallUs": 374.6246
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 6.249323,
+          "averagePerCallUs": 624.9323
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 5.269985,
+          "averagePerCallUs": 526.9985
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 7.057479,
+          "averagePerCallUs": 705.7479000000001
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 3.974703,
+          "averagePerCallUs": 397.4703
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 5.430607,
+          "averagePerCallUs": 543.0607
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 7.858765,
+          "averagePerCallUs": 785.8765000000001
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 5.835376,
+          "averagePerCallUs": 583.5376
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 8.7848,
+          "averagePerCallUs": 878.4800000000001
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 5.380027,
+          "averagePerCallUs": 538.0027
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 7.301417,
+          "averagePerCallUs": 730.1416999999999
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 5.02783,
+          "averagePerCallUs": 502.783
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 3.685112,
+          "averagePerCallUs": 368.51120000000003
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 7.816555,
+          "averagePerCallUs": 781.6555000000001
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 6.121165,
+          "averagePerCallUs": 612.1165
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 8.316922,
+          "averagePerCallUs": 831.6922000000001
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 4.449544,
+          "averagePerCallUs": 444.9544000000001
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 3.744379,
+          "averagePerCallUs": 374.4379
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 8.447143,
+          "averagePerCallUs": 844.7143
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 4.71268,
+          "averagePerCallUs": 471.2679999999999
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 7.55529,
+          "averagePerCallUs": 755.529
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 4.787972,
+          "averagePerCallUs": 478.7972
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 4.480935,
+          "averagePerCallUs": 448.09349999999995
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 7.723809,
+          "averagePerCallUs": 772.3809
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 6.351171,
+          "averagePerCallUs": 635.1171
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 4.609845,
+          "averagePerCallUs": 460.9845
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 4.601407,
+          "averagePerCallUs": 460.14070000000004
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 5.945779,
+          "averagePerCallUs": 594.5779
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 7.614391,
+          "averagePerCallUs": 761.4391
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 3.954079,
+          "averagePerCallUs": 395.40790000000004
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 6.004172,
+          "averagePerCallUs": 600.4172
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 6.761894,
+          "averagePerCallUs": 676.1894
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 6.261025,
+          "averagePerCallUs": 626.1025
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 9.077486,
+          "averagePerCallUs": 907.7486000000001
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 4.252714,
+          "averagePerCallUs": 425.27139999999997
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 4.615977,
+          "averagePerCallUs": 461.5977
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 10.274426,
+          "averagePerCallUs": 1027.4425999999999
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 4.572007,
+          "averagePerCallUs": 457.20070000000004
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 4.21074,
+          "averagePerCallUs": 421.07400000000007
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 7.603999,
+          "averagePerCallUs": 760.3999
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 5.62884,
+          "averagePerCallUs": 562.884
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 9.419986,
+          "averagePerCallUs": 941.9985999999999
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 5.390726,
+          "averagePerCallUs": 539.0726
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 5.421837,
+          "averagePerCallUs": 542.1837
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 8.28847,
+          "averagePerCallUs": 828.847
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 5.051291,
+          "averagePerCallUs": 505.1291
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 8.405981,
+          "averagePerCallUs": 840.5980999999999
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 5.900537,
+          "averagePerCallUs": 590.0537
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 6.387159,
+          "averagePerCallUs": 638.7158999999999
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "finishedAtMillis": 1790784656457
+}

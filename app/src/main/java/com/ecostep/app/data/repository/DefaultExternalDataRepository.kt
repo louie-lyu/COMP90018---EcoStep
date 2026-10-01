@@ -9,6 +9,11 @@ import com.ecostep.app.data.model.PublicTransportInfo
 import com.ecostep.app.data.model.RouteInfo
 import com.ecostep.app.data.model.WeatherData
 import com.ecostep.app.network.weather.OpenMeteoWeatherDataSource
+import com.ecostep.app.network.route.OpenRouteServiceProfile
+import com.ecostep.app.network.route.RouteProxyAuthenticationException
+import com.ecostep.app.network.route.RouteProxyDataSource
+import com.ecostep.app.network.route.RouteProxyServiceException
+import com.ecostep.app.network.publictransport.TransitousPublicTransportDataSource
 import java.io.IOException
 import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerializationException
@@ -17,8 +22,13 @@ import retrofit2.HttpException
 internal class DefaultExternalDataRepository(
     private val weatherDataSource: OpenMeteoWeatherDataSource,
     private val weatherCache: WeatherCache,
-    private val weatherCachePolicy: WeatherCachePolicy = WeatherCachePolicy(),
-    private val currentTimeMillis: () -> Long = System::currentTimeMillis,
+    private val routeDataSource: RouteProxyDataSource? = null,
+    private val publicTransportDataSource:
+    TransitousPublicTransportDataSource? = null,
+    private val weatherCachePolicy: WeatherCachePolicy =
+        WeatherCachePolicy(),
+    private val currentTimeMillis: () -> Long =
+        System::currentTimeMillis,
 ) : ExternalDataRepository {
 
     override suspend fun getWeather(location: GeoPoint): WeatherData {
@@ -78,18 +88,50 @@ internal class DefaultExternalDataRepository(
         start: GeoPoint,
         end: GeoPoint,
     ): List<RouteInfo> {
-        throw UnsupportedOperationException(
-            "Route API is not configured yet",
-        )
+        val dataSource = routeDataSource
+            ?: throw ExternalDataException(
+                reason = ExternalDataException.Reason.SERVICE,
+                message = "Route service is not configured.",
+            )
+
+        return try {
+            OpenRouteServiceProfile.entries.map { profile ->
+                dataSource.getRoute(
+                    start = start,
+                    end = end,
+                    profile = profile,
+                )
+            }
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (error: Exception) {
+            throw error.toExternalDataException()
+        }
     }
 
     override suspend fun getPublicTransportOptions(
         start: GeoPoint,
         end: GeoPoint,
     ): List<PublicTransportInfo> {
-        throw UnsupportedOperationException(
-            "Public transport API is not configured yet",
-        )
+        val dataSource =
+            publicTransportDataSource
+                ?: throw ExternalDataException(
+                    reason =
+                        ExternalDataException.Reason.SERVICE,
+                    message =
+                        "Public transport service is not configured.",
+                )
+
+        return try {
+            dataSource.getPublicTransportOptions(
+                start = start,
+                end = end,
+            )
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (error: Exception) {
+            throw error.toExternalDataException()
+        }
     }
 
     private suspend fun readCacheBestEffort(
@@ -135,6 +177,12 @@ internal class DefaultExternalDataRepository(
     private fun Exception.toExternalDataException(): ExternalDataException {
         return when (this) {
             is ExternalDataException -> this
+
+            is RouteProxyAuthenticationException,
+            is RouteProxyServiceException -> ExternalDataException(
+                reason = ExternalDataException.Reason.SERVICE,
+                cause = this,
+            )
 
             is IOException -> ExternalDataException(
                 reason = ExternalDataException.Reason.NETWORK,

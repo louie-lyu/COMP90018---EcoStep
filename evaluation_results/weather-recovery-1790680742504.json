@@ -1,0 +1,24 @@
+{
+  "startedAtMillis": 1790680742504,
+  "passed": true,
+  "records": [
+    {
+      "scenario": "weather.network.first_fetch",
+      "durationMs": 2040.418897,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "scenario": "weather.cache.hit",
+      "durationMs": 1.251992,
+      "outcome": "SUCCESS",
+      "errorType": null
+    },
+    {
+      "scenario": "weather.network.refresh",
+      "durationMs": 1740.938779,
+      "outcome": "SUCCESS",
+      "errorType": null
+    }
+  ]
+}
