@@ -87,6 +87,9 @@ dependencies {
     // Foundational GPS client for Zongcheng's sensor/journey-tracking module.
     implementation(libs.play.services.location)
 
+    // OpenStreetMap renderer for the Home map.
+    implementation(libs.osmdroid.android)
+
     // Firebase (Auth + Firestore, per docs/WORK_PLAN.md). Plugin left un-applied above
     // until Zongcheng adds the real google-services.json.
     implementation(platform(libs.firebase.bom))

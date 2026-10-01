@@ -13,6 +13,7 @@ retrofit = "3.0.0"
 okhttp = "5.5.0"
 retrofitSerializationConverter = "1.0.0"
 playServicesLocation = "21.4.0"
+osmdroid = "6.1.20"
 firebaseBom = "34.19.0"
 googleServicesPlugin = "4.5.0"
 junit = "4.13.2"
@@ -48,6 +49,8 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhtt
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+
+osmdroid-android = { group = "org.osmdroid", name = "osmdroid-android", version.ref = "osmdroid" }
 
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 # firebase-auth-ktx / firebase-firestore-ktx are deprecated; KTX extensions now ship in these.
