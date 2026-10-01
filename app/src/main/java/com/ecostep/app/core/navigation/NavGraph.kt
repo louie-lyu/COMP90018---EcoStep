@@ -24,11 +24,9 @@ import com.ecostep.app.sensors.ui.TrackingRoute
 import com.ecostep.app.sensors.ui.TrackingRoutes
 import com.ecostep.app.sensors.ui.TrackingViewModel
 import com.ecostep.app.ui.components.EcoStepBottomBar
-import com.ecostep.app.ui.mock.MockHomeRouteDataSource
 import com.ecostep.app.ui.mock.MockJourneyRepository
 import com.ecostep.app.ui.screens.RewardsScreen
 import com.ecostep.app.ui.mock.MockMissionRepository
-import com.ecostep.app.ui.screens.HistoryScreen
 import com.ecostep.app.ui.screens.HomeScreen
 import com.ecostep.app.ui.screens.JourneyReviewScreen
 import com.ecostep.app.ui.screens.MissionScreen
