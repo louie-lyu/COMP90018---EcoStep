@@ -51,6 +51,7 @@ import androidx.compose.ui.text.style.TextAlign
 @Composable
 fun JourneyReviewScreen(
     viewModel: JourneyReviewViewModel,
+    onBackToMap: () -> Unit = {},
     readOnly: Boolean = false,
     onBack: () -> Unit = {},
 ) {
@@ -81,20 +82,17 @@ fun JourneyReviewScreen(
                 JourneyReviewLoadedContent(
                     uiState = uiState,
                     readOnly = readOnly,
-                    onModeSelected =
-                        viewModel::selectTransportMode,
-                    onConfirmJourney =
-                        viewModel::saveJourney,
+                    onModeSelected = viewModel::selectTransportMode,
+                    onConfirmJourney = viewModel::saveJourney,
                 )
 
                 if (!readOnly && uiState.isSaved) {
                     JourneyConfirmedDialog(
                         ecoPoints = uiState.ecoPoints,
-                        carbonSavedKg =
-                            uiState.carbonSavedKg,
+                        carbonSavedKg = uiState.carbonSavedKg,
                         onDismiss = {
                             viewModel.dismissConfirmation()
-                            onBack()
+                            onBackToMap()
                         },
                     )
                 }
