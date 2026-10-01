@@ -17,6 +17,9 @@ interface TransitousApi {
         @Query("toPlace")
         toPlace: String,
 
+        @Query("time")
+        time: String? = null,
+
         @Query("arriveBy")
         arriveBy: Boolean = false,
 

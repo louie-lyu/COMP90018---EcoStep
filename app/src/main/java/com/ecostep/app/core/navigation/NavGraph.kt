@@ -128,6 +128,8 @@ fun EcoStepNavHost(
                                     appContainer.authRepository,
                                 journeyRepository =
                                     appContainer.journeyRepository,
+                                transportEvidenceProviderFactory =
+                                    appContainer::transportEvidenceProvider,
                             )
                         },
                     )

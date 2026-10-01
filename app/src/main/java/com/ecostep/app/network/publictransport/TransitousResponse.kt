@@ -32,4 +32,12 @@ data class TransitousLeg(
     val displayName: String? = null,
     val routeLongName: String? = null,
     val realTime: Boolean = false,
+    val from: TransitousPlace? = null,
+    val to: TransitousPlace? = null,
+    val intermediateStops: List<TransitousPlace>? = null,
+)
+@Serializable
+data class TransitousPlace(
+    val lat: Double,
+    val lon: Double,
 )

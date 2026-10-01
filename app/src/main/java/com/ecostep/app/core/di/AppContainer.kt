@@ -7,6 +7,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ecostep.app.BuildConfig
+import com.ecostep.app.algorithm.TransportEvidenceProvider
 import com.ecostep.app.data.cache.weather.DataStoreWeatherCache
 import com.ecostep.app.data.cache.weather.WeatherCache
 import com.ecostep.app.data.cache.weather.weatherDataStore
@@ -18,7 +19,9 @@ import com.ecostep.app.network.weather.OpenMeteoWeatherDataSource
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import com.ecostep.app.network.publictransport.TransitousClient
+import com.ecostep.app.network.publictransport.DefaultTransportEvidenceProvider
 import com.ecostep.app.network.publictransport.TransitousPublicTransportDataSource
+import com.ecostep.app.sensors.tracking.RecordingResult
 
 /**
  * Manual dependency provisioning (no DI framework) — see docs/ARCHITECTURE.md for why.
@@ -28,6 +31,9 @@ class AppContainer(context: Context) {
 
     private val applicationContext = context.applicationContext
     val journeyTracker by lazy { com.ecostep.app.sensors.tracking.JourneyTracker() }
+
+    fun transportEvidenceProvider(recording: RecordingResult): TransportEvidenceProvider =
+        DefaultTransportEvidenceProvider(recording, transitousApi)
 
     /**
      * Shared HTTP client. Jianing builds per-API Retrofit instances (weather/route/public

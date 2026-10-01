@@ -7,11 +7,14 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ecostep.app.algorithm.DefaultTransportClassifier
+import com.ecostep.app.algorithm.TransportEvidenceProvider
 import com.ecostep.app.data.repository.AuthRepository
 import com.ecostep.app.data.repository.JourneyRepository
 import com.ecostep.app.sensors.service.JourneyTrackingService
 import com.ecostep.app.sensors.tracking.JourneySummaryBuilder
 import com.ecostep.app.sensors.tracking.JourneyTracker
+import com.ecostep.app.sensors.tracking.RecordingResult
 import com.ecostep.app.sensors.tracking.TrackingState
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +37,7 @@ class TrackingViewModel(
     private val tracker: JourneyTracker,
     private val authRepository: AuthRepository,
     private val journeyRepository: JourneyRepository,
+    private val transportEvidenceProviderFactory: (RecordingResult) -> TransportEvidenceProvider,
 ) : ViewModel() {
     val tracking: StateFlow<TrackingState> = tracker.state
     private val mutableUi = MutableStateFlow(TrackingUiState())
@@ -80,10 +84,25 @@ class TrackingViewModel(
             mutableUi.update { it.copy(message = "Sign in again to save your journey.") }
             return
         }
-        val summary = JourneySummaryBuilder().build(result, uid)
+        val unclassifiedSummary = JourneySummaryBuilder().build(result, uid)
         viewModelScope.launch {
             mutableUi.update { it.copy(isSaving = true, message = null) }
             try {
+                val summary = withContext(Dispatchers.IO) {
+                    try {
+                        withTimeoutOrNull(5_000) {
+                            val evidenceProvider = transportEvidenceProviderFactory(result)
+                            val mode = DefaultTransportClassifier(evidenceProvider)
+                                .classify(unclassifiedSummary)
+                                .mode
+                            unclassifiedSummary.copy(transportMode = mode)
+                        } ?: unclassifiedSummary
+                    } catch (exception: CancellationException) {
+                        throw exception
+                    } catch (_: Exception) {
+                        unclassifiedSummary
+                    }
+                }
                 // Firestore queues a write in its local cache while offline. Its Task may keep
                 // waiting for the server, so cap the wait before opening the review screen.
                 withContext(Dispatchers.IO) {
