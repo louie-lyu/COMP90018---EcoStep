@@ -1,0 +1,5231 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": 2,
+  "calculator": "DefaultEcoPointsCalculator",
+  "startedAtMillis": 1790773909066,
+  "gitCommit": "e4f78f2fe6030601b4dea7ada2b5f70633459fc1",
+  "workingTreeDirty": true,
+  "device": "Google sdk_gphone64_x86_64",
+  "androidVersion": "16",
+  "apiLevel": 36,
+  "buildType": "debug",
+  "scope": "Synthetic correctness and amortized call timings; no sensors, network, account balance or UI integration.",
+  "rules": "Accepted and completed; round(savingsGrams \/ 10) plus WALKING=20, CYCLING=15, PUBLIC_TRANSPORT=5, others=0; cap=500. Missing data or zero savings returns zero.",
+  "carbonFactorsGramsPerKm": "Provisional: CAR=192, PUBLIC_TRANSPORT=89, WALKING=0, CYCLING=0",
+  "benchmarkMethod": "Sequential groups; System.nanoTime around batches. Includes case selection, loop and result-array writes; carbon_to_points also includes carbon calculation and MissionResult copying. Fixtures, warm-ups, validation and JSON excluded. Nearest-rank P50\/P95 use successful batches only; per-call values are batch averages, not individual-call tail latency. JIT\/GC and group order can affect comparisons. No latency pass\/fail threshold.",
+  "plannedCases": 110,
+  "totalCases": 110,
+  "passedCases": 110,
+  "failedCases": 0,
+  "records": [
+    {
+      "scenario": "reference_WALKING_100.0",
+      "group": "reference",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 100
+      },
+      "distanceMeters": null,
+      "expectedPoints": 30,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 100
+      },
+      "actualPoints": 30
+    },
+    {
+      "scenario": "zero_WALKING_0.0",
+      "group": "zero",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 0
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 0
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "zero_WALKING_-0.0",
+      "group": "zero",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": -0
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": -0
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "rounding_WALKING_0.001",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 0.001
+      },
+      "distanceMeters": null,
+      "expectedPoints": 20,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 0.001
+      },
+      "actualPoints": 20
+    },
+    {
+      "scenario": "rounding_WALKING_4.9",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 4.9
+      },
+      "distanceMeters": null,
+      "expectedPoints": 20,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 4.9
+      },
+      "actualPoints": 20
+    },
+    {
+      "scenario": "rounding_WALKING_5.0",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 5
+      },
+      "distanceMeters": null,
+      "expectedPoints": 21,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 5
+      },
+      "actualPoints": 21
+    },
+    {
+      "scenario": "rounding_WALKING_5.1",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 5.1
+      },
+      "distanceMeters": null,
+      "expectedPoints": 21,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 5.1
+      },
+      "actualPoints": 21
+    },
+    {
+      "scenario": "rounding_WALKING_14.9",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 14.9
+      },
+      "distanceMeters": null,
+      "expectedPoints": 21,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 14.9
+      },
+      "actualPoints": 21
+    },
+    {
+      "scenario": "rounding_WALKING_15.0",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 15
+      },
+      "distanceMeters": null,
+      "expectedPoints": 22,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 15
+      },
+      "actualPoints": 22
+    },
+    {
+      "scenario": "cap_WALKING_4794.9",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 4794.9
+      },
+      "distanceMeters": null,
+      "expectedPoints": 499,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 4794.9
+      },
+      "actualPoints": 499
+    },
+    {
+      "scenario": "cap_WALKING_4795.0",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 4795
+      },
+      "distanceMeters": null,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 4795
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "cap_WALKING_4795.1",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 4795.1
+      },
+      "distanceMeters": null,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 4795.1
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "cap_WALKING_10000.0",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 10000
+      },
+      "distanceMeters": null,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 10000
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "invalid_WALKING_-1.0",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": -1
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": -1
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "invalid_WALKING_NaN",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": "NaN"
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": "NaN"
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "invalid_WALKING_-Infinity",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": "-Infinity"
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": "-Infinity"
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "invalid_WALKING_Infinity",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": "Infinity"
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": "Infinity"
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "reference_CYCLING_100.0",
+      "group": "reference",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 100
+      },
+      "distanceMeters": null,
+      "expectedPoints": 25,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 100
+      },
+      "actualPoints": 25
+    },
+    {
+      "scenario": "zero_CYCLING_0.0",
+      "group": "zero",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 0
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 0
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "zero_CYCLING_-0.0",
+      "group": "zero",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": -0
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": -0
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "rounding_CYCLING_0.001",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 0.001
+      },
+      "distanceMeters": null,
+      "expectedPoints": 15,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 0.001
+      },
+      "actualPoints": 15
+    },
+    {
+      "scenario": "rounding_CYCLING_4.9",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 4.9
+      },
+      "distanceMeters": null,
+      "expectedPoints": 15,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 4.9
+      },
+      "actualPoints": 15
+    },
+    {
+      "scenario": "rounding_CYCLING_5.0",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 5
+      },
+      "distanceMeters": null,
+      "expectedPoints": 16,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 5
+      },
+      "actualPoints": 16
+    },
+    {
+      "scenario": "rounding_CYCLING_5.1",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 5.1
+      },
+      "distanceMeters": null,
+      "expectedPoints": 16,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 5.1
+      },
+      "actualPoints": 16
+    },
+    {
+      "scenario": "rounding_CYCLING_14.9",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 14.9
+      },
+      "distanceMeters": null,
+      "expectedPoints": 16,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 14.9
+      },
+      "actualPoints": 16
+    },
+    {
+      "scenario": "rounding_CYCLING_15.0",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 15
+      },
+      "distanceMeters": null,
+      "expectedPoints": 17,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 15
+      },
+      "actualPoints": 17
+    },
+    {
+      "scenario": "cap_CYCLING_4844.9",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 4844.9
+      },
+      "distanceMeters": null,
+      "expectedPoints": 499,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 4844.9
+      },
+      "actualPoints": 499
+    },
+    {
+      "scenario": "cap_CYCLING_4845.0",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 4845
+      },
+      "distanceMeters": null,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 4845
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "cap_CYCLING_4845.1",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 4845.1
+      },
+      "distanceMeters": null,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 4845.1
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "cap_CYCLING_10000.0",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 10000
+      },
+      "distanceMeters": null,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 10000
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "invalid_CYCLING_-1.0",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": -1
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": -1
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "invalid_CYCLING_NaN",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": "NaN"
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": "NaN"
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "invalid_CYCLING_-Infinity",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": "-Infinity"
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": "-Infinity"
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "invalid_CYCLING_Infinity",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": "Infinity"
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": "Infinity"
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "reference_PUBLIC_TRANSPORT_100.0",
+      "group": "reference",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 100
+      },
+      "distanceMeters": null,
+      "expectedPoints": 15,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 100
+      },
+      "actualPoints": 15
+    },
+    {
+      "scenario": "zero_PUBLIC_TRANSPORT_0.0",
+      "group": "zero",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 0
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 0
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "zero_PUBLIC_TRANSPORT_-0.0",
+      "group": "zero",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": -0
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": -0
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "rounding_PUBLIC_TRANSPORT_0.001",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 0.001
+      },
+      "distanceMeters": null,
+      "expectedPoints": 5,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 0.001
+      },
+      "actualPoints": 5
+    },
+    {
+      "scenario": "rounding_PUBLIC_TRANSPORT_4.9",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 4.9
+      },
+      "distanceMeters": null,
+      "expectedPoints": 5,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 4.9
+      },
+      "actualPoints": 5
+    },
+    {
+      "scenario": "rounding_PUBLIC_TRANSPORT_5.0",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 5
+      },
+      "distanceMeters": null,
+      "expectedPoints": 6,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 5
+      },
+      "actualPoints": 6
+    },
+    {
+      "scenario": "rounding_PUBLIC_TRANSPORT_5.1",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 5.1
+      },
+      "distanceMeters": null,
+      "expectedPoints": 6,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 5.1
+      },
+      "actualPoints": 6
+    },
+    {
+      "scenario": "rounding_PUBLIC_TRANSPORT_14.9",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 14.9
+      },
+      "distanceMeters": null,
+      "expectedPoints": 6,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 14.9
+      },
+      "actualPoints": 6
+    },
+    {
+      "scenario": "rounding_PUBLIC_TRANSPORT_15.0",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 15
+      },
+      "distanceMeters": null,
+      "expectedPoints": 7,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 15
+      },
+      "actualPoints": 7
+    },
+    {
+      "scenario": "cap_PUBLIC_TRANSPORT_4944.9",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 4944.9
+      },
+      "distanceMeters": null,
+      "expectedPoints": 499,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 4944.9
+      },
+      "actualPoints": 499
+    },
+    {
+      "scenario": "cap_PUBLIC_TRANSPORT_4945.0",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 4945
+      },
+      "distanceMeters": null,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 4945
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "cap_PUBLIC_TRANSPORT_4945.1",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 4945.1
+      },
+      "distanceMeters": null,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 4945.1
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "cap_PUBLIC_TRANSPORT_10000.0",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 10000
+      },
+      "distanceMeters": null,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 10000
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "invalid_PUBLIC_TRANSPORT_-1.0",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": -1
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": -1
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "invalid_PUBLIC_TRANSPORT_NaN",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": "NaN"
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": "NaN"
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "invalid_PUBLIC_TRANSPORT_-Infinity",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": "-Infinity"
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": "-Infinity"
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "invalid_PUBLIC_TRANSPORT_Infinity",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": "Infinity"
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": "Infinity"
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "reference_CAR_100.0",
+      "group": "reference",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 100
+      },
+      "distanceMeters": null,
+      "expectedPoints": 10,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 100
+      },
+      "actualPoints": 10
+    },
+    {
+      "scenario": "zero_CAR_0.0",
+      "group": "zero",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 0
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 0
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "zero_CAR_-0.0",
+      "group": "zero",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": -0
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": -0
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "rounding_CAR_0.001",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 0.001
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 0.001
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "rounding_CAR_4.9",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 4.9
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 4.9
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "rounding_CAR_5.0",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 5
+      },
+      "distanceMeters": null,
+      "expectedPoints": 1,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 5
+      },
+      "actualPoints": 1
+    },
+    {
+      "scenario": "rounding_CAR_5.1",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 5.1
+      },
+      "distanceMeters": null,
+      "expectedPoints": 1,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 5.1
+      },
+      "actualPoints": 1
+    },
+    {
+      "scenario": "rounding_CAR_14.9",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 14.9
+      },
+      "distanceMeters": null,
+      "expectedPoints": 1,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 14.9
+      },
+      "actualPoints": 1
+    },
+    {
+      "scenario": "rounding_CAR_15.0",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 15
+      },
+      "distanceMeters": null,
+      "expectedPoints": 2,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 15
+      },
+      "actualPoints": 2
+    },
+    {
+      "scenario": "cap_CAR_4994.9",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 4994.9
+      },
+      "distanceMeters": null,
+      "expectedPoints": 499,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 4994.9
+      },
+      "actualPoints": 499
+    },
+    {
+      "scenario": "cap_CAR_4995.0",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 4995
+      },
+      "distanceMeters": null,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 4995
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "cap_CAR_4995.1",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 4995.1
+      },
+      "distanceMeters": null,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 4995.1
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "cap_CAR_10000.0",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 10000
+      },
+      "distanceMeters": null,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": 10000
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "invalid_CAR_-1.0",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": -1
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": -1
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "invalid_CAR_NaN",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": "NaN"
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": "NaN"
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "invalid_CAR_-Infinity",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": "-Infinity"
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": "-Infinity"
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "invalid_CAR_Infinity",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": "Infinity"
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CAR",
+        "actualCarbonSavingGrams": "Infinity"
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "reference_UNKNOWN_100.0",
+      "group": "reference",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 100
+      },
+      "distanceMeters": null,
+      "expectedPoints": 10,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 100
+      },
+      "actualPoints": 10
+    },
+    {
+      "scenario": "zero_UNKNOWN_0.0",
+      "group": "zero",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 0
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 0
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "zero_UNKNOWN_-0.0",
+      "group": "zero",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": -0
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": -0
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "rounding_UNKNOWN_0.001",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 0.001
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 0.001
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "rounding_UNKNOWN_4.9",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 4.9
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 4.9
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "rounding_UNKNOWN_5.0",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 5
+      },
+      "distanceMeters": null,
+      "expectedPoints": 1,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 5
+      },
+      "actualPoints": 1
+    },
+    {
+      "scenario": "rounding_UNKNOWN_5.1",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 5.1
+      },
+      "distanceMeters": null,
+      "expectedPoints": 1,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 5.1
+      },
+      "actualPoints": 1
+    },
+    {
+      "scenario": "rounding_UNKNOWN_14.9",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 14.9
+      },
+      "distanceMeters": null,
+      "expectedPoints": 1,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 14.9
+      },
+      "actualPoints": 1
+    },
+    {
+      "scenario": "rounding_UNKNOWN_15.0",
+      "group": "rounding",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 15
+      },
+      "distanceMeters": null,
+      "expectedPoints": 2,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 15
+      },
+      "actualPoints": 2
+    },
+    {
+      "scenario": "cap_UNKNOWN_4994.9",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 4994.9
+      },
+      "distanceMeters": null,
+      "expectedPoints": 499,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 4994.9
+      },
+      "actualPoints": 499
+    },
+    {
+      "scenario": "cap_UNKNOWN_4995.0",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 4995
+      },
+      "distanceMeters": null,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 4995
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "cap_UNKNOWN_4995.1",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 4995.1
+      },
+      "distanceMeters": null,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 4995.1
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "cap_UNKNOWN_10000.0",
+      "group": "cap",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 10000
+      },
+      "distanceMeters": null,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": 10000
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "invalid_UNKNOWN_-1.0",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": -1
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": -1
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "invalid_UNKNOWN_NaN",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": "NaN"
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": "NaN"
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "invalid_UNKNOWN_-Infinity",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": "-Infinity"
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": "-Infinity"
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "invalid_UNKNOWN_Infinity",
+      "group": "invalid",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": "Infinity"
+      },
+      "distanceMeters": null,
+      "expectedPoints": null,
+      "expectedError": "IllegalArgumentException",
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "UNKNOWN",
+        "actualCarbonSavingGrams": "Infinity"
+      },
+      "error": {
+        "type": "IllegalArgumentException",
+        "message": "Actual carbon saving must be finite and non-negative."
+      }
+    },
+    {
+      "scenario": "state_false_false",
+      "group": "state",
+      "input": {
+        "accepted": false,
+        "completed": false,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 100
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": false,
+        "completed": false,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 100
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "state_false_true",
+      "group": "state",
+      "input": {
+        "accepted": false,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 100
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": false,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 100
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "state_true_false",
+      "group": "state",
+      "input": {
+        "accepted": true,
+        "completed": false,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 100
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": false,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 100
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "state_true_true",
+      "group": "state",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 100
+      },
+      "distanceMeters": null,
+      "expectedPoints": 25,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 100
+      },
+      "actualPoints": 25
+    },
+    {
+      "scenario": "missing_savings",
+      "group": "missing",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": null
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": null
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "missing_mode",
+      "group": "missing",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": null,
+        "actualCarbonSavingGrams": 100
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": null,
+        "actualCarbonSavingGrams": 100
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "unaccepted_invalid_savings",
+      "group": "state",
+      "input": {
+        "accepted": false,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": "NaN"
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": false,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": "NaN"
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "incomplete_invalid_savings",
+      "group": "state",
+      "input": {
+        "accepted": true,
+        "completed": false,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": -1
+      },
+      "distanceMeters": null,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": false,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": -1
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "carbon_to_points_WALKING_0.0",
+      "group": "carbon_to_points",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 0
+      },
+      "distanceMeters": 0,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 0
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "carbon_to_points_CYCLING_0.0",
+      "group": "carbon_to_points",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 0
+      },
+      "distanceMeters": 0,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 0
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "carbon_to_points_PUBLIC_TRANSPORT_0.0",
+      "group": "carbon_to_points",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 0
+      },
+      "distanceMeters": 0,
+      "expectedPoints": 0,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 0
+      },
+      "actualPoints": 0
+    },
+    {
+      "scenario": "carbon_to_points_WALKING_1000.0",
+      "group": "carbon_to_points",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 192
+      },
+      "distanceMeters": 1000,
+      "expectedPoints": 39,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 192
+      },
+      "actualPoints": 39
+    },
+    {
+      "scenario": "carbon_to_points_CYCLING_1000.0",
+      "group": "carbon_to_points",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 192
+      },
+      "distanceMeters": 1000,
+      "expectedPoints": 34,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 192
+      },
+      "actualPoints": 34
+    },
+    {
+      "scenario": "carbon_to_points_PUBLIC_TRANSPORT_1000.0",
+      "group": "carbon_to_points",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 103
+      },
+      "distanceMeters": 1000,
+      "expectedPoints": 15,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 103
+      },
+      "actualPoints": 15
+    },
+    {
+      "scenario": "carbon_to_points_WALKING_10000.0",
+      "group": "carbon_to_points",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 1920
+      },
+      "distanceMeters": 10000,
+      "expectedPoints": 212,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 1920
+      },
+      "actualPoints": 212
+    },
+    {
+      "scenario": "carbon_to_points_CYCLING_10000.0",
+      "group": "carbon_to_points",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 1920
+      },
+      "distanceMeters": 10000,
+      "expectedPoints": 207,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 1920
+      },
+      "actualPoints": 207
+    },
+    {
+      "scenario": "carbon_to_points_PUBLIC_TRANSPORT_10000.0",
+      "group": "carbon_to_points",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 1030
+      },
+      "distanceMeters": 10000,
+      "expectedPoints": 108,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 1030
+      },
+      "actualPoints": 108
+    },
+    {
+      "scenario": "carbon_to_points_WALKING_100000.0",
+      "group": "carbon_to_points",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 19200
+      },
+      "distanceMeters": 100000,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "WALKING",
+        "actualCarbonSavingGrams": 19200
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "carbon_to_points_CYCLING_100000.0",
+      "group": "carbon_to_points",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 19200
+      },
+      "distanceMeters": 100000,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "CYCLING",
+        "actualCarbonSavingGrams": 19200
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "carbon_to_points_PUBLIC_TRANSPORT_100000.0",
+      "group": "carbon_to_points",
+      "input": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 10300
+      },
+      "distanceMeters": 100000,
+      "expectedPoints": 500,
+      "expectedError": null,
+      "passed": true,
+      "actualInput": {
+        "accepted": true,
+        "completed": true,
+        "actualTransportMode": "PUBLIC_TRANSPORT",
+        "actualCarbonSavingGrams": 10300
+      },
+      "actualPoints": 500
+    },
+    {
+      "scenario": "consistency_WALKING",
+      "expected": "Repeatable, nondecreasing points in [0, 500] as savings increase",
+      "passed": true,
+      "values": [
+        {
+          "savingsGrams": -0,
+          "points": 0
+        },
+        {
+          "savingsGrams": 0,
+          "points": 0
+        },
+        {
+          "savingsGrams": 0.001,
+          "points": 20
+        },
+        {
+          "savingsGrams": 4.9,
+          "points": 20
+        },
+        {
+          "savingsGrams": 5,
+          "points": 21
+        },
+        {
+          "savingsGrams": 5.1,
+          "points": 21
+        },
+        {
+          "savingsGrams": 14.9,
+          "points": 21
+        },
+        {
+          "savingsGrams": 15,
+          "points": 22
+        },
+        {
+          "savingsGrams": 100,
+          "points": 30
+        },
+        {
+          "savingsGrams": 4794.9,
+          "points": 499
+        },
+        {
+          "savingsGrams": 4795,
+          "points": 500
+        },
+        {
+          "savingsGrams": 4795.1,
+          "points": 500
+        },
+        {
+          "savingsGrams": 10000,
+          "points": 500
+        }
+      ]
+    },
+    {
+      "scenario": "consistency_CYCLING",
+      "expected": "Repeatable, nondecreasing points in [0, 500] as savings increase",
+      "passed": true,
+      "values": [
+        {
+          "savingsGrams": -0,
+          "points": 0
+        },
+        {
+          "savingsGrams": 0,
+          "points": 0
+        },
+        {
+          "savingsGrams": 0.001,
+          "points": 15
+        },
+        {
+          "savingsGrams": 4.9,
+          "points": 15
+        },
+        {
+          "savingsGrams": 5,
+          "points": 16
+        },
+        {
+          "savingsGrams": 5.1,
+          "points": 16
+        },
+        {
+          "savingsGrams": 14.9,
+          "points": 16
+        },
+        {
+          "savingsGrams": 15,
+          "points": 17
+        },
+        {
+          "savingsGrams": 100,
+          "points": 25
+        },
+        {
+          "savingsGrams": 4844.9,
+          "points": 499
+        },
+        {
+          "savingsGrams": 4845,
+          "points": 500
+        },
+        {
+          "savingsGrams": 4845.1,
+          "points": 500
+        },
+        {
+          "savingsGrams": 10000,
+          "points": 500
+        }
+      ]
+    },
+    {
+      "scenario": "consistency_PUBLIC_TRANSPORT",
+      "expected": "Repeatable, nondecreasing points in [0, 500] as savings increase",
+      "passed": true,
+      "values": [
+        {
+          "savingsGrams": -0,
+          "points": 0
+        },
+        {
+          "savingsGrams": 0,
+          "points": 0
+        },
+        {
+          "savingsGrams": 0.001,
+          "points": 5
+        },
+        {
+          "savingsGrams": 4.9,
+          "points": 5
+        },
+        {
+          "savingsGrams": 5,
+          "points": 6
+        },
+        {
+          "savingsGrams": 5.1,
+          "points": 6
+        },
+        {
+          "savingsGrams": 14.9,
+          "points": 6
+        },
+        {
+          "savingsGrams": 15,
+          "points": 7
+        },
+        {
+          "savingsGrams": 100,
+          "points": 15
+        },
+        {
+          "savingsGrams": 4944.9,
+          "points": 499
+        },
+        {
+          "savingsGrams": 4945,
+          "points": 500
+        },
+        {
+          "savingsGrams": 4945.1,
+          "points": 500
+        },
+        {
+          "savingsGrams": 10000,
+          "points": 500
+        }
+      ]
+    },
+    {
+      "scenario": "consistency_CAR",
+      "expected": "Repeatable, nondecreasing points in [0, 500] as savings increase",
+      "passed": true,
+      "values": [
+        {
+          "savingsGrams": -0,
+          "points": 0
+        },
+        {
+          "savingsGrams": 0,
+          "points": 0
+        },
+        {
+          "savingsGrams": 0.001,
+          "points": 0
+        },
+        {
+          "savingsGrams": 4.9,
+          "points": 0
+        },
+        {
+          "savingsGrams": 5,
+          "points": 1
+        },
+        {
+          "savingsGrams": 5.1,
+          "points": 1
+        },
+        {
+          "savingsGrams": 14.9,
+          "points": 1
+        },
+        {
+          "savingsGrams": 15,
+          "points": 2
+        },
+        {
+          "savingsGrams": 100,
+          "points": 10
+        },
+        {
+          "savingsGrams": 4994.9,
+          "points": 499
+        },
+        {
+          "savingsGrams": 4995,
+          "points": 500
+        },
+        {
+          "savingsGrams": 4995.1,
+          "points": 500
+        },
+        {
+          "savingsGrams": 10000,
+          "points": 500
+        }
+      ]
+    },
+    {
+      "scenario": "consistency_UNKNOWN",
+      "expected": "Repeatable, nondecreasing points in [0, 500] as savings increase",
+      "passed": true,
+      "values": [
+        {
+          "savingsGrams": -0,
+          "points": 0
+        },
+        {
+          "savingsGrams": 0,
+          "points": 0
+        },
+        {
+          "savingsGrams": 0.001,
+          "points": 0
+        },
+        {
+          "savingsGrams": 4.9,
+          "points": 0
+        },
+        {
+          "savingsGrams": 5,
+          "points": 1
+        },
+        {
+          "savingsGrams": 5.1,
+          "points": 1
+        },
+        {
+          "savingsGrams": 14.9,
+          "points": 1
+        },
+        {
+          "savingsGrams": 15,
+          "points": 2
+        },
+        {
+          "savingsGrams": 100,
+          "points": 10
+        },
+        {
+          "savingsGrams": 4994.9,
+          "points": 499
+        },
+        {
+          "savingsGrams": 4995,
+          "points": 500
+        },
+        {
+          "savingsGrams": 4995.1,
+          "points": 500
+        },
+        {
+          "savingsGrams": 10000,
+          "points": 500
+        }
+      ]
+    }
+  ],
+  "plannedBenchmarkGroups": 8,
+  "benchmarks": [
+    {
+      "scenario": "normal_WALKING",
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 1000,
+      "inputScenarios": [
+        "reference_WALKING_100.0",
+        "rounding_WALKING_0.001",
+        "rounding_WALKING_4.9",
+        "rounding_WALKING_5.0",
+        "rounding_WALKING_5.1",
+        "rounding_WALKING_14.9",
+        "rounding_WALKING_15.0"
+      ],
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 1.948102,
+      "p95BatchMs": 2.515228,
+      "p50AveragePerCallUs": 1.948102,
+      "p95AveragePerCallUs": 2.515228,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 1.910932,
+          "averagePerCallUs": 1.910932
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 1.988407,
+          "averagePerCallUs": 1.988407
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 2.151759,
+          "averagePerCallUs": 2.151759
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 2.587649,
+          "averagePerCallUs": 2.587649
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 2.215818,
+          "averagePerCallUs": 2.215818
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 1.882267,
+          "averagePerCallUs": 1.882267
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 1.862137,
+          "averagePerCallUs": 1.862137
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 2.129356,
+          "averagePerCallUs": 2.129356
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 2.078729,
+          "averagePerCallUs": 2.078729
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 2.030189,
+          "averagePerCallUs": 2.030189
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 1.948102,
+          "averagePerCallUs": 1.948102
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 1.966144,
+          "averagePerCallUs": 1.9661439999999997
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 1.906822,
+          "averagePerCallUs": 1.906822
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 2.066533,
+          "averagePerCallUs": 2.066533
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 1.930924,
+          "averagePerCallUs": 1.930924
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 1.87111,
+          "averagePerCallUs": 1.87111
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 2.082375,
+          "averagePerCallUs": 2.082375
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 2.515228,
+          "averagePerCallUs": 2.515228
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 2.173203,
+          "averagePerCallUs": 2.173203
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 2.355711,
+          "averagePerCallUs": 2.355711
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 2.010967,
+          "averagePerCallUs": 2.010967
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 2.024036,
+          "averagePerCallUs": 2.024036
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 2.014681,
+          "averagePerCallUs": 2.014681
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 1.853126,
+          "averagePerCallUs": 1.853126
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 2.089353,
+          "averagePerCallUs": 2.089353
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 1.992933,
+          "averagePerCallUs": 1.992933
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 2.303514,
+          "averagePerCallUs": 2.303514
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 2.138298,
+          "averagePerCallUs": 2.138298
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 1.893567,
+          "averagePerCallUs": 1.893567
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 2.141316,
+          "averagePerCallUs": 2.141316
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 1.868963,
+          "averagePerCallUs": 1.868963
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 1.925455,
+          "averagePerCallUs": 1.925455
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 2.348311,
+          "averagePerCallUs": 2.348311
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 2.545696,
+          "averagePerCallUs": 2.545696
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 1.951508,
+          "averagePerCallUs": 1.951508
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 2.031096,
+          "averagePerCallUs": 2.031096
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 1.47012,
+          "averagePerCallUs": 1.47012
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 1.189451,
+          "averagePerCallUs": 1.189451
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.911416,
+          "averagePerCallUs": 0.911416
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.522916,
+          "averagePerCallUs": 0.522916
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.666509,
+          "averagePerCallUs": 0.666509
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.383868,
+          "averagePerCallUs": 0.383868
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.362278,
+          "averagePerCallUs": 0.362278
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.613729,
+          "averagePerCallUs": 0.613729
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.369515,
+          "averagePerCallUs": 0.369515
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.464699,
+          "averagePerCallUs": 0.464699
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.546946,
+          "averagePerCallUs": 0.546946
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.289988,
+          "averagePerCallUs": 0.289988
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.208616,
+          "averagePerCallUs": 0.208616
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.17288,
+          "averagePerCallUs": 0.17288
+        }
+      ]
+    },
+    {
+      "scenario": "normal_CYCLING",
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 1000,
+      "inputScenarios": [
+        "reference_CYCLING_100.0",
+        "rounding_CYCLING_0.001",
+        "rounding_CYCLING_4.9",
+        "rounding_CYCLING_5.0",
+        "rounding_CYCLING_5.1",
+        "rounding_CYCLING_14.9",
+        "rounding_CYCLING_15.0"
+      ],
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.057557,
+      "p95BatchMs": 0.12545,
+      "p50AveragePerCallUs": 0.057557,
+      "p95AveragePerCallUs": 0.12545,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 0.065082,
+          "averagePerCallUs": 0.065082
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 0.084536,
+          "averagePerCallUs": 0.084536
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 0.059444,
+          "averagePerCallUs": 0.059444
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 0.058929,
+          "averagePerCallUs": 0.058929
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 0.05903,
+          "averagePerCallUs": 0.05903
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 0.073464,
+          "averagePerCallUs": 0.073464
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 0.057026,
+          "averagePerCallUs": 0.057026
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 0.061566,
+          "averagePerCallUs": 0.061566
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 0.056157,
+          "averagePerCallUs": 0.056157
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 0.056165,
+          "averagePerCallUs": 0.056165
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 0.056223,
+          "averagePerCallUs": 0.056223
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 0.081237,
+          "averagePerCallUs": 0.081237
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 0.05721,
+          "averagePerCallUs": 0.05721
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 0.077577,
+          "averagePerCallUs": 0.077577
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 0.056976,
+          "averagePerCallUs": 0.056976
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.096925,
+          "averagePerCallUs": 0.096925
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.12545,
+          "averagePerCallUs": 0.12545
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.057557,
+          "averagePerCallUs": 0.057557
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 0.056332,
+          "averagePerCallUs": 0.056332
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.056776,
+          "averagePerCallUs": 0.056776
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 0.056279,
+          "averagePerCallUs": 0.056279
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.056312,
+          "averagePerCallUs": 0.056312
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.057088,
+          "averagePerCallUs": 0.057088
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.057001,
+          "averagePerCallUs": 0.057001
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.056471,
+          "averagePerCallUs": 0.056471
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.057176,
+          "averagePerCallUs": 0.057176
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.058273,
+          "averagePerCallUs": 0.058273
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.057345,
+          "averagePerCallUs": 0.057345
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.057207,
+          "averagePerCallUs": 0.057207
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.057035,
+          "averagePerCallUs": 0.057035
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.057677,
+          "averagePerCallUs": 0.057677
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.057293,
+          "averagePerCallUs": 0.057293
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.056468,
+          "averagePerCallUs": 0.056468
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.056674,
+          "averagePerCallUs": 0.056674
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.058113,
+          "averagePerCallUs": 0.058113
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.057856,
+          "averagePerCallUs": 0.057856
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.057462,
+          "averagePerCallUs": 0.057462
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.05878,
+          "averagePerCallUs": 0.05878
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.057965,
+          "averagePerCallUs": 0.057965
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.057124,
+          "averagePerCallUs": 0.057124
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.057606,
+          "averagePerCallUs": 0.057606
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.058666,
+          "averagePerCallUs": 0.058666
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.057592,
+          "averagePerCallUs": 0.057592
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.056919,
+          "averagePerCallUs": 0.056919
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.137263,
+          "averagePerCallUs": 0.137263
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.069199,
+          "averagePerCallUs": 0.069199
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.057856,
+          "averagePerCallUs": 0.057856
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.17501,
+          "averagePerCallUs": 0.17501
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.058399,
+          "averagePerCallUs": 0.058399
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.056864,
+          "averagePerCallUs": 0.056864
+        }
+      ]
+    },
+    {
+      "scenario": "normal_PUBLIC_TRANSPORT",
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 1000,
+      "inputScenarios": [
+        "reference_PUBLIC_TRANSPORT_100.0",
+        "rounding_PUBLIC_TRANSPORT_0.001",
+        "rounding_PUBLIC_TRANSPORT_4.9",
+        "rounding_PUBLIC_TRANSPORT_5.0",
+        "rounding_PUBLIC_TRANSPORT_5.1",
+        "rounding_PUBLIC_TRANSPORT_14.9",
+        "rounding_PUBLIC_TRANSPORT_15.0"
+      ],
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.055422,
+      "p95BatchMs": 0.075126,
+      "p50AveragePerCallUs": 0.055422,
+      "p95AveragePerCallUs": 0.075126,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 0.058912,
+          "averagePerCallUs": 0.058912
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 0.058739,
+          "averagePerCallUs": 0.058739
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 0.058921,
+          "averagePerCallUs": 0.058921
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 0.057585,
+          "averagePerCallUs": 0.05758499999999999
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 0.056886,
+          "averagePerCallUs": 0.056886
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 0.075126,
+          "averagePerCallUs": 0.075126
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 0.150336,
+          "averagePerCallUs": 0.150336
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 0.057391,
+          "averagePerCallUs": 0.057391
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 0.056996,
+          "averagePerCallUs": 0.056996
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 0.057062,
+          "averagePerCallUs": 0.057062
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 0.056684,
+          "averagePerCallUs": 0.056684
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 0.056395,
+          "averagePerCallUs": 0.056395
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 0.056366,
+          "averagePerCallUs": 0.056366
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 0.056669,
+          "averagePerCallUs": 0.056669
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 0.056267,
+          "averagePerCallUs": 0.056267
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.056526,
+          "averagePerCallUs": 0.05652600000000001
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.056796,
+          "averagePerCallUs": 0.056796
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.05626,
+          "averagePerCallUs": 0.05626
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 0.056053,
+          "averagePerCallUs": 0.056053
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.055717,
+          "averagePerCallUs": 0.055717
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 0.054212,
+          "averagePerCallUs": 0.054212
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.054809,
+          "averagePerCallUs": 0.054809
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.071795,
+          "averagePerCallUs": 0.071795
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.054671,
+          "averagePerCallUs": 0.054671
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.055409,
+          "averagePerCallUs": 0.055409
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.226325,
+          "averagePerCallUs": 0.226325
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.055911,
+          "averagePerCallUs": 0.055911
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.055296,
+          "averagePerCallUs": 0.055296
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.054222,
+          "averagePerCallUs": 0.054222
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.055062,
+          "averagePerCallUs": 0.055062
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.055056,
+          "averagePerCallUs": 0.055056
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.054992,
+          "averagePerCallUs": 0.054992
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.054985,
+          "averagePerCallUs": 0.054985
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.055194,
+          "averagePerCallUs": 0.055194
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.055185,
+          "averagePerCallUs": 0.055185
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.06568,
+          "averagePerCallUs": 0.06568
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.055422,
+          "averagePerCallUs": 0.055422
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.055385,
+          "averagePerCallUs": 0.055385
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.053998,
+          "averagePerCallUs": 0.053998
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.053994,
+          "averagePerCallUs": 0.053994
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.053979,
+          "averagePerCallUs": 0.053979
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.054044,
+          "averagePerCallUs": 0.054044
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.05405,
+          "averagePerCallUs": 0.05405
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.054058,
+          "averagePerCallUs": 0.054058
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.055411,
+          "averagePerCallUs": 0.055411
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.055152,
+          "averagePerCallUs": 0.055152
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.055175,
+          "averagePerCallUs": 0.055175
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.054963,
+          "averagePerCallUs": 0.054963
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.055857,
+          "averagePerCallUs": 0.055857
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.054038,
+          "averagePerCallUs": 0.054038
+        }
+      ]
+    },
+    {
+      "scenario": "normal_CAR",
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 1000,
+      "inputScenarios": [
+        "reference_CAR_100.0",
+        "rounding_CAR_0.001",
+        "rounding_CAR_4.9",
+        "rounding_CAR_5.0",
+        "rounding_CAR_5.1",
+        "rounding_CAR_14.9",
+        "rounding_CAR_15.0"
+      ],
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.059866,
+      "p95BatchMs": 0.07518,
+      "p50AveragePerCallUs": 0.059866,
+      "p95AveragePerCallUs": 0.07518,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 0,
+          "averagePerCallUs": 0
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 0,
+          "averagePerCallUs": 0
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 0,
+          "averagePerCallUs": 0
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 0,
+          "averagePerCallUs": 0
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 0,
+          "averagePerCallUs": 0
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 0,
+          "averagePerCallUs": 0
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 0,
+          "averagePerCallUs": 0
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 0,
+          "averagePerCallUs": 0
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 0,
+          "averagePerCallUs": 0
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 0,
+          "averagePerCallUs": 0
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 0.051944,
+          "averagePerCallUs": 0.051944
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 0.057588,
+          "averagePerCallUs": 0.057588
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 0.057565,
+          "averagePerCallUs": 0.057565
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 0.057983,
+          "averagePerCallUs": 0.057983
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 0.057606,
+          "averagePerCallUs": 0.057606
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.057257,
+          "averagePerCallUs": 0.057257
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.057563,
+          "averagePerCallUs": 0.057563
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.057598,
+          "averagePerCallUs": 0.057598
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 0.131643,
+          "averagePerCallUs": 0.131643
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.118959,
+          "averagePerCallUs": 0.118959
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 0.060148,
+          "averagePerCallUs": 0.060148
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.060077,
+          "averagePerCallUs": 0.060077
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.05979,
+          "averagePerCallUs": 0.05979
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.059853,
+          "averagePerCallUs": 0.059853
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.060159,
+          "averagePerCallUs": 0.060159
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.0602,
+          "averagePerCallUs": 0.0602
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.060034,
+          "averagePerCallUs": 0.060034
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.059938,
+          "averagePerCallUs": 0.059938
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.060001,
+          "averagePerCallUs": 0.060001
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.060173,
+          "averagePerCallUs": 0.060173
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.060116,
+          "averagePerCallUs": 0.060116
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.059973,
+          "averagePerCallUs": 0.059973
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.075143,
+          "averagePerCallUs": 0.075143
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.060406,
+          "averagePerCallUs": 0.060406
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.059827,
+          "averagePerCallUs": 0.059827
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.060187,
+          "averagePerCallUs": 0.060187
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.059866,
+          "averagePerCallUs": 0.059866
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.059962,
+          "averagePerCallUs": 0.059962
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.060153,
+          "averagePerCallUs": 0.060153
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.059726,
+          "averagePerCallUs": 0.059726
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.059807,
+          "averagePerCallUs": 0.059807
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.06004,
+          "averagePerCallUs": 0.06004
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.059998,
+          "averagePerCallUs": 0.059998
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.060185,
+          "averagePerCallUs": 0.060185
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.060182,
+          "averagePerCallUs": 0.060182
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.059878,
+          "averagePerCallUs": 0.059878
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.059907,
+          "averagePerCallUs": 0.059907
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.059935,
+          "averagePerCallUs": 0.059935
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.07518,
+          "averagePerCallUs": 0.07518
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.057878,
+          "averagePerCallUs": 0.057878
+        }
+      ]
+    },
+    {
+      "scenario": "normal_UNKNOWN",
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 1000,
+      "inputScenarios": [
+        "reference_UNKNOWN_100.0",
+        "rounding_UNKNOWN_0.001",
+        "rounding_UNKNOWN_4.9",
+        "rounding_UNKNOWN_5.0",
+        "rounding_UNKNOWN_5.1",
+        "rounding_UNKNOWN_14.9",
+        "rounding_UNKNOWN_15.0"
+      ],
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.057604,
+      "p95BatchMs": 0.135962,
+      "p50AveragePerCallUs": 0.057604,
+      "p95AveragePerCallUs": 0.135962,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 0,
+          "averagePerCallUs": 0
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 0,
+          "averagePerCallUs": 0
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 0,
+          "averagePerCallUs": 0
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 0,
+          "averagePerCallUs": 0
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 0.003817,
+          "averagePerCallUs": 0.003817
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 0.057398,
+          "averagePerCallUs": 0.057398
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 0.057277,
+          "averagePerCallUs": 0.057277
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 0.05733,
+          "averagePerCallUs": 0.05733
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 0.057353,
+          "averagePerCallUs": 0.057353
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 0.057833,
+          "averagePerCallUs": 0.057833
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 0.057604,
+          "averagePerCallUs": 0.057604
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 0.057983,
+          "averagePerCallUs": 0.057983
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 0.058214,
+          "averagePerCallUs": 0.058214
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 0.057819,
+          "averagePerCallUs": 0.057819
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 0.057867,
+          "averagePerCallUs": 0.057867
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.135962,
+          "averagePerCallUs": 0.135962
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.058053,
+          "averagePerCallUs": 0.058053
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.057351,
+          "averagePerCallUs": 0.057351
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 0.05818,
+          "averagePerCallUs": 0.05818
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.058144,
+          "averagePerCallUs": 0.058144
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 0.058079,
+          "averagePerCallUs": 0.058079
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.057401,
+          "averagePerCallUs": 0.057401
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.057463,
+          "averagePerCallUs": 0.057463
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.058041,
+          "averagePerCallUs": 0.058041
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.058702,
+          "averagePerCallUs": 0.058702
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.058105,
+          "averagePerCallUs": 0.058105
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.058317,
+          "averagePerCallUs": 0.058317
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.072159,
+          "averagePerCallUs": 0.072159
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.059265,
+          "averagePerCallUs": 0.059265
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.058552,
+          "averagePerCallUs": 0.058552
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.061544,
+          "averagePerCallUs": 0.061544
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.059037,
+          "averagePerCallUs": 0.059037
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.056554,
+          "averagePerCallUs": 0.056554
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.057018,
+          "averagePerCallUs": 0.057018
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.057623,
+          "averagePerCallUs": 0.057623
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.057865,
+          "averagePerCallUs": 0.057865
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.056834,
+          "averagePerCallUs": 0.056834
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.056753,
+          "averagePerCallUs": 0.056753
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.057027,
+          "averagePerCallUs": 0.057027
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.057177,
+          "averagePerCallUs": 0.057177
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.056872,
+          "averagePerCallUs": 0.056872
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.057166,
+          "averagePerCallUs": 0.057166
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.05719,
+          "averagePerCallUs": 0.05719
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.057567,
+          "averagePerCallUs": 0.057567
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.058611,
+          "averagePerCallUs": 0.058611
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.058199,
+          "averagePerCallUs": 0.058199
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.149468,
+          "averagePerCallUs": 0.149468
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.170736,
+          "averagePerCallUs": 0.170736
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.056741,
+          "averagePerCallUs": 0.056741
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.056485,
+          "averagePerCallUs": 0.056485
+        }
+      ]
+    },
+    {
+      "scenario": "early_return",
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 1000,
+      "inputScenarios": [
+        "zero_WALKING_0.0",
+        "zero_WALKING_-0.0",
+        "zero_CYCLING_0.0",
+        "zero_CYCLING_-0.0",
+        "zero_PUBLIC_TRANSPORT_0.0",
+        "zero_PUBLIC_TRANSPORT_-0.0",
+        "zero_CAR_0.0",
+        "zero_CAR_-0.0",
+        "zero_UNKNOWN_0.0",
+        "zero_UNKNOWN_-0.0",
+        "state_false_false",
+        "state_false_true",
+        "state_true_false",
+        "missing_savings",
+        "missing_mode",
+        "unaccepted_invalid_savings",
+        "incomplete_invalid_savings"
+      ],
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.029971,
+      "p95BatchMs": 0.032274,
+      "p50AveragePerCallUs": 0.029971,
+      "p95AveragePerCallUs": 0.032274,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 0.035261,
+          "averagePerCallUs": 0.035261
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 0.031245,
+          "averagePerCallUs": 0.031245
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 0.031725,
+          "averagePerCallUs": 0.031725
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 0.03122,
+          "averagePerCallUs": 0.03122
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 0.032093,
+          "averagePerCallUs": 0.032093
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 0.030175,
+          "averagePerCallUs": 0.030175
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 0.029953,
+          "averagePerCallUs": 0.029953
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 0.029816,
+          "averagePerCallUs": 0.029816
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 0.029706,
+          "averagePerCallUs": 0.029706
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 0.029801,
+          "averagePerCallUs": 0.029801
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 0.029867,
+          "averagePerCallUs": 0.029867
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 0.030102,
+          "averagePerCallUs": 0.030102
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 0.029805,
+          "averagePerCallUs": 0.029805
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 0.029929,
+          "averagePerCallUs": 0.029929
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 0.029971,
+          "averagePerCallUs": 0.029971
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.030058,
+          "averagePerCallUs": 0.030058
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.02995,
+          "averagePerCallUs": 0.02995
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.02986,
+          "averagePerCallUs": 0.02986
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 0.030544,
+          "averagePerCallUs": 0.030544
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.030896,
+          "averagePerCallUs": 0.030896
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 0.029724,
+          "averagePerCallUs": 0.029724
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.030384,
+          "averagePerCallUs": 0.030384
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.030323,
+          "averagePerCallUs": 0.030323
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.031243,
+          "averagePerCallUs": 0.031243
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.031135,
+          "averagePerCallUs": 0.031135
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.02997,
+          "averagePerCallUs": 0.02997
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.029995,
+          "averagePerCallUs": 0.029995
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.029786,
+          "averagePerCallUs": 0.029786
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.029849,
+          "averagePerCallUs": 0.029849
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.030037,
+          "averagePerCallUs": 0.030037
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.029844,
+          "averagePerCallUs": 0.029844
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.029934,
+          "averagePerCallUs": 0.029934
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.125019,
+          "averagePerCallUs": 0.125019
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.030345,
+          "averagePerCallUs": 0.030345
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.030126,
+          "averagePerCallUs": 0.030126
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.029975,
+          "averagePerCallUs": 0.029975
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.029919,
+          "averagePerCallUs": 0.029919
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.029657,
+          "averagePerCallUs": 0.029657
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.029495,
+          "averagePerCallUs": 0.029495
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.029567,
+          "averagePerCallUs": 0.029567
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.029522,
+          "averagePerCallUs": 0.029522
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.029712,
+          "averagePerCallUs": 0.029712
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.029616,
+          "averagePerCallUs": 0.029616
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.029891,
+          "averagePerCallUs": 0.029891
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.029563,
+          "averagePerCallUs": 0.029563
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.030032,
+          "averagePerCallUs": 0.030032
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.032274,
+          "averagePerCallUs": 0.032274
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.030522,
+          "averagePerCallUs": 0.030522
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.030425,
+          "averagePerCallUs": 0.030425
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.030049,
+          "averagePerCallUs": 0.030049
+        }
+      ]
+    },
+    {
+      "scenario": "cap",
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 1000,
+      "inputScenarios": [
+        "cap_WALKING_4794.9",
+        "cap_WALKING_4795.0",
+        "cap_WALKING_4795.1",
+        "cap_WALKING_10000.0",
+        "cap_CYCLING_4844.9",
+        "cap_CYCLING_4845.0",
+        "cap_CYCLING_4845.1",
+        "cap_CYCLING_10000.0",
+        "cap_PUBLIC_TRANSPORT_4944.9",
+        "cap_PUBLIC_TRANSPORT_4945.0",
+        "cap_PUBLIC_TRANSPORT_4945.1",
+        "cap_PUBLIC_TRANSPORT_10000.0",
+        "cap_CAR_4994.9",
+        "cap_CAR_4995.0",
+        "cap_CAR_4995.1",
+        "cap_CAR_10000.0",
+        "cap_UNKNOWN_4994.9",
+        "cap_UNKNOWN_4995.0",
+        "cap_UNKNOWN_4995.1",
+        "cap_UNKNOWN_10000.0"
+      ],
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.055319,
+      "p95BatchMs": 0.132335,
+      "p50AveragePerCallUs": 0.055319,
+      "p95AveragePerCallUs": 0.132335,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 0.054155,
+          "averagePerCallUs": 0.054155
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 0.054677,
+          "averagePerCallUs": 0.054677
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 0.055513,
+          "averagePerCallUs": 0.055513
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 0.05406,
+          "averagePerCallUs": 0.05406
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 0.05491,
+          "averagePerCallUs": 0.05491
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 0.05426,
+          "averagePerCallUs": 0.05426
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 0.053835,
+          "averagePerCallUs": 0.053835
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 0.053899,
+          "averagePerCallUs": 0.053899
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 0.170678,
+          "averagePerCallUs": 0.170678
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 0.139448,
+          "averagePerCallUs": 0.139448
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 0.054374,
+          "averagePerCallUs": 0.05437399999999999
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 0.054133,
+          "averagePerCallUs": 0.054133
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 0.054149,
+          "averagePerCallUs": 0.054149
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 0.054121,
+          "averagePerCallUs": 0.054121
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 0.054092,
+          "averagePerCallUs": 0.054092
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 0.054231,
+          "averagePerCallUs": 0.054231
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 0.089827,
+          "averagePerCallUs": 0.089827
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 0.054538,
+          "averagePerCallUs": 0.054538
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 0.054805,
+          "averagePerCallUs": 0.054805
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 0.0558,
+          "averagePerCallUs": 0.0558
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 0.05675,
+          "averagePerCallUs": 0.05675
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.058792,
+          "averagePerCallUs": 0.058792
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.055319,
+          "averagePerCallUs": 0.055319
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.055468,
+          "averagePerCallUs": 0.055468
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.054544,
+          "averagePerCallUs": 0.054544
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.054646,
+          "averagePerCallUs": 0.054646
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.054932,
+          "averagePerCallUs": 0.054932
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.055752,
+          "averagePerCallUs": 0.055752
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.055086,
+          "averagePerCallUs": 0.055086
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.104147,
+          "averagePerCallUs": 0.104147
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.054748,
+          "averagePerCallUs": 0.054748
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.132335,
+          "averagePerCallUs": 0.132335
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.055254,
+          "averagePerCallUs": 0.055254
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.055983,
+          "averagePerCallUs": 0.055983
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.055874,
+          "averagePerCallUs": 0.055874
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.05565,
+          "averagePerCallUs": 0.05565
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.055404,
+          "averagePerCallUs": 0.055404
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.055268,
+          "averagePerCallUs": 0.055268
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.055578,
+          "averagePerCallUs": 0.055578
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.05515,
+          "averagePerCallUs": 0.05515
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.055468,
+          "averagePerCallUs": 0.055468
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.055755,
+          "averagePerCallUs": 0.05575499999999999
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.055235,
+          "averagePerCallUs": 0.055235
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.055377,
+          "averagePerCallUs": 0.055377
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.057438,
+          "averagePerCallUs": 0.057438
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.055593,
+          "averagePerCallUs": 0.055593
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.055361,
+          "averagePerCallUs": 0.055361
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.055591,
+          "averagePerCallUs": 0.055591
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.095163,
+          "averagePerCallUs": 0.095163
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.056793,
+          "averagePerCallUs": 0.056793
+        }
+      ]
+    },
+    {
+      "scenario": "carbon_to_points",
+      "plannedSamples": 50,
+      "warmupBatches": 10,
+      "batchSize": 1000,
+      "inputScenarios": [
+        "carbon_to_points_WALKING_0.0",
+        "carbon_to_points_CYCLING_0.0",
+        "carbon_to_points_PUBLIC_TRANSPORT_0.0",
+        "carbon_to_points_WALKING_1000.0",
+        "carbon_to_points_CYCLING_1000.0",
+        "carbon_to_points_PUBLIC_TRANSPORT_1000.0",
+        "carbon_to_points_WALKING_10000.0",
+        "carbon_to_points_CYCLING_10000.0",
+        "carbon_to_points_PUBLIC_TRANSPORT_10000.0",
+        "carbon_to_points_WALKING_100000.0",
+        "carbon_to_points_CYCLING_100000.0",
+        "carbon_to_points_PUBLIC_TRANSPORT_100000.0"
+      ],
+      "warmupPassed": true,
+      "recordedSamples": 50,
+      "successfulSamples": 50,
+      "failedSamples": 0,
+      "skippedSamples": 0,
+      "p50BatchMs": 0.843904,
+      "p95BatchMs": 1.865202,
+      "p50AveragePerCallUs": 0.843904,
+      "p95AveragePerCallUs": 1.865202,
+      "passed": true,
+      "records": [
+        {
+          "sample": 1,
+          "passed": true,
+          "batchDurationMs": 1.976739,
+          "averagePerCallUs": 1.976739
+        },
+        {
+          "sample": 2,
+          "passed": true,
+          "batchDurationMs": 1.809355,
+          "averagePerCallUs": 1.809355
+        },
+        {
+          "sample": 3,
+          "passed": true,
+          "batchDurationMs": 1.474201,
+          "averagePerCallUs": 1.474201
+        },
+        {
+          "sample": 4,
+          "passed": true,
+          "batchDurationMs": 1.625407,
+          "averagePerCallUs": 1.625407
+        },
+        {
+          "sample": 5,
+          "passed": true,
+          "batchDurationMs": 1.618809,
+          "averagePerCallUs": 1.618809
+        },
+        {
+          "sample": 6,
+          "passed": true,
+          "batchDurationMs": 1.46815,
+          "averagePerCallUs": 1.46815
+        },
+        {
+          "sample": 7,
+          "passed": true,
+          "batchDurationMs": 1.582949,
+          "averagePerCallUs": 1.582949
+        },
+        {
+          "sample": 8,
+          "passed": true,
+          "batchDurationMs": 1.45026,
+          "averagePerCallUs": 1.4502600000000003
+        },
+        {
+          "sample": 9,
+          "passed": true,
+          "batchDurationMs": 1.443039,
+          "averagePerCallUs": 1.443039
+        },
+        {
+          "sample": 10,
+          "passed": true,
+          "batchDurationMs": 1.282833,
+          "averagePerCallUs": 1.282833
+        },
+        {
+          "sample": 11,
+          "passed": true,
+          "batchDurationMs": 1.820763,
+          "averagePerCallUs": 1.820763
+        },
+        {
+          "sample": 12,
+          "passed": true,
+          "batchDurationMs": 1.993229,
+          "averagePerCallUs": 1.993229
+        },
+        {
+          "sample": 13,
+          "passed": true,
+          "batchDurationMs": 1.488602,
+          "averagePerCallUs": 1.488602
+        },
+        {
+          "sample": 14,
+          "passed": true,
+          "batchDurationMs": 1.777328,
+          "averagePerCallUs": 1.777328
+        },
+        {
+          "sample": 15,
+          "passed": true,
+          "batchDurationMs": 1.638778,
+          "averagePerCallUs": 1.638778
+        },
+        {
+          "sample": 16,
+          "passed": true,
+          "batchDurationMs": 1.865202,
+          "averagePerCallUs": 1.865202
+        },
+        {
+          "sample": 17,
+          "passed": true,
+          "batchDurationMs": 1.762559,
+          "averagePerCallUs": 1.762559
+        },
+        {
+          "sample": 18,
+          "passed": true,
+          "batchDurationMs": 1.786769,
+          "averagePerCallUs": 1.786769
+        },
+        {
+          "sample": 19,
+          "passed": true,
+          "batchDurationMs": 1.365748,
+          "averagePerCallUs": 1.365748
+        },
+        {
+          "sample": 20,
+          "passed": true,
+          "batchDurationMs": 1.817316,
+          "averagePerCallUs": 1.817316
+        },
+        {
+          "sample": 21,
+          "passed": true,
+          "batchDurationMs": 1.58871,
+          "averagePerCallUs": 1.58871
+        },
+        {
+          "sample": 22,
+          "passed": true,
+          "batchDurationMs": 0.723365,
+          "averagePerCallUs": 0.723365
+        },
+        {
+          "sample": 23,
+          "passed": true,
+          "batchDurationMs": 0.868737,
+          "averagePerCallUs": 0.868737
+        },
+        {
+          "sample": 24,
+          "passed": true,
+          "batchDurationMs": 0.648729,
+          "averagePerCallUs": 0.648729
+        },
+        {
+          "sample": 25,
+          "passed": true,
+          "batchDurationMs": 0.715185,
+          "averagePerCallUs": 0.715185
+        },
+        {
+          "sample": 26,
+          "passed": true,
+          "batchDurationMs": 0.709851,
+          "averagePerCallUs": 0.709851
+        },
+        {
+          "sample": 27,
+          "passed": true,
+          "batchDurationMs": 0.617811,
+          "averagePerCallUs": 0.617811
+        },
+        {
+          "sample": 28,
+          "passed": true,
+          "batchDurationMs": 0.651067,
+          "averagePerCallUs": 0.6510670000000001
+        },
+        {
+          "sample": 29,
+          "passed": true,
+          "batchDurationMs": 0.667704,
+          "averagePerCallUs": 0.667704
+        },
+        {
+          "sample": 30,
+          "passed": true,
+          "batchDurationMs": 0.661272,
+          "averagePerCallUs": 0.661272
+        },
+        {
+          "sample": 31,
+          "passed": true,
+          "batchDurationMs": 0.760667,
+          "averagePerCallUs": 0.760667
+        },
+        {
+          "sample": 32,
+          "passed": true,
+          "batchDurationMs": 0.749458,
+          "averagePerCallUs": 0.749458
+        },
+        {
+          "sample": 33,
+          "passed": true,
+          "batchDurationMs": 0.843904,
+          "averagePerCallUs": 0.843904
+        },
+        {
+          "sample": 34,
+          "passed": true,
+          "batchDurationMs": 0.787373,
+          "averagePerCallUs": 0.7873729999999999
+        },
+        {
+          "sample": 35,
+          "passed": true,
+          "batchDurationMs": 0.775704,
+          "averagePerCallUs": 0.775704
+        },
+        {
+          "sample": 36,
+          "passed": true,
+          "batchDurationMs": 0.79854,
+          "averagePerCallUs": 0.79854
+        },
+        {
+          "sample": 37,
+          "passed": true,
+          "batchDurationMs": 0.924077,
+          "averagePerCallUs": 0.924077
+        },
+        {
+          "sample": 38,
+          "passed": true,
+          "batchDurationMs": 0.705569,
+          "averagePerCallUs": 0.705569
+        },
+        {
+          "sample": 39,
+          "passed": true,
+          "batchDurationMs": 0.709287,
+          "averagePerCallUs": 0.709287
+        },
+        {
+          "sample": 40,
+          "passed": true,
+          "batchDurationMs": 0.746558,
+          "averagePerCallUs": 0.746558
+        },
+        {
+          "sample": 41,
+          "passed": true,
+          "batchDurationMs": 0.890894,
+          "averagePerCallUs": 0.890894
+        },
+        {
+          "sample": 42,
+          "passed": true,
+          "batchDurationMs": 0.801022,
+          "averagePerCallUs": 0.801022
+        },
+        {
+          "sample": 43,
+          "passed": true,
+          "batchDurationMs": 0.916756,
+          "averagePerCallUs": 0.916756
+        },
+        {
+          "sample": 44,
+          "passed": true,
+          "batchDurationMs": 0.805244,
+          "averagePerCallUs": 0.805244
+        },
+        {
+          "sample": 45,
+          "passed": true,
+          "batchDurationMs": 0.761679,
+          "averagePerCallUs": 0.761679
+        },
+        {
+          "sample": 46,
+          "passed": true,
+          "batchDurationMs": 0.726904,
+          "averagePerCallUs": 0.726904
+        },
+        {
+          "sample": 47,
+          "passed": true,
+          "batchDurationMs": 0.815872,
+          "averagePerCallUs": 0.815872
+        },
+        {
+          "sample": 48,
+          "passed": true,
+          "batchDurationMs": 0.763447,
+          "averagePerCallUs": 0.763447
+        },
+        {
+          "sample": 49,
+          "passed": true,
+          "batchDurationMs": 0.683417,
+          "averagePerCallUs": 0.683417
+        },
+        {
+          "sample": 50,
+          "passed": true,
+          "batchDurationMs": 0.738707,
+          "averagePerCallUs": 0.738707
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "finishedAtMillis": 1790773909294
+}
