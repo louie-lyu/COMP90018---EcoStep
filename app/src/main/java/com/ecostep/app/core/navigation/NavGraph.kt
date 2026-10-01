@@ -24,15 +24,17 @@ import com.ecostep.app.sensors.ui.TrackingRoute
 import com.ecostep.app.sensors.ui.TrackingRoutes
 import com.ecostep.app.sensors.ui.TrackingViewModel
 import com.ecostep.app.ui.components.EcoStepBottomBar
-import com.ecostep.app.ui.mock.MockHomeRouteDataSource
 import com.ecostep.app.ui.mock.MockJourneyRepository
+import com.ecostep.app.ui.screens.RewardsScreen
 import com.ecostep.app.ui.mock.MockMissionRepository
-import com.ecostep.app.ui.screens.HistoryScreen
 import com.ecostep.app.ui.screens.HomeScreen
 import com.ecostep.app.ui.screens.JourneyReviewScreen
 import com.ecostep.app.ui.screens.MissionScreen
 import com.ecostep.app.ui.screens.SettingsScreen
 import com.ecostep.app.ui.viewmodels.HomeViewModel
+import com.ecostep.app.ui.mock.MockHomeRouteDataSource
+import com.ecostep.app.ui.mock.MockHomeMissionDataSource
+import com.ecostep.app.ui.viewmodels.RewardsViewModel
 import com.ecostep.app.ui.viewmodels.JourneyReviewViewModel
 import com.ecostep.app.ui.viewmodels.MissionViewModel
 
@@ -250,8 +252,16 @@ fun EcoStepNavHost(
                 )
             }
 
-            composable(Routes.HISTORY) {
-                HistoryScreen()
+            composable(Routes.REWARDS) {
+                val rewardsViewModel: RewardsViewModel = viewModel(
+                    factory = ViewModelFactory {
+                        RewardsViewModel()
+                    },
+                )
+
+                RewardsScreen(
+                    viewModel = rewardsViewModel,
+                )
             }
 
             composable(Routes.SETTINGS) {

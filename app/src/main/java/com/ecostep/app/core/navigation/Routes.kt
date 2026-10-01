@@ -10,7 +10,7 @@ object Routes {
         "$JOURNEY_REVIEW/{$JOURNEY_ID_ARGUMENT}"
 
     const val MISSIONS = "missions"
-    const val HISTORY = "history"
+    const val REWARDS = "rewards"
     const val SETTINGS = "settings"
 
     fun journeyReview(journeyId: String): String {
