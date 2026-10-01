@@ -13,6 +13,7 @@ import com.ecostep.app.network.route.OpenRouteServiceProfile
 import com.ecostep.app.network.route.RouteProxyAuthenticationException
 import com.ecostep.app.network.route.RouteProxyDataSource
 import com.ecostep.app.network.route.RouteProxyServiceException
+import com.ecostep.app.network.publictransport.TransitousPublicTransportDataSource
 import java.io.IOException
 import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerializationException
@@ -22,8 +23,12 @@ internal class DefaultExternalDataRepository(
     private val weatherDataSource: OpenMeteoWeatherDataSource,
     private val weatherCache: WeatherCache,
     private val routeDataSource: RouteProxyDataSource? = null,
-    private val weatherCachePolicy: WeatherCachePolicy = WeatherCachePolicy(),
-    private val currentTimeMillis: () -> Long = System::currentTimeMillis,
+    private val publicTransportDataSource:
+    TransitousPublicTransportDataSource? = null,
+    private val weatherCachePolicy: WeatherCachePolicy =
+        WeatherCachePolicy(),
+    private val currentTimeMillis: () -> Long =
+        System::currentTimeMillis,
 ) : ExternalDataRepository {
 
     override suspend fun getWeather(location: GeoPoint): WeatherData {
@@ -108,9 +113,25 @@ internal class DefaultExternalDataRepository(
         start: GeoPoint,
         end: GeoPoint,
     ): List<PublicTransportInfo> {
-        throw UnsupportedOperationException(
-            "Public transport API is not configured yet",
-        )
+        val dataSource =
+            publicTransportDataSource
+                ?: throw ExternalDataException(
+                    reason =
+                        ExternalDataException.Reason.SERVICE,
+                    message =
+                        "Public transport service is not configured.",
+                )
+
+        return try {
+            dataSource.getPublicTransportOptions(
+                start = start,
+                end = end,
+            )
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (error: Exception) {
+            throw error.toExternalDataException()
+        }
     }
 
     private suspend fun readCacheBestEffort(
