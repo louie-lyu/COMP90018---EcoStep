@@ -1,4 +1,5 @@
 package com.ecostep.app.sensors.tracking
+import com.ecostep.app.algorithm.ActivityHint
 
 data class TrackingState(
     val isRecording: Boolean = false,
@@ -19,4 +20,6 @@ data class RecordingResult(
     val last: LocationSample,
     val distanceMeters: Double,
     val features: com.ecostep.app.data.model.SensorFeatures,
+    val trace: List<LocationSample> = emptyList(),
+    val activityHint: ActivityHint? = null,
 )

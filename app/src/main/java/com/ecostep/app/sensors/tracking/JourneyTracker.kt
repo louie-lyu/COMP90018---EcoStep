@@ -1,4 +1,6 @@
 package com.ecostep.app.sensors.tracking
+import com.ecostep.app.algorithm.ActivityHint
+import com.ecostep.app.algorithm.MotionHint
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -8,11 +10,13 @@ class JourneyTracker {
     private val mutableState = MutableStateFlow(TrackingState())
     val state = mutableState.asStateFlow()
     private var accumulator = FeatureAccumulator()
+    private val activityVotes = mutableMapOf<MotionHint, Int>()
     private var lastPublishMillis = 0L
 
     @Synchronized fun begin(now: Long): Boolean {
         if (mutableState.value.isRecording) return false
         accumulator = FeatureAccumulator()
+        activityVotes.clear()
         lastPublishMillis = now
         mutableState.value = TrackingState(isRecording = true, startTimeMillis = now)
         return true
@@ -28,6 +32,11 @@ class JourneyTracker {
         accumulator.onMotion(sample)
         publish(System.currentTimeMillis())
     }
+    @Synchronized fun onActivityHint(hint: ActivityHint) {
+        if (!mutableState.value.isRecording) return
+        if (hint.confidence !in 60..100 || hint.type == MotionHint.UNKNOWN) return
+        activityVotes[hint.type] = (activityVotes[hint.type] ?: 0) + hint.confidence
+    }
 
     @Synchronized fun tick(now: Long) {
         if (mutableState.value.isRecording) publish(now, force = true)
@@ -39,6 +48,7 @@ class JourneyTracker {
 
     @Synchronized fun abort(message: String) {
         accumulator = FeatureAccumulator()
+        activityVotes.clear()
         mutableState.value = TrackingState(sensorError = message)
     }
 
@@ -49,16 +59,26 @@ class JourneyTracker {
             RecordingResult(
                 start, now, accumulator.first!!, accumulator.last!!,
                 accumulator.distanceMeters, accumulator.toFeatures(now - start),
+                trace = accumulator.snapshotTrace(),
+                activityHint = dominantActivityHint(),
             )
         } else null
         mutableState.value = TrackingState()
         accumulator = FeatureAccumulator()
+        activityVotes.clear()
         return result
     }
 
     @Synchronized fun discard() {
         mutableState.value = TrackingState()
         accumulator = FeatureAccumulator()
+        activityVotes.clear()
+    }
+
+    private fun dominantActivityHint(): ActivityHint? {
+        val winner = activityVotes.maxByOrNull { it.value } ?: return null
+        val total = activityVotes.values.sum()
+        return ActivityHint(winner.key, winner.value * 100 / total)
     }
 
     private fun publish(now: Long, force: Boolean = false) {

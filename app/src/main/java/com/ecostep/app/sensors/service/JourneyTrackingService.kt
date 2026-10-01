@@ -25,11 +25,15 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import android.os.Build
+import com.ecostep.app.sensors.motion.ActivityRecognitionReceiver
+import com.google.android.gms.location.ActivityRecognition
 
 class JourneyTrackingService : Service() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val tracker get() = (application as EcoStepApp).appContainer.journeyTracker
     private var samplingJob: Job? = null
+    private var activityPendingIntent: PendingIntent? = null
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -90,9 +94,11 @@ class JourneyTrackingService : Service() {
                 }
             }
         }
+        startActivityRecognition()
     }
 
     private fun stop() {
+        stopActivityRecognition()
         samplingJob?.cancel()
         samplingJob = null
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
@@ -100,8 +106,46 @@ class JourneyTrackingService : Service() {
     }
 
     override fun onDestroy() {
+        stopActivityRecognition()
         scope.cancel()
         super.onDestroy()
+    }
+
+    private fun startActivityRecognition() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) !=
+            PackageManager.PERMISSION_GRANTED
+        ) return
+
+        val flags = PendingIntent.FLAG_UPDATE_CURRENT or
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_MUTABLE else 0
+        val pending = PendingIntent.getBroadcast(
+            this,
+            1002,
+            Intent(this, ActivityRecognitionReceiver::class.java),
+            flags,
+        )
+        activityPendingIntent = pending
+
+        try {
+            ActivityRecognition.getClient(this)
+                .requestActivityUpdates(10_000L, pending)
+                .addOnFailureListener { error ->
+                    Log.w(TAG, "Activity recognition unavailable; using sensor fallback.", error)
+                }
+        } catch (error: SecurityException) {
+            Log.w(TAG, "Activity recognition permission unavailable.", error)
+        }
+    }
+
+    private fun stopActivityRecognition() {
+        val pending = activityPendingIntent ?: return
+        activityPendingIntent = null
+        try {
+            ActivityRecognition.getClient(this).removeActivityUpdates(pending)
+        } catch (error: SecurityException) {
+            Log.w(TAG, "Could not remove activity updates.", error)
+        }
     }
 
     private fun createChannel() {

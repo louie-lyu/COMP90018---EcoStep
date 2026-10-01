@@ -456,6 +456,7 @@ class DefaultExternalDataRepositoryTest {
         override suspend fun planJourney(
             fromPlace: String,
             toPlace: String,
+            time: String?,
             arriveBy: Boolean,
             maxTransfers: Int,
             detailedLegs: Boolean,
