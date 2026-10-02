@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,27 +27,34 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import com.ecostep.app.data.model.GeoPoint
 import com.ecostep.app.data.model.RouteInfo
 import com.ecostep.app.data.model.TransportMode
 import com.ecostep.app.ui.mock.HomeRouteOption
 import com.ecostep.app.ui.viewmodels.HomeViewModel
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.rotate
 import com.ecostep.app.ui.components.UpcomingMissionCard
 import com.ecostep.app.ui.viewmodels.JourneyTrackingState
+import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint as OsmGeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
 
 @Composable
 fun HomeScreen(
@@ -71,8 +77,8 @@ fun HomeScreen(
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
-        MapBackground(
-            selectedMode = selectedOption?.route?.mode,
+        OsmMapView(
+            currentLocation = uiState.currentLocation,
         )
 
         Column(
@@ -380,205 +386,59 @@ fun HomeScreen(
 }
 
 @Composable
-private fun MapBackground(
-    selectedMode: TransportMode?,
-    // TODO(Sensors): Replace this mock bearing with the user's
-    // real device heading when sensor integration is available.
-    userBearing: Float = 35f,
+private fun OsmMapView(
+    currentLocation: GeoPoint,
 ) {
-    val backgroundColor =
-        MaterialTheme.colorScheme.primaryContainer.copy(
-            alpha = 0.55f,
-        )
-
-    val roadColor =
-        MaterialTheme.colorScheme.surface.copy(
-            alpha = 0.95f,
-        )
-
-    val routeColor =
-        MaterialTheme.colorScheme.primary
-
-    val surfaceColor =
-        MaterialTheme.colorScheme.surface
-
-    Canvas(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(backgroundColor),
-    ) {
-        val roadWidth = 14.dp.toPx()
-
-        drawLine(
-            color = roadColor,
-            start = Offset(size.width * 0.18f, 0f),
-            end = Offset(
-                size.width * 0.18f,
-                size.height,
-            ),
-            strokeWidth = roadWidth,
-        )
-
-        drawLine(
-            color = roadColor,
-            start = Offset(size.width * 0.52f, 0f),
-            end = Offset(
-                size.width * 0.52f,
-                size.height,
-            ),
-            strokeWidth = roadWidth,
-        )
-
-        drawLine(
-            color = roadColor,
-            start = Offset(size.width * 0.84f, 0f),
-            end = Offset(
-                size.width * 0.84f,
-                size.height,
-            ),
-            strokeWidth = roadWidth,
-        )
-
-        drawLine(
-            color = roadColor,
-            start = Offset(0f, size.height * 0.26f),
-            end = Offset(
-                size.width,
-                size.height * 0.26f,
-            ),
-            strokeWidth = roadWidth,
-        )
-
-        drawLine(
-            color = roadColor,
-            start = Offset(0f, size.height * 0.52f),
-            end = Offset(
-                size.width,
-                size.height * 0.52f,
-            ),
-            strokeWidth = roadWidth,
-        )
-
-        drawLine(
-            color = roadColor,
-            start = Offset(0f, size.height * 0.76f),
-            end = Offset(
-                size.width,
-                size.height * 0.76f,
-            ),
-            strokeWidth = roadWidth,
-        )
-
-        if (selectedMode != null) {
-            val routeVariation = when (selectedMode) {
-                TransportMode.WALKING -> 0.42f
-                TransportMode.CYCLING -> 0.50f
-                TransportMode.PUBLIC_TRANSPORT -> 0.58f
-                TransportMode.CAR -> 0.66f
-                TransportMode.UNKNOWN -> 0.54f
-            }
-
-            val startPoint = Offset(
-                x = size.width * 0.28f,
-                y = size.height * 0.67f,
-            )
-
-            val middlePoint = Offset(
-                x = size.width * routeVariation,
-                y = size.height * 0.47f,
-            )
-
-            val endPoint = Offset(
-                x = size.width * 0.74f,
-                y = size.height * 0.29f,
-            )
-
-            val dashedEffect =
-                PathEffect.dashPathEffect(
-                    intervals = floatArrayOf(14f, 10f),
-                )
-
-            drawLine(
-                color = routeColor,
-                start = startPoint,
-                end = middlePoint,
-                strokeWidth = 7.dp.toPx(),
-                pathEffect = dashedEffect,
-            )
-
-            drawLine(
-                color = routeColor,
-                start = middlePoint,
-                end = endPoint,
-                strokeWidth = 7.dp.toPx(),
-                pathEffect = dashedEffect,
-            )
-
-            drawCircle(
-                color = routeColor,
-                radius = 11.dp.toPx(),
-                center = startPoint,
-            )
-
-            drawCircle(
-                color = surfaceColor,
-                radius = 11.dp.toPx(),
-                center = endPoint,
-            )
-
-            drawCircle(
-                color = routeColor,
-                radius = 11.dp.toPx(),
-                center = endPoint,
-                style = Stroke(
-                    width = 4.dp.toPx(),
-                ),
-            )
-        }
-
-        // TODO(Location): Replace this fixed canvas position with the user's
-        // live map position when location tracking is available.
-        val userLocation = Offset(
-            x = size.width * 0.28f,
-            y = size.height * 0.67f,
-        )
-
-        val cursorPath = Path().apply {
-            moveTo(
-                userLocation.x,
-                userLocation.y - 18.dp.toPx(),
-            )
-            lineTo(
-                userLocation.x - 11.dp.toPx(),
-                userLocation.y + 14.dp.toPx(),
-            )
-            lineTo(
-                userLocation.x,
-                userLocation.y + 9.dp.toPx(),
-            )
-            lineTo(
-                userLocation.x + 11.dp.toPx(),
-                userLocation.y + 14.dp.toPx(),
-            )
-            close()
-        }
-
-        rotate(
-            degrees = userBearing,
-            pivot = userLocation,
-        ) {
-            drawPath(
-                path = cursorPath,
-                color = Color.White,
-                style = Stroke(width = 6.dp.toPx()),
-            )
-
-            drawPath(
-                path = cursorPath,
-                color = routeColor,
-            )
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val mapView = remember {
+        MapView(context).apply {
+            setTileSource(TileSourceFactory.MAPNIK)
+            setMultiTouchControls(true)
+            controller.setZoom(16.0)
+            controller.setCenter(currentLocation.toOsmGeoPoint())
         }
     }
+
+    AndroidView(
+        modifier = Modifier.fillMaxSize(),
+        factory = { mapView },
+        update = { view ->
+            view.overlays.clear()
+            view.overlays.add(
+                Marker(view).apply {
+                    position = currentLocation.toOsmGeoPoint()
+                    setAnchor(
+                        Marker.ANCHOR_CENTER,
+                        Marker.ANCHOR_BOTTOM,
+                    )
+                    title = "You are here"
+                },
+            )
+            view.invalidate()
+        },
+    )
+
+    DisposableEffect(lifecycleOwner, mapView) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_RESUME -> mapView.onResume()
+                Lifecycle.Event.ON_PAUSE -> mapView.onPause()
+                else -> Unit
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+            mapView.onDetach()
+        }
+    }
+}
+
+private fun GeoPoint.toOsmGeoPoint(): OsmGeoPoint {
+    return OsmGeoPoint(latitude, longitude)
 }
 
 @Composable
