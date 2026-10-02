@@ -39,6 +39,9 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run-recurring-journey-evaluat
 - EcoPoints: `-Warmups 10 -Samples 50 -BatchSize 1000`.
 - AI missions: `-Warmups 10 -Samples 50 -BatchSize 100`; timings cover the local validator and fallback.
 - AI replies/errors are controlled fixtures; Gemini latency, parse rate and text quality are not measured.
+  For the separate opt-in **real Gemini host test** (raw reply parse rate, field/business validation,
+  latency and saved JSON reports), see [AI_LIVE_EVALUATION.md](../../../../../../../../docs/AI_LIVE_EVALUATION.md).
+  That test uses synthetic prompts and a local environment key; it does not measure Android/proxy latency or text quality.
 - Weekly coach: `-Warmups 10 -Samples 50 -BatchSize 10`; histories of 0–10,000 entries, all or 10% in the week.
 - Mission triggers: same batch parameters; plans timestamps only, not Android notification delivery. DST gaps shift forward; overlaps use the earlier offset.
 - Local flow: same batch parameters; real local algorithms with synthetic candidate availability and completion events. One timed call processes one or three journeys, including object construction; no UI, sensors or storage.
