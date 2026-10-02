@@ -45,6 +45,7 @@ fun MissionScreen(
     onEditMission: (String) -> Unit = {},
     missionViewModel: MissionViewModel,
     onOpenJourneyReview: (String) -> Unit,
+    onOpenWeeklyInsight: () -> Unit = {},
 ) {
     LaunchedEffect(missionViewModel) {
         missionViewModel.journeyReviewEvents.collect { journeyId ->
@@ -107,6 +108,14 @@ fun MissionScreen(
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+            }
+        }
+
+        item {
+            TextButton(
+                onClick = onOpenWeeklyInsight,
+            ) {
+                Text("View Weekly Insight →")
             }
         }
 

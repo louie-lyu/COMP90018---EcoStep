@@ -23,16 +23,20 @@ import com.ecostep.app.sensors.location.PlaceNameResolver
 import com.ecostep.app.sensors.ui.TrackingRoute
 import com.ecostep.app.sensors.ui.TrackingRoutes
 import com.ecostep.app.sensors.ui.TrackingViewModel
+import com.ecostep.app.algorithm.DefaultWeeklyCoach
 import com.ecostep.app.ui.components.EcoStepBottomBar
 import com.ecostep.app.ui.mock.MockJourneyRepository
 import com.ecostep.app.ui.screens.RewardsScreen
 import com.ecostep.app.ui.mock.MockMissionRepository
+import com.ecostep.app.ui.mock.MockWeeklyInsightDataSource
 import com.ecostep.app.ui.screens.HomeScreen
 import com.ecostep.app.ui.screens.JourneyReviewScreen
 import com.ecostep.app.ui.screens.MissionScreen
 import com.ecostep.app.ui.screens.ProfileScreen
+import com.ecostep.app.ui.screens.WeeklyInsightScreen
 import com.ecostep.app.ui.viewmodels.JourneyReviewViewModel
 import com.ecostep.app.ui.viewmodels.HomeViewModel
+import com.ecostep.app.ui.viewmodels.WeeklyInsightViewModel
 import com.ecostep.app.ui.mock.MockHomeRouteDataSource
 import com.ecostep.app.ui.mock.MockHomeMissionDataSource
 import android.content.Intent
@@ -269,6 +273,28 @@ fun EcoStepNavHost(
                             Routes.journeyReview(journeyId),
                         )
                     },
+                    onOpenWeeklyInsight = {
+                        navController.navigate(
+                            Routes.WEEKLY_INSIGHT,
+                        )
+                    },
+                )
+            }
+
+            composable(Routes.WEEKLY_INSIGHT) {
+                val weeklyInsightViewModel: WeeklyInsightViewModel =
+                    viewModel(
+                        factory = ViewModelFactory {
+                            WeeklyInsightViewModel(
+                                weeklyCoach = DefaultWeeklyCoach(),
+                                dataSource =
+                                    MockWeeklyInsightDataSource(),
+                            )
+                        },
+                    )
+
+                WeeklyInsightScreen(
+                    viewModel = weeklyInsightViewModel,
                 )
             }
             
