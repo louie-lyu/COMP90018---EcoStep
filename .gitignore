@@ -6,6 +6,7 @@ gradle-app.setting
 # Local configuration (never commit real secrets/paths)
 local.properties
 app/google-services.json
+/ai-evaluation.local.json
 
 # Android Studio / IntelliJ
 .idea/
