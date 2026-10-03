@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ecostep.app.BuildConfig
+import com.ecostep.app.algorithm.TransportEvidenceProvider
 import com.ecostep.app.data.cache.publictransport.DataStorePublicTransportCache
 import com.ecostep.app.data.cache.publictransport.PublicTransportCache
 import com.ecostep.app.data.cache.publictransport.publicTransportDataStore
@@ -19,6 +20,7 @@ import com.ecostep.app.data.repository.AuthRepository
 import com.ecostep.app.data.repository.DefaultExternalDataRepository
 import com.ecostep.app.data.repository.ExternalDataRepository
 import com.ecostep.app.data.repository.JourneyRepository
+import com.ecostep.app.network.publictransport.DefaultTransportEvidenceProvider
 import com.ecostep.app.network.publictransport.TransitousClient
 import com.ecostep.app.network.publictransport.TransitousPublicTransportDataSource
 import com.ecostep.app.network.route.RouteAccessTokenProvider
@@ -28,6 +30,7 @@ import com.ecostep.app.network.weather.OpenMeteoApi
 import com.ecostep.app.network.weather.OpenMeteoClient
 import com.ecostep.app.network.weather.OpenMeteoWeatherDataSource
 import com.ecostep.app.sensors.tracking.JourneyTracker
+import com.ecostep.app.sensors.tracking.RecordingResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import okhttp3.OkHttpClient
@@ -45,6 +48,14 @@ class AppContainer(context: Context) {
         JourneyTracker()
     }
 
+    fun transportEvidenceProvider(recording: RecordingResult): TransportEvidenceProvider =
+        DefaultTransportEvidenceProvider(recording, transitousApi)
+
+    /**
+     * Shared HTTP client. Jianing builds per-API Retrofit instances (weather/route/public
+     * transport/AI) on top of this, so every network client shares one connection pool and
+     * one logging policy instead of each owner configuring OkHttp separately.
+     */
     val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
             .addInterceptor(

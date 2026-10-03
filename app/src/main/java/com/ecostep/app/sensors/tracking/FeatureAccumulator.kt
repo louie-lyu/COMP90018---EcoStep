@@ -19,13 +19,16 @@ data class LocationSample(
 enum class MotionType { ACCELEROMETER, GYROSCOPE }
 data class MotionSample(val type: MotionType, val x: Float, val y: Float, val z: Float)
 
-/** Keeps only endpoints and summary statistics, never the raw track or motion samples. */
+/** Keeps summary statistics and a bounded in-memory GPS trace; raw motion samples are discarded. */
 class FeatureAccumulator {
     private val accelMagnitude = RunningStats()
     private val accelDynamic = RunningStats()
     private val gyroMagnitude = RunningStats()
     private val gpsAccuracy = RunningStats()
     private val speeds = mutableListOf<Double>()
+    private val recentTrace = mutableListOf<LocationSample>()
+
+    fun snapshotTrace(): List<LocationSample> = recentTrace.toList()
 
     var distanceMeters = 0.0
         private set
@@ -68,6 +71,24 @@ class FeatureAccumulator {
         if (first == null) first = sample
         if (previous != null && gap >= 3.0) distanceMeters += gap
         last = sample
+        // Keep one accepted GPS point about every five seconds, in memory only.
+        if (
+            recentTrace.isEmpty() ||
+            sample.timeMillis - recentTrace.last().timeMillis >= 5_000L
+        ) {
+            recentTrace += sample
+        }
+
+        // Keep no more than the most recent hour or 720 points.
+        while (
+            recentTrace.isNotEmpty() &&
+            sample.timeMillis - recentTrace.first().timeMillis > 3_600_000L
+        ) {
+            recentTrace.removeAt(0)
+        }
+        while (recentTrace.size > 720) {
+            recentTrace.removeAt(0)
+        }
         gpsAccuracy.add(sample.accuracyMeters.toDouble())
         val reportedSpeed = sample.speedMps?.toDouble()?.takeIf { it.isFinite() && it >= 0.0 }
         speeds += min(60.0, reportedSpeed ?: if (previous == null) 0.0 else gap / seconds)

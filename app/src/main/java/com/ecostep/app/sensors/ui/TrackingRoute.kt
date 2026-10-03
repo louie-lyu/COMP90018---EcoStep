@@ -107,14 +107,21 @@ fun TrackingRoute(viewModel: TrackingViewModel, onJourneySaved: (String) -> Unit
         } else {
             Button(
                 onClick = {
-                    if (hasFineLocation(context)) {
+                    if (hasFineLocation(context) && hasActivityRecognition(context)) {
                         viewModel.start()
                     } else {
                         askedLocation = true
                         val permissions = buildList {
-                            add(Manifest.permission.ACCESS_FINE_LOCATION)
-                            add(Manifest.permission.ACCESS_COARSE_LOCATION)
-                            if (Build.VERSION.SDK_INT >= 33) add(Manifest.permission.POST_NOTIFICATIONS)
+                            if (!hasFineLocation(context)) {
+                                add(Manifest.permission.ACCESS_FINE_LOCATION)
+                                add(Manifest.permission.ACCESS_COARSE_LOCATION)
+                            }
+                            if (Build.VERSION.SDK_INT >= 29 && !hasActivityRecognition(context)) {
+                                add(Manifest.permission.ACTIVITY_RECOGNITION)
+                            }
+                            if (Build.VERSION.SDK_INT >= 33) {
+                                add(Manifest.permission.POST_NOTIFICATIONS)
+                            }
                         }
                         launcher.launch(permissions.toTypedArray())
                     }
@@ -137,3 +144,8 @@ fun TrackingRoute(viewModel: TrackingViewModel, onJourneySaved: (String) -> Unit
 private fun hasFineLocation(context: android.content.Context): Boolean =
     ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) ==
         PackageManager.PERMISSION_GRANTED
+
+private fun hasActivityRecognition(context: Context): Boolean =
+    Build.VERSION.SDK_INT < 29 ||
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACTIVITY_RECOGNITION) ==
+            PackageManager.PERMISSION_GRANTED
