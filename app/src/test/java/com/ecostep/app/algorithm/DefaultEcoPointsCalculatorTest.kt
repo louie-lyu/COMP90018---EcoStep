@@ -21,7 +21,31 @@ class DefaultEcoPointsCalculatorTest {
                 ),
             )
 
-        assertEquals(25, points)
+        // 100 g saved by cycling is about 521 m: 10 base + round(15 × 0.521) = 18.
+        assertEquals(18, points)
+    }
+
+    @Test
+    fun `the mode bonus is proportional to distance up to one kilometre`() {
+        fun walkingPoints(grams: Double, meters: Double) = calculator.calculatePoints(
+            createMissionResult(
+                carbonSavingGrams = grams,
+                transportMode = TransportMode.WALKING,
+            ).copy(actualDistanceMeters = meters),
+        )
+
+        // The 26 m walk from the review screen: no longer the full 20-point bonus.
+        assertEquals(1, walkingPoints(4.992, 26.0))
+        assertEquals(10 + 10, walkingPoints(96.0, 500.0))
+        assertEquals(19 + 20, walkingPoints(192.0, 1_000.0))
+        assertEquals(38 + 20, walkingPoints(384.0, 2_000.0))
+    }
+
+    @Test
+    fun `negative distance is rejected`() {
+        assertThrows(IllegalArgumentException::class.java) {
+            calculator.calculatePoints(createMissionResult().copy(actualDistanceMeters = -1.0))
+        }
     }
 
     @Test

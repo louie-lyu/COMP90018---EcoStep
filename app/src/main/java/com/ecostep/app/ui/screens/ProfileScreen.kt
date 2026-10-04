@@ -52,9 +52,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ecostep.app.ui.mock.CarbonRankingEntry
 import com.ecostep.app.ui.mock.FriendRequestStatus
+import com.ecostep.app.ui.mock.IncomingFriendRequestUi
 import com.ecostep.app.ui.mock.FriendSearchResult
 import com.ecostep.app.ui.mock.ProfileData
 import com.ecostep.app.ui.mock.RankingPeriod
@@ -62,14 +62,30 @@ import com.ecostep.app.ui.mock.RankingScope
 import com.ecostep.app.ui.viewmodels.ProfileViewModel
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.LaunchedEffect
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    viewModel: ProfileViewModel = viewModel(),
+    viewModel: ProfileViewModel,
     onViewJourneyHistory: () -> Unit = {},
     onOpenLocationSettings: () -> Unit = {},
     onSignOut: () -> Unit = {},
+    /** Permissions may have changed; lets features that depend on them re-check. */
+    onPermissionsChanged: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -147,6 +163,18 @@ fun ProfileScreen(
                             showAddFriend = true
                         },
                     )
+                }
+
+                if (uiState.incomingFriendRequests.isNotEmpty()) {
+                    item {
+                        IncomingFriendRequestsCard(
+                            requests = uiState.incomingFriendRequests,
+                            respondingRequestId =
+                                uiState.respondingFriendRequestId,
+                            onRespond =
+                                viewModel::respondToFriendRequest,
+                        )
+                    }
                 }
 
                 item {
@@ -275,6 +303,7 @@ fun ProfileScreen(
                         showSettings = false
                         onSignOut()
                     },
+                    onPermissionsChanged = onPermissionsChanged,
                 )
             }
 
@@ -504,6 +533,62 @@ private fun UserSummaryCard(
 }
 
 @Composable
+private fun IncomingFriendRequestsCard(
+    requests: List<IncomingFriendRequestUi>,
+    respondingRequestId: String?,
+    onRespond: (requestId: String, accept: Boolean) -> Unit,
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            Text(
+                text = "Friend requests",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+            )
+            requests.forEach { request ->
+                val isResponding = respondingRequestId == request.requestId
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(
+                        text = request.senderDisplayName,
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                    TextButton(
+                        onClick = { onRespond(request.requestId, false) },
+                        enabled = respondingRequestId == null,
+                    ) {
+                        Text("Decline")
+                    }
+                    Button(
+                        onClick = { onRespond(request.requestId, true) },
+                        enabled = respondingRequestId == null,
+                    ) {
+                        if (isResponding) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(18.dp),
+                                strokeWidth = 2.dp,
+                            )
+                        } else {
+                            Text("Accept")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun ImpactSummaryCard(
     profileData: ProfileData,
 ) {
@@ -548,6 +633,15 @@ private fun ImpactSummaryCard(
                     )} kg",
                 label = "CO₂ saved",
                 modifier = Modifier.weight(1f),
+            )
+        }
+
+        if (profileData.impactSummary.isAwaitingServer) {
+            Text(
+                text = "Journeys and CO₂ are estimated on this device until the server verifies " +
+                    "them. EcoPoints are added once verified.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
@@ -878,8 +972,37 @@ private fun ProfileSettingsPage(
     onCommunityRankingChanged: (Boolean) -> Unit,
     onOpenLocationSettings: () -> Unit,
     onSignOut: () -> Unit,
+    onPermissionsChanged: () -> Unit,
 ) {
     val preferences = profileData.preferences
+
+    // Re-read permission state after a request and whenever the user returns from Settings.
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    var permissionCheck by remember { mutableIntStateOf(0) }
+    val currentOnPermissionsChanged by rememberUpdatedState(onPermissionsChanged)
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                permissionCheck++
+                currentOnPermissionsChanged()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions(),
+    ) {
+        permissionCheck++
+        currentOnPermissionsChanged()
+    }
+    val missingNotificationPermissions = remember(permissionCheck) {
+        missingPermissions(context, notificationPermissions())
+    }
+    val missingDetectionPermissions = remember(permissionCheck) {
+        missingPermissions(context, detectionPermissions())
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -990,6 +1113,19 @@ private fun ProfileSettingsPage(
                                     .missionNotificationsEnabled,
                             onCheckedChange =
                                 onMissionNotificationsChanged,
+                            warning = if (
+                                preferences.missionNotificationsEnabled &&
+                                missingNotificationPermissions.isNotEmpty()
+                            ) {
+                                "Notifications are blocked, so reminders cannot appear."
+                            } else {
+                                null
+                            },
+                            onFixWarning = {
+                                permissionLauncher.launch(
+                                    missingNotificationPermissions.toTypedArray(),
+                                )
+                            },
                         )
 
                         HorizontalDivider(
@@ -1021,12 +1157,25 @@ private fun ProfileSettingsPage(
                             title =
                                 "Automatic Journey Detection",
                             supportingText =
-                                "Detect journeys in the background",
+                                "Start recording when you begin moving while EcoStep is open",
                             checked =
                                 preferences
                                     .automaticJourneyDetectionEnabled,
                             onCheckedChange =
                                 onAutomaticDetectionChanged,
+                            warning = if (
+                                preferences.automaticJourneyDetectionEnabled &&
+                                missingDetectionPermissions.isNotEmpty()
+                            ) {
+                                "Not active: precise location and physical activity access are needed."
+                            } else {
+                                null
+                            },
+                            onFixWarning = {
+                                permissionLauncher.launch(
+                                    missingDetectionPermissions.toTypedArray(),
+                                )
+                            },
                         )
                     }
                 }
@@ -1124,8 +1273,63 @@ private fun SettingsSectionTitle(
     )
 }
 
+private fun notificationPermissions(): List<String> =
+    if (Build.VERSION.SDK_INT >= 33) listOf(Manifest.permission.POST_NOTIFICATIONS) else emptyList()
+
+private fun detectionPermissions(): List<String> =
+    buildList {
+        add(Manifest.permission.ACCESS_FINE_LOCATION)
+        add(Manifest.permission.ACCESS_COARSE_LOCATION)
+        if (Build.VERSION.SDK_INT >= 29) add(Manifest.permission.ACTIVITY_RECOGNITION)
+    }
+
+private fun missingPermissions(context: Context, permissions: List<String>): List<String> =
+    permissions.filter {
+        ContextCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
+    }
+
 @Composable
 private fun SettingsSwitchRow(
+    title: String,
+    supportingText: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    /** Shown when the switch is on but cannot work, e.g. a permission is missing. */
+    warning: String? = null,
+    onFixWarning: () -> Unit = {},
+) {
+    Column {
+        SettingsSwitchRowContent(
+            title = title,
+            supportingText = supportingText,
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+        )
+
+        warning?.let {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 8.dp, bottom = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = it,
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                )
+
+                TextButton(onClick = onFixWarning) {
+                    Text("Allow")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SettingsSwitchRowContent(
     title: String,
     supportingText: String,
     checked: Boolean,
@@ -1424,6 +1628,14 @@ private fun FriendSearchResultCard(
                 FriendRequestStatus.REQUEST_SENT -> {
                     Text(
                         text = "Sent",
+                        color =
+                            MaterialTheme.colorScheme.primary,
+                    )
+                }
+
+                FriendRequestStatus.REQUEST_RECEIVED -> {
+                    Text(
+                        text = "Wants to connect",
                         color =
                             MaterialTheme.colorScheme.primary,
                     )

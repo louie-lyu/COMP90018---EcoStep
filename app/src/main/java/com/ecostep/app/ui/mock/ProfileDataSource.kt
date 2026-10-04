@@ -11,6 +11,8 @@ data class ProfileImpactSummary(
     val ecoPointsBalance: Int,
     val totalJourneys: Int,
     val carbonSavedKg: Double,
+    /** Journeys and CO₂ come from this device because the server has not processed them yet. */
+    val isAwaitingServer: Boolean = false,
 )
 
 data class ProfilePreferences(
@@ -54,7 +56,13 @@ enum class FriendRequestStatus {
     NONE,
     ALREADY_FRIENDS,
     REQUEST_SENT,
+    REQUEST_RECEIVED,
 }
+
+data class IncomingFriendRequestUi(
+    val requestId: String,
+    val senderDisplayName: String,
+)
 
 data class FriendSearchResult(
     val userId: String,
@@ -103,10 +111,20 @@ interface ProfileDataSource {
     suspend fun updateCommunityRankingParticipation(
         enabled: Boolean,
     )
+
+    suspend fun getIncomingFriendRequests(): List<IncomingFriendRequestUi> =
+        emptyList()
+
+    suspend fun respondToFriendRequest(
+        requestId: String,
+        accept: Boolean,
+    ) {
+    }
 }
 
 /*
- * Temporary data source used to build and demonstrate ProfileScreen.
+ * Preview/test data source for ProfileScreen. Production navigation uses
+ * RepositoryProfileDataSource, backed by Firestore and the trusted backend.
  *
  * TODO(Profile/Auth):
  * Replace the mock user with the signed-in user supplied by the

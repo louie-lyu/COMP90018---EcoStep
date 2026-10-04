@@ -12,13 +12,17 @@ import kotlinx.coroutines.launch
 
 data class JourneyHistoryUiState(
     val journeys: List<JourneySummary> = emptyList(),
+    /** Journeys whose latest local changes have not reached the server yet. */
+    val pendingSyncJourneyIds: Set<String> = emptySet(),
     val isLoading: Boolean = true,
+    val requiresSignIn: Boolean = false,
     val errorMessage: String? = null,
 )
 
 class JourneyHistoryViewModel(
     private val journeyRepository: JourneyRepository,
-    private val userId: String,
+    /** Signed-in user's UID from the auth repository; null when signed out. */
+    private val currentUserId: String?,
 ) : ViewModel() {
 
     private val _uiState =
@@ -32,9 +36,19 @@ class JourneyHistoryViewModel(
     }
 
     private fun observeJourneyHistory() {
+        val userId = currentUserId
+        if (userId == null) {
+            _uiState.value = JourneyHistoryUiState(
+                isLoading = false,
+                requiresSignIn = true,
+                errorMessage = "Sign in to see your journey history.",
+            )
+            return
+        }
+
         viewModelScope.launch {
             journeyRepository
-                .observeJourneyHistory(userId)
+                .observeJourneyHistorySnapshots(userId)
                 .catch { exception ->
                     _uiState.value =
                         JourneyHistoryUiState(
@@ -44,13 +58,17 @@ class JourneyHistoryViewModel(
                                     ?: "Unable to load journey history.",
                         )
                 }
-                .collect { journeys ->
+                .collect { snapshots ->
                     _uiState.value =
                         JourneyHistoryUiState(
                             journeys =
-                                journeys.sortedByDescending {
-                                    it.endTimeMillis
-                                },
+                                snapshots
+                                    .map { it.journey }
+                                    .sortedByDescending { it.endTimeMillis },
+                            pendingSyncJourneyIds =
+                                snapshots
+                                    .filter { it.hasPendingWrites }
+                                    .mapTo(mutableSetOf()) { it.journey.journeyId },
                             isLoading = false,
                         )
                 }

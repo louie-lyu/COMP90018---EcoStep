@@ -36,6 +36,11 @@ import androidx.compose.ui.unit.dp
 import com.ecostep.app.ui.mock.MissionDay
 import com.ecostep.app.ui.mock.MissionPageItem
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.LaunchedEffect
+import com.ecostep.app.ui.adapters.withRouteEstimate
+import com.ecostep.app.ui.viewmodels.RouteEstimateState
+import java.util.Locale
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,6 +48,10 @@ fun MissionEditorBottomSheet(
     item: MissionPageItem,
     onDismiss: () -> Unit,
     onSave: (MissionPageItem) -> Unit,
+    /** Recalculated impact for the start and destination being edited. */
+    routeEstimate: RouteEstimateState = RouteEstimateState.Idle,
+    /** Called once typing pauses on a changed start or destination. */
+    onRouteChanged: (start: String, destination: String) -> Unit = { _, _ -> },
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
@@ -80,7 +89,22 @@ fun MissionEditorBottomSheet(
         mutableStateOf(false)
     }
 
-    val transportModes = item.transportOptions
+    // Recalculate once the user has finished editing the route, not on every keystroke.
+    LaunchedEffect(startLocation, destination) {
+        val routeChanged = startLocation.trim() != item.startLocation.trim() ||
+            destination.trim() != item.destination.trim()
+        if (routeChanged || item.transportOptions.isEmpty()) {
+            delay(ROUTE_ESTIMATE_DEBOUNCE_MILLIS)
+            onRouteChanged(startLocation, destination)
+        }
+    }
+
+    val estimate = (routeEstimate as? RouteEstimateState.Ready)?.estimate
+        ?.takeIf { it.matches(startLocation, destination) }
+
+    val transportModes = estimate
+        ?.let { item.withRouteEstimate(it).transportOptions }
+        ?: item.transportOptions
 
     val selectedTransportOption =
         transportModes.firstOrNull {
@@ -146,6 +170,12 @@ fun MissionEditorBottomSheet(
                     Text("Destination")
                 },
                 singleLine = true,
+            )
+
+            RouteEstimateStatus(
+                routeEstimate = routeEstimate,
+                startLocation = startLocation,
+                destination = destination,
             )
 
             Text(
@@ -240,8 +270,11 @@ fun MissionEditorBottomSheet(
                             verticalArrangement = Arrangement.spacedBy(2.dp),
                         ) {
                             Text(
-                                text =
-                                    "${option.estimatedCarbonSavedKg} kg CO₂ saved",
+                                text = String.format(
+                                    Locale.getDefault(),
+                                    "%.2f kg CO₂ saved",
+                                    option.estimatedCarbonSavedKg,
+                                ),
                                 style = MaterialTheme.typography.titleMedium,
                                 color =
                                     MaterialTheme.colorScheme.onSecondaryContainer,
@@ -437,6 +470,53 @@ fun MissionEditorBottomSheet(
             },
         )
     }
+}
+
+private const val ROUTE_ESTIMATE_DEBOUNCE_MILLIS = 800L
+
+@Composable
+private fun RouteEstimateStatus(
+    routeEstimate: RouteEstimateState,
+    startLocation: String,
+    destination: String,
+) {
+    fun isCurrent(start: String, end: String) =
+        start == startLocation.trim() && end == destination.trim()
+
+    val (text, isError) = when (routeEstimate) {
+        is RouteEstimateState.Loading ->
+            if (isCurrent(routeEstimate.startText, routeEstimate.destinationText)) {
+                "Calculating CO₂ and EcoPoints for this route…" to false
+            } else {
+                return
+            }
+
+        is RouteEstimateState.Ready -> {
+            val estimate = routeEstimate.estimate
+            if (!estimate.matches(startLocation, destination)) return
+            val km = estimate.distanceByMode.values.minOrNull()?.div(1000.0) ?: return
+            String.format(Locale.getDefault(), "Estimates updated for this route (about %.1f km).", km) to false
+        }
+
+        is RouteEstimateState.Failed ->
+            if (isCurrent(routeEstimate.startText, routeEstimate.destinationText)) {
+                routeEstimate.message to true
+            } else {
+                return
+            }
+
+        RouteEstimateState.Idle -> return
+    }
+
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodySmall,
+        color = if (isError) {
+            MaterialTheme.colorScheme.error
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        },
+    )
 }
 
 @Composable

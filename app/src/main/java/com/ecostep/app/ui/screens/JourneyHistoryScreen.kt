@@ -107,6 +107,9 @@ fun JourneyHistoryScreen(
                         ) { journey ->
                             JourneyHistoryCard(
                                 journey = journey,
+                                isPendingSync =
+                                    journey.journeyId in
+                                        uiState.pendingSyncJourneyIds,
                                 onClick = {
                                     onJourneySelected(
                                         journey.journeyId,
@@ -194,6 +197,7 @@ private fun JourneyHistoryTopBar(
 @Composable
 private fun JourneyHistoryCard(
     journey: JourneySummary,
+    isPendingSync: Boolean,
     onClick: () -> Unit,
 ) {
     Card(
@@ -318,6 +322,14 @@ private fun JourneyHistoryCard(
                                 journey.endTimeMillis,
                         ),
                     modifier = Modifier.weight(1f),
+                )
+            }
+
+            if (isPendingSync) {
+                Text(
+                    text = "Saved on this device · waiting to sync",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.tertiary,
                 )
             }
         }

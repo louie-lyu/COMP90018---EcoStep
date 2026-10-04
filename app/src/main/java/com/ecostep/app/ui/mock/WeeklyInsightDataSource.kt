@@ -5,15 +5,14 @@ import com.ecostep.app.data.model.TransportMode
 import java.util.Calendar
 
 interface WeeklyInsightDataSource {
-    fun getMissionResults(): List<MissionResult>
+    /** Mission results with timestamps on or after [fromMillis]. */
+    suspend fun getMissionResults(fromMillis: Long): List<MissionResult>
 }
 
-/**
- * TODO(Missions/Firebase): Replace with real [MissionResult] history recorded
- */
+/** Sample results for previews; production uses RepositoryWeeklyInsightDataSource. */
 class MockWeeklyInsightDataSource : WeeklyInsightDataSource {
 
-    override fun getMissionResults(): List<MissionResult> {
+    override suspend fun getMissionResults(fromMillis: Long): List<MissionResult> {
         val now = System.currentTimeMillis()
 
         return listOf(

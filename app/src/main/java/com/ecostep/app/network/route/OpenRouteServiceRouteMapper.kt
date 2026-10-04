@@ -28,7 +28,8 @@ internal enum class OpenRouteServiceProfile(
 internal fun OpenRouteServiceResponse.toRouteInfo(
     profile: OpenRouteServiceProfile,
 ): RouteInfo {
-    val summary = routes.firstOrNull()?.summary
+    val route = routes.firstOrNull()
+    val summary = route?.summary
         ?: throw SerializationException(
             "OpenRouteService response contains no routes.",
         )
@@ -63,5 +64,6 @@ internal fun OpenRouteServiceResponse.toRouteInfo(
         mode = profile.transportMode,
         distanceMeters = summary.distance,
         durationSeconds = durationSeconds,
+        path = route.geometry?.let(::decodePolyline).orEmpty(),
     )
 }

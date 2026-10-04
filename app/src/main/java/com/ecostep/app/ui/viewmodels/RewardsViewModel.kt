@@ -2,11 +2,13 @@ package com.ecostep.app.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ecostep.app.ui.mock.MockRewardsDataSource
+import com.ecostep.app.data.repository.BackendException
 import com.ecostep.app.ui.mock.RedeemedReward
 import com.ecostep.app.ui.mock.RewardOffer
 import com.ecostep.app.ui.mock.RewardRedemptionStatus
 import com.ecostep.app.ui.mock.RewardsDataSource
+import java.util.UUID
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,9 +28,16 @@ data class RewardsUiState(
 )
 
 class RewardsViewModel(
-    private val rewardsDataSource: RewardsDataSource =
-        MockRewardsDataSource(),
+    private val rewardsDataSource: RewardsDataSource,
+    private val requestIdFactory: () -> String = { UUID.randomUUID().toString() },
 ) : ViewModel() {
+
+    /**
+     * Request ID of a redemption whose outcome is unknown (e.g. network failure). Retrying the
+     * same reward reuses it, so the backend can never charge twice for one intent.
+     */
+    private var pendingRequest: Pair<String, String>? = null
+
 
     private val _uiState =
         MutableStateFlow(RewardsUiState())
@@ -111,6 +120,12 @@ class RewardsViewModel(
         val currentState = _uiState.value
         val reward = currentState.selectedReward ?: return
 
+        // Ignore repeated taps while a request is in flight.
+        if (currentState.isRedeeming) {
+            return
+        }
+
+        // A quick local check for feedback only; the backend re-checks inside its transaction.
         if (currentState.pointsBalance < reward.pointsRequired) {
             _uiState.update {
                 it.copy(
@@ -122,47 +137,53 @@ class RewardsViewModel(
             return
         }
 
+        val requestId = pendingRequest
+            ?.takeIf { (rewardId, _) -> rewardId == reward.rewardId }
+            ?.second
+            ?: requestIdFactory()
+        pendingRequest = reward.rewardId to requestId
+
         _uiState.update {
-            it.copy(isRedeeming = true)
+            it.copy(isRedeeming = true, errorMessage = null)
         }
 
-        /*
-         * Temporary in-memory redemption used for the UI prototype.
-         *
-         * TODO(Rewards):
-         * Replace this local update with the shared EcoPoints and rewards
-         * data source once its ownership and interface are agreed by the team.
-         * The final implementation should persist the updated balance and
-         * redemption history so they can be restored after an app restart.
-         */
-        val currentTimeMillis =
-            System.currentTimeMillis()
+        viewModelScope.launch {
+            try {
+                val redeemedReward =
+                    rewardsDataSource.redeemReward(
+                        rewardId = reward.rewardId,
+                        requestId = requestId,
+                    )
+                pendingRequest = null
 
-        val redeemedReward = RedeemedReward(
-            redemptionId =
-                "mock-redemption-$currentTimeMillis",
-            reward = reward,
-            redemptionCode =
-                "ECO-${currentTimeMillis.toString().takeLast(6)}",
-            redeemedAtMillis = currentTimeMillis,
-            expiresAtMillis =
-                currentTimeMillis +
-                        30L * 24L * 60L * 60L * 1000L,
-            isUsed = false,
-        )
+                _uiState.update {
+                    it.copy(
+                        selectedReward = null,
+                        recentlyRedeemedReward = redeemedReward,
+                        isRedeeming = false,
+                    )
+                }
 
-        _uiState.update {
-            it.copy(
-                pointsBalance =
-                    it.pointsBalance - reward.pointsRequired,
-                activeRedeemedRewards =
-                    listOf(redeemedReward) +
-                            it.activeRedeemedRewards,
-                selectedReward = null,
-                recentlyRedeemedReward = redeemedReward,
-                isRedeeming = false,
-                errorMessage = null,
-            )
+                // Balance and history come from the server, never from local arithmetic.
+                loadRewards()
+            } catch (exception: CancellationException) {
+                throw exception
+            } catch (exception: Exception) {
+                // A definitive rejection ends this intent; an unknown outcome keeps the ID
+                // so that "try again" is safe.
+                if (exception is BackendException && exception.code in DEFINITIVE_REJECTIONS) {
+                    pendingRequest = null
+                }
+                _uiState.update {
+                    it.copy(
+                        isRedeeming = false,
+                        selectedReward = null,
+                        errorMessage =
+                            exception.message
+                                ?: "Unable to redeem this reward.",
+                    )
+                }
+            }
         }
     }
 
@@ -176,5 +197,15 @@ class RewardsViewModel(
         _uiState.update {
             it.copy(errorMessage = null)
         }
+    }
+
+    private companion object {
+        val DEFINITIVE_REJECTIONS = setOf(
+            "FAILED_PRECONDITION",
+            "INVALID_ARGUMENT",
+            "NOT_FOUND",
+            "ALREADY_EXISTS",
+            "PERMISSION_DENIED",
+        )
     }
 }

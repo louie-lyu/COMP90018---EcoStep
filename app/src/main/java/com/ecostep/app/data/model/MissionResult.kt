@@ -14,4 +14,9 @@ data class MissionResult(
     val actualTransportMode: TransportMode?,
     val actualCarbonSavingGrams: Double?,
     val timestampMillis: Long,
+    /**
+     * Distance actually travelled, which scales the transport-mode bonus. When null, the
+     * calculator derives it from [actualCarbonSavingGrams] (a saving versus driving).
+     */
+    val actualDistanceMeters: Double? = null,
 )

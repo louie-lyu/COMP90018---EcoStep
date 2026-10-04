@@ -122,6 +122,21 @@ Each team member owns one main module. Work is tracked through GitHub issues lin
 | Demonstration video: record, edit, and verify | 9–10 Oct | To Do | Video recorded and edited |
 | Final review and submission | 11–12 Oct | To Do | Code, report, and video submitted |
 
+### 8. Feature-Gap Integration — see [CLAUDE_FEATURE_GAP_IMPLEMENTATION_GUIDE.md](CLAUDE_FEATURE_GAP_IMPLEMENTATION_GUIDE.md)
+
+Code and unit tests exist for every row; none has been tested on a physical device yet, so all are **Review**. Module owners confirm before marking Done.
+
+| Gap | Owners | Status | Evidence |
+|-----|--------|--------|----------|
+| Free-journey Start from Home route + live-location weather | Yu-Han, Zongcheng | Review | `NavGraph.kt` (`onStartJourney`, `freeJourneyRoute`), `HomeViewModel.updateCurrentLocation`; `HomeViewModelTest` |
+| Production routes, public-transport timetable, calculator estimates on Home | Jianing, Yu-Han, Duo | Review | `ui/adapters/RepositoryHomeRouteDataSource.kt`; `RepositoryHomeRouteDataSourceTest`, `HomeViewModelTest` |
+| Lower-carbon alternatives on Journey Review | Duo, Yu-Han | Review | `JourneyReviewViewModel` (`lowerCarbonAlternatives`), `LowerCarbonAlternativesCard`; `JourneyReviewViewModelTest` |
+| Confirmed journey → AI/fallback EcoMission → suggested Mission in Firestore | Duo, Chi Hong, Jianing | Review | `core/integration/MissionGenerationCoordinator.kt`, `EcoMissionMapper.kt`; `MissionGenerationCoordinatorTest`, `EcoMissionMapperTest` |
+| Mission reminders and preference switches that take effect | Yu-Han, Chi Hong, Duo/Rui | Review | `core/notifications/*`, `core/integration/UserPreferenceCoordinator.kt`; `MissionReminderSyncTest`, `UserPreferenceCoordinatorTest` |
+| Automatic journey detection (while the app is open) | Zongcheng, Yu-Han | Review | `sensors/autodetect/*`, `sensors/tracking/RecordingStarter.kt`; `AutoJourneyDetectionTest` |
+| AI Weekly Coach text on Weekly Insight | Duo, Yu-Han | Review | `WeeklyInsightViewModel` (`insight`/`action`/`usedAi`); `WeeklyInsightViewModelTest` |
+| Remove unused `PlaceholderScreen` | Chi Hong | Review | File deleted; `TEAM_GUIDE.md` updated |
+
 ## Report and Demonstration Responsibilities
 
 **Duo Lyu (Coordinator):**

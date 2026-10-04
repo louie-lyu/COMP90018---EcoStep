@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
  * Provider response returned by OpenRouteService.
  *
  * Only fields required by EcoStep's shared RouteInfo model are represented
- * here. Geometry, metadata, way points and non-fatal provider warnings are
- * intentionally ignored by the JSON configuration.
+ * here, including the encoded route geometry for map display. Metadata, way
+ * points and non-fatal provider warnings are ignored by the JSON configuration.
  */
 @Serializable
 data class OpenRouteServiceResponse(
@@ -17,6 +17,8 @@ data class OpenRouteServiceResponse(
 @Serializable
 data class OpenRouteServiceRoute(
     val summary: OpenRouteServiceRouteSummary,
+    /** Encoded polyline of the route shape (OpenRouteService's default geometry format). */
+    val geometry: String? = null,
 )
 
 @Serializable

@@ -58,22 +58,41 @@ data class RewardsData(
 interface RewardsDataSource {
 
     suspend fun getRewardsData(): RewardsData
+
+    /**
+     * Redeems [rewardId]. Repeating a call with the same [requestId] must return the same
+     * redemption and never spend points twice.
+     */
+    suspend fun redeemReward(
+        rewardId: String,
+        requestId: String,
+    ): RedeemedReward
 }
 
-/*
- * TODO(EcoPoints):
- * Replace the mock balance with a shared EcoPoints repository once its
- * ownership and interface have been agreed by the team.
- *
- * The shared repository should provide the signed-in user's accumulated
- * balance. Rewards should read and spend that balance, while verified
- * journeys should add newly calculated EcoPoints to it.
- *
- * TODO(Rewards):
- * Persist redeemed reward history so available, used and expired rewards
- * can be restored after the app restarts.
+/**
+ * Sample rewards for previews and UI tests. Production uses RepositoryRewardsDataSource,
+ * where the balance comes from the backend ledger and redemption is a server transaction.
  */
 class MockRewardsDataSource : RewardsDataSource {
+
+    private val redemptions = mutableMapOf<String, RedeemedReward>()
+
+    override suspend fun redeemReward(
+        rewardId: String,
+        requestId: String,
+    ): RedeemedReward {
+        redemptions[requestId]?.let { return it }
+        val reward = getRewardsData().availableRewards.first { it.rewardId == rewardId }
+        val now = System.currentTimeMillis()
+        return RedeemedReward(
+            redemptionId = requestId,
+            reward = reward,
+            redemptionCode = "ECO-PREVIEW",
+            redeemedAtMillis = now,
+            expiresAtMillis = now + 30L * 24L * 60L * 60L * 1000L,
+            isUsed = false,
+        ).also { redemptions[requestId] = it }
+    }
 
     override suspend fun getRewardsData(): RewardsData {
         val currentTimeMillis = System.currentTimeMillis()

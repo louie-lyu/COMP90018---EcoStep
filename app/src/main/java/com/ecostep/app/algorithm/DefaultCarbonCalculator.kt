@@ -7,7 +7,7 @@ import com.ecostep.app.data.model.TransportMode
 
 class DefaultCarbonCalculator(
     private val emissionFactorsGramsPerKm: Map<TransportMode, Double> =
-        DEFAULT_EMISSION_FACTORS,
+        EmissionFactors.GRAMS_PER_KM,
 ) : CarbonCalculator {
 
     override fun calculate(journey: JourneySummary): CarbonResult {
@@ -51,19 +51,5 @@ class DefaultCarbonCalculator(
             emissionsGrams = currentEmissions,
             lowerCarbonAlternatives = alternatives,
         )
-    }
-
-    private companion object {
-        /*
-         * Provisional prototype values.
-         * The team must confirm the final values with a referenced source.
-         */
-        val DEFAULT_EMISSION_FACTORS =
-            mapOf(
-                TransportMode.WALKING to 0.0,
-                TransportMode.CYCLING to 0.0,
-                TransportMode.PUBLIC_TRANSPORT to 89.0,
-                TransportMode.CAR to 192.0,
-            )
     }
 }

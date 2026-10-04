@@ -3,32 +3,47 @@ package com.ecostep.app.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ecostep.app.data.model.GeoPoint
+import com.ecostep.app.data.model.PublicTransportInfo
 import com.ecostep.app.data.model.TransportMode
 import com.ecostep.app.data.model.WeatherData
 import com.ecostep.app.data.repository.ExternalDataRepository
+import com.ecostep.app.ui.mock.CURRENT_LOCATION_LABEL
 import com.ecostep.app.ui.mock.HomeRouteDataSource
+import com.ecostep.app.ui.mock.HomeRouteException
 import com.ecostep.app.ui.mock.HomeRouteOption
+import com.ecostep.app.ui.mock.HomeRouteQuery
 import com.ecostep.app.ui.mock.MissionDay
 import com.ecostep.app.ui.mock.MissionPageItem
 import com.ecostep.app.ui.mock.MissionRepository
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import com.ecostep.app.data.model.UserPreferences
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import kotlin.math.abs
 
 /*
- * TODO(Location): Replace this fixed Melbourne coordinate with the
- * signed-in user's live location from the location-tracking module.
- * Permission denial and unavailable-location states must also be handled.
+ * Fallback position used until the first live location arrives, and when
+ * location permission is denied or in previews.
  */
 private val MELBOURNE_LOCATION = GeoPoint(
     latitude = -37.8136,
     longitude = 144.9631,
 )
+
+/*
+ * Weather is refreshed only after moving roughly a kilometre, so live GPS
+ * samples do not each trigger a network request.
+ */
+private const val WEATHER_REFRESH_DEGREES = 0.01
 
 /**
  * Mission information displayed by the Home screen.
@@ -52,11 +67,11 @@ enum class JourneyTrackingState {
 }
 
 data class HomeUiState(
-    val startLocation: String = "Current location",
+    val startLocation: String = CURRENT_LOCATION_LABEL,
     val destination: String = "",
     val isRoutePlannerVisible: Boolean = false,
 
-    // TODO(Location): Replace this with live location data.
+    /** Live device position, or the Melbourne fallback until one arrives. */
     val currentLocation: GeoPoint = MELBOURNE_LOCATION,
 
     val weather: WeatherData? = null,
@@ -69,12 +84,16 @@ data class HomeUiState(
     val routeErrorMessage: String? = null,
     val isDirectionsConfirmed: Boolean = false,
 
+    /** Next departures for the searched trip, earliest first (at most three). */
+    val publicTransportOptions: List<PublicTransportInfo> = emptyList(),
+    val publicTransportErrorMessage: String? = null,
+
     val journeyTrackingState: JourneyTrackingState =
         JourneyTrackingState.READY,
 
     val upcomingMission: UpcomingMissionUi? = null,
 
-    // TODO(Settings): Replace these values with saved user settings.
+    /** From the user's saved preferences once they load. */
     val missionRemindersEnabled: Boolean = true,
     val missionReminderLeadMinutes: Int = 15,
 
@@ -109,6 +128,8 @@ class HomeViewModel(
     private val externalDataRepository: ExternalDataRepository,
     private val homeRouteDataSource: HomeRouteDataSource,
     private val missionRepository: MissionRepository,
+    /** Saved reminder settings; the mission card follows them. */
+    private val preferences: Flow<UserPreferences> = emptyFlow(),
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -129,10 +150,36 @@ class HomeViewModel(
 
     private var loadedActiveMissionId: String? = null
 
+    /** Position the current weather was requested for; null until a live location arrives. */
+    private var weatherLocation: GeoPoint? = null
+
+    private var weatherJob: Job? = null
+
+    /** Device position from the location tracker; null until the first fix. */
+    private var liveLocation: GeoPoint? = null
+
+    private var searchJob: Job? = null
+
     init {
         loadWeather()
         startMissionClock()
         observeMissions()
+        observePreferences()
+    }
+
+    private fun observePreferences() {
+        viewModelScope.launch {
+            preferences
+                .catch { /* Keep the defaults when the profile cannot be read. */ }
+                .collect { saved ->
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            missionRemindersEnabled = saved.missionNotificationsEnabled,
+                            missionReminderLeadMinutes = saved.defaultReminderMinutes,
+                        )
+                    }
+                }
+        }
     }
 
     private fun observeMissions() {
@@ -169,17 +216,8 @@ class HomeViewModel(
 
                     _uiState.update { currentState ->
                         if (missionWasActive) {
-                            currentState.copy(
-                                startLocation = "Current location",
-                                destination = "",
+                            currentState.withoutPlannedRoute().copy(
                                 upcomingMission = visibleMission,
-                                routeOptions = emptyList(),
-                                selectedMode = null,
-                                isRoutePlannerVisible = false,
-                                isDirectionsConfirmed = false,
-                                journeyTrackingState =
-                                    JourneyTrackingState.READY,
-                                routeErrorMessage = null,
                             )
                         } else {
                             currentState.copy(
@@ -202,16 +240,16 @@ class HomeViewModel(
         loadedActiveMissionId = item.mission.missionId
         dismissedReminderMissionId = item.mission.missionId
 
-        /*
-         * TODO(Routing): Request route options using item.startLocation and
-         * item.destination. The current mock source returns fixed routes.
-         *
-         * TODO(Error handling): Expose a route error when production route
-         * loading fails instead of silently returning an empty list.
-         */
+        // The map's planned route comes from PlannedRouteViewModel; these options only feed
+        // the impact chips, so a failed lookup simply leaves them empty.
         val routeOptions =
             try {
-                homeRouteDataSource.getRouteOptions()
+                homeRouteDataSource.getRouteOptions(
+                    routeQuery(
+                        startText = item.startLocation,
+                        destinationText = item.destination,
+                    ),
+                ).routes
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (_: Exception) {
@@ -286,25 +324,33 @@ class HomeViewModel(
     }
 
     fun updateStartLocation(startLocation: String) {
+        searchJob?.cancel()
         _uiState.update { currentState ->
             currentState.copy(
                 startLocation = startLocation,
                 routeOptions = emptyList(),
                 selectedMode = null,
+                isRouteLoading = false,
                 routeErrorMessage = null,
                 isDirectionsConfirmed = false,
+                publicTransportOptions = emptyList(),
+                publicTransportErrorMessage = null,
             )
         }
     }
 
     fun updateDestination(destination: String) {
+        searchJob?.cancel()
         _uiState.update { currentState ->
             currentState.copy(
                 destination = destination,
                 routeOptions = emptyList(),
                 selectedMode = null,
+                isRouteLoading = false,
                 routeErrorMessage = null,
                 isDirectionsConfirmed = false,
+                publicTransportOptions = emptyList(),
+                publicTransportErrorMessage = null,
             )
         }
     }
@@ -321,22 +367,28 @@ class HomeViewModel(
             return
         }
 
-        viewModelScope.launch {
+        // Only the latest search may update the screen.
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
                     isRouteLoading = true,
                     routeErrorMessage = null,
                     isDirectionsConfirmed = false,
+                    publicTransportOptions = emptyList(),
+                    publicTransportErrorMessage = null,
                 )
             }
 
             try {
-                /*
-                 * TODO(Routing): Pass the selected start location and destination
-                 * to the production route data source.
-                 */
-                val routeOptions =
-                    homeRouteDataSource.getRouteOptions()
+                val state = _uiState.value
+                val result = homeRouteDataSource.getRouteOptions(
+                    routeQuery(
+                        startText = state.startLocation,
+                        destinationText = state.destination,
+                    ),
+                )
+                val routeOptions = result.routes
 
                 val defaultMode =
                     routeOptions.firstOrNull { option ->
@@ -358,10 +410,25 @@ class HomeViewModel(
                             } else {
                                 null
                             },
+                        publicTransportOptions = result.publicTransportOptions,
+                        publicTransportErrorMessage = when {
+                            result.publicTransportUnavailable ->
+                                "Public transport times are unavailable right now."
+                            result.publicTransportOptions.isEmpty() ->
+                                "No upcoming public transport departures found."
+                            else -> null
+                        },
                     )
                 }
             } catch (cancelled: CancellationException) {
                 throw cancelled
+            } catch (problem: HomeRouteException) {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isRouteLoading = false,
+                        routeErrorMessage = problem.message,
+                    )
+                }
             } catch (_: Exception) {
                 _uiState.update { currentState ->
                     currentState.copy(
@@ -413,8 +480,69 @@ class HomeViewModel(
         }
     }
 
+    /**
+     * Uses the device's live position for weather. Safe to call for every GPS sample:
+     * weather reloads on the first live fix and then only after a meaningful move.
+     */
+    fun updateCurrentLocation(location: GeoPoint) {
+        liveLocation = location
+        _uiState.update { currentState ->
+            currentState.copy(currentLocation = location)
+        }
+
+        val previous = weatherLocation
+        val movedFar = previous == null ||
+            abs(previous.latitude - location.latitude) > WEATHER_REFRESH_DEGREES ||
+            abs(previous.longitude - location.longitude) > WEATHER_REFRESH_DEGREES
+
+        if (movedFar) {
+            weatherLocation = location
+            loadWeather()
+        }
+    }
+
+    /**
+     * Clears a confirmed free-journey route once it was recorded or aborted. Active
+     * missions keep their route; it is reset when the mission ends.
+     */
+    fun clearFreeJourney() {
+        if (loadedActiveMissionId != null) {
+            return
+        }
+
+        searchJob?.cancel()
+        _uiState.update { currentState ->
+            currentState.withoutPlannedRoute()
+        }
+    }
+
+    private fun routeQuery(startText: String, destinationText: String) =
+        HomeRouteQuery(
+            startText = startText,
+            destinationText = destinationText,
+            currentLocation = liveLocation ?: _uiState.value.currentLocation,
+            isCurrentLocationLive = liveLocation != null,
+        )
+
+    private fun HomeUiState.withoutPlannedRoute(): HomeUiState =
+        copy(
+            startLocation = CURRENT_LOCATION_LABEL,
+            destination = "",
+            routeOptions = emptyList(),
+            selectedMode = null,
+            isRoutePlannerVisible = false,
+            isDirectionsConfirmed = false,
+            isRouteLoading = false,
+            journeyTrackingState = JourneyTrackingState.READY,
+            routeErrorMessage = null,
+            publicTransportOptions = emptyList(),
+            publicTransportErrorMessage = null,
+        )
+
     fun loadWeather() {
-        viewModelScope.launch {
+        // A newer position supersedes any request still in flight.
+        weatherJob?.cancel()
+        weatherJob = viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
                     isWeatherLoading = true,
@@ -461,6 +589,8 @@ class HomeViewModel(
                 repeatDays = repeatDays,
                 scheduledHour = scheduledHour,
                 scheduledMinute = scheduledMinute,
+                // Today's occurrence is already done or skipped: remind about the next one.
+                excludeToday = completedToday || skippedToday,
             ) ?: return null
 
         return UpcomingMissionUi(
@@ -483,12 +613,19 @@ class HomeViewModel(
         repeatDays: Set<MissionDay>,
         scheduledHour: Int,
         scheduledMinute: Int,
+        excludeToday: Boolean = false,
     ): Long? {
         if (repeatDays.isEmpty()) {
             return null
         }
 
         val now = Calendar.getInstance()
+        val endOfToday = (now.clone() as Calendar).apply {
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 59)
+            set(Calendar.SECOND, 59)
+        }
+        val notBefore = if (excludeToday) endOfToday else now
         var nearestOccurrence: Long? = null
 
         repeatDays.forEach { missionDay ->
@@ -500,7 +637,7 @@ class HomeViewModel(
                     set(Calendar.SECOND, 0)
                     set(Calendar.MILLISECOND, 0)
 
-                    if (timeInMillis <= now.timeInMillis) {
+                    if (timeInMillis <= notBefore.timeInMillis) {
                         add(Calendar.WEEK_OF_YEAR, 1)
                     }
                 }.timeInMillis

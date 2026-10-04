@@ -37,7 +37,30 @@ data class MissionPageItem(
     val repeatDays: Set<MissionDay>,
     val explanation: String,
     val transportOptions: List<MissionTransportOption>,
+    /** Route distance for the chosen mode, when known. */
+    val distanceMeters: Double? = null,
+    /** Today's occurrence was already completed; the mission stays listed for its next one. */
+    val completedToday: Boolean = false,
+    /** Today's occurrence was skipped. */
+    val skippedToday: Boolean = false,
+    /** Next scheduled date ("YYYY-MM-DD"), when known. */
+    val nextOccurrenceDate: String? = null,
 ) {
+    /** e.g. "Completed today ✓ · Next: Wed 7 Oct"; null when today's occurrence is still open. */
+    val todayStatusLabel: String?
+        get() {
+            val status = when {
+                completedToday -> "Completed today ✓"
+                skippedToday -> "Skipped today"
+                else -> return null
+            }
+            val next = nextOccurrenceDate
+                ?.let { runCatching { java.time.LocalDate.parse(it) }.getOrNull() }
+                ?.format(java.time.format.DateTimeFormatter.ofPattern("EEE d MMM", java.util.Locale.getDefault()))
+                ?: return status
+            return "$status · Next: $next"
+        }
+
     val scheduleLabel: String
         get() {
             val displayHour = when {

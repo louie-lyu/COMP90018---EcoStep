@@ -23,6 +23,12 @@ android {
             "ROUTE_PROXY_BASE_URL",
             "\"https://ecostep-route-proxy.jm674420449.workers.dev/\"",
         )
+        // Local Firebase Emulator Suite host for manual testing: -Pecostep.firebaseEmulatorHost=
+        // 127.0.0.1 together with `adb reverse tcp:9099 tcp:9099` (and 8080, 5001). Empty, the
+        // default, uses the real project from google-services.json.
+        val firebaseEmulatorHost =
+            providers.gradleProperty("ecostep.firebaseEmulatorHost").getOrElse("")
+        buildConfigField("String", "FIREBASE_EMULATOR_HOST", "\"$firebaseEmulatorHost\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -95,6 +101,8 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    // Callable Cloud Functions for trusted operations (reward redemption, friend requests).
+    implementation(libs.firebase.functions)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)

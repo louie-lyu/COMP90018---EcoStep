@@ -159,7 +159,7 @@ fun UpcomingMissionCard(
                     ) {
                         Text(
                             text =
-                                "${mission.estimatedCarbonSavedKg} kg CO₂ saved",
+                                String.format(java.util.Locale.getDefault(), "%.2f kg CO₂ saved", mission.estimatedCarbonSavedKg),
                             style = MaterialTheme.typography.titleMedium,
                             color =
                                 MaterialTheme.colorScheme.onSecondaryContainer,
