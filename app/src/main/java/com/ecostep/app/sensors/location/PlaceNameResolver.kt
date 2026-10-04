@@ -22,6 +22,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 class PlaceNameResolver(context: Context) {
     private val geocoder = Geocoder(context.applicationContext, Locale.getDefault())
     private val cache = mutableMapOf<String, String>()
+    private val locations = mutableMapOf<String, GeoPoint>()
 
     suspend fun resolve(point: GeoPoint): String? {
         if (!Geocoder.isPresent()) return null
@@ -33,6 +34,60 @@ class PlaceNameResolver(context: Context) {
             ?: return null
         synchronized(cache) { cache[key] = name }
         return name
+    }
+
+    /**
+     * Finds a place by name, preferring results within about 30 km of [near]. Returns null
+     * when the name cannot be found (e.g. personal labels like "Home") or geocoding is
+     * unavailable.
+     */
+    suspend fun locate(query: String, near: GeoPoint): GeoPoint? {
+        val name = query.trim()
+        if (name.isEmpty() || !Geocoder.isPresent()) return null
+        val key = "%s@%.2f,%.2f".format(Locale.US, name.lowercase(Locale.ROOT), near.latitude, near.longitude)
+        synchronized(locations) { locations[key] }?.let { return it }
+
+        val address = withTimeoutOrNull(TIMEOUT_MILLIS) { lookupByName(name, near) } ?: return null
+        val point = GeoPoint(address.latitude, address.longitude)
+        synchronized(locations) { locations[key] = point }
+        return point
+    }
+
+    private suspend fun lookupByName(name: String, near: GeoPoint): Address? {
+        val south = (near.latitude - SEARCH_RADIUS_DEGREES).coerceAtLeast(-90.0)
+        val north = (near.latitude + SEARCH_RADIUS_DEGREES).coerceAtMost(90.0)
+        val west = (near.longitude - SEARCH_RADIUS_DEGREES).coerceAtLeast(-180.0)
+        val east = (near.longitude + SEARCH_RADIUS_DEGREES).coerceAtMost(180.0)
+        return if (Build.VERSION.SDK_INT >= 33) {
+            suspendCancellableCoroutine { continuation ->
+                geocoder.getFromLocationName(
+                    name,
+                    1,
+                    south,
+                    west,
+                    north,
+                    east,
+                    object : Geocoder.GeocodeListener {
+                        override fun onGeocode(addresses: MutableList<Address>) {
+                            if (continuation.isActive) continuation.resume(addresses.firstOrNull())
+                        }
+
+                        override fun onError(errorMessage: String?) {
+                            if (continuation.isActive) continuation.resume(null)
+                        }
+                    },
+                )
+            }
+        } else {
+            withContext(Dispatchers.IO) {
+                try {
+                    @Suppress("DEPRECATION")
+                    geocoder.getFromLocationName(name, 1, south, west, north, east)?.firstOrNull()
+                } catch (_: Exception) {
+                    null
+                }
+            }
+        }
     }
 
     private suspend fun lookup(point: GeoPoint): Address? =
@@ -77,5 +132,6 @@ class PlaceNameResolver(context: Context) {
 
     private companion object {
         const val TIMEOUT_MILLIS = 5_000L
+        const val SEARCH_RADIUS_DEGREES = 0.3
     }
 }

@@ -28,11 +28,11 @@ internal object EcoPointsEvaluationCases {
             fun addPoints(group: String, savings: Double, expected: Int) {
                 add(EcoPointsCase("${group}_${mode.name}_$savings", group, mission(mode, savings), expected))
             }
-            addPoints("reference", 100.0, 10 + bonus)
+            addPoints("reference", 100.0, 10 + scaledBonus(mode, bonus, 100.0))
             addPoints("zero", 0.0, 0)
             addPoints("zero", -0.0, 0)
             for ((savings, base) in listOf(0.001 to 0, 4.9 to 0, 5.0 to 1, 5.1 to 1, 14.9 to 1, 15.0 to 2)) {
-                addPoints("rounding", savings, base + bonus)
+                addPoints("rounding", savings, base + scaledBonus(mode, bonus, savings))
             }
             // The first rounded base value that reaches the cap is 500 minus the bonus.
             val boundary = (500 - bonus) * 10.0 - 5.0
@@ -49,7 +49,7 @@ internal object EcoPointsEvaluationCases {
             for (completed in listOf(false, true)) {
                 add(EcoPointsCase("state_${accepted}_$completed", "state",
                     mission().copy(accepted = accepted, completed = completed),
-                    if (accepted && completed) 25 else 0))
+                    if (accepted && completed) 18 else 0))
             }
         }
         add(EcoPointsCase("missing_savings", "missing", mission().copy(actualCarbonSavingGrams = null), 0))
@@ -73,6 +73,20 @@ internal object EcoPointsEvaluationCases {
                     mission(mode, savings), points, journey = journey(distance)))
             }
         }
+    }
+
+    /**
+     * The mode bonus scales with distance up to 1 km. Without a recorded distance it is
+     * derived from the saving versus driving: car 192 g/km, public transport 89 g/km.
+     */
+    private fun scaledBonus(mode: TransportMode, bonus: Int, savings: Double): Int {
+        val savingPerKm = when (mode) {
+            TransportMode.WALKING, TransportMode.CYCLING -> 192.0
+            TransportMode.PUBLIC_TRANSPORT -> 103.0
+            TransportMode.CAR, TransportMode.UNKNOWN -> return 0
+        }
+        val share = minOf(1.0, savings / savingPerKm)
+        return Math.round(bonus * share).toInt()
     }
 
     private fun mission(mode: TransportMode = TransportMode.CYCLING, savings: Double = 100.0) = MissionResult(

@@ -221,6 +221,8 @@ fun MissionScreen(
                     MissionListCard(
                         mission = item.mission,
                         scheduleLabel = item.scheduleLabel,
+                        todayStatusLabel = item.todayStatusLabel,
+                        canStartToday = !item.completedToday,
                         onEdit = {
                             missionBeingEdited = item
 
@@ -251,15 +253,20 @@ fun MissionScreen(
     }
 
     missionBeingEdited?.let { item ->
+        val routeEstimate by missionViewModel.routeEstimate.collectAsState()
+
         MissionEditorBottomSheet(
             item = item,
             onDismiss = {
+                missionViewModel.clearRouteEstimate()
                 missionBeingEdited = null
             },
             onSave = { updatedMission ->
                 missionViewModel.updateMission(updatedMission)
                 missionBeingEdited = null
             },
+            routeEstimate = routeEstimate,
+            onRouteChanged = missionViewModel::estimateRoute,
         )
     }
     if (showEndMissionDialog) {
@@ -460,7 +467,7 @@ private fun ActiveMissionCard(
                     ) {
                         Text(
                             text =
-                                "${item.mission.estimatedCarbonSavedKg} kg CO₂ saved",
+                                String.format(java.util.Locale.getDefault(), "%.2f kg CO₂ saved", item.mission.estimatedCarbonSavedKg),
                             style =
                                 MaterialTheme.typography.titleMedium,
                             color =
@@ -591,7 +598,7 @@ private fun SuggestedMissionCard(
                     ) {
                         Text(
                             text =
-                                "${item.mission.estimatedCarbonSavedKg} kg CO₂ saved",
+                                String.format(java.util.Locale.getDefault(), "%.2f kg CO₂ saved", item.mission.estimatedCarbonSavedKg),
                             style = MaterialTheme.typography.titleMedium,
                             color =
                                 MaterialTheme.colorScheme.onSecondaryContainer,

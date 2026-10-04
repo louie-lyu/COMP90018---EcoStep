@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ecostep.app.ui.mock.CarbonRankingEntry
 import com.ecostep.app.ui.mock.FriendRequestStatus
 import com.ecostep.app.ui.mock.FriendSearchResult
-import com.ecostep.app.ui.mock.MockProfileDataSource
+import com.ecostep.app.ui.mock.IncomingFriendRequestUi
 import com.ecostep.app.ui.mock.ProfileData
 import com.ecostep.app.ui.mock.ProfileDataSource
 import com.ecostep.app.ui.mock.RankingPeriod
@@ -31,13 +31,15 @@ data class ProfileUiState(
     val isRankingLoading: Boolean = false,
     val isSearchingFriends: Boolean = false,
     val friendRequestUserId: String? = null,
+    val incomingFriendRequests: List<IncomingFriendRequestUi> =
+        emptyList(),
+    val respondingFriendRequestId: String? = null,
     val isSavingProfile: Boolean = false,
     val errorMessage: String? = null,
 )
 
 class ProfileViewModel(
-    private val profileDataSource: ProfileDataSource =
-        MockProfileDataSource(),
+    private val profileDataSource: ProfileDataSource,
 ) : ViewModel() {
 
     private val _uiState =
@@ -71,10 +73,14 @@ class ProfileViewModel(
                             _uiState.value.selectedRankingPeriod,
                     )
 
+                val incomingRequests =
+                    profileDataSource.getIncomingFriendRequests()
+
                 _uiState.update {
                     it.copy(
                         profileData = profileData,
                         rankingEntries = rankingEntries,
+                        incomingFriendRequests = incomingRequests,
                         isLoading = false,
                         isRankingLoading = false,
                     )
@@ -281,6 +287,54 @@ class ProfileViewModel(
                         errorMessage =
                             exception.message
                                 ?: "Unable to send friend request.",
+                    )
+                }
+            }
+        }
+    }
+
+    fun respondToFriendRequest(
+        requestId: String,
+        accept: Boolean,
+    ) {
+        if (_uiState.value.respondingFriendRequestId != null) {
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    respondingFriendRequestId = requestId,
+                    errorMessage = null,
+                )
+            }
+
+            try {
+                profileDataSource.respondToFriendRequest(
+                    requestId = requestId,
+                    accept = accept,
+                )
+
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        incomingFriendRequests =
+                            currentState.incomingFriendRequests.filterNot {
+                                it.requestId == requestId
+                            },
+                        respondingFriendRequestId = null,
+                    )
+                }
+
+                if (accept) {
+                    loadProfile()
+                }
+            } catch (exception: Exception) {
+                _uiState.update {
+                    it.copy(
+                        respondingFriendRequestId = null,
+                        errorMessage =
+                            exception.message
+                                ?: "Unable to answer the friend request.",
                     )
                 }
             }

@@ -1,5 +1,6 @@
 package com.ecostep.app.sensors.tracking
 import com.ecostep.app.algorithm.ActivityHint
+import com.ecostep.app.data.model.GeoPoint
 
 data class TrackingState(
     val isRecording: Boolean = false,
@@ -11,6 +12,11 @@ data class TrackingState(
     val accelCount: Long = 0,
     val gyroCount: Long = 0,
     val sensorError: String? = null,
+    /**
+     * Accepted GPS points of the current recording (about one every five seconds, plus the
+     * latest), for drawing the walked path. Kept in memory only and never uploaded.
+     */
+    val path: List<GeoPoint> = emptyList(),
 )
 
 data class RecordingResult(

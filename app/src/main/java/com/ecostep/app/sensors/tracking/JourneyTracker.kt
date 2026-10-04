@@ -24,6 +24,9 @@ class JourneyTracker {
 
     @Synchronized fun onLocation(sample: LocationSample) {
         if (!mutableState.value.isRecording) return
+        // The location provider may first replay a cached fix from before recording started;
+        // it is not part of this journey.
+        if (sample.timeMillis < mutableState.value.startTimeMillis - STALE_FIX_TOLERANCE_MILLIS) return
         if (accumulator.onLocation(sample)) publish(System.currentTimeMillis())
     }
 
@@ -92,6 +95,11 @@ class JourneyTracker {
             gpsCount = accumulator.gpsCount,
             accelCount = accumulator.accelCount,
             gyroCount = accumulator.gyroCount,
+            path = accumulator.displayPath(),
         )
+    }
+
+    private companion object {
+        const val STALE_FIX_TOLERANCE_MILLIS = 2_000L
     }
 }

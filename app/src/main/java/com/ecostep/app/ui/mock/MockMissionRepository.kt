@@ -12,6 +12,8 @@ data class MissionRepositoryState(
     val suggestedMission: MissionPageItem? = null,
     val upcomingMissions: List<MissionPageItem> = emptyList(),
     val activeMission: MissionPageItem? = null,
+    /** Last persistence error, if any. */
+    val errorMessage: String? = null,
 )
 
 interface MissionRepository {
@@ -31,19 +33,8 @@ interface MissionRepository {
 }
 
 /**
- * Temporary in-memory mission repository shared by HomeScreen and
- * MissionScreen.
- *
- * TODO(Missions/Firebase): Replace this class with a production
- * MissionRepository implementation that:
- * - loads and saves missions for the signed-in user;
- * - persists accepted, dismissed, edited and active mission states;
- * - records "Skip today" for only the current occurrence without deleting
- *   the recurring mission;
- * - restores mission state after the app restarts.
- *
- * Journey tracking and reward calculation should remain the responsibility
- * of the tracking, journey and algorithm modules.
+ * In-memory mission repository for previews and UI tests. Production navigation uses
+ * RepositoryMissionStore, which persists missions and occurrences in Firestore.
  */
 class MockMissionRepository(
     dataSource: MissionScreenDataSource =

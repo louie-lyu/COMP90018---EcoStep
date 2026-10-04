@@ -43,7 +43,8 @@ internal object LocalFlowEvaluationCases {
             originalMode = TransportMode.PUBLIC_TRANSPORT, availableModes = setOf(TransportMode.CYCLING), actualMode = TransportMode.CYCLING))
         add(LocalFlowCase("fractional_distance", ExpectedLocalFlow(240.096, missionSavingGrams = 240.096, points = 44), distanceMeters = 1250.5))
         add(LocalFlowCase("points_cap", ExpectedLocalFlow(5760.0, missionSavingGrams = 5760.0, points = 500), distanceMeters = 30000.0))
-        add(LocalFlowCase("short_positive_journey", ExpectedLocalFlow(0.192, missionSavingGrams = 0.192, points = 20), distanceMeters = 1.0))
+        // 1 m earns 0.1% of the walking bonus, which rounds to nothing.
+        add(LocalFlowCase("short_positive_journey", ExpectedLocalFlow(0.192, missionSavingGrams = 0.192, points = 0), distanceMeters = 1.0))
         val rejected = walking.copy(points = 0, weeklyAccepted = 0, weeklyCompleted = 0, weeklyRate = 0.0,
             weeklySavingGrams = 0.0, weeklyMode = null)
         add(LocalFlowCase("rejected_mission", rejected, accepted = false, completed = false))

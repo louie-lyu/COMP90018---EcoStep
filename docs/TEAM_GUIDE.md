@@ -103,7 +103,7 @@ com.ecostep.app
 **要做什麼**：把 6 個空畫面做成真正的介面。
 
 **完成步驟**：
-1. 逐一打開並改寫 [`LoginScreen.kt`](../app/src/main/java/com/ecostep/app/ui/screens/LoginScreen.kt)、[`HomeScreen.kt`](../app/src/main/java/com/ecostep/app/ui/screens/HomeScreen.kt)、[`JourneyReviewScreen.kt`](../app/src/main/java/com/ecostep/app/ui/screens/JourneyReviewScreen.kt)、[`MissionScreen.kt`](../app/src/main/java/com/ecostep/app/ui/screens/MissionScreen.kt)、[`HistoryScreen.kt`](../app/src/main/java/com/ecostep/app/ui/screens/HistoryScreen.kt)、[`SettingsScreen.kt`](../app/src/main/java/com/ecostep/app/ui/screens/SettingsScreen.kt)（目前每個都只呼叫共用的 `PlaceholderScreen`，直接刪掉那行換成你的內容）。
+1. 畫面都已實作：[`LoginScreen.kt`](../app/src/main/java/com/ecostep/app/ui/screens/LoginScreen.kt)、[`HomeScreen.kt`](../app/src/main/java/com/ecostep/app/ui/screens/HomeScreen.kt)、[`JourneyReviewScreen.kt`](../app/src/main/java/com/ecostep/app/ui/screens/JourneyReviewScreen.kt)、[`MissionScreen.kt`](../app/src/main/java/com/ecostep/app/ui/screens/MissionScreen.kt)、[`JourneyHistoryScreen.kt`](../app/src/main/java/com/ecostep/app/ui/screens/JourneyHistoryScreen.kt)、[`ProfileScreen.kt`](../app/src/main/java/com/ecostep/app/ui/screens/ProfileScreen.kt)、[`RewardsScreen.kt`](../app/src/main/java/com/ecostep/app/ui/screens/RewardsScreen.kt)、[`WeeklyInsightScreen.kt`](../app/src/main/java/com/ecostep/app/ui/screens/WeeklyInsightScreen.kt)（原本的共用 `PlaceholderScreen` 已無人使用並已刪除）。
 2. 需要在畫面間傳資料（例如點一個旅程要帶 journeyId 過去）時，到
    [core/navigation/NavGraph.kt](../app/src/main/java/com/ecostep/app/core/navigation/NavGraph.kt) / [Routes.kt](../app/src/main/java/com/ecostep/app/core/navigation/Routes.kt) 加路由參數。
 3. 想換配色/字體可以改 [core/theme/](../app/src/main/java/com/ecostep/app/core/theme/)（非必要）。

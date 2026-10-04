@@ -37,6 +37,12 @@
         <receiver
             android:name=".sensors.motion.ActivityRecognitionReceiver"
             android:exported="false" />
+        <receiver
+            android:name=".sensors.autodetect.AutoJourneyDetectionReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".core.notifications.MissionReminderReceiver"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -1,0 +1,30 @@
+{
+  "emissionFactorsGramsPerKm": {
+    "WALKING": 0,
+    "CYCLING": 0,
+    "PUBLIC_TRANSPORT": 89,
+    "CAR": 192
+  },
+  "ecoPoints": {
+    "gramsPerPoint": 10,
+    "maxPoints": 500,
+    "bonusFullDistanceMeters": 1000,
+    "modeBonusPoints": {
+      "WALKING": 20,
+      "CYCLING": 15,
+      "PUBLIC_TRANSPORT": 5,
+      "CAR": 0,
+      "UNKNOWN": 0
+    }
+  },
+  "journeyLimits": {
+    "maxDistanceMeters": 1000000,
+    "maxAverageSpeedMps": {
+      "WALKING": 3.5,
+      "CYCLING": 12,
+      "PUBLIC_TRANSPORT": 45,
+      "CAR": 60
+    }
+  },
+  "redemptionValidityDays": 30
+}

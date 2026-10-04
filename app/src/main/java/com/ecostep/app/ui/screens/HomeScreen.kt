@@ -38,12 +38,17 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextOverflow
+import java.text.DateFormat
+import java.util.Date
+import java.util.Locale
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.ecostep.app.data.model.GeoPoint
+import com.ecostep.app.data.model.PublicTransportInfo
 import com.ecostep.app.data.model.RouteInfo
 import com.ecostep.app.data.model.TransportMode
 import com.ecostep.app.ui.mock.HomeRouteOption
@@ -55,6 +60,12 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint as OsmGeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import android.graphics.Paint
+import androidx.compose.ui.graphics.toArgb
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import org.osmdroid.util.BoundingBox
+import org.osmdroid.views.overlay.Polyline
 
 @Composable
 fun HomeScreen(
@@ -62,6 +73,16 @@ fun HomeScreen(
     onStartJourney: (RouteInfo) -> Unit = {},
     onStartMission: (String) -> Unit = {},
     onViewMission: (String) -> Unit = {},
+    /** Live device position; the map follows it when present. */
+    liveLocation: GeoPoint? = null,
+    /** Planned route for the active journey, drawn with start and destination markers. */
+    plannedRoute: List<GeoPoint> = emptyList(),
+    routeStart: GeoPoint? = null,
+    routeDestination: GeoPoint? = null,
+    /** Path actually travelled in the current recording. */
+    recordedPath: List<GeoPoint> = emptyList(),
+    /** Journey-tracking panel floating above the bottom of the map, when a journey is active. */
+    trackingPanel: (@Composable () -> Unit)? = null,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -78,7 +99,12 @@ fun HomeScreen(
         modifier = Modifier.fillMaxSize(),
     ) {
         OsmMapView(
-            currentLocation = uiState.currentLocation,
+            currentLocation = liveLocation ?: uiState.currentLocation,
+            followLocation = liveLocation != null,
+            plannedRoute = plannedRoute,
+            routeStart = routeStart,
+            routeDestination = routeDestination,
+            recordedPath = recordedPath,
         )
 
         Column(
@@ -148,14 +174,21 @@ fun HomeScreen(
                             verticalArrangement = Arrangement.spacedBy(2.dp),
                         ) {
                             Text(
-                                text =
-                                    "Up to +${option.estimatedEcoPoints}",
+                                text = if (option.estimatedEcoPoints > 0) {
+                                    "Up to +${option.estimatedEcoPoints}"
+                                } else {
+                                    "+0"
+                                },
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.primary,
                             )
 
                             Text(
-                                text = "EcoPoints",
+                                text = ecoPointsLabel(
+                                    points = option.estimatedEcoPoints,
+                                    isMission = uiState.journeyTrackingState ==
+                                        JourneyTrackingState.IN_PROGRESS,
+                                ),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color =
                                     MaterialTheme.colorScheme.onSurfaceVariant,
@@ -178,7 +211,7 @@ fun HomeScreen(
                         ) {
                             Text(
                                 text =
-                                    "Est. ${option.estimatedCarbonSavedKg} kg",
+                                    "Est. ${carbonKgText(option.estimatedCarbonSavedKg)}",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.primary,
                             )
@@ -251,8 +284,7 @@ fun HomeScreen(
                                             "${transportModeName(option.route.mode)} · " +
                                                     "Tracking automatically"
                                         } else {
-                                            "Trip tracking will start automatically " +
-                                                    "when you begin moving."
+                                            "Press Start below to record this trip."
                                         },
                                     style = MaterialTheme.typography.bodyMedium,
                                     color =
@@ -338,6 +370,8 @@ fun HomeScreen(
 
                 routeOptions = uiState.routeOptions,
                 selectedOption = selectedOption,
+                publicTransportOptions = uiState.publicTransportOptions,
+                publicTransportErrorMessage = uiState.publicTransportErrorMessage,
                 isDirectionsConfirmed =
                     uiState.isDirectionsConfirmed,
                 onRouteSelected = { option ->
@@ -382,20 +416,42 @@ fun HomeScreen(
                 )
             }
         }
+
+        if (trackingPanel != null && !uiState.isRoutePlannerVisible) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(12.dp),
+            ) {
+                trackingPanel()
+            }
+        }
     }
 }
 
 @Composable
 private fun OsmMapView(
     currentLocation: GeoPoint,
+    followLocation: Boolean = false,
+    plannedRoute: List<GeoPoint> = emptyList(),
+    routeStart: GeoPoint? = null,
+    routeDestination: GeoPoint? = null,
+    recordedPath: List<GeoPoint> = emptyList(),
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val lastCentered = remember { LastCentered() }
+    val lastFittedRoute = remember { LastFittedRoute() }
+    val routeColor = MaterialTheme.colorScheme.primary.toArgb()
+    val density = context.resources.displayMetrics.density
     val mapView = remember {
         MapView(context).apply {
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
-            controller.setZoom(16.0)
+            // Scale tiles to the screen density; otherwise streets and labels look tiny on
+            // high-resolution phones.
+            isTilesScaledToDpi = true
+            controller.setZoom(DEFAULT_MAP_ZOOM)
             controller.setCenter(currentLocation.toOsmGeoPoint())
         }
     }
@@ -405,6 +461,37 @@ private fun OsmMapView(
         factory = { mapView },
         update = { view ->
             view.overlays.clear()
+            if (plannedRoute.size >= 2) {
+                view.overlays.add(
+                    Polyline(view).apply {
+                        setPoints(plannedRoute.map { it.toOsmGeoPoint() })
+                        outlinePaint.color = routeColor
+                        outlinePaint.strokeWidth = 6f * density
+                        outlinePaint.strokeCap = Paint.Cap.ROUND
+                        outlinePaint.isAntiAlias = true
+                        title = "Planned route"
+                    },
+                )
+            }
+            if (recordedPath.size >= 2) {
+                view.overlays.add(
+                    Polyline(view).apply {
+                        setPoints(recordedPath.map { it.toOsmGeoPoint() })
+                        outlinePaint.color = RECORDED_PATH_COLOR
+                        outlinePaint.strokeWidth = 5f * density
+                        outlinePaint.strokeCap = Paint.Cap.ROUND
+                        outlinePaint.strokeJoin = Paint.Join.ROUND
+                        outlinePaint.isAntiAlias = true
+                        title = "Your journey"
+                    },
+                )
+            }
+            routeStart?.let {
+                view.overlays.add(routeMarker(view, it, "Start", START_MARKER_COLOR))
+            }
+            routeDestination?.let {
+                view.overlays.add(routeMarker(view, it, "Destination", DESTINATION_MARKER_COLOR))
+            }
             view.overlays.add(
                 Marker(view).apply {
                     position = currentLocation.toOsmGeoPoint()
@@ -415,6 +502,23 @@ private fun OsmMapView(
                     title = "You are here"
                 },
             )
+
+            if (plannedRoute.size >= 2 && lastFittedRoute.value !== plannedRoute) {
+                // Show the whole route once when it arrives; leave room for the cards above
+                // and the tracking panel below.
+                lastFittedRoute.value = plannedRoute
+                lastCentered.value = currentLocation
+                val box = BoundingBox.fromGeoPoints(
+                    (plannedRoute + currentLocation).map { it.toOsmGeoPoint() },
+                )
+                view.post {
+                    view.zoomToBoundingBox(box, true, (ROUTE_FIT_PADDING_DP * density).toInt())
+                }
+            } else if (followLocation && lastCentered.value != currentLocation) {
+                // Recentre only when the position changes, so the user can still pan the map.
+                lastCentered.value = currentLocation
+                view.controller.animateTo(currentLocation.toOsmGeoPoint())
+            }
             view.invalidate()
         },
     )
@@ -436,6 +540,35 @@ private fun OsmMapView(
         }
     }
 }
+
+/** Non-observable holder: remembering the last centred point must not trigger recomposition. */
+private class LastCentered {
+    var value: GeoPoint? = null
+}
+
+/** Non-observable holder for the route the map last zoomed to. */
+private class LastFittedRoute {
+    var value: List<GeoPoint>? = null
+}
+
+private fun routeMarker(view: MapView, point: GeoPoint, label: String, color: Int): Marker =
+    Marker(view).apply {
+        position = point.toOsmGeoPoint()
+        setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        title = label
+        ContextCompat.getDrawable(view.context, org.osmdroid.library.R.drawable.marker_default)
+            ?.mutate()
+            ?.let { drawable ->
+                DrawableCompat.setTint(drawable, color)
+                icon = drawable
+            }
+    }
+
+private const val DEFAULT_MAP_ZOOM = 17.0
+private const val ROUTE_FIT_PADDING_DP = 140f
+private const val START_MARKER_COLOR = 0xFF1E88E5.toInt()
+private const val DESTINATION_MARKER_COLOR = 0xFFD32F2F.toInt()
+private const val RECORDED_PATH_COLOR = 0xFF1565C0.toInt()
 
 private fun GeoPoint.toOsmGeoPoint(): OsmGeoPoint {
     return OsmGeoPoint(latitude, longitude)
@@ -510,6 +643,8 @@ private fun RouteSelectionCard(
     onFindRoutes: () -> Unit,
     routeOptions: List<HomeRouteOption>,
     selectedOption: HomeRouteOption?,
+    publicTransportOptions: List<PublicTransportInfo>,
+    publicTransportErrorMessage: String?,
     isDirectionsConfirmed: Boolean,
     onRouteSelected: (HomeRouteOption) -> Unit,
     onDirectionsClick: () -> Unit,
@@ -608,6 +743,16 @@ private fun RouteSelectionCard(
                         Spacer(modifier = Modifier.weight(1f))
                     }
                 }
+            }
+
+            if (selectedOption?.route?.mode == TransportMode.PUBLIC_TRANSPORT) {
+                PublicTransportTimetable(departures = publicTransportOptions)
+            } else if (publicTransportErrorMessage != null && routeOptions.isNotEmpty()) {
+                Text(
+                    text = publicTransportErrorMessage,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
 
             selectedOption?.let { option ->
@@ -751,7 +896,7 @@ private fun SelectedRouteImpact(
                 Column {
                     Text(
                         text =
-                            "${option.estimatedCarbonSavedKg} kg",
+                            carbonKgText(option.estimatedCarbonSavedKg),
                         style =
                             MaterialTheme.typography.titleMedium,
                         color =
@@ -778,7 +923,7 @@ private fun SelectedRouteImpact(
                     )
 
                     Text(
-                        text = "Estimated EcoPoints",
+                        text = ecoPointsLabel(option.estimatedEcoPoints),
                         style =
                             MaterialTheme.typography.bodyMedium,
                     )
@@ -811,5 +956,47 @@ private fun durationText(
 private fun distanceText(
     distanceMeters: Double,
 ): String {
-    return "${distanceMeters / 1000.0} km"
+    return String.format(Locale.getDefault(), "%.1f km", distanceMeters / 1000.0)
+}
+
+private fun carbonKgText(carbonKg: Double): String =
+    String.format(Locale.getDefault(), "%.2f kg", carbonKg)
+
+/** EcoPoints are only awarded for completed missions; free routes say so instead of "+0". */
+private fun ecoPointsLabel(points: Int, isMission: Boolean = false): String =
+    if (points > 0 || isMission) "Estimated EcoPoints" else "EcoPoints on missions only"
+
+@Composable
+private fun PublicTransportTimetable(
+    departures: List<PublicTransportInfo>,
+) {
+    val timeFormat = remember { DateFormat.getTimeInstance(DateFormat.SHORT) }
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        Text(
+            text = "Next departures",
+            style = MaterialTheme.typography.labelLarge,
+        )
+
+        if (departures.isEmpty()) {
+            Text(
+                text = "No upcoming departures found.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+
+        departures.forEach { departure ->
+            Text(
+                text = "${departure.line} · departs " +
+                    "${timeFormat.format(Date(departure.departureTimeMillis))} · " +
+                    durationText(departure.estimatedDurationSeconds),
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+    }
 }

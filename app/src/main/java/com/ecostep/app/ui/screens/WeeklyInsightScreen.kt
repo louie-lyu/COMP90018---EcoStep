@@ -69,14 +69,15 @@ fun WeeklyInsightScreen(
         item {
             InsightCard(
                 title = "This week",
-                body = report.summary,
+                body = uiState.insight ?: report.summary,
+                badge = if (uiState.usedAi) "AI personalised" else null,
             )
         }
 
         item {
             InsightCard(
                 title = "Coaching tip",
-                body = report.fallbackMessage,
+                body = uiState.action ?: report.fallbackMessage,
             )
         }
     }
@@ -165,6 +166,7 @@ private fun StatCard(
 private fun InsightCard(
     title: String,
     body: String,
+    badge: String? = null,
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -175,11 +177,24 @@ private fun InsightCard(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                )
+
+                badge?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                }
+            }
 
             Text(
                 text = body,

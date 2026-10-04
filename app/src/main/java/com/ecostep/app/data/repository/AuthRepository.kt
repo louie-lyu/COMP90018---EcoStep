@@ -3,6 +3,10 @@ package com.ecostep.app.data.repository
 interface AuthRepository {
     val currentUserId: String?
 
+    /** Email of the signed-in user; Firebase Auth is its only source of truth. */
+    val currentUserEmail: String?
+        get() = null
+
     suspend fun signIn(email: String, password: String)
 
     suspend fun signUp(email: String, password: String)

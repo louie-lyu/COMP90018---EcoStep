@@ -1,5 +1,5 @@
 package com.ecostep.app.sensors.tracking
-
+import com.ecostep.app.data.model.GeoPoint
 import com.ecostep.app.data.model.SensorFeatures
 import kotlin.math.abs
 import kotlin.math.asin
@@ -24,11 +24,20 @@ class FeatureAccumulator {
     private val accelMagnitude = RunningStats()
     private val accelDynamic = RunningStats()
     private val gyroMagnitude = RunningStats()
-    private val gpsAccuracy = RunningStats()
+    private var gpsAccuracy = RunningStats()
     private val speeds = mutableListOf<Double>()
     private val recentTrace = mutableListOf<LocationSample>()
 
     fun snapshotTrace(): List<LocationSample> = recentTrace.toList()
+
+    /** Retained trace plus the latest accepted fix, as map coordinates. */
+    fun displayPath(): List<GeoPoint> {
+        val points = recentTrace.mapTo(mutableListOf()) { GeoPoint(it.latitude, it.longitude) }
+        last?.let { latest ->
+            if (recentTrace.lastOrNull() !== latest) points += GeoPoint(latest.latitude, latest.longitude)
+        }
+        return points
+    }
 
     var distanceMeters = 0.0
         private set
@@ -36,6 +45,8 @@ class FeatureAccumulator {
         private set
     var last: LocationSample? = null
         private set
+    private var distanceAnchor: LocationSample? = null
+    private var relocationCandidate: LocationSample? = null
     val gpsCount: Int get() = speeds.size
     val accelCount: Long get() = accelMagnitude.count
     val gyroCount: Long get() = gyroMagnitude.count
@@ -66,10 +77,47 @@ class FeatureAccumulator {
         val seconds = if (previous == null) 0.0 else
             (sample.timeMillis - previous.timeMillis) / 1000.0
         if (previous != null && seconds <= 0.0) return false
-        if (previous != null && gap / seconds > 60.0) return false
 
+        var relocated = false
+        if (previous != null && gap / seconds > MAX_PLAUSIBLE_SPEED_MPS) {
+            // A jump. Comparing later fixes with the stale point would eventually look
+            // plausible as the time gap grows and add the whole jump to the distance. Instead,
+            // when the next fix agrees with the jumped-to position, continue from there
+            // without counting the jump; a single outlier is simply dropped.
+            val candidate = relocationCandidate
+            if (candidate != null && isPlausibleStep(candidate, sample)) {
+                relocated = true
+            } else {
+                relocationCandidate = sample
+                return false
+            }
+        }
+        relocationCandidate = null
+
+        if (relocated && distanceMeters == 0.0) {
+            // Nothing was travelled before the jump, so the earlier fixes were a wrong or stale
+            // position (e.g. an emulator or provider still reporting an old place). The journey
+            // starts here; keeping the old point would put the start in the wrong place and
+            // draw the jump on the map.
+            first = null
+            recentTrace.clear()
+            speeds.clear()
+            gpsAccuracy = RunningStats()
+        }
         if (first == null) first = sample
-        if (previous != null && gap >= 3.0) distanceMeters += gap
+        // Measure from the last point that counted, not the previous fix: at walking speed
+        // consecutive fixes (1-2 s apart) are under the jitter threshold, so comparing
+        // neighbours alone would drop the whole journey.
+        val anchor = distanceAnchor
+        if (anchor == null || relocated) {
+            distanceAnchor = sample
+        } else {
+            val moved = distance(anchor, sample)
+            if (moved >= MIN_COUNTED_MOVE_METERS) {
+                distanceMeters += moved
+                distanceAnchor = sample
+            }
+        }
         last = sample
         // Keep one accepted GPS point about every five seconds, in memory only.
         if (
@@ -91,7 +139,10 @@ class FeatureAccumulator {
         }
         gpsAccuracy.add(sample.accuracyMeters.toDouble())
         val reportedSpeed = sample.speedMps?.toDouble()?.takeIf { it.isFinite() && it >= 0.0 }
-        speeds += min(60.0, reportedSpeed ?: if (previous == null) 0.0 else gap / seconds)
+        speeds += min(
+            MAX_PLAUSIBLE_SPEED_MPS,
+            reportedSpeed ?: if (previous == null || relocated) 0.0 else gap / seconds,
+        )
         return true
     }
 
@@ -120,5 +171,18 @@ class FeatureAccumulator {
             cos(Math.toRadians(a.latitude)) * cos(Math.toRadians(b.latitude)) *
             sin(lon / 2) * sin(lon / 2)
         return 12_742_000.0 * asin(sqrt(h.coerceIn(0.0, 1.0)))
+    }
+
+    private fun isPlausibleStep(from: LocationSample, to: LocationSample): Boolean {
+        val seconds = (to.timeMillis - from.timeMillis) / 1000.0
+        return seconds > 0.0 && distance(from, to) / seconds <= MAX_PLAUSIBLE_SPEED_MPS
+    }
+
+    private companion object {
+        /** Movement below this is treated as GPS jitter. */
+        const val MIN_COUNTED_MOVE_METERS = 3.0
+
+        /** Faster than any supported transport mode: treated as a GPS jump. */
+        const val MAX_PLAUSIBLE_SPEED_MPS = 60.0
     }
 }

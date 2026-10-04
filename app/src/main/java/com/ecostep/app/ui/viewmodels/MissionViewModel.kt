@@ -2,19 +2,41 @@ package com.ecostep.app.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ecostep.app.core.integration.MissionRouteEstimate
+import com.ecostep.app.core.integration.MissionRouteException
+import com.ecostep.app.ui.adapters.withRouteEstimate
 import com.ecostep.app.ui.mock.MissionJourneyRecorder
 import com.ecostep.app.ui.mock.MissionRepository
 import com.ecostep.app.ui.mock.MissionRepositoryState
 import com.ecostep.app.ui.mock.MissionPageItem
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
+/** Recalculated impact for the route being edited. */
+sealed interface RouteEstimateState {
+    data object Idle : RouteEstimateState
+    data class Loading(val startText: String, val destinationText: String) : RouteEstimateState
+    data class Ready(val estimate: MissionRouteEstimate) : RouteEstimateState
+    data class Failed(val startText: String, val destinationText: String, val message: String) :
+        RouteEstimateState
+}
 
 class MissionViewModel(
     private val missionRepository: MissionRepository,
-    private val missionJourneyRecorder: MissionJourneyRecorder,
+    /**
+     * Preview/mock only: fabricates a journey when a mission ends. Production passes null;
+     * real journeys come from tracking and complete the mission on review.
+     */
+    private val missionJourneyRecorder: MissionJourneyRecorder? = null,
+    /** Recalculates CO₂ and EcoPoints for an edited route; null keeps the stored values. */
+    private val routeEstimator: (suspend (start: String, destination: String) -> MissionRouteEstimate)? = null,
 ) : ViewModel() {
 
     val uiState: StateFlow<MissionRepositoryState> =
@@ -25,6 +47,11 @@ class MissionViewModel(
 
     val journeyReviewEvents: SharedFlow<String> =
         _journeyReviewEvents.asSharedFlow()
+
+    private val _routeEstimate = MutableStateFlow<RouteEstimateState>(RouteEstimateState.Idle)
+    val routeEstimate: StateFlow<RouteEstimateState> = _routeEstimate.asStateFlow()
+
+    private var estimateJob: Job? = null
 
     fun acceptSuggestedMission() {
         missionRepository.acceptSuggestedMission()
@@ -42,8 +69,86 @@ class MissionViewModel(
         missionRepository.skipMissionToday(missionId)
     }
 
+    /** Recalculates the estimates for a start and destination typed in the editor. */
+    fun estimateRoute(start: String, destination: String) {
+        val estimator = routeEstimator
+        val startText = start.trim()
+        val destinationText = destination.trim()
+        if (estimator == null || startText.isEmpty() || destinationText.isEmpty()) {
+            clearRouteEstimate()
+            return
+        }
+        when (val current = _routeEstimate.value) {
+            is RouteEstimateState.Ready -> if (current.estimate.matches(startText, destinationText)) return
+            is RouteEstimateState.Loading ->
+                if (current.startText == startText && current.destinationText == destinationText) return
+            else -> Unit
+        }
+
+        estimateJob?.cancel()
+        _routeEstimate.value = RouteEstimateState.Loading(startText, destinationText)
+        estimateJob = viewModelScope.launch {
+            _routeEstimate.value = try {
+                RouteEstimateState.Ready(estimator(startText, destinationText))
+            } catch (exception: CancellationException) {
+                throw exception
+            } catch (exception: MissionRouteException) {
+                RouteEstimateState.Failed(startText, destinationText, exception.message.orEmpty())
+            } catch (_: Exception) {
+                RouteEstimateState.Failed(
+                    startText,
+                    destinationText,
+                    "Could not calculate this route right now. Saved values are kept.",
+                )
+            }
+        }
+    }
+
+    fun clearRouteEstimate() {
+        estimateJob?.cancel()
+        _routeEstimate.value = RouteEstimateState.Idle
+    }
+
+    /**
+     * Saves an edit. When the start or destination changed, the estimates are recalculated
+     * for the new route first; if that fails, the previous estimates are kept.
+     */
     fun updateMission(updatedMission: MissionPageItem) {
-        missionRepository.updateMission(updatedMission)
+        val estimator = routeEstimator
+        if (estimator == null || !routeChanged(updatedMission)) {
+            missionRepository.updateMission(updatedMission)
+            return
+        }
+
+        val ready = (_routeEstimate.value as? RouteEstimateState.Ready)?.estimate
+            ?.takeIf { it.matches(updatedMission.startLocation, updatedMission.destination) }
+        clearRouteEstimate()
+        if (ready != null) {
+            missionRepository.updateMission(updatedMission.withRouteEstimate(ready))
+            return
+        }
+
+        viewModelScope.launch {
+            val estimate = try {
+                estimator(updatedMission.startLocation.trim(), updatedMission.destination.trim())
+            } catch (exception: CancellationException) {
+                throw exception
+            } catch (_: Exception) {
+                null
+            }
+            missionRepository.updateMission(
+                estimate?.let(updatedMission::withRouteEstimate) ?: updatedMission,
+            )
+        }
+    }
+
+    private fun routeChanged(updated: MissionPageItem): Boolean {
+        val state = missionRepository.state.value
+        val original = (listOfNotNull(state.activeMission, state.suggestedMission) + state.upcomingMissions)
+            .firstOrNull { it.mission.missionId == updated.mission.missionId }
+            ?: return true
+        return original.startLocation.trim() != updated.startLocation.trim() ||
+            original.destination.trim() != updated.destination.trim()
     }
 
     fun endActiveMission() {
@@ -51,17 +156,15 @@ class MissionViewModel(
             missionRepository.state.value.activeMission
                 ?: return
 
+        val recorder = missionJourneyRecorder
+        if (recorder == null) {
+            missionRepository.endActiveMission()
+            return
+        }
+
         viewModelScope.launch {
-            /*
-             * TODO(Tracking): Replace this temporary journey creation with the
-             * verified journey result from the sensor/location tracking module.
-             *
-             * TODO(Error handling): Expose an error state if journey creation or
-             * persistence fails. The active mission must only be cleared after the
-             * journey has been saved successfully.
-             */
             val journeyId =
-                missionJourneyRecorder.createPartialJourney(
+                recorder.createPartialJourney(
                     mission = activeMission,
                 )
 

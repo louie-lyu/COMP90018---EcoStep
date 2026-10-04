@@ -26,6 +26,10 @@ fun MissionListCard(
     onStart: () -> Unit,
     onSkipToday: () -> Unit,
     modifier: Modifier = Modifier,
+    /** e.g. "Completed today ✓ · Next: Wed 7 Oct"; null while today's occurrence is open. */
+    todayStatusLabel: String? = null,
+    /** False once today's occurrence is completed. */
+    canStartToday: Boolean = true,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -66,6 +70,14 @@ fun MissionListCard(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+
+                todayStatusLabel?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
             }
 
             Row(
@@ -115,7 +127,7 @@ fun MissionListCard(
                     ) {
                         Text(
                             text =
-                                "${mission.estimatedCarbonSavedKg} kg CO₂ saved",
+                                String.format(java.util.Locale.getDefault(), "%.2f kg CO₂ saved", mission.estimatedCarbonSavedKg),
                             style = MaterialTheme.typography.titleMedium,
                             color =
                                 MaterialTheme.colorScheme.onSecondaryContainer,
@@ -145,16 +157,19 @@ fun MissionListCard(
                 Button(
                     onClick = onStart,
                     modifier = Modifier.weight(1f),
+                    enabled = canStartToday,
                 ) {
                     Text("Start")
                 }
             }
 
-            TextButton(
-                onClick = onSkipToday,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text("Skip today")
+            if (todayStatusLabel == null) {
+                TextButton(
+                    onClick = onSkipToday,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text("Skip today")
+                }
             }
         }
     }

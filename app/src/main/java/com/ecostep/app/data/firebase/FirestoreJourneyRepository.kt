@@ -1,26 +1,26 @@
 package com.ecostep.app.data.firebase
 
-import com.ecostep.app.data.model.GeoPoint
 import com.ecostep.app.data.model.JourneySummary
-import com.ecostep.app.data.model.SensorFeatures
 import com.ecostep.app.data.model.TransportMode
+import com.ecostep.app.data.model.requireValidForWrite
 import com.ecostep.app.data.repository.AuthRepository
 import com.ecostep.app.data.repository.JourneyRepository
-import com.google.android.gms.tasks.Task
+import com.ecostep.app.data.repository.JourneySnapshot
+import com.ecostep.app.data.repository.WriteOutcome
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.Source
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.suspendCancellableCoroutine
 
 class FirestoreJourneyRepository(
     private val authRepository: AuthRepository,
     private val firestore: FirebaseFirestore,
+    private val ackTimeoutMillis: Long = DEFAULT_ACK_TIMEOUT_MILLIS,
 ) : JourneyRepository {
 
     override fun observeJourneyHistory(userId: String): Flow<List<JourneySummary>> = callbackFlow {
@@ -32,21 +32,42 @@ class FirestoreJourneyRepository(
                 close(exception)
                 return@addSnapshotListener
             }
-
-            try {
-                val history = snapshot
-                    ?.documents
-                    .orEmpty()
-                    .map { it.toJourneySummary() }
-                    .sortedByDescending { it.startTimeMillis }
-                trySend(history)
-            } catch (mappingException: Exception) {
-                close(mappingException)
-            }
+            val history = snapshot
+                ?.documents
+                .orEmpty()
+                // A single corrupt document must not hide the rest of the history.
+                .mapNotNull { it.data?.toJourneySummaryOrNull(it.id) }
+                .sortedByDescending { it.startTimeMillis }
+            trySend(history)
         }
 
         awaitClose { listener.remove() }
     }
+
+    override fun observeJourneyHistorySnapshots(userId: String): Flow<List<JourneySnapshot>> =
+        callbackFlow {
+            val uid = requireCurrentUserId()
+            require(userId == uid) { "Cannot read another user's journeys." }
+
+            val listener = journeys(uid).addSnapshotListener(MetadataChanges.INCLUDE) { snapshot, exception ->
+                if (exception != null) {
+                    close(exception)
+                    return@addSnapshotListener
+                }
+                val history = snapshot
+                    ?.documents
+                    .orEmpty()
+                    .mapNotNull { document ->
+                        document.data?.toJourneySummaryOrNull(document.id)?.let {
+                            JourneySnapshot(it, document.metadata.hasPendingWrites())
+                        }
+                    }
+                    .sortedByDescending { it.journey.startTimeMillis }
+                trySend(history)
+            }
+
+            awaitClose { listener.remove() }
+        }
 
     override suspend fun getJourney(journeyId: String): JourneySummary? {
         val uid = requireCurrentUserId()
@@ -62,19 +83,80 @@ class FirestoreJourneyRepository(
         if (cached?.exists() == true && cached.metadata.hasPendingWrites()) {
             return cached.toJourneySummary()
         }
-        val snapshot = document.get().await()
+        val snapshot = try {
+            document.get().await()
+        } catch (exception: CancellationException) {
+            throw exception
+        } catch (exception: Exception) {
+            // Offline: fall back to the cached copy rather than reporting "not found".
+            if (cached?.exists() == true) return cached.toJourneySummary()
+            throw exception
+        }
         return if (snapshot.exists()) snapshot.toJourneySummary() else null
     }
 
-    override suspend fun saveJourney(journey: JourneySummary) {
+    override fun observeJourney(journeyId: String): Flow<JourneySnapshot?> = callbackFlow {
         val uid = requireCurrentUserId()
-        require(journey.journeyId.isNotBlank()) { "Journey ID cannot be empty." }
+        val listener = journeys(uid)
+            .document(journeyId)
+            .addSnapshotListener(MetadataChanges.INCLUDE) { snapshot, exception ->
+                if (exception != null) {
+                    close(exception)
+                    return@addSnapshotListener
+                }
+                if (snapshot == null) return@addSnapshotListener
+                if (!snapshot.exists()) {
+                    // A cache miss is not proof the journey is missing; wait for the server.
+                    if (!snapshot.metadata.isFromCache) trySend(null)
+                    return@addSnapshotListener
+                }
+                try {
+                    trySend(
+                        JourneySnapshot(
+                            journey = snapshot.toJourneySummary(),
+                            hasPendingWrites = snapshot.metadata.hasPendingWrites(),
+                        ),
+                    )
+                } catch (mappingException: IllegalStateException) {
+                    close(mappingException)
+                }
+            }
 
-        val ownedJourney = journey.copy(userId = uid)
-        journeys(uid)
+        awaitClose { listener.remove() }
+    }
+
+    override suspend fun createJourney(journey: JourneySummary): WriteOutcome {
+        val uid = requireCurrentUserId()
+        val ownedJourney = journey.copy(
+            userId = uid,
+            // Backend-only values are never sent by the client.
+            carbonSavedGrams = null,
+            ecoPoints = null,
+            createdAtMillis = null,
+            updatedAtMillis = null,
+        )
+        ownedJourney.requireValidForWrite()
+
+        // Plain set: security rules reject it if the document already exists, so a create can
+        // never overwrite fields added later (confirmation, backend results).
+        return journeys(uid)
             .document(ownedJourney.journeyId)
-            .set(ownedJourney.toFirestoreMap())
-            .await()
+            .set(ownedJourney.toFirestoreCreateMap(FieldValue.serverTimestamp()))
+            .awaitWriteOutcome(ackTimeoutMillis)
+    }
+
+    override suspend fun confirmTransportMode(
+        journeyId: String,
+        mode: TransportMode,
+    ): WriteOutcome {
+        val uid = requireCurrentUserId()
+        require(journeyId.isNotBlank()) { "Journey ID cannot be empty." }
+        require(mode != TransportMode.UNKNOWN) { "Choose a transport mode to confirm." }
+
+        return journeys(uid)
+            .document(journeyId)
+            .update(confirmationUpdate(mode, FieldValue.serverTimestamp()))
+            .awaitWriteOutcome(ackTimeoutMillis)
     }
 
     private fun requireCurrentUserId(): String =
@@ -85,125 +167,7 @@ class FirestoreJourneyRepository(
         firestore.collection("users").document(uid).collection("journeys")
 }
 
-internal fun JourneySummary.toFirestoreMap(): Map<String, Any> = buildMap {
-    put("journeyId", journeyId)
-    put("userId", userId)
-    put(
-        "startLocation",
-        mapOf(
-            "latitude" to startLocation.latitude,
-            "longitude" to startLocation.longitude,
-        ),
-    )
-    put(
-        "endLocation",
-        mapOf(
-            "latitude" to endLocation.latitude,
-            "longitude" to endLocation.longitude,
-        ),
-    )
-    put("startTimeMillis", startTimeMillis)
-    put("endTimeMillis", endTimeMillis)
-    put("distanceMeters", distanceMeters)
-    put("transportMode", transportMode.name)
-    sensorFeatures?.let { put("sensorFeatures", it.toFirestoreMap()) }
-}
-
-private fun SensorFeatures.toFirestoreMap(): Map<String, Any> = mapOf(
-    "featureVersion" to featureVersion,
-    "averageSpeedMps" to averageSpeedMps,
-    "p95SpeedMps" to p95SpeedMps,
-    "maxSpeedMps" to maxSpeedMps,
-    "stopRatio" to stopRatio,
-    "averageGpsAccuracyMeters" to averageGpsAccuracyMeters,
-    "gpsSampleCount" to gpsSampleCount,
-    "accelMagnitudeMean" to accelMagnitudeMean,
-    "accelMagnitudeStd" to accelMagnitudeStd,
-    "accelSampleCount" to accelSampleCount,
-    "gyroMagnitudeMean" to gyroMagnitudeMean,
-    "gyroMagnitudeStd" to gyroMagnitudeStd,
-    "gyroSampleCount" to gyroSampleCount,
-)
-
 private fun DocumentSnapshot.toJourneySummary(): JourneySummary {
     val data = data ?: throw IllegalStateException("Journey $id has no data.")
     return data.toJourneySummary(id)
-}
-
-internal fun Map<String, Any>.toJourneySummary(documentId: String): JourneySummary {
-    return JourneySummary(
-        journeyId = string("journeyId"),
-        userId = string("userId"),
-        startLocation = location("startLocation"),
-        endLocation = location("endLocation"),
-        startTimeMillis = number("startTimeMillis").toLong(),
-        endTimeMillis = number("endTimeMillis").toLong(),
-        distanceMeters = number("distanceMeters").toDouble(),
-        transportMode = string("transportMode").toTransportMode(),
-        sensorFeatures = sensorFeatures(documentId),
-    )
-}
-
-private fun Map<String, Any>.sensorFeatures(documentId: String): SensorFeatures? {
-    val rawFeatures = this["sensorFeatures"] ?: return null
-    val features = rawFeatures as? Map<*, *>
-        ?: throw IllegalStateException(
-            "Journey $documentId field 'sensorFeatures' is invalid.",
-        )
-
-    fun number(field: String): Number = features[field] as? Number
-        ?: throw IllegalStateException(
-            "Journey $documentId field 'sensorFeatures.$field' is missing or invalid.",
-        )
-
-    return SensorFeatures(
-        featureVersion = (features["featureVersion"] as? Number)?.toInt() ?: 1,
-        averageSpeedMps = number("averageSpeedMps").toDouble(),
-        p95SpeedMps = number("p95SpeedMps").toDouble(),
-        maxSpeedMps = number("maxSpeedMps").toDouble(),
-        stopRatio = number("stopRatio").toDouble(),
-        averageGpsAccuracyMeters = number("averageGpsAccuracyMeters").toDouble(),
-        gpsSampleCount = number("gpsSampleCount").toInt(),
-        accelMagnitudeMean = number("accelMagnitudeMean").toDouble(),
-        accelMagnitudeStd = number("accelMagnitudeStd").toDouble(),
-        accelSampleCount = number("accelSampleCount").toInt(),
-        gyroMagnitudeMean = number("gyroMagnitudeMean").toDouble(),
-        gyroMagnitudeStd = number("gyroMagnitudeStd").toDouble(),
-        gyroSampleCount = number("gyroSampleCount").toInt(),
-    )
-}
-
-private fun Map<String, Any>.string(field: String): String =
-    this[field] as? String
-        ?: throw IllegalStateException("Journey field '$field' is missing or invalid.")
-
-private fun Map<String, Any>.number(field: String): Number =
-    this[field] as? Number
-        ?: throw IllegalStateException("Journey field '$field' is missing or invalid.")
-
-private fun Map<String, Any>.location(field: String): GeoPoint {
-    val location = this[field] as? Map<*, *>
-        ?: throw IllegalStateException("Journey field '$field' is missing or invalid.")
-    val latitude = location["latitude"] as? Number
-        ?: throw IllegalStateException("Journey field '$field.latitude' is missing or invalid.")
-    val longitude = location["longitude"] as? Number
-        ?: throw IllegalStateException("Journey field '$field.longitude' is missing or invalid.")
-    return GeoPoint(latitude.toDouble(), longitude.toDouble())
-}
-
-private fun String.toTransportMode(): TransportMode =
-    TransportMode.entries.firstOrNull { it.name == this }
-        ?: TransportMode.UNKNOWN
-
-private suspend fun <T> Task<T>.await(): T = suspendCancellableCoroutine { continuation ->
-    addOnCompleteListener { task ->
-        val exception = task.exception
-        when {
-            task.isSuccessful -> continuation.resume(task.result)
-            exception != null -> continuation.resumeWithException(exception)
-            else -> continuation.resumeWithException(
-                IllegalStateException("Firebase request failed."),
-            )
-        }
-    }
 }

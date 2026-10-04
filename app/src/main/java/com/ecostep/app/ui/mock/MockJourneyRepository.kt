@@ -1,9 +1,12 @@
 package com.ecostep.app.ui.mock
 
 import com.ecostep.app.data.model.GeoPoint
+import com.ecostep.app.data.model.JourneyConfirmationStatus
 import com.ecostep.app.data.model.JourneySummary
 import com.ecostep.app.data.model.TransportMode
 import com.ecostep.app.data.repository.JourneyRepository
+import com.ecostep.app.data.repository.JourneySnapshot
+import com.ecostep.app.data.repository.WriteOutcome
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
@@ -23,16 +26,11 @@ interface MissionJourneyRecorder {
 }
 
 /**
- * Shared temporary in-memory repository used by the UI while the
- * Firebase-backed JourneyRepository is unavailable.
+ * In-memory repository for previews and UI development only. Production navigation uses
+ * the Firestore-backed JourneyRepository from AppContainer.
  *
  * It supplies mock journey history and temporarily stores journeys created
  * when an active mission ends, allowing JourneyReviewScreen to load them.
- *
- * TODO(Journeys): Replace this class with the production JourneyRepository
- * provided through AppContainer. The production implementation should save
- * completed or partially completed journeys to Firebase using the signed-in
- * user's ID and real sensor/location tracking data.
  */
 
 class MockJourneyRepository :
@@ -110,7 +108,42 @@ class MockJourneyRepository :
         }
     }
 
-    override suspend fun saveJourney(
+    override fun observeJourney(
+        journeyId: String,
+    ): Flow<JourneySnapshot?> {
+        return journeys.map { journeyList ->
+            journeyList
+                .firstOrNull { it.journeyId == journeyId }
+                ?.let { JourneySnapshot(it, hasPendingWrites = false) }
+        }
+    }
+
+    override suspend fun createJourney(
+        journey: JourneySummary,
+    ): WriteOutcome {
+        if (journeys.value.none { it.journeyId == journey.journeyId }) {
+            upsert(journey)
+        }
+        return WriteOutcome.SYNCED
+    }
+
+    override suspend fun confirmTransportMode(
+        journeyId: String,
+        mode: TransportMode,
+    ): WriteOutcome {
+        val journey = getJourney(journeyId)
+            ?: throw IllegalStateException("Journey not found.")
+        upsert(
+            journey.copy(
+                transportMode = mode,
+                confirmedTransportMode = mode,
+                confirmationStatus = JourneyConfirmationStatus.CONFIRMED,
+            ),
+        )
+        return WriteOutcome.SYNCED
+    }
+
+    private fun upsert(
         journey: JourneySummary,
     ) {
         val currentJourneys = journeys.value.toMutableList()
@@ -164,7 +197,7 @@ class MockJourneyRepository :
                     .toTransportMode(),
         )
 
-        saveJourney(partialJourney)
+        upsert(partialJourney)
 
         return journeyId
     }

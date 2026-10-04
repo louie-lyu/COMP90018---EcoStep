@@ -1,0 +1,314 @@
+rules_version = '2';
+
+// EcoStep Firestore Security Rules: the final authorization boundary.
+//
+// Clients may write only their own profile, journeys (create + mode confirmation), missions
+// and mission occurrences. Trusted values (carbon credit, EcoPoints, balances, redemptions,
+// friendships, leaderboards, public profiles) are written exclusively by Cloud Functions via
+// the Admin SDK, which bypasses these rules.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- helpers ----------
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isFriendOf(uid) {
+      return signedIn() &&
+        exists(/databases/$(database)/documents/users/$(uid)/friends/$(request.auth.uid));
+    }
+
+    function isMode(value) {
+      return value in ['WALKING', 'CYCLING', 'PUBLIC_TRANSPORT', 'CAR', 'UNKNOWN'];
+    }
+
+    // Finite and within [0, max]: NaN and Infinity fail these comparisons.
+    function isNumberInRange(value, max) {
+      return value is number && value >= 0 && value <= max;
+    }
+
+    function isStringOfLength(value, min, max) {
+      return value is string && value.size() >= min && value.size() <= max;
+    }
+
+    function isIsoDate(value) {
+      return value is string && value.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+    }
+
+    function optional(data, field, check) {
+      return !(field in data) || check;
+    }
+
+    function nullableString(data, field, max) {
+      return !(field in data) || data[field] == null || isStringOfLength(data[field], 0, max);
+    }
+
+    function setsServerTime(data, field) {
+      return !(field in data) || data[field] == request.time;
+    }
+
+    function unchanged(field) {
+      return request.resource.data.get(field, null) == resource.data.get(field, null);
+    }
+
+    function changedKeys() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    // ---------- users/{uid}: private profile ----------
+
+    function isValidPreferences(p) {
+      return p is map &&
+        p.keys().hasOnly([
+          'routineLearningEnabled', 'missionNotificationsEnabled', 'defaultReminderMinutes',
+          'automaticJourneyDetectionEnabled', 'communityRankingEnabled'
+        ]) &&
+        optional(p, 'routineLearningEnabled', p.routineLearningEnabled is bool) &&
+        optional(p, 'missionNotificationsEnabled', p.missionNotificationsEnabled is bool) &&
+        optional(p, 'defaultReminderMinutes',
+          p.defaultReminderMinutes is int && p.defaultReminderMinutes >= 0 && p.defaultReminderMinutes <= 1440) &&
+        optional(p, 'automaticJourneyDetectionEnabled', p.automaticJourneyDetectionEnabled is bool) &&
+        optional(p, 'communityRankingEnabled', p.communityRankingEnabled is bool);
+    }
+
+    function isValidProfile(d) {
+      return d.keys().hasOnly(['schemaVersion', 'displayName', 'preferences', 'createdAt', 'updatedAt']) &&
+        optional(d, 'schemaVersion', d.schemaVersion == 1) &&
+        optional(d, 'displayName', isStringOfLength(d.displayName, 1, 50)) &&
+        optional(d, 'preferences', isValidPreferences(d.preferences)) &&
+        d.updatedAt == request.time;
+    }
+
+    match /users/{uid} {
+      allow read: if isOwner(uid);
+      allow create: if isOwner(uid) &&
+        isValidProfile(request.resource.data) &&
+        setsServerTime(request.resource.data, 'createdAt');
+      allow update: if isOwner(uid) &&
+        isValidProfile(request.resource.data) &&
+        (unchanged('createdAt') ||
+          (resource.data.get('createdAt', null) == null && request.resource.data.createdAt == request.time));
+      allow delete: if false;
+
+      // ---------- journeys ----------
+
+      function isValidLocation(l) {
+        return l is map && l.keys().hasOnly(['latitude', 'longitude']) &&
+          l.latitude is number && l.latitude >= -90 && l.latitude <= 90 &&
+          l.longitude is number && l.longitude >= -180 && l.longitude <= 180;
+      }
+
+      function isValidSensorFeatures(f) {
+        return f is map && f.keys().hasOnly([
+          'featureVersion', 'averageSpeedMps', 'p95SpeedMps', 'maxSpeedMps', 'stopRatio',
+          'averageGpsAccuracyMeters', 'gpsSampleCount', 'accelMagnitudeMean', 'accelMagnitudeStd',
+          'accelSampleCount', 'gyroMagnitudeMean', 'gyroMagnitudeStd', 'gyroSampleCount'
+        ]);
+      }
+
+      function isValidJourneyCreate(d, uid, journeyId) {
+        return d.keys().hasOnly([
+            'schemaVersion', 'journeyId', 'userId', 'startLocation', 'endLocation',
+            'startTimeMillis', 'endTimeMillis', 'distanceMeters', 'transportMode',
+            'detectedTransportMode', 'confirmedTransportMode', 'confirmationStatus',
+            'linkedMissionId', 'routePolyline', 'sensorFeatures', 'createdAt', 'updatedAt'
+          ]) &&
+          d.keys().hasAll([
+            'journeyId', 'userId', 'startLocation', 'endLocation', 'startTimeMillis',
+            'endTimeMillis', 'distanceMeters', 'transportMode'
+          ]) &&
+          d.userId == uid &&
+          d.journeyId == journeyId &&
+          isValidLocation(d.startLocation) &&
+          isValidLocation(d.endLocation) &&
+          d.startTimeMillis is int && d.startTimeMillis > 0 &&
+          d.endTimeMillis is int && d.endTimeMillis >= d.startTimeMillis &&
+          isNumberInRange(d.distanceMeters, 1000000) &&
+          isMode(d.transportMode) &&
+          optional(d, 'schemaVersion', d.schemaVersion in [1, 2]) &&
+          optional(d, 'detectedTransportMode', isMode(d.detectedTransportMode)) &&
+          optional(d, 'confirmedTransportMode', d.confirmedTransportMode == null || isMode(d.confirmedTransportMode)) &&
+          optional(d, 'confirmationStatus', d.confirmationStatus in ['pending', 'confirmed']) &&
+          nullableString(d, 'linkedMissionId', 128) &&
+          nullableString(d, 'routePolyline', 100000) &&
+          optional(d, 'sensorFeatures', isValidSensorFeatures(d.sensorFeatures)) &&
+          setsServerTime(d, 'createdAt') &&
+          setsServerTime(d, 'updatedAt');
+      }
+
+      // A confirmation may change only these four fields.
+      function isValidJourneyConfirmation() {
+        let d = request.resource.data;
+        return changedKeys().hasOnly(['confirmedTransportMode', 'transportMode', 'confirmationStatus', 'updatedAt']) &&
+          d.confirmationStatus == 'confirmed' &&
+          isMode(d.confirmedTransportMode) &&
+          d.confirmedTransportMode != 'UNKNOWN' &&
+          d.transportMode == d.confirmedTransportMode &&
+          d.updatedAt == request.time;
+      }
+
+      match /journeys/{journeyId} {
+        allow read: if isOwner(uid);
+        allow create: if isOwner(uid) && isValidJourneyCreate(request.resource.data, uid, journeyId);
+        allow update: if isOwner(uid) && isValidJourneyConfirmation();
+        allow delete: if false;
+      }
+
+      // ---------- missions ----------
+
+      function isValidRecurrence(r) {
+        return r is map && r.keys().hasOnly(['type', 'interval', 'daysOfWeek', 'timezone']) &&
+          r.type in ['none', 'daily', 'weekly', 'custom'] &&
+          r.interval is int && r.interval >= 1 && r.interval <= 52 &&
+          r.daysOfWeek is list && r.daysOfWeek.size() <= 7 &&
+          isStringOfLength(r.timezone, 1, 64);
+      }
+
+      function isValidMission(d, missionId) {
+        return d.keys().hasOnly([
+            'schemaVersion', 'missionId', 'title', 'description', 'missionType', 'startLabel',
+            'destinationLabel', 'targetTransportMode', 'targetDistanceMeters', 'status', 'recurrence',
+            'scheduledMinuteOfDay', 'nextOccurrenceDate', 'activeOccurrenceDate', 'estimates',
+            'createdAt', 'updatedAt'
+          ]) &&
+          d.missionId == missionId &&
+          isStringOfLength(d.title, 1, 120) &&
+          d.status in ['suggested', 'accepted', 'active', 'completed', 'dismissed', 'archived'] &&
+          isValidRecurrence(d.recurrence) &&
+          d.scheduledMinuteOfDay is int && d.scheduledMinuteOfDay >= 0 && d.scheduledMinuteOfDay < 1440 &&
+          optional(d, 'description', isStringOfLength(d.description, 0, 500)) &&
+          optional(d, 'missionType', isStringOfLength(d.missionType, 1, 32)) &&
+          optional(d, 'startLabel', isStringOfLength(d.startLabel, 0, 120)) &&
+          optional(d, 'destinationLabel', isStringOfLength(d.destinationLabel, 0, 120)) &&
+          optional(d, 'targetTransportMode', d.targetTransportMode == null || isMode(d.targetTransportMode)) &&
+          optional(d, 'targetDistanceMeters', d.targetDistanceMeters == null || isNumberInRange(d.targetDistanceMeters, 1000000)) &&
+          optional(d, 'nextOccurrenceDate', d.nextOccurrenceDate == null || isIsoDate(d.nextOccurrenceDate)) &&
+          optional(d, 'activeOccurrenceDate', d.activeOccurrenceDate == null || isIsoDate(d.activeOccurrenceDate)) &&
+          optional(d, 'estimates', d.estimates is list && d.estimates.size() <= 5) &&
+          d.updatedAt == request.time;
+      }
+
+      match /missions/{missionId} {
+        allow read: if isOwner(uid);
+        allow create: if isOwner(uid) &&
+          isValidMission(request.resource.data, missionId) &&
+          request.resource.data.createdAt == request.time;
+        allow update: if isOwner(uid) &&
+          isValidMission(request.resource.data, missionId) &&
+          unchanged('createdAt');
+        allow delete: if false;
+      }
+
+      // ---------- mission occurrences / results ----------
+
+      function serverResultFields() {
+        return ['actualTransportMode', 'actualCarbonSavingGrams', 'ecoPointsAwarded', 'awardStatus',
+          'awardReason', 'awardedAt', 'createdAt'];
+      }
+
+      function isValidResult(d, resultId) {
+        return d.keys().hasOnly([
+            'schemaVersion', 'missionId', 'occurrenceDate', 'accepted', 'completed', 'skipped',
+            'linkedJourneyId', 'completedAtMillis', 'lastActionAtMillis', 'updatedAt',
+            'actualTransportMode', 'actualCarbonSavingGrams', 'ecoPointsAwarded', 'awardStatus',
+            'awardReason', 'awardedAt', 'createdAt'
+          ]) &&
+          isStringOfLength(d.missionId, 1, 128) &&
+          isIsoDate(d.occurrenceDate) &&
+          resultId == d.missionId + '_' + d.occurrenceDate &&
+          optional(d, 'accepted', d.accepted is bool) &&
+          optional(d, 'completed', d.completed is bool) &&
+          optional(d, 'skipped', d.skipped is bool) &&
+          nullableString(d, 'linkedJourneyId', 128) &&
+          optional(d, 'completedAtMillis', d.completedAtMillis == null || d.completedAtMillis is int) &&
+          optional(d, 'lastActionAtMillis', d.lastActionAtMillis is int) &&
+          // Completion needs the confirmed journey the backend will verify.
+          (d.get('completed', false) != true || isStringOfLength(d.get('linkedJourneyId', ''), 1, 128)) &&
+          d.updatedAt == request.time;
+      }
+
+      match /missionResults/{resultId} {
+        allow read: if isOwner(uid);
+        allow create: if isOwner(uid) &&
+          isValidResult(request.resource.data, resultId) &&
+          !request.resource.data.keys().hasAny(serverResultFields());
+        allow update: if isOwner(uid) &&
+          isValidResult(request.resource.data, resultId) &&
+          !changedKeys().hasAny(serverResultFields()) &&
+          // A completed occurrence is final: it cannot be re-linked or un-completed.
+          (resource.data.get('completed', false) != true ||
+            !changedKeys().hasAny(['completed', 'linkedJourneyId', 'completedAtMillis', 'skipped', 'accepted']));
+        allow delete: if false;
+      }
+
+      // ---------- backend-only collections under the user ----------
+
+      match /pointTransactions/{transactionId} {
+        allow read: if isOwner(uid);
+        allow write: if false;
+      }
+
+      match /rewardRedemptions/{redemptionId} {
+        allow read: if isOwner(uid);
+        allow write: if false;
+      }
+
+      // Each request is mirrored into the sender's and the receiver's subcollection only,
+      // so reading your own subcollection is exactly "sender or receiver".
+      match /friendRequests/{requestId} {
+        allow read: if isOwner(uid);
+        allow write: if false;
+      }
+
+      match /friends/{friendUid} {
+        allow read: if isOwner(uid);
+        allow write: if false;
+      }
+    }
+
+    // ---------- top-level backend-maintained data ----------
+
+    match /userStats/{uid} {
+      allow read: if isOwner(uid);
+      allow write: if false;
+    }
+
+    // Whitelisted fields only (displayName, displayNameLower, communityRankingEnabled, updatedAt).
+    match /publicProfiles/{uid} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    match /rewards/{rewardId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    // Friend rankings read individual stats; only the user and their friends may.
+    match /leaderboardStats/{uid} {
+      allow read: if isOwner(uid) || isFriendOf(uid);
+      allow write: if false;
+    }
+
+    match /leaderboards/{periodId} {
+      allow read: if signedIn();
+      allow write: if false;
+
+      // Opted-out users are removed by the backend, so every entry is community-visible.
+      match /entries/{uid} {
+        allow read: if signedIn();
+        allow write: if false;
+      }
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

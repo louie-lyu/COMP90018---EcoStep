@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ecostep.app.data.model.CarbonAlternative
 import com.ecostep.app.data.model.GeoPoint
 import com.ecostep.app.data.model.TransportMode
 import com.ecostep.app.ui.viewmodels.JourneyReviewUiState
@@ -200,6 +201,13 @@ private fun JourneyReviewLoadedContent(
                 )
             }
 
+            item {
+                JourneySyncStatus(
+                    isPendingSync = uiState.isPendingSync,
+                    saveErrorMessage = uiState.saveErrorMessage,
+                )
+            }
+
             if (!readOnly) {
                 item {
                     ConfirmJourneyButton(
@@ -214,6 +222,31 @@ private fun JourneyReviewLoadedContent(
         }
     }
 }
+@Composable
+private fun JourneySyncStatus(
+    isPendingSync: Boolean,
+    saveErrorMessage: String?,
+) {
+    Column(
+        modifier = Modifier.padding(horizontal = 20.dp, vertical = 4.dp),
+    ) {
+        if (isPendingSync) {
+            Text(
+                text = "Saved on this device. It will sync when you are back online.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.tertiary,
+            )
+        }
+        saveErrorMessage?.let { message ->
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+            )
+        }
+    }
+}
+
 @Composable
 private fun ConfirmJourneyButton(
     ecoPoints: Int,
@@ -547,6 +580,14 @@ private fun JourneyReviewContent(
             carbonSavedKg = uiState.carbonSavedKg,
         )
 
+        if (uiState.lowerCarbonAlternatives.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(14.dp))
+
+            LowerCarbonAlternativesCard(
+                alternatives = uiState.lowerCarbonAlternatives,
+            )
+        }
+
         Spacer(modifier = Modifier.height(30.dp))
     }
 }
@@ -839,6 +880,69 @@ private fun EnvironmentalImpactCard(
                     color =
                         MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+            }
+        }
+    }
+}
+
+/** Calculator estimates for the selected mode; never the backend's verified figures. */
+@Composable
+private fun LowerCarbonAlternativesCard(
+    alternatives: List<CarbonAlternative>,
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp,
+        ),
+    ) {
+        Column(
+            modifier = Modifier.padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "Lower-carbon alternatives",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+
+                Text(
+                    text = "Estimated",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
+            alternatives.forEach { alternative ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(
+                        text = transportModeName(alternative.mode),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+
+                    Text(
+                        text = String.format(
+                            Locale.US,
+                            "saves %.2f kg CO₂",
+                            alternative.savingsGrams / 1000.0,
+                        ),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
             }
         }
     }
