@@ -67,7 +67,7 @@ class DefaultTransportClassifierTest {
         }
 
     @Test
-    fun vehicleWithoutTransitEvidenceRemainsUnknown() = runBlocking {
+    fun vehicleWithoutTransitEvidenceReturnsCar() = runBlocking {
         val classifier = classifierWith(
             TransportEvidence(
                 activity = ActivityHint(MotionHint.IN_VEHICLE, 90),
@@ -76,7 +76,7 @@ class DefaultTransportClassifierTest {
 
         val result = classifier.classify(journey())
 
-        assertEquals(TransportMode.UNKNOWN, result.mode)
+        assertEquals(TransportMode.CAR, result.mode)
     }
 
     private fun classifierWith(

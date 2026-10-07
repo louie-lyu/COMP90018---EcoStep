@@ -22,3 +22,6 @@ captures/
 
 # Log/generated
 *.log
+
+# Local evaluation datasets (GeoLife is not redistributed)
+/app/src/androidTest/java/com/ecostep/app/evaluation/data/
