@@ -117,8 +117,8 @@ class DefaultTransportClassifier(
             )
         }
 
-        // 没有公交数据时不能断定是汽车。
-        if (evidence.transitRoutes.isEmpty() || evidence.track.size < 4) {
+        // 有公交候选路线但轨迹不足时，无法完成站点匹配。
+        if (evidence.transitRoutes.isNotEmpty() && evidence.track.size < 4) {
             return result(
                 TransportMode.UNKNOWN,
                 40.0,
@@ -129,7 +129,7 @@ class DefaultTransportClassifier(
             )
         }
 
-        // 有轨迹和公交候选路线，但没有按顺序匹配到站点：暂判汽车，
+        // 没有公交候选路线或未匹配到站点：暂判汽车，
         // 保留较低置信度，用户仍可在行程确认页更正。
         return result(
             TransportMode.CAR,
