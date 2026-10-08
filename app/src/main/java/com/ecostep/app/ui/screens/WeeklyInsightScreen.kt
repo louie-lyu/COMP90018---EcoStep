@@ -59,6 +59,17 @@ fun WeeklyInsightScreen(
         }
 
         if (report == null) {
+            item {
+                Text(
+                    text = if (uiState.isLoading) {
+                        "Loading this week's insight..."
+                    } else {
+                        "Could not load this week's data. Check your connection and reopen this page."
+                    },
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
             return@LazyColumn
         }
 

@@ -272,8 +272,8 @@ fun MissionEditorBottomSheet(
                             Text(
                                 text = String.format(
                                     Locale.getDefault(),
-                                    "%.2f kg CO₂ saved",
-                                    option.estimatedCarbonSavedKg,
+                                    "%.1f g CO₂ saved",
+                                    option.estimatedCarbonSavedKg * 1000.0,
                                 ),
                                 style = MaterialTheme.typography.titleMedium,
                                 color =
