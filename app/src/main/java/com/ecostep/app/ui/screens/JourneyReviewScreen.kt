@@ -294,8 +294,8 @@ private fun ConfirmJourneyButton(
             Text(
                 text = String.format(
                     Locale.US,
-                    "Save %.2f kg CO₂ · Earn %d EcoPoints",
-                    carbonSavedKg,
+                    "Save %.1f g CO₂ · Earn %d EcoPoints",
+                    carbonSavedKg * 1000.0,
                     ecoPoints,
                 ),
                 style = MaterialTheme.typography.bodyLarge,
@@ -866,8 +866,8 @@ private fun EnvironmentalImpactCard(
                 Text(
                     text = String.format(
                         Locale.US,
-                        "%.2f kg",
-                        carbonSavedKg,
+                        "%.1f g",
+                        carbonSavedKg * 1000.0,
                     ),
                     style =
                         MaterialTheme.typography.headlineMedium,
@@ -936,8 +936,8 @@ private fun LowerCarbonAlternativesCard(
                     Text(
                         text = String.format(
                             Locale.US,
-                            "saves %.2f kg CO₂",
-                            alternative.savingsGrams / 1000.0,
+                            "saves %.1f g CO₂",
+                            alternative.savingsGrams,
                         ),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.primary,
@@ -1014,8 +1014,8 @@ private fun JourneyConfirmedDialog(
                 Text(
                     text = String.format(
                         Locale.US,
-                        "You saved %.2f kg of CO₂",
-                        carbonSavedKg,
+                        "You saved %.1f g of CO₂",
+                        carbonSavedKg * 1000.0,
                     ),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,

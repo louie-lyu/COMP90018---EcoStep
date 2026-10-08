@@ -56,6 +56,7 @@ import com.ecostep.app.ui.viewmodels.PlannedRouteViewModel
 import com.ecostep.app.ui.viewmodels.routeSummary
 import com.ecostep.app.ui.viewmodels.ProfileViewModel
 import com.ecostep.app.ui.adapters.TransportModeLabels
+import com.ecostep.app.algorithm.DefaultWeeklyCoach
 
 @Composable
 fun EcoStepNavHost(
@@ -458,7 +459,7 @@ fun EcoStepNavHost(
                     viewModel(
                         factory = ViewModelFactory {
                             WeeklyInsightViewModel(
-                                coaching = appContainer.aiModule.weeklyCoach::generate,
+                                weeklyCoach = DefaultWeeklyCoach(),
                                 dataSource =
                                     appContainer.weeklyInsightDataSource(),
                             )

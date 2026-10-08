@@ -960,7 +960,7 @@ private fun distanceText(
 }
 
 private fun carbonKgText(carbonKg: Double): String =
-    String.format(Locale.getDefault(), "%.2f kg", carbonKg)
+    String.format(Locale.getDefault(), "%.1f g", carbonKg * 1000.0)
 
 /** EcoPoints are only awarded for completed missions; free routes say so instead of "+0". */
 private fun ecoPointsLabel(points: Int, isMission: Boolean = false): String =

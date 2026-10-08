@@ -629,8 +629,8 @@ private fun ImpactSummaryCard(
                 value =
                     "${formatOneDecimal(
                         profileData.impactSummary
-                            .carbonSavedKg,
-                    )} kg",
+                            .carbonSavedKg * 1000.0,
+                    )} g",
                 label = "CO₂ saved",
                 modifier = Modifier.weight(1f),
             )
@@ -878,8 +878,8 @@ private fun RankingRow(
                 Text(
                     text =
                         "${formatOneDecimal(
-                            entry.carbonSavedKg,
-                        )} kg",
+                            entry.carbonSavedKg * 1000.0,
+                        )} g",
                     style =
                         MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
