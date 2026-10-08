@@ -16,6 +16,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run-weekly-coach-evaluation.p
 powershell -ExecutionPolicy Bypass -File .\scripts\run-mission-trigger-evaluation.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\run-local-flow-evaluation.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\run-recurring-journey-evaluation.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\run-activity-hint-transport-evaluation.ps1
 ```
 
 ## Coverage
@@ -32,6 +33,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run-recurring-journey-evaluat
 | Mission triggers | Lead time, weekday/month/year boundaries, UTC/offset zones and DST | 29 cases; 5 timing groups; no internet/login |
 | Local flow | Carbon → fallback/validation → completion → points → weekly totals; corrected modes and rejected inputs | 25 cases; 4 timing groups; no internet/login |
 | Recurring journeys | Counts, location/time boundaries, reverse routes, midnight, duplicate IDs and output fields | 41 cases; 8 timing groups |
+| Transport classification (SHL) | Replay the same GPS journeys with and without recorded Google Activity hints; accuracy, confusion matrices and classifier latency | Up to 100 intervals per mode; seed 42; 10 warm-ups per mode |
 
 ## Parameters and results
 
@@ -47,6 +49,14 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run-recurring-journey-evaluat
 - Mission triggers: same batch parameters; plans timestamps only, not Android notification delivery. DST gaps shift forward; overlaps use the earlier offset.
 - Local flow: same batch parameters; real local algorithms with synthetic candidate availability and completion events. One timed call processes one or three journeys, including object construction; no UI, sensors or storage.
 - Recurring: `-Warmups 10 -Samples 50`; histories of 10–10,000 entries, all or 10% matching.
+- Transport classification: use `-DatasetPath` for a local SHL preview archive, or place
+  `SHL-preview-evaluation.zip` in the ignored `data/` directory beside this README.
+  Run with `-SamplesPerMode 100 -Warmups 10 -Seed 42`; the runner accepts one emulator or physical device.
+  Both variants use the same selected intervals. Recorded Activity hints are replayed; live Google
+  recognition, IMU samples, transit routes, UI, Firebase and user corrections are not evaluated.
+  Without transit routes, vehicle classifications fall back to CAR, so these results do not validate
+  public-transport stop matching. Passing means evaluation completed without runtime errors, not
+  that an accuracy threshold was met. Reports include Git/device metadata and the dataset hash.
 - P50/P95 use successful samples only (nearest rank); unavailable metrics are `null`.
 - EcoPoints, AI missions, weekly coach, mission triggers and local flow report batch time and average time per call; their percentiles describe batch averages.
 - Timing excludes fixture creation, warm-up, validation and report writing. Weather source checks,
