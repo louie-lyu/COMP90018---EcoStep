@@ -38,6 +38,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
+import com.ecostep.app.ui.mock.MissionTransportOption
+import com.ecostep.app.ui.viewmodels.UpcomingMissionUi
+import java.util.UUID
+import androidx.compose.ui.platform.LocalConfiguration
 
 @Composable
 fun MissionScreen(
@@ -78,6 +82,8 @@ fun MissionScreen(
         mutableStateOf<MissionPageItem?>(null)
     }
 
+    var missionBeingCreated by remember { mutableStateOf<MissionPageItem?>(null) }
+
     var showEndMissionDialog by rememberSaveable {
         mutableStateOf(false)
     }
@@ -116,6 +122,18 @@ fun MissionScreen(
                 onClick = onOpenWeeklyInsight,
             ) {
                 Text("View Weekly Insight →")
+            }
+        }
+
+        item {
+            Button(
+                onClick = {
+                    missionViewModel.clearRouteEstimate()
+                    missionBeingCreated = createEmptyMissionDraft()
+                },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text("+ Create mission")
             }
         }
 
@@ -250,6 +268,24 @@ fun MissionScreen(
                 }
             }
         }
+    }
+
+    missionBeingCreated?.let { draft ->
+        val routeEstimate by missionViewModel.routeEstimate.collectAsState()
+
+        MissionEditorBottomSheet(
+            item = draft,
+            isCreating = true,
+            onDismiss = {
+                missionViewModel.clearRouteEstimate()
+                missionBeingCreated = null
+            },
+            onSave = {
+                // TODO: Connect the create callback in the next step.
+            },
+            routeEstimate = routeEstimate,
+            onRouteChanged = missionViewModel::estimateRoute,
+        )
     }
 
     missionBeingEdited?.let { item ->
@@ -467,7 +503,7 @@ private fun ActiveMissionCard(
                     ) {
                         Text(
                             text =
-                                String.format(java.util.Locale.getDefault(), "%.2f kg CO₂ saved", item.mission.estimatedCarbonSavedKg),
+                                String.format(LocalConfiguration.current.locales[0], "%.2f kg CO₂ saved", item.mission.estimatedCarbonSavedKg),
                             style =
                                 MaterialTheme.typography.titleMedium,
                             color =
@@ -598,7 +634,7 @@ private fun SuggestedMissionCard(
                     ) {
                         Text(
                             text =
-                                String.format(java.util.Locale.getDefault(), "%.2f kg CO₂ saved", item.mission.estimatedCarbonSavedKg),
+                                String.format(LocalConfiguration.current.locales[0], "%.2f kg CO₂ saved", item.mission.estimatedCarbonSavedKg),
                             style = MaterialTheme.typography.titleMedium,
                             color =
                                 MaterialTheme.colorScheme.onSecondaryContainer,
@@ -642,3 +678,27 @@ private fun SuggestedMissionCard(
         }
     }
 }
+
+private fun createEmptyMissionDraft(): MissionPageItem =
+    MissionPageItem(
+        mission = UpcomingMissionUi(
+            missionId = UUID.randomUUID().toString(),
+            routeTitle = "",
+            transportLabel = "",
+            estimatedEcoPoints = 0,
+            estimatedCarbonSavedKg = 0.0,
+            startTimeMillis = 0L,
+            endTimeMillis = 0L,
+        ),
+        startLocation = "",
+        destination = "",
+        scheduledHour = 9,
+        scheduledMinute = 0,
+        repeatDays = emptySet(),
+        explanation = "",
+        transportOptions = listOf(
+            MissionTransportOption("Walking", 0, 0.0),
+            MissionTransportOption("Cycling", 0, 0.0),
+            MissionTransportOption("Public Transport", 0, 0.0),
+        ),
+    )
