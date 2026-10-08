@@ -12,6 +12,9 @@ import com.ecostep.app.data.model.JourneySummary
 import com.ecostep.app.data.model.TransportMode
 import com.ecostep.app.network.publictransport.DefaultTransportEvidenceProvider
 import com.ecostep.app.network.publictransport.TransitousApi
+import com.ecostep.app.network.publictransport.TransitousItinerary
+import com.ecostep.app.network.publictransport.TransitousLeg
+import com.ecostep.app.network.publictransport.TransitousPlace
 import com.ecostep.app.network.publictransport.TransitousResponse
 import com.ecostep.app.sensors.tracking.JourneySummaryBuilder
 import com.ecostep.app.sensors.tracking.JourneyTracker
@@ -32,7 +35,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** Rui Fang: replay recorded SHL Google activity results; never use ground truth as an ActivityHint. */
+/** Rui Fang: replay SHL GPS/Activity with offline transit sequences and no-transit controls. */
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class ActivityHintTransportEvaluationTest {
@@ -41,7 +44,7 @@ class ActivityHintTransportEvaluationTest {
     private val sourceModes = mapOf(2 to TransportMode.WALKING, 4 to TransportMode.CYCLING, 5 to TransportMode.CAR,
         6 to TransportMode.PUBLIC_TRANSPORT, 7 to TransportMode.PUBLIC_TRANSPORT, 8 to TransportMode.PUBLIC_TRANSPORT)
     private val sourceNames = mapOf(2 to "walk", 4 to "bike", 5 to "car", 6 to "bus", 7 to "train", 8 to "subway")
-    // SHL supplies no historical transit stop routes. Keep the production provider's track/activity conversion.
+    // No-transit control; the primary variants supply independently published offline GTFS sequences.
     private val offlineTransit = object : TransitousApi {
         override suspend fun planJourney(fromPlace: String, toPlace: String, time: String?, arriveBy: Boolean,
             maxTransfers: Int, detailedLegs: Boolean, detailedTransfers: Boolean, userAgent: String) = TransitousResponse()
@@ -56,15 +59,21 @@ class ActivityHintTransportEvaluationTest {
             require(value in range) { "$name must be in $range" }
             return value
         }
-        val limit = argument("samplesPerMode", 100, 1..10000)
+        val limit = argument("samplesPerMode", 10000, 1..10000)
         val warmups = argument("warmups", 10, 1..100)
         val seed = argument("seed", 42, 0..Int.MAX_VALUE)
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val archive = File(context.getExternalFilesDir("evaluation"), "shl-preview.zip")
+        val baselineRecords = mutableListOf<JSONObject>()
+        val baselineGpsOnly = mutableListOf<JSONObject>()
         val records = mutableListOf<JSONObject>()
         val gpsOnly = mutableListOf<JSONObject>()
+        val transitFile = File(context.getExternalFilesDir("evaluation"), "transit-routes.json")
         val report = JSONObject().apply {
-            put("schemaVersion", 1).put("datasetVersion", "SHL preview v1, Hand position")
+            put("schemaVersion", 2).put("experiment", "Offline real transit stop sequences with Activity-hint and no-transit controls, pooled SHL")
+            put("primaryVariant", "recorded_activity_with_offline_transit")
+            put("candidatePolicy", "Same policy for every true mode and both Activity variants: ordered origin/end stop pairs within 1000 m of the recorded journey endpoints; rank by sum of endpoint distances; at most 50 distinct published stop sequences. No labels, activity predictions, interior stop/dwell matching, calendar or timetables used for selection. Current feed is not a 2017 reconstruction.")
+            put("datasetVersion", "SHL preview v1, Hand position")
             put("datasetUrl", "http://www.shl-dataset.org/download/#shldataset-preview")
             put("attribution", "University of Sussex and Huawei; Wang et al., IEEE Access 2018, doi:10.1109/ACCESS.2018.2858933. Non-profit research use.")
             put("classifier", "DefaultTransportClassifier").put("startedAtMillis", startedAt)
@@ -72,8 +81,8 @@ class ActivityHintTransportEvaluationTest {
             put("workingTreeDirty", arguments.getString("workingTreeDirty")?.toBooleanStrictOrNull() ?: JSONObject.NULL)
             put("device", "${Build.MANUFACTURER} ${Build.MODEL}").put("androidVersion", Build.VERSION.RELEASE)
             put("apiLevel", Build.VERSION.SDK_INT).put("buildType", BuildConfig.BUILD_TYPE)
-            put("scope", "Recorded Google API confidences and GPS -> production JourneyTracker -> JourneySummaryBuilder -> DefaultTransportEvidenceProvider -> DefaultTransportClassifier. No live Google inference, hardware sensors, transit network, Firebase, UI or user corrections. Transit routes are empty, so vehicle predictions can be UNKNOWN; this is not full-app accuracy.")
-            put("sampling", JSONObject().put("method", "Seeded reservoir sampling per mapped true mode, before GPS quality filtering; sorted days")
+            put("scope", "Recorded Google API confidences and GPS -> production JourneyTracker -> JourneySummaryBuilder -> DefaultTransportEvidenceProvider -> DefaultTransportClassifier. No live Google inference, hardware sensors, transit network, Firebase, UI or user corrections. Baseline has empty transit routes. Primary variants use independently published current GTFS sequences selected offline by endpoints; no live service or 2017 timetable validation. This is not full-app accuracy.")
+            put("sampling", JSONObject().put("method", "Seeded reservoir sampling per mapped true mode pooled across all users, before GPS quality filtering; sorted user/day paths")
                 .put("samplesPerMode", limit).put("seed", seed).put("warmupCallsPerMode", warmups))
             put("preprocessing", JSONObject().put("unit", "Continuous single-coarse-label interval in Label.txt, at least 30 seconds")
                 .put("intervals", "Half-open [start, end); label changes, day boundaries and label gaps over 300 seconds split intervals")
@@ -81,12 +90,17 @@ class ActivityHintTransportEvaluationTest {
                 .put("activityMapping", "Like ActivityRecognitionReceiver: highest-confidence WALKING/ON_BICYCLE/IN_VEHICLE at >=60. Other types, including ON_FOOT, are ignored. Supported-confidence ties prefer WALKING, then CYCLING, then IN_VEHICLE.")
                 .put("gps", "Recorded accuracy; no reported speed available. Production filtering and derived speeds are retained.")
                 .put("recordingFailure", "JourneyTracker.finish returning null is reported as UNKNOWN and remains in the accuracy denominator; no classifier latency is recorded")
-                .put("unavailableEvidence", "No IMU samples or historical transit routes supplied; correctedMode is null"))
-            put("benchmarkMethod", "System.nanoTime around classify after warm-ups, including the production evidence provider with an offline empty transit response. Excludes parsing, recording replay and report writes. P50/P95 include all successful classifier calls, including UNKNOWN and incorrect predictions.")
+                .put("unavailableEvidence", "No IMU samples or historical transit routes; provided routes are current public GTFS geometry. correctedMode is null"))
+            put("benchmarkMethod", "System.nanoTime around classify after warm-ups, including the production evidence provider with a cached offline response. Candidate selection is excluded from timings; route matching is included. Excludes parsing, recording replay and report writes. P50/P95 include all successful classifier calls, including UNKNOWN and incorrect predictions.")
             put("passCriterion", "All four true modes represented and all selected intervals processed without runtime errors. No accuracy threshold; unavailable recordings remain UNKNOWN.")
         }
         var completed = false
         try {
+            check(transitFile.isFile) { "Transit routes missing; use scripts/run-activity-hint-transport-evaluation.ps1" }
+            val transitBytes = transitFile.readBytes()
+            loadRoutes(JSONObject(transitBytes.toString(Charsets.UTF_8)))
+            report.put("transitDataSha256", MessageDigest.getInstance("SHA-256").digest(transitBytes).joinToString("") { "%02x".format(it) })
+            report.put("transitDataMetadata", transitMetadata)
             check(archive.isFile) { "SHL ZIP missing; use scripts/run-activity-hint-transport-evaluation.ps1" }
             val digest = MessageDigest.getInstance("SHA-256")
             archive.inputStream().buffered().use { stream ->
@@ -103,25 +117,38 @@ class ActivityHintTransportEvaluationTest {
                     repeat(warmups) {
                         classifier(sample, false).classify(checkNotNull(sample.journey))
                         classifier(sample, true).classify(checkNotNull(sample.journey))
+                        classifier(sample, false, true).classify(checkNotNull(sample.journey))
+                        classifier(sample, true, true).classify(checkNotNull(sample.journey))
                     }
                 }
             }
             for (sample in dataset.samples) {
-                records += evaluate(sample, false)
-                gpsOnly += evaluate(sample, true)
+                baselineRecords += evaluate(sample, false)
+                baselineGpsOnly += evaluate(sample, true)
+                records += evaluate(sample, false, true)
+                gpsOnly += evaluate(sample, true, true)
             }
             completed = true
         } catch (error: Exception) {
             report.put("runError", errorJson(error))
             throw error
         } finally {
+            report.put("baselineRecords", JSONArray(baselineRecords)).put("baselineGpsOnlyRecords", JSONArray(baselineGpsOnly))
+            report.put("totalSamples", baselineRecords.size).put("skippedSamples", report.optInt("plannedSamples", 0) - baselineRecords.size)
+            report.put("baselineSummary", metrics(baselineRecords)).put("baselineGpsOnlySummary", metrics(baselineGpsOnly))
+            report.put("baselinePerMode", JSONArray(modes.map { perMode(baselineRecords, it) }))
+            report.put("baselineGpsOnlyPerMode", JSONArray(modes.map { perMode(baselineGpsOnly, it) }))
+            report.put("baselineConfusionMatrix", confusionMatrix(baselineRecords)).put("baselineGpsOnlyConfusionMatrix", confusionMatrix(baselineGpsOnly))
             report.put("records", JSONArray(records)).put("gpsOnlyRecords", JSONArray(gpsOnly))
-            report.put("totalSamples", records.size).put("skippedSamples", report.optInt("plannedSamples", 0) - records.size)
             report.put("summary", metrics(records)).put("gpsOnlySummary", metrics(gpsOnly))
             report.put("perMode", JSONArray(modes.map { perMode(records, it) }))
             report.put("gpsOnlyPerMode", JSONArray(modes.map { perMode(gpsOnly, it) }))
-            report.put("confusionMatrix", confusionMatrix(records)).put("gpsOnlyConfusionMatrix", confusionMatrix(gpsOnly))
-            report.put("passed", completed && (records + gpsOnly).all { it.getBoolean("runtimeSuccess") })
+            report.put("confusionMatrix", confusionMatrix(records))
+            report.put("gpsOnlyConfusionMatrix", confusionMatrix(gpsOnly))
+            report.put("candidateCoverage", JSONObject().put("recordings", records.count { it.getBoolean("recordingAvailable") })
+                .put("withCandidates", records.count { it.optInt("transitRoutes") > 0 })
+                .put("candidateSequencesAvailable", routes.size))
+            report.put("passed", completed && (baselineRecords + baselineGpsOnly + records + gpsOnly).all { it.getBoolean("runtimeSuccess") })
             report.put("finishedAtMillis", System.currentTimeMillis())
             val directory = File(context.filesDir, "evaluation")
             check(directory.isDirectory || directory.mkdirs()) { "Cannot create evaluation directory" }
@@ -130,11 +157,11 @@ class ActivityHintTransportEvaluationTest {
         assertTrue("Activity hint evaluation did not complete; inspect the JSON report", report.getBoolean("passed"))
     }
 
-    private fun classifier(sample: Sample, gpsOnly: Boolean) = DefaultTransportClassifier(
-        DefaultTransportEvidenceProvider(checkNotNull(sample.recording).let { if (gpsOnly) it.copy(activityHint = null) else it }, offlineTransit),
+    private fun classifier(sample: Sample, gpsOnly: Boolean, withTransit: Boolean = false) = DefaultTransportClassifier(
+        DefaultTransportEvidenceProvider(checkNotNull(sample.recording).let { if (gpsOnly) it.copy(activityHint = null) else it }, if (withTransit) candidateApi(sample) else offlineTransit),
     )
 
-    private suspend fun evaluate(sample: Sample, gpsOnly: Boolean): JSONObject {
+    private suspend fun evaluate(sample: Sample, gpsOnly: Boolean, withTransit: Boolean = false): JSONObject {
         val recording = sample.recording
         val hint = if (gpsOnly) null else recording?.activityHint
         val record = JSONObject().put("sampleId", sample.id).put("userId", sample.user)
@@ -145,14 +172,15 @@ class ActivityHintTransportEvaluationTest {
             .put("activitySamples", sample.activityPoints).put("acceptedActivityHints", sample.acceptedHints)
             .put("activityConfidenceTies", sample.activityTies)
             .put("activityHint", hint?.let { JSONObject().put("type", it.type.name).put("confidence", it.confidence) } ?: JSONObject.NULL)
-            .put("trackPoints", recording?.trace?.size ?: 0).put("transitRoutes", 0)
+            .put("trackPoints", recording?.trace?.size ?: 0).put("transitRoutes", if (withTransit) candidates(sample).size else 0)
+            .put("candidateRouteIds", JSONArray(if (withTransit) candidates(sample).map { it.id } else emptyList<String>()))
             .put("recordingAvailable", recording != null).put("classifierCalled", recording != null)
             .put("runtimeSuccess", false).put("correct", false).put("durationMs", JSONObject.NULL)
         if (recording == null) {
             return record.put("predictedMode", "UNKNOWN").put("runtimeSuccess", true)
                 .put("reason", "Recording unavailable after production GPS filtering")
         }
-        val classifier = classifier(sample, gpsOnly)
+        val classifier = classifier(sample, gpsOnly, withTransit)
         val journey = checkNotNull(sample.journey)
         val start = System.nanoTime()
         var durationMs = 0.0
@@ -289,36 +317,36 @@ class ActivityHintTransportEvaluationTest {
             }.toList()
         }
 
-    private fun metrics(records: List<JSONObject>): JSONObject {
-        val successful = records.filter { it.getBoolean("runtimeSuccess") }
+    private fun metrics(baselineRecords: List<JSONObject>): JSONObject {
+        val successful = baselineRecords.filter { it.getBoolean("runtimeSuccess") }
         val classified = successful.count { it.getString("predictedMode") != "UNKNOWN" }
-        val correct = records.count { it.getBoolean("correct") }
+        val correct = baselineRecords.count { it.getBoolean("correct") }
         val times = successful.filter { !it.isNull("durationMs") }.map { it.getDouble("durationMs") }.sorted()
         fun percentile(fraction: Double): Any = if (times.isEmpty()) JSONObject.NULL else times[ceil(times.size * fraction).toInt() - 1]
-        val f1 = modes.filter { mode -> records.any { it.getString("trueMode") == mode.name } }.map { perMode(records, it).getDouble("f1") }
-        return JSONObject().put("totalSamples", records.size).put("correctSamples", correct)
-            .put("incorrectSamples", records.size - correct).put("accuracy", ratio(correct, records.size))
-            .put("unknownSamples", successful.size - classified).put("unknownRate", ratio(successful.size - classified, records.size))
-            .put("classifiedSamples", classified).put("coverage", ratio(classified, records.size))
-            .put("accuracyAmongClassified", ratio(correct, classified)).put("runtimeErrors", records.size - successful.size)
-            .put("recordingFailures", records.count { !it.getBoolean("recordingAvailable") })
+        val f1 = modes.filter { mode -> baselineRecords.any { it.getString("trueMode") == mode.name } }.map { perMode(baselineRecords, it).getDouble("f1") }
+        return JSONObject().put("totalSamples", baselineRecords.size).put("correctSamples", correct)
+            .put("incorrectSamples", baselineRecords.size - correct).put("accuracy", ratio(correct, baselineRecords.size))
+            .put("unknownSamples", successful.size - classified).put("unknownRate", ratio(successful.size - classified, baselineRecords.size))
+            .put("classifiedSamples", classified).put("coverage", ratio(classified, baselineRecords.size))
+            .put("accuracyAmongClassified", ratio(correct, classified)).put("runtimeErrors", baselineRecords.size - successful.size)
+            .put("recordingFailures", baselineRecords.count { !it.getBoolean("recordingAvailable") })
             .put("latencySamples", times.size).put("p50Ms", percentile(0.50)).put("p95Ms", percentile(0.95))
             .put("macroF1", if (f1.isEmpty()) JSONObject.NULL else f1.average())
     }
 
-    private fun perMode(records: List<JSONObject>, mode: TransportMode): JSONObject {
-        val support = records.filter { it.getString("trueMode") == mode.name }
+    private fun perMode(baselineRecords: List<JSONObject>, mode: TransportMode): JSONObject {
+        val support = baselineRecords.filter { it.getString("trueMode") == mode.name }
         val tp = support.count { it.getBoolean("correct") }
-        val fp = records.count { it.optString("predictedMode") == mode.name && it.getString("trueMode") != mode.name }
+        val fp = baselineRecords.count { it.optString("predictedMode") == mode.name && it.getString("trueMode") != mode.name }
         val unknown = support.count { it.optString("predictedMode") == "UNKNOWN" }
         return JSONObject().put("mode", mode.name).put("totalSamples", support.size).put("correctSamples", tp)
             .put("accuracy", ratio(tp, support.size)).put("precision", ratio(tp, tp + fp)).put("recall", ratio(tp, support.size))
             .put("f1", ratio(2 * tp, support.size + tp + fp)).put("unknownRate", ratio(unknown, support.size))
     }
 
-    private fun confusionMatrix(records: List<JSONObject>) = JSONObject().apply {
+    private fun confusionMatrix(baselineRecords: List<JSONObject>) = JSONObject().apply {
         for (mode in modes) put(mode.name, JSONObject().apply {
-            for (prediction in modes.map { it.name } + listOf("UNKNOWN", "ERROR")) put(prediction, records.count {
+            for (prediction in modes.map { it.name } + listOf("UNKNOWN", "ERROR")) put(prediction, baselineRecords.count {
                 it.getString("trueMode") == mode.name && (if (it.getBoolean("runtimeSuccess")) it.getString("predictedMode") else "ERROR") == prediction
             })
         })
@@ -326,4 +354,57 @@ class ActivityHintTransportEvaluationTest {
 
     private fun errorJson(error: Exception) = JSONObject().put("type", error.javaClass.simpleName).put("message", error.message ?: JSONObject.NULL)
     private fun ratio(numerator: Int, denominator: Int): Any = if (denominator == 0) JSONObject.NULL else numerator.toDouble() / denominator
+    private data class Route(val id: String, val mode: String, val stops: List<TransitousPlace>)
+    private var routes = emptyList<Route>()
+    private var transitMetadata = JSONObject()
+    private val candidateCache = mutableMapOf<String, List<Route>>()
+
+    private fun loadRoutes(data: JSONObject) {
+        transitMetadata = data.getJSONObject("metadata")
+        val list = data.getJSONArray("routes")
+        routes = (0 until list.length()).map { index ->
+            val route = list.getJSONObject(index)
+            val stops = route.getJSONArray("stops")
+            Route(route.getString("id"), route.getString("mode"), (0 until stops.length()).map { i ->
+                val point = stops.getJSONArray(i)
+                TransitousPlace(point.getDouble(0), point.getDouble(1))
+            })
+        }
+    }
+
+    private fun candidates(sample: Sample): List<Route> = candidateCache.getOrPut(sample.id) {
+        val journey = sample.journey
+        if (journey == null) emptyList() else routes.mapNotNull { route ->
+            var closestOrigin = Double.POSITIVE_INFINITY
+            var score = Double.POSITIVE_INFINITY
+            for (point in route.stops) {
+                val endDistance = meters(point.lat, point.lon, journey.endLocation.latitude, journey.endLocation.longitude)
+                if (endDistance <= 1000.0 && closestOrigin <= 1000.0) score = minOf(score, closestOrigin + endDistance)
+                val startDistance = meters(point.lat, point.lon, journey.startLocation.latitude, journey.startLocation.longitude)
+                if (startDistance <= 1000.0) closestOrigin = minOf(closestOrigin, startDistance)
+            }
+            if (score.isFinite()) route to score else null
+        }.sortedWith(compareBy<Pair<Route, Double>> { it.second }.thenBy { it.first.id }).take(50).map { it.first }
+    }
+
+    private fun candidateApi(sample: Sample): TransitousApi {
+        val selected = candidates(sample)
+        // Candidate legs are a fixture for the production mapper, not a planned connected itinerary.
+        val response = TransitousResponse(listOf(TransitousItinerary(0L, "", "", legs = selected.map { route ->
+            TransitousLeg(mode = route.mode, startTime = "", endTime = "", routeShortName = route.id,
+                from = route.stops.first(), to = route.stops.last(), intermediateStops = route.stops.drop(1).dropLast(1))
+        })))
+        return object : TransitousApi {
+            override suspend fun planJourney(fromPlace: String, toPlace: String, time: String?, arriveBy: Boolean,
+                maxTransfers: Int, detailedLegs: Boolean, detailedTransfers: Boolean, userAgent: String) = response
+        }
+    }
+
+    private fun meters(a: Double, b: Double, c: Double, d: Double): Double {
+        val lat = Math.toRadians(c-a); val lon = Math.toRadians(d-b)
+        val x = kotlin.math.sin(lat/2) * kotlin.math.sin(lat/2) + kotlin.math.cos(Math.toRadians(a)) *
+            kotlin.math.cos(Math.toRadians(c)) * kotlin.math.sin(lon/2) * kotlin.math.sin(lon/2)
+        return 12742000.0 * kotlin.math.asin(kotlin.math.sqrt(x.coerceIn(0.0,1.0)))
+    }
+
 }
