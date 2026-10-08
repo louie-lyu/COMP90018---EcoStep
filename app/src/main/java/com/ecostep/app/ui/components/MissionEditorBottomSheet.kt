@@ -48,6 +48,7 @@ fun MissionEditorBottomSheet(
     item: MissionPageItem,
     onDismiss: () -> Unit,
     onSave: (MissionPageItem) -> Unit,
+    isCreating: Boolean = false,
     /** Recalculated impact for the start and destination being edited. */
     routeEstimate: RouteEstimateState = RouteEstimateState.Idle,
     /** Called once typing pauses on a changed start or destination. */
@@ -58,15 +59,15 @@ fun MissionEditorBottomSheet(
     )
 
     var startLocation by remember(item.mission.missionId) {
-        mutableStateOf(item.startLocation)
+        mutableStateOf(if (isCreating) "" else item.startLocation)
     }
 
     var destination by remember(item.mission.missionId) {
-        mutableStateOf(item.destination)
+        mutableStateOf(if (isCreating) "" else item.destination)
     }
 
     var selectedTransportMode by remember(item.mission.missionId) {
-        mutableStateOf(item.mission.transportLabel)
+        mutableStateOf(if (isCreating) "" else item.mission.transportLabel)
     }
 
     var selectedHour by remember(item.mission.missionId) {
@@ -78,7 +79,7 @@ fun MissionEditorBottomSheet(
     }
 
     var selectedRepeatDays by remember(item.mission.missionId) {
-        mutableStateOf(item.repeatDays)
+        mutableStateOf(if (isCreating) emptySet<MissionDay>() else item.repeatDays)
     }
 
     var showTimePicker by remember {
@@ -114,6 +115,7 @@ fun MissionEditorBottomSheet(
     val canSave =
         startLocation.isNotBlank() &&
                 destination.isNotBlank() &&
+                selectedTransportOption != null &&
                 selectedRepeatDays.isNotEmpty()
 
     ModalBottomSheet(
@@ -133,12 +135,16 @@ fun MissionEditorBottomSheet(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text(
-                text = "Edit EcoMission",
+                text = if (isCreating) "Create EcoMission" else "Edit EcoMission",
                 style = MaterialTheme.typography.headlineMedium,
             )
 
             Text(
-                text = "Update the route, transport mode and schedule.",
+                text = if (isCreating) {
+                    "Choose your route, transport mode and repeating schedule."
+                } else {
+                    "Update the route, transport mode and schedule."
+                },
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -224,7 +230,9 @@ fun MissionEditorBottomSheet(
                     }
                 }
 
-            selectedTransportOption?.let { option ->
+            selectedTransportOption
+                ?.takeIf { !isCreating || estimate != null }
+                ?.let { option ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -353,7 +361,7 @@ fun MissionEditorBottomSheet(
                     modifier = Modifier.weight(1f),
                     enabled = canSave,
                 ) {
-                    Text("Save")
+                    Text(if (isCreating) "Create mission" else "Save")
                 }
             }
         }

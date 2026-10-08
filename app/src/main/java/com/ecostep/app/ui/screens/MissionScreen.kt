@@ -38,6 +38,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
+import com.ecostep.app.ui.mock.MissionTransportOption
+import com.ecostep.app.ui.viewmodels.UpcomingMissionUi
+import java.util.UUID
+import androidx.compose.ui.platform.LocalConfiguration
 
 @Composable
 fun MissionScreen(
@@ -78,9 +82,18 @@ fun MissionScreen(
         mutableStateOf<MissionPageItem?>(null)
     }
 
+    var missionBeingCreated by remember { mutableStateOf<MissionPageItem?>(null) }
+
+    var locallyCreatedMissions by remember {
+        mutableStateOf<List<MissionPageItem>>(emptyList())
+    }
+
     var showEndMissionDialog by rememberSaveable {
         mutableStateOf(false)
     }
+
+    val displayedUpcomingMissions =
+        locallyCreatedMissions + uiState.upcomingMissions
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -96,15 +109,24 @@ fun MissionScreen(
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                Text(
-                    text = "Missions",
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "Missions",
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = MaterialTheme.colorScheme.onBackground,
+                    )
+
+                    TextButton(onClick = onOpenWeeklyInsight) {
+                        Text("Weekly Insight →")
+                    }
+                }
 
                 Text(
-                    text =
-                        "Build greener habits from your regular journeys.",
+                    text = "Build greener habits from your regular journeys.",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -112,10 +134,14 @@ fun MissionScreen(
         }
 
         item {
-            TextButton(
-                onClick = onOpenWeeklyInsight,
+            Button(
+                onClick = {
+                    missionViewModel.clearRouteEstimate()
+                    missionBeingCreated = createEmptyMissionDraft()
+                },
+                modifier = Modifier.fillMaxWidth(),
             ) {
-                Text("View Weekly Insight →")
+                Text("+ Create mission")
             }
         }
 
@@ -202,7 +228,7 @@ fun MissionScreen(
                 )
             }
 
-            if (uiState.upcomingMissions.isEmpty()) {
+            if (displayedUpcomingMissions.isEmpty()) {
                 item {
                     Text(
                         text = "No upcoming EcoMissions.",
@@ -213,7 +239,7 @@ fun MissionScreen(
                 }
             } else {
                 items(
-                    items = uiState.upcomingMissions,
+                    items = displayedUpcomingMissions,
                     key = { item ->
                         item.mission.missionId
                     },
@@ -222,7 +248,11 @@ fun MissionScreen(
                         mission = item.mission,
                         scheduleLabel = item.scheduleLabel,
                         todayStatusLabel = item.todayStatusLabel,
-                        canStartToday = !item.completedToday,
+                        canStartToday = !item.completedToday &&
+                                !item.skippedToday &&
+                                locallyCreatedMissions.none {
+                                    it.mission.missionId == item.mission.missionId
+                                },
                         onEdit = {
                             missionBeingEdited = item
 
@@ -242,14 +272,51 @@ fun MissionScreen(
                             )
                         },
                         onSkipToday = {
-                            missionViewModel.skipMissionToday(
-                                item.mission.missionId,
-                            )
+                            val isLocalMission = locallyCreatedMissions.any {
+                                it.mission.missionId == item.mission.missionId
+                            }
+
+                            if (isLocalMission) {
+                                locallyCreatedMissions = locallyCreatedMissions.map {
+                                    if (it.mission.missionId == item.mission.missionId) {
+                                        it.copy(skippedToday = true)
+                                    } else {
+                                        it
+                                    }
+                                }
+                            } else {
+                                missionViewModel.skipMissionToday(item.mission.missionId)
+                            }
                         },
                     )
                 }
             }
         }
+    }
+
+    missionBeingCreated?.let { draft ->
+        val routeEstimate by missionViewModel.routeEstimate.collectAsState()
+
+        MissionEditorBottomSheet(
+            item = draft,
+            isCreating = true,
+            onDismiss = {
+                missionViewModel.clearRouteEstimate()
+                missionBeingCreated = null
+            },
+            onSave = { newMission ->
+                locallyCreatedMissions =
+                    listOf(newMission) + locallyCreatedMissions
+
+                missionViewModel.clearRouteEstimate()
+                missionBeingCreated = null
+                selectedTabIndex = 1
+            },
+
+
+            routeEstimate = routeEstimate,
+            onRouteChanged = missionViewModel::estimateRoute,
+        )
     }
 
     missionBeingEdited?.let { item ->
@@ -262,7 +329,23 @@ fun MissionScreen(
                 missionBeingEdited = null
             },
             onSave = { updatedMission ->
-                missionViewModel.updateMission(updatedMission)
+                val isLocalMission = locallyCreatedMissions.any {
+                    it.mission.missionId == updatedMission.mission.missionId
+                }
+
+                if (isLocalMission) {
+                    locallyCreatedMissions = locallyCreatedMissions.map {
+                        if (it.mission.missionId == updatedMission.mission.missionId) {
+                            updatedMission
+                        } else {
+                            it
+                        }
+                    }
+                } else {
+                    missionViewModel.updateMission(updatedMission)
+                }
+
+                missionViewModel.clearRouteEstimate()
                 missionBeingEdited = null
             },
             routeEstimate = routeEstimate,
@@ -467,7 +550,7 @@ private fun ActiveMissionCard(
                     ) {
                         Text(
                             text =
-                                String.format(java.util.Locale.getDefault(), "%.2f kg CO₂ saved", item.mission.estimatedCarbonSavedKg),
+                                String.format(LocalConfiguration.current.locales[0], "%.2f kg CO₂ saved", item.mission.estimatedCarbonSavedKg),
                             style =
                                 MaterialTheme.typography.titleMedium,
                             color =
@@ -598,7 +681,7 @@ private fun SuggestedMissionCard(
                     ) {
                         Text(
                             text =
-                                String.format(java.util.Locale.getDefault(), "%.2f kg CO₂ saved", item.mission.estimatedCarbonSavedKg),
+                                String.format(LocalConfiguration.current.locales[0], "%.2f kg CO₂ saved", item.mission.estimatedCarbonSavedKg),
                             style = MaterialTheme.typography.titleMedium,
                             color =
                                 MaterialTheme.colorScheme.onSecondaryContainer,
@@ -642,3 +725,28 @@ private fun SuggestedMissionCard(
         }
     }
 }
+
+private fun createEmptyMissionDraft(): MissionPageItem =
+    MissionPageItem(
+        mission = UpcomingMissionUi(
+            missionId = UUID.randomUUID().toString(),
+            routeTitle = "",
+            transportLabel = "",
+            estimatedEcoPoints = 0,
+            estimatedCarbonSavedKg = 0.0,
+            startTimeMillis = 0L,
+            endTimeMillis = 0L,
+        ),
+        startLocation = "",
+        destination = "",
+        scheduledHour = 9,
+        scheduledMinute = 0,
+        repeatDays = emptySet(),
+        explanation = "",
+        transportOptions = listOf(
+            MissionTransportOption("Walking", 0, 0.0),
+            MissionTransportOption("Cycling", 0, 0.0),
+            MissionTransportOption("Public Transport", 0, 0.0),
+            MissionTransportOption("Car", 0, 0.0),
+        ),
+    )
