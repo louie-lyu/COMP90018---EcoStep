@@ -21,64 +21,99 @@ import com.ecostep.app.algorithm.WeeklyCoachReport
 import com.ecostep.app.data.model.TransportMode
 import com.ecostep.app.ui.viewmodels.WeeklyInsightViewModel
 import java.util.Locale
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 
 @Composable
 fun WeeklyInsightScreen(
     viewModel: WeeklyInsightViewModel,
+    onBack: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val report = uiState.report
 
-    LazyColumn(
+    Surface(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(
-            start = 20.dp,
-            top = 24.dp,
-            end = 20.dp,
-            bottom = 28.dp,
-        ),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        color = MaterialTheme.colorScheme.background,
     ) {
-        item {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp),
+        Column(
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(
-                    text = "Weekly Insight",
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
+                IconButton(
+                    onClick = onBack,
+                    modifier = Modifier.size(56.dp),
+                ) {
+                    Text(
+                        text = "←",
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.semantics {
+                            contentDescription = "Back to Missions"
+                        },
+                    )
+                }
 
-                Text(
-                    text =
-                        "How your low-carbon missions went this week.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 16.dp),
+                ) {
+                    Text(
+                        text = "Weekly Insight",
+                        style = MaterialTheme.typography.headlineMedium,
+                    )
+                    Text(
+                        text = "Your low-carbon missions this week",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
-        }
 
-        if (report == null) {
-            return@LazyColumn
-        }
+            HorizontalDivider()
 
-        item {
-            StatsRow(report = report)
-        }
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(
+                    horizontal = 20.dp,
+                    vertical = 20.dp,
+                ),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                if (report == null) {
+                    return@LazyColumn
+                }
 
-        item {
-            InsightCard(
-                title = "This week",
-                body = uiState.insight ?: report.summary,
-                badge = if (uiState.usedAi) "AI personalised" else null,
-            )
-        }
+                item {
+                    StatsRow(report = report)
+                }
 
-        item {
-            InsightCard(
-                title = "Coaching tip",
-                body = uiState.action ?: report.fallbackMessage,
-            )
+                item {
+                    InsightCard(
+                        title = "This week",
+                        body = uiState.insight ?: report.summary,
+                        badge = if (uiState.usedAi) "AI personalised" else null,
+                    )
+                }
+
+                item {
+                    InsightCard(
+                        title = "Coaching tip",
+                        body = uiState.action ?: report.fallbackMessage,
+                    )
+                }
+            }
         }
     }
 }
@@ -204,6 +239,8 @@ private fun InsightCard(
         }
     }
 }
+
+
 
 private fun transportModeName(mode: TransportMode): String {
     return when (mode) {

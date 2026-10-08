@@ -467,6 +467,9 @@ fun EcoStepNavHost(
 
                 WeeklyInsightScreen(
                     viewModel = weeklyInsightViewModel,
+                    onBack = {
+                        navController.popBackStack()
+                    },
                 )
             }
             
