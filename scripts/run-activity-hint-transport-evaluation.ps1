@@ -1,9 +1,7 @@
 param(
     [string]$AdbPath = "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe",
     [string]$DatasetPath = '',
-    [string]$TransitRoutesPath = '',
     [ValidateRange(1, 10000)][int]$SamplesPerMode = 10000,
-    [ValidateRange(1, 100)][int]$Warmups = 10,
     [ValidateRange(0, 2147483647)][int]$Seed = 42
 )
 
@@ -16,14 +14,6 @@ $outputDirectory = Join-Path $projectRoot 'evaluation_results'
 if (-not $DatasetPath) {
     $DatasetPath = Join-Path $projectRoot 'app\src\androidTest\java\com\ecostep\app\evaluation\data\SHL-preview-evaluation.zip'
 }
-
-if (-not $TransitRoutesPath) {
-    $TransitRoutesPath = Join-Path $projectRoot 'app/src/androidTest/java/com/ecostep/app/evaluation/data/transit/transit-routes.json'
-}
-if (-not (Test-Path -LiteralPath $TransitRoutesPath -PathType Leaf)) {
-    throw 'Transit routes JSON not found. Run scripts/download-shl-transit-gtfs.py and scripts/prepare-shl-transit-routes.py, or supply -TransitRoutesPath.'
-}
-$TransitRoutesPath = (Resolve-Path -LiteralPath $TransitRoutesPath).ProviderPath
 
 if (-not (Test-Path -LiteralPath $DatasetPath -PathType Leaf)) {
     throw 'SHL preview ZIP not found. Download the evaluation archive into evaluation/data or supply -DatasetPath.'
@@ -54,8 +44,6 @@ try {
     $workingTreeDirty = if ($gitStatus) { 'true' } else { 'false' }
     $datasetSha256 = (Get-FileHash -LiteralPath $DatasetPath -Algorithm SHA256).Hash.ToLowerInvariant()
 
-    $transitDataSha256 = (Get-FileHash -LiteralPath $TransitRoutesPath -Algorithm SHA256).Hash.ToLowerInvariant()
-
     & .\gradlew.bat installDebug installDebugAndroidTest
     if ($LASTEXITCODE -ne 0) { throw 'Build or installation failed.' }
     & $AdbPath -s $serial shell mkdir -p $datasetDirectory
@@ -63,14 +51,12 @@ try {
     & $AdbPath -s $serial push $DatasetPath "$datasetDirectory/shl-preview.zip"
     if ($LASTEXITCODE -ne 0) { throw 'Could not copy the SHL preview ZIP to the device.' }
 
-    & $AdbPath -s $serial push $TransitRoutesPath "$datasetDirectory/transit-routes.json"
-    if ($LASTEXITCODE -ne 0) { throw 'Could not copy the transit routes JSON to the device.' }
-
+    Write-Host 'Live evaluation: sends SHL endpoints to Transitous, omits query time, and uses current timetables.'
     $previousReports = @(Get-ReportNames)
     $testOutput = & $AdbPath -s $serial shell am instrument -w -r `
         -e class com.ecostep.app.evaluation.ActivityHintTransportEvaluationTest `
         -e gitCommit $gitCommit -e workingTreeDirty $workingTreeDirty `
-        -e samplesPerMode $SamplesPerMode -e warmups $Warmups -e seed $Seed `
+        -e live true -e samplesPerMode $SamplesPerMode -e seed $Seed `
         com.ecostep.app.test/androidx.test.runner.AndroidJUnitRunner
     $instrumentExitCode = $LASTEXITCODE
     $testOutput | Write-Host
@@ -89,17 +75,15 @@ try {
         [System.IO.File]::WriteAllText($destination, $json, [System.Text.UTF8Encoding]::new($false))
         Write-Host "JSON saved: $destination"
         Write-Host "Samples: $($report.totalSamples)/$($report.plannedSamples); correct: $($report.summary.correctSamples); runtime errors: $($report.summary.runtimeErrors)"
-        Write-Host "With transit: accuracy=$($report.summary.accuracy); UNKNOWN rate=$($report.summary.unknownRate); coverage=$($report.summary.coverage); macro F1=$($report.summary.macroF1)"
+        Write-Host "Online current-timetable accuracy=$($report.summary.accuracy); UNKNOWN rate=$($report.summary.unknownRate); coverage=$($report.summary.coverage); macro F1=$($report.summary.macroF1)"
         Write-Host "Classification P50=$($report.summary.p50Ms) ms; P95=$($report.summary.p95Ms) ms"
-        if ($report.gpsOnlySummary) {
-            Write-Host "With transit, GPS-only accuracy=$($report.gpsOnlySummary.accuracy); UNKNOWN rate=$($report.gpsOnlySummary.unknownRate); coverage=$($report.gpsOnlySummary.coverage)"
-        }
-        Write-Host "No-transit controls: Activity accuracy=$($report.baselineSummary.accuracy); GPS-only accuracy=$($report.baselineGpsOnlySummary.accuracy)"
-        Write-Host "Candidate coverage: $($report.candidateCoverage.withCandidates)/$($report.candidateCoverage.recordings); available sequences=$($report.candidateCoverage.candidateSequencesAvailable)"
+        Write-Host "Planner statuses: $($report.plannerStatusCounts | ConvertTo-Json -Compress)"
+        Write-Host "With transit candidates=$($report.withTransitCandidates); timeouts=$($report.timeouts)"
+        Write-Host "Successful online subset accuracy=$($report.successfulOnlineSummary.accuracy) (n=$($report.successfulOnlineSummary.totalSamples))"
         foreach ($mode in $report.perMode) {
             Write-Host "$($mode.mode): n=$($mode.totalSamples); precision=$($mode.precision); recall=$($mode.recall); F1=$($mode.f1); UNKNOWN rate=$($mode.unknownRate)"
         }
-        if ($report.passed -ne $true -or $report.datasetSha256 -ne $datasetSha256 -or $report.transitDataSha256 -ne $transitDataSha256 -or $report.schemaVersion -ne 2) { $evaluationFailed = $true }
+        if ($report.passed -ne $true -or $report.datasetSha256 -ne $datasetSha256 -or $report.schemaVersion -ne 3 -or $report.timetableTime -ne "current") { $evaluationFailed = $true }
     }
     if ($evaluationFailed -or $instrumentExitCode -ne 0 -or ($testOutput -join "`n") -notmatch 'OK \(\d+ tests?\)') {
         throw 'Activity hint transport evaluation did not complete or a dataset hash/schema differs. JSON results were exported for inspection.'

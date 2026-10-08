@@ -33,7 +33,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run-activity-hint-transport-e
 | Mission triggers | Lead time, weekday/month/year boundaries, UTC/offset zones and DST | 29 cases; 5 timing groups; no internet/login |
 | Local flow | Carbon → fallback/validation → completion → points → weekly totals; corrected modes and rejected inputs | 25 cases; 4 timing groups; no internet/login |
 | Recurring journeys | Counts, location/time boundaries, reverse routes, midnight, duplicate IDs and output fields | 41 cases; 8 timing groups |
-| Transport classification (SHL) | Offline real transit stop sequences with/without recorded Google Activity hints, plus no-transit controls; accuracy, confusion matrices and classifier latency | Up to 10000 intervals per mode; seed 42; 10 warm-ups per mode per variant |
+| Transport classification (SHL) | Live Transitous plans + SHL GPS/recorded Activity; accuracy, planner diagnostics and end-to-end latency | Up to 10000 intervals per mode; seed 42; 5-second timeout; 2-second request spacing |
 
 ## Parameters and results
 
@@ -49,38 +49,34 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run-activity-hint-transport-e
 - Mission triggers: same batch parameters; plans timestamps only, not Android notification delivery. DST gaps shift forward; overlaps use the earlier offset.
 - Local flow: same batch parameters; real local algorithms with synthetic candidate availability and completion events. One timed call processes one or three journeys, including object construction; no UI, sensors or storage.
 - Recurring: `-Warmups 10 -Samples 50`; histories of 10–10,000 entries, all or 10% matching.
-- Transport classification: place `SHL-preview-evaluation.zip` in the ignored `data/` directory
-  beside this README, or supply `-DatasetPath`. The merged local archive includes User1, User2 and
-  User3 (nine days); results are pooled while original paths preserve journey boundaries.
-  Run with `-SamplesPerMode 10000 -Warmups 10 -Seed 42`; exactly one Android device is required.
-  Offline transit data is required at `data/transit/transit-routes.json`, or use `-TransitRoutesPath`.
-  Prepare it from the repository root using Python 3.10+ (standard library only):
-  ```powershell
-  python ./scripts/download-shl-transit-gtfs.py
-  python ./scripts/prepare-shl-transit-routes.py
-  ```
-  Existing local snapshots can be reused without downloading again. Public source:
-  [Aubin Great Britain GTFS](https://beta.aubin.app/gtfs/great_britain_gtfs.zip), as listed by
-  [Transitous](https://transitous.org/sources-great-britain/). Compressed source tables, provenance
-  and extracted routes stay in ignored `data/transit/`. Preparation verifies source CRCs and
-  preserves GTFS stop order; patterns are deduplicated by route ID and ordered stop IDs.
-  Region selection uses GPS bounds plus a fixed margin, never transport labels.
-  Each sample selects ordered origin/destination stop pairs within 1000 m of its endpoints,
-  ranks by the minimum summed endpoint distance, and keeps at most 50 sequences. The same rule
-  applies to every mode and both Activity variants; no labels, Activity predictions or interior
-  stop matches are used for candidate selection. These are spatial candidates, not planned trips.
-  All four variants use the same intervals and the unchanged production classifier/evidence mapper.
-  Schema 2 reports make `summary`, `records`, `perMode`, `confusionMatrix` the **Activity + transit**
-  results; `gpsOnly*` is **GPS + transit**. `baseline*` and `baselineGpsOnly*` contain the respective
-  **no-transit** controls. Reports include route/SHL hashes, source metadata, candidate IDs/counts
-  and Git/device metadata. Passing means no runtime errors, not an accuracy threshold.
-  The local GTFS snapshot is from 2026, while SHL is from 2017. No service calendar, timetable,
-  walking access, transfers or historical route compatibility are validated. The test is offline
-  and does not call the live journey planner. Ground-truth labels split single-mode intervals;
-  mixed walking/transit journeys and automatic boundary detection are not evaluated.
-  Google Activity results are recorded data; live recognition, IMU, UI, Firebase and user
-  corrections are outside scope. Missing recordings remain UNKNOWN in the accuracy denominator.
-  Classification timings include station matching but exclude candidate selection and replay.
+- Transport classification: uses the pooled User1/User2/User3 SHL Hand recordings (nine days).
+  Keep `SHL-preview-evaluation.zip` in ignored `data/`, or supply `-DatasetPath`.
+  Run `scripts/run-activity-hint-transport-evaluation.ps1 -SamplesPerMode 10000 -Seed 42`
+  with one connected Android device and internet access. A small smoke run uses `-SamplesPerMode 1`.
+  The runner enables `live=true`; a general Android test run skips this network evaluation.
+  Each valid recording sends its endpoints to [Transitous](https://transitous.org/api/), with
+  [source attribution](https://transitous.org/sources/). No full track, Activity series or true labels
+  are sent. Requests are sequential with a 2-second pause; no online warm-ups or extra retries.
+  HTTP 403/429 stops remaining requests and exports an incomplete report.
+  The planner `time` parameter is omitted, so the service uses its current timetable. SHL's original
+  timestamps remain in GPS/Activity replay. This is historical GPS evaluated against present-day
+  route plans; it is not a reconstruction of 2017 services. Results can change with timetables/network.
+  The production JourneyTracker, summary builder, shared HTTP client, evidence provider, stop mapper
+  and classifier are reused. The 5-second timeout and UNKNOWN fallback match TrackingViewModel.
+  Only the planner query time differs. No offline transit files or local candidate filtering remain.
+  Schema 3 reports contain `summary`, `perMode` (true-label recall/precision/F1), `perPrediction`
+  (predicted-label share/error rate), `confusionMatrix`, per-sample records and planner diagnostics.
+  `successfulOnlineSummary` covers requests that succeeded and completed classification; an HTTP
+  success can still return no transit candidates. Check `withTransitCandidates`, `plannerStatusCounts`
+  and `timeouts` separately. Reports include dataset SHA-256, Git/device metadata and current-time policy.
+  Missing recordings count as UNKNOWN in total accuracy; the App would not save these recordings.
+  Unexpected classifier exceptions retain UNKNOWN but fail the test. Expected network failures and
+  timeouts are measured outcomes; passing is not an accuracy threshold or proof of planner success.
+  Ground-truth labels split single-mode intervals; automatic segmentation and mixed walking/transit
+  trips are outside scope. Live Google recognition, IMU, Firebase saving, UI and user corrections
+  are not evaluated. Latency includes network/classification, excludes replay and request spacing.
+  Code is split into `ActivityHintTransportEvaluationTest` (online flow), `ShlEvaluationDataset`
+  (sampling/replay), and `TransportEvaluationMetrics` (report calculations).
 - P50/P95 use successful samples only (nearest rank); unavailable metrics are `null`.
 - EcoPoints, AI missions, weekly coach, mission triggers and local flow report batch time and average time per call; their percentiles describe batch averages.
 - Timing excludes fixture creation, warm-up, validation and report writing. Weather source checks,
