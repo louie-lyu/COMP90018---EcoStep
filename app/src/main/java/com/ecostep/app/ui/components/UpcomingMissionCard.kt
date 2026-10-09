@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.material3.IconButton
+import androidx.compose.ui.platform.LocalLocale
 
 @Composable
 fun UpcomingMissionCard(
@@ -30,6 +31,8 @@ fun UpcomingMissionCard(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
 ) {
+    val locale = LocalLocale.current.platformLocale
+
     val millisUntilStart =
         mission.startTimeMillis - currentTimeMillis
 
@@ -158,8 +161,11 @@ fun UpcomingMissionCard(
                         verticalArrangement = Arrangement.spacedBy(2.dp),
                     ) {
                         Text(
-                            text =
-                                String.format(java.util.Locale.getDefault(), "%.2f kg CO₂ saved", mission.estimatedCarbonSavedKg),
+                            text = String.format(
+                                locale,
+                                "%.2f kg CO₂ saved",
+                                mission.estimatedCarbonSavedKg,
+                            ),
                             style = MaterialTheme.typography.titleMedium,
                             color =
                                 MaterialTheme.colorScheme.onSecondaryContainer,

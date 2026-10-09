@@ -41,6 +41,7 @@ import com.ecostep.app.ui.adapters.withRouteEstimate
 import com.ecostep.app.ui.viewmodels.RouteEstimateState
 import java.util.Locale
 import kotlinx.coroutines.delay
+import androidx.compose.ui.platform.LocalLocale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,6 +55,8 @@ fun MissionEditorBottomSheet(
     /** Called once typing pauses on a changed start or destination. */
     onRouteChanged: (start: String, destination: String) -> Unit = { _, _ -> },
 ) {
+    val locale = LocalLocale.current.platformLocale
+
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
     )
@@ -279,7 +282,7 @@ fun MissionEditorBottomSheet(
                         ) {
                             Text(
                                 text = String.format(
-                                    Locale.getDefault(),
+                                    locale,
                                     "%.2f kg CO₂ saved",
                                     option.estimatedCarbonSavedKg,
                                 ),
