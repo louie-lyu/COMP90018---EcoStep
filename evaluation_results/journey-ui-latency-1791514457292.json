@@ -1,0 +1,411 @@
+{
+  "schemaVersion": 1,
+  "startedAtMillis": 1791514457292,
+  "gitCommit": "205f6b4a38e6edbeaa9021fa7fa3c8982ab14c18",
+  "workingTreeDirty": true,
+  "device": "Google sdk_gphone64_x86_64",
+  "androidVersion": "16",
+  "buildType": "debug",
+  "networkConditions": "emulator-online",
+  "plannedSamplesPerScenario": 20,
+  "operationTimeoutMs": 30000,
+  "pollIntervalMs": 50,
+  "scope": "Real MainActivity, navigation, live transit classifier and signed-in Firestore. Fixed 60-second walking GPS\/Activity fixture is replayed before clicking End. No physical sensor acquisition, AI mission-generation latency or server-ack latency measured.",
+  "timing": "System.nanoTime from injected touch DOWN to accessibility-observed visible UI readiness. Includes input dispatch, production work, rendering\/accessibility propagation and polling overhead. No Compose virtual clock. Warm app; first sample retained and numbered. Setup, scrolling, storage checks and pauses excluded.",
+  "stopBoundary": "End touch -> new journey-specific Review layout and visible Journey complete heading. Mode selector availability is checked before confirmation; reaching a button below the fold is not timed.",
+  "confirmBoundary": "Confirm touch -> visible Journey saved dialog with enabled Back to Map button. Local Firestore confirmation is verified outside timing; pending sync is reported separately.",
+  "fixture": "13 GPS points at 5-second intervals; 5m reported accuracy; Melbourne northbound ~67m walking; dominant WALKING hint 100. Unique journey ID per run. No active mission permitted.",
+  "dataRetention": "Created\/confirmed journeys remain in the test account; client security rules prohibit deletion. Walking journeys have no lower-carbon alternative, so no AI recommendation is expected.",
+  "passed": true,
+  "records": [
+    {
+      "sample": 1,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 2578.2138,
+      "journeyId": "11a0f690-e77a-4ea5-9e9f-62ce95918395",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 1,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 294.2986,
+      "journeyId": "11a0f690-e77a-4ea5-9e9f-62ce95918395",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 2,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 739.9132,
+      "journeyId": "c90a505c-02ae-42e8-90f0-1bfa585959e8",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 2,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 212.4165,
+      "journeyId": "c90a505c-02ae-42e8-90f0-1bfa585959e8",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 3,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 781.9818,
+      "journeyId": "22c74a37-b26d-4851-894d-a8374f0197ce",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 3,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 317.2218,
+      "journeyId": "22c74a37-b26d-4851-894d-a8374f0197ce",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 4,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 901.6624,
+      "journeyId": "dd4271e8-d848-486d-ad4b-d299999c41cb",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 4,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 272.9267,
+      "journeyId": "dd4271e8-d848-486d-ad4b-d299999c41cb",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 5,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 727.2845,
+      "journeyId": "c2d9f20d-b5ed-4a69-8ca3-4ea087406251",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 5,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 286.7953,
+      "journeyId": "c2d9f20d-b5ed-4a69-8ca3-4ea087406251",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 6,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 708.7659,
+      "journeyId": "7a05dafe-115b-4cc6-89bd-4040dc7419ec",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 6,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 257.0881,
+      "journeyId": "7a05dafe-115b-4cc6-89bd-4040dc7419ec",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 7,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 707.8106,
+      "journeyId": "b1fbfeb3-d74e-4b19-8f9a-bc314f10c217",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 7,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 307.611,
+      "journeyId": "b1fbfeb3-d74e-4b19-8f9a-bc314f10c217",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 8,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 879.2407,
+      "journeyId": "2e36a1b9-b3dc-4d14-bbd1-d8ab7be01ffb",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 8,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 291.1422,
+      "journeyId": "2e36a1b9-b3dc-4d14-bbd1-d8ab7be01ffb",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 9,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 811.9879,
+      "journeyId": "bd898fc3-7690-405e-a433-eebd38260aa9",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 9,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 230.6129,
+      "journeyId": "bd898fc3-7690-405e-a433-eebd38260aa9",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 10,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 946.4271,
+      "journeyId": "d6c4b366-cb5c-41fa-ac68-d74fca06669b",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 10,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 238.4102,
+      "journeyId": "d6c4b366-cb5c-41fa-ac68-d74fca06669b",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 11,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 758.7204,
+      "journeyId": "4a273b79-9f31-4c3d-a58a-921891fce4e5",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 11,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 250.1078,
+      "journeyId": "4a273b79-9f31-4c3d-a58a-921891fce4e5",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 12,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 693.3391,
+      "journeyId": "21ca7dd3-2e5a-4d41-a985-418f16814cf3",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 12,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 211.4055,
+      "journeyId": "21ca7dd3-2e5a-4d41-a985-418f16814cf3",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 13,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 824.467,
+      "journeyId": "f979ce42-6340-4649-b18f-2e9912acc922",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 13,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 224.054,
+      "journeyId": "f979ce42-6340-4649-b18f-2e9912acc922",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 14,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 698.9337,
+      "journeyId": "f8c50334-1df6-47cc-ae63-1780470577c0",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 14,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 251.1396,
+      "journeyId": "f8c50334-1df6-47cc-ae63-1780470577c0",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 15,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 727.1961,
+      "journeyId": "42474317-ba2b-42ed-89be-e5640ee67a08",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 15,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 216.052,
+      "journeyId": "42474317-ba2b-42ed-89be-e5640ee67a08",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 16,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 661.6566,
+      "journeyId": "456654ed-a5c7-4e44-a9c6-7952dac1f9b3",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 16,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 250.4867,
+      "journeyId": "456654ed-a5c7-4e44-a9c6-7952dac1f9b3",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 17,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 735.7026,
+      "journeyId": "b8538824-75bc-4c5d-a4a0-3610d6e27e74",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 17,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 222.3305,
+      "journeyId": "b8538824-75bc-4c5d-a4a0-3610d6e27e74",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 18,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 738.811,
+      "journeyId": "e239a901-6d3b-409c-8243-6eecb7c0e303",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 18,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 252.9494,
+      "journeyId": "e239a901-6d3b-409c-8243-6eecb7c0e303",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 19,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 709.4925,
+      "journeyId": "0340538f-3e2f-4cd4-abfc-875b0a3463f1",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 19,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 294.7901,
+      "journeyId": "0340538f-3e2f-4cd4-abfc-875b0a3463f1",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    },
+    {
+      "sample": 20,
+      "scenario": "stop_to_review",
+      "outcome": "SUCCESS",
+      "durationMs": 687.3069,
+      "journeyId": "4bcd492d-7136-422a-9494-e156c7016fa0",
+      "detectedMode": "WALKING",
+      "localJourneyVerified": true
+    },
+    {
+      "sample": 20,
+      "scenario": "confirm_to_feedback",
+      "outcome": "SUCCESS",
+      "durationMs": 271.8488,
+      "journeyId": "4bcd492d-7136-422a-9494-e156c7016fa0",
+      "localConfirmationVerified": true,
+      "pendingSyncAtVerification": false
+    }
+  ],
+  "summaries": [
+    {
+      "scenario": "stop_to_review",
+      "planned": 20,
+      "attempted": 20,
+      "successful": 20,
+      "failed": 0,
+      "timeouts": 0,
+      "skipped": 0,
+      "successRate": 1,
+      "p50Ms": 735.7026,
+      "p95Ms": 946.4271,
+      "maxMs": 2578.2138
+    },
+    {
+      "scenario": "confirm_to_feedback",
+      "planned": 20,
+      "attempted": 20,
+      "successful": 20,
+      "failed": 0,
+      "timeouts": 0,
+      "skipped": 0,
+      "successRate": 1,
+      "p50Ms": 251.1396,
+      "p95Ms": 307.611,
+      "maxMs": 317.2218
+    }
+  ],
+  "finishedAtMillis": 1791514560745
+}

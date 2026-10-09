@@ -15,6 +15,8 @@ import com.ecostep.app.sensors.ui.hasFineLocationPermission
 import com.ecostep.app.sensors.ui.rememberTrackingPermissionRequest
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -116,6 +118,7 @@ fun EcoStepNavHost(
         )
 
     Scaffold(
+        modifier = Modifier.semantics { testTagsAsResourceId = true },
         bottomBar = {
             if (showBottomBar) {
                 EcoStepBottomBar(
