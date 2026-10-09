@@ -24,6 +24,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -114,7 +115,7 @@ fun JourneyTrackingPanel(
                 Button(
                     onClick = onEnd,
                     enabled = isRecording && !isSaving,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).testTag("journey.end"),
                 ) { Text("End") }
                 OutlinedButton(
                     onClick = { confirmAbort = true },

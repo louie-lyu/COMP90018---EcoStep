@@ -33,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -179,6 +180,7 @@ private fun JourneyReviewLoadedContent(
     val journey = uiState.journey ?: return
 
     Scaffold(
+        modifier = Modifier.testTag("journey.review:${journey.journeyId}"),
         containerColor = MaterialTheme.colorScheme.background,
     ) { innerPadding ->
         LazyColumn(
@@ -257,7 +259,7 @@ private fun ConfirmJourneyButton(
     Button(
         onClick = onClick,
         enabled = !isSaving,
-        modifier = Modifier
+        modifier = Modifier.testTag("journey.confirm")
             .fillMaxWidth()
             .padding(
                 start = 20.dp,
@@ -961,7 +963,7 @@ private fun JourneyConfirmedDialog(
         title = {
             Text(
                 text = "Journey saved!",
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag("journey.saved"),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -1026,6 +1028,7 @@ private fun JourneyConfirmedDialog(
         confirmButton = {
             TextButton(
                 onClick = onDismiss,
+                modifier = Modifier.testTag("journey.backToMap"),
             ) {
                 Text(
                     text = "Back to Map",

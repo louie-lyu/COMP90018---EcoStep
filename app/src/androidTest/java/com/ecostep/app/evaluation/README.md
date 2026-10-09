@@ -91,3 +91,60 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run-activity-hint-transport-e
   Android Studio runs need arguments for Git metadata; dirty runs need the corresponding source.
 - Synthetic checks and debug emulator timings do not establish real-user accuracy or phone performance.
   Carbon factors are provisional; performance has no pass/fail threshold. JIT/GC and group order affect timings.
+
+## User-visible journey latency (real UI and Firebase)
+
+Run with exactly one unlocked emulator or physical Android device. Sign in to a dedicated
+Firebase test account first, and end any active mission/recording. This test creates and
+confirms real journeys which remain in that account: client security rules prohibit deletion.
+It does not read credentials or change the signed-in account.
+
+```powershell
+# Three-journey smoke run.
+powershell -ExecutionPolicy Bypass -File .\scripts\run-journey-ui-latency-evaluation.ps1 -TestAccount -Samples 3 -NetworkConditions emulator-online
+
+# Default: 20 journeys, each measuring both operations.
+powershell -ExecutionPolicy Bypass -File .\scripts\run-journey-ui-latency-evaluation.ps1 -TestAccount -NetworkConditions phone-wifi
+```
+
+`-NetworkConditions` is a label, not a network switch (letters, digits, dot, underscore and
+hyphen only). `-AdbPath` selects an alternative adb executable; `-TimeoutMs` defaults to 30000
+per UI wait. Do not interact with the device during the run. Instrumentation progress is
+printed after each completed journey. JSON and CSV are exported to `evaluation_results/`,
+including partial failure reports. General instrumentation runs skip this opt-in live test.
+
+`JourneyUiLatencyEvaluationTest` launches the real MainActivity and production navigation,
+TrackingViewModel, classifier, JourneyReviewViewModel and Firestore repositories. Before each
+End click it instantly replays 13 fixed GPS points with timestamps covering the preceding
+60 seconds and a WALKING Activity hint. No real walking or 60-second sleep is necessary.
+Sensor acquisition, classifier accuracy on real trips and app startup are outside scope.
+The walking fixture is unlinked to missions and has no lower-carbon alternative; task/AI
+recommendation generation and reward delivery are not measured.
+
+- `stop_to_review`: injected End touch to the new journey-specific Review layout and visible
+  "Journey complete" heading. This covers classification, initial persistence, navigation
+  and accessibility-observed loaded content. It does not wait for place-name resolution or
+  a confirm button below the fold. The mode selector is exercised separately before confirming.
+- `confirm_to_feedback`: injected Confirm touch to the visible "Journey saved!" dialog and
+  its Back to Map control. The same journey's confirmed mode is then checked in the real
+  Firestore local cache outside timing. `pendingSyncAtVerification` distinguishes pending
+  local writes; feedback does not prove server acknowledgement or verified points.
+
+The test queries Android's accessibility tree and injects real touches; there is no Compose
+virtual animation clock. Production controls have test tags (see Android's official
+[Compose interoperability documentation](https://developer.android.com/develop/ui/compose/testing/interoperability)).
+The device remains subject to normal scheduling and animation. Polling is every 50 ms, so
+results include input dispatch, accessibility propagation and observation overhead, not
+frame-exact rendering timestamps. Scrolling/button-position stabilization happens before
+starting confirmation timing. Fixture preparation, scrolling, verification, CSV/JSON writes
+and a two-second inter-journey pause are excluded.
+
+Each scenario reports planned/attempted/successful/failed/timed-out/skipped counts, success
+rate among attempts, and nearest-rank P50/P95/max of successful individual operations.
+All numbered samples are retained, including the first operation after activity launch;
+there are no hidden warm-ups or automatic retries. A UI observation timeout is different
+from an internal network timeout that production code handles via fallback. On failure,
+the run stops and remaining samples are marked skipped. A passed run requires both UI
+operations and local confirmation verification for every requested journey; there is no
+latency pass threshold. Few-sample percentiles are descriptive. Compare emulator and phone,
+network conditions, first-use and subsequent operations separately.
