@@ -152,7 +152,20 @@ internal object ShlEvaluationDataset {
             }
             println("SHL: GPS and Google activity replayed for ${prefix.trimEnd('/')}")
         }
+        // Evaluate only journeys that the production recorder can actually create.
+        // Keep exclusion counts so the report states the denominator explicitly.
+        val evaluatedSamples = samples.filter { it.recording != null }
+        val excludedSamples = samples.filter { it.recording == null }
+        check(evaluatedSamples.isNotEmpty()) { "No selected intervals produced a valid recording" }
         val metadata = JSONObject().put("labelFiles", labelFiles.size).put("labelRows", labelRows)
+            .put("selectedSegmentsBeforeRecordingFilter", samples.size)
+            .put("excludedRecordingSegments", excludedSamples.size)
+            .put("excludedRecordingSegmentsPerMode", JSONObject().apply {
+                modes.forEach { mode -> put(mode.name, excludedSamples.count { it.mode == mode }) }
+            })
+            .put("evaluatedSegmentsPerMode", JSONObject().apply {
+                modes.forEach { mode -> put(mode.name, evaluatedSamples.count { it.mode == mode }) }
+            })
             .put("users", JSONArray(labelFiles.map { it.name.split('/').first { part -> part.startsWith("User") } }.distinct()))
             .put("loadedGpsPoints", gpsRows).put("loadedActivitySamples", activityRows)
             .put("supportedConfidenceTieSamples", activityTies)
@@ -160,7 +173,7 @@ internal object ShlEvaluationDataset {
             .put("eligibleSegmentsPerMode", JSONObject().apply { eligible.forEach { (mode, count) -> put(mode.name, count) } })
             .put("selectedSegmentsPerMode", JSONObject().apply { selected.forEach { (mode, cases) -> put(mode.name, cases.size) } })
         zip.getEntry("manifest.json")?.let { metadata.put("downloadManifest", JSONObject(zip.getInputStream(it).bufferedReader().use { reader -> reader.readText() })) }
-        Dataset(samples, metadata)
+        Dataset(evaluatedSamples, metadata)
     }
 
     private fun <T> readRows(zip: ZipFile, entry: ZipEntry, columns: Int, parse: (List<String>) -> T): List<T> =

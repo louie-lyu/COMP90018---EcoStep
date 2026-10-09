@@ -83,7 +83,7 @@ try {
         foreach ($mode in $report.perMode) {
             Write-Host "$($mode.mode): n=$($mode.totalSamples); precision=$($mode.precision); recall=$($mode.recall); F1=$($mode.f1); UNKNOWN rate=$($mode.unknownRate)"
         }
-        if ($report.passed -ne $true -or $report.datasetSha256 -ne $datasetSha256 -or $report.schemaVersion -ne 3 -or $report.timetableTime -ne "current") { $evaluationFailed = $true }
+        if ($report.passed -ne $true -or $report.datasetSha256 -ne $datasetSha256 -or $report.schemaVersion -ne 4 -or $report.timetableTime -ne "current") { $evaluationFailed = $true }
     }
     if ($evaluationFailed -or $instrumentExitCode -ne 0 -or ($testOutput -join "`n") -notmatch 'OK \(\d+ tests?\)') {
         throw 'Activity hint transport evaluation did not complete or a dataset hash/schema differs. JSON results were exported for inspection.'

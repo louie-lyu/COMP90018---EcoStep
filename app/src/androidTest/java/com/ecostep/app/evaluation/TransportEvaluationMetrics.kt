@@ -5,7 +5,7 @@ import kotlin.math.ceil
 import org.json.JSONArray
 import org.json.JSONObject
 
-/** Accuracy uses every selected sample; unavailable recordings remain UNKNOWN. */
+/** Accuracy uses every evaluated sample after the recording-availability filter. */
 internal object TransportEvaluationMetrics {
     private val modes = ShlEvaluationDataset.modes
 

@@ -201,7 +201,7 @@ class ActivityHintTransportEvaluationTest {
 
     private fun newReport(startedAt: Long, limit: Int, seed: Int) = JSONObject().apply {
         val arguments = InstrumentationRegistry.getArguments()
-        put("schemaVersion", 3)
+        put("schemaVersion", 4)
         put("experiment", "SHL recorded Activity and GPS with live current-timetable transit plans")
         put("timetableTime", "current")
         put("startedAtMillis", startedAt)
@@ -220,7 +220,7 @@ class ActivityHintTransportEvaluationTest {
         put("attribution", "https://transitous.org/sources/")
         put("timePolicy", "Planner time is omitted: server default current time. Original SHL timestamps remain in GPS/Activity replay; this is not historical route accuracy.")
         put("scope", "Production recording replay, shared App HTTP client, evidence provider and classifier; App 5-second timeout/fallback. No Firebase saving, UI, live sensors or user correction.")
-        put("preprocessing", "True-label changes, day boundaries and label gaps over 300 seconds split intervals; keep intervals at least 30 seconds. Labels define boundaries only, never planner or classifier inputs. Mixed trips are not evaluated.")
+        put("preprocessing", "True-label changes, day boundaries and label gaps over 300 seconds split intervals; keep intervals at least 30 seconds, then exclude intervals that cannot produce a recording with at least two accepted GPS points. Exclusions are counted in dataset metadata, outside accuracy denominators. Labels define boundaries only, never planner or classifier inputs. Mixed trips are not evaluated.")
         put("requestPolicy", "Serial requests, no extra retries/warm-ups; App defaults except time. HTTP 403/429 stops the run. No offline route data or local candidate filtering.")
         put("benchmarkMethod", "Network plus classification, excluding dataset parsing/replay and request spacing.")
         put("passCriterion", "All selected samples processed without unexpected runtime errors. Network failure/timeout remain measured outcomes; no accuracy threshold.")

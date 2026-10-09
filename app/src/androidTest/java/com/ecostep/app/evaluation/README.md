@@ -64,12 +64,17 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run-activity-hint-transport-e
   The production JourneyTracker, summary builder, shared HTTP client, evidence provider, stop mapper
   and classifier are reused. The 5-second timeout and UNKNOWN fallback match TrackingViewModel.
   Only the planner query time differs. No offline transit files or local candidate filtering remain.
-  Schema 3 reports contain `summary`, `perMode` (true-label recall/precision/F1), `perPrediction`
+  Schema 4 reports contain `summary`, `perMode` (true-label recall/precision/F1), `perPrediction`
   (predicted-label share/error rate), `confusionMatrix`, per-sample records and planner diagnostics.
   `successfulOnlineSummary` covers requests that succeeded and completed classification; an HTTP
   success can still return no transit candidates. Check `withTransitCandidates`, `plannerStatusCounts`
   and `timeouts` separately. Reports include dataset SHA-256, Git/device metadata and current-time policy.
-  Missing recordings count as UNKNOWN in total accuracy; the App would not save these recordings.
+  Intervals that cannot produce a recording are excluded before classification and are outside all
+  accuracy denominators. `dataset.excludedRecordingSegments` and its per-mode counts document
+  these exclusions; `evaluatedSegmentsPerMode` gives the retained sample counts. The source ZIP
+  remains unchanged. With the current preview dataset, the default run retains 138 of 149 intervals
+  (64 walking, 13 cycling, 45 public transport, 16 car), excluding 11 unavailable recordings.
+  `SamplesPerMode` caps intervals selected before this filter; it does not split or duplicate trips.
   Unexpected classifier exceptions retain UNKNOWN but fail the test. Expected network failures and
   timeouts are measured outcomes; passing is not an accuracy threshold or proof of planner success.
   Ground-truth labels split single-mode intervals; automatic segmentation and mixed walking/transit
