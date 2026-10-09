@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.unit.dp
 import com.ecostep.app.ui.viewmodels.UpcomingMissionUi
 
@@ -26,11 +27,11 @@ fun MissionListCard(
     onStart: () -> Unit,
     onSkipToday: () -> Unit,
     modifier: Modifier = Modifier,
-    /** e.g. "Completed today ✓ · Next: Wed 7 Oct"; null while today's occurrence is open. */
     todayStatusLabel: String? = null,
-    /** False once today's occurrence is completed. */
     canStartToday: Boolean = true,
 ) {
+    val locale = LocalLocale.current.platformLocale
+
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -126,8 +127,11 @@ fun MissionListCard(
                         verticalArrangement = Arrangement.spacedBy(2.dp),
                     ) {
                         Text(
-                            text =
-                                String.format(java.util.Locale.getDefault(), "%.2f kg CO₂ saved", mission.estimatedCarbonSavedKg),
+                            text = String.format(
+                                locale,
+                                "%.2f kg CO₂ saved",
+                                mission.estimatedCarbonSavedKg,
+                            ),
                             style = MaterialTheme.typography.titleMedium,
                             color =
                                 MaterialTheme.colorScheme.onSecondaryContainer,
