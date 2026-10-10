@@ -8,8 +8,10 @@ import com.ecostep.app.data.model.MissionRecurrence
 import com.ecostep.app.data.model.MissionStatus
 import com.ecostep.app.data.model.RecurrenceType
 import com.ecostep.app.data.model.TransportMode
+import com.ecostep.app.data.repository.WriteOutcome
 import com.ecostep.app.testing.MainDispatcherRule
 import com.ecostep.app.ui.adapters.toPageItem
+import com.ecostep.app.ui.adapters.toMission
 import com.ecostep.app.ui.adapters.withEditsFrom
 import com.ecostep.app.ui.mock.MissionPageItem
 import com.ecostep.app.ui.mock.MissionRepository
@@ -48,6 +50,11 @@ class MissionEditEstimateTest {
             mission = mission.withEditsFrom(updatedMission)
         }
 
+        override suspend fun createMission(mission: MissionPageItem): WriteOutcome {
+            this.mission = mission.toMission(MissionStatus.ACCEPTED, "UTC")
+            return WriteOutcome.SYNCED
+        }
+
         override fun acceptSuggestedMission() = Unit
         override fun dismissSuggestedMission() = Unit
         override fun startMission(missionId: String) = Unit
@@ -78,6 +85,20 @@ class MissionEditEstimateTest {
 
     private fun edited(destination: String) = stored.toPageItem().let {
         it.copy(destination = destination, mission = it.mission.copy(routeTitle = "Home street → $destination"))
+    }
+
+    @Test
+    fun `creating a mission saves the ready route estimate without another request`() {
+        val store = Store(stored)
+        val viewModel = viewModel(store)
+        viewModel.estimateRoute("Home street", "CBD")
+
+        viewModel.createMission(edited("CBD"))
+
+        assertEquals(1, estimateCalls)
+        assertEquals("CBD", store.mission.destinationLabel)
+        assertEquals(2000.0, store.mission.targetDistanceMeters!!, 0.0)
+        assertEquals(58, store.mission.estimates.first().estimatedEcoPoints)
     }
 
     @Test

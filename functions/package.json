@@ -8,7 +8,9 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test:unit": "npm run build && node --test \"lib/test/unit/**/*.test.js\"",
+    "test:unit": "npm run build && node --test \"lib/test/unit/**/*.test.js\" \"scripts/*.test.cjs\"",
+    "rewards:inspect": "node scripts/inspect-rewards.cjs",
+    "rewards:seed:demo": "node scripts/seed-demo-rewards.cjs",
     "test:emulator": "node --test --test-concurrency=1 \"lib/test/rules/**/*.test.js\" \"lib/test/integration/**/*.test.js\"",
     "test": "npm run build && firebase emulators:exec --project demo-ecostep --only auth,firestore,functions \"npm run test:emulator\"",
     "emulators": "npm run build && firebase emulators:start --project demo-ecostep --only auth,firestore,functions"

@@ -43,6 +43,8 @@ data class MissionPageItem(
     val completedToday: Boolean = false,
     /** Today's occurrence was skipped. */
     val skippedToday: Boolean = false,
+    /** Whether the repeating schedule includes today. */
+    val dueToday: Boolean = true,
     /** Next scheduled date ("YYYY-MM-DD"), when known. */
     val nextOccurrenceDate: String? = null,
 ) {

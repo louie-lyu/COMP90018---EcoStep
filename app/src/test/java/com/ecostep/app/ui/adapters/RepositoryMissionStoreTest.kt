@@ -11,6 +11,8 @@ import com.ecostep.app.testing.FakeMissionRepository
 import com.ecostep.app.testing.FakeMissionResultRepository
 import com.ecostep.app.testing.MainDispatcherRule
 import com.ecostep.app.ui.mock.MockMissionScreenDataSource
+import com.ecostep.app.ui.mock.MissionDay
+import com.ecostep.app.ui.mock.MissionTransportOption
 import com.ecostep.app.ui.viewmodels.WeeklyInsightViewModel
 import java.time.ZoneId
 import java.time.ZoneOffset
@@ -19,6 +21,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runCurrent
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -54,6 +58,131 @@ class RepositoryMissionStoreTest {
         recurrence = MissionRecurrence(RecurrenceType.DAILY, timezone = "UTC"),
         targetTransportMode = TransportMode.CYCLING,
     )
+
+    @Test
+    fun `manual creation survives restart and supports edit start and skip`() = runTest {
+        val store = store()
+        val draft = recurring("manual", MissionStatus.SUGGESTED).toPageItem().copy(
+            startLocation = "Home",
+            destination = "Campus",
+            scheduledHour = 10,
+            scheduledMinute = 30,
+            repeatDays = setOf(MissionDay.MONDAY, MissionDay.THURSDAY),
+            distanceMeters = 2500.0,
+            transportOptions = listOf(MissionTransportOption("Cycling", 42, 0.5)),
+        )
+
+        store.createMission(draft)
+
+        val stored = missions.missions.value.getValue("manual")
+        assertEquals(MissionStatus.ACCEPTED, stored.status)
+        assertEquals("Home", stored.startLabel)
+        assertEquals("Campus", stored.destinationLabel)
+        assertEquals(630, stored.scheduledMinuteOfDay)
+        assertEquals(setOf(1, 4), stored.recurrence.daysOfWeek)
+        assertEquals("UTC", stored.recurrence.timezone)
+        assertEquals("2026-10-05", stored.nextOccurrenceDate)
+        assertEquals(2500.0, stored.targetDistanceMeters!!, 0.0)
+        assertEquals(500.0, stored.estimates.single().estimatedCarbonSavedGrams, 0.0)
+
+        val restarted = store()
+        val listed = restarted.state.value.upcomingMissions.single()
+        restarted.updateMission(listed.copy(destination = "Library"))
+        assertEquals("Library", missions.missions.value.getValue("manual").destinationLabel)
+        restarted.startMission("manual")
+        assertEquals("manual", restarted.activeMissionId())
+        restarted.endActiveMission()
+        restarted.skipMissionToday("manual")
+        assertTrue(restarted.state.value.upcomingMissions.single().skippedToday)
+    }
+
+    @Test
+    fun `failed creation reports an error without adding an upcoming mission`() = runTest {
+        val failingRepository = object : com.ecostep.app.data.repository.MissionRepository by missions {
+            override suspend fun createMission(mission: Mission): com.ecostep.app.data.repository.WriteOutcome {
+                throw IllegalStateException("Unable to save mission")
+            }
+        }
+        val store = RepositoryMissionStore(
+            missionRepository = failingRepository,
+            missionResultRepository = results,
+            scope = scope,
+            clock = { now },
+            zoneId = { ZoneId.of("UTC") },
+        ).also { it.bind("user-a") }
+
+        val failure = runCatching { store.createMission(recurring("manual", MissionStatus.SUGGESTED).toPageItem()) }
+        assertEquals("Unable to save mission", failure.exceptionOrNull()?.message)
+        assertTrue(store.state.value.upcomingMissions.isEmpty())
+        assertTrue(missions.missions.value.isEmpty())
+    }
+
+    @Test
+    fun `non scheduled days and closed occurrences cannot start or skip`() {
+        val weekly = recurring("weekly", MissionStatus.ACCEPTED).copy(
+            recurrence = MissionRecurrence(RecurrenceType.WEEKLY, daysOfWeek = setOf(2), timezone = "UTC"),
+        )
+        missions.missions.value = mapOf("weekly" to weekly)
+        val store = store()
+        assertEquals(false, store.state.value.upcomingMissions.single().dueToday)
+        store.startMission("weekly")
+        store.skipMissionToday("weekly")
+        assertEquals(0, missions.writes)
+        assertTrue(results.results.value.isEmpty())
+
+        missions.missions.value = mapOf("weekly" to weekly.copy(recurrence = MissionRecurrence(RecurrenceType.DAILY)))
+        assertTrue(store.state.value.upcomingMissions.single().dueToday)
+        store.skipMissionToday("weekly")
+        val writesAfterSkip = missions.writes
+        store.startMission("weekly")
+        store.skipMissionToday("weekly")
+        assertEquals(writesAfterSkip, missions.writes)
+        assertNull(store.activeMissionId())
+    }
+
+    @Test
+    fun `midnight refresh clears yesterday status and stops on sign out`() = runTest {
+        val beforeMidnight = ZonedDateTime.of(2026, 10, 5, 23, 59, 0, 0, ZoneOffset.UTC).toInstant().toEpochMilli()
+        missions.missions.value = mapOf(
+            "a" to recurring("a", MissionStatus.ACCEPTED),
+            "b" to recurring("b", MissionStatus.ACCEPTED),
+        )
+        results.results.value = mapOf("a_2026-10-05" to MissionOccurrence(
+            resultId = "a_2026-10-05", missionId = "a", occurrenceDate = "2026-10-05", skipped = true,
+        ), "b_2026-10-05" to MissionOccurrence(
+            resultId = "b_2026-10-05", missionId = "b", occurrenceDate = "2026-10-05", completed = true,
+        ))
+        val store = RepositoryMissionStore(missions, results, backgroundScope,
+            clock = { beforeMidnight + testScheduler.currentTime }, zoneId = { ZoneId.of("UTC") })
+        store.bind("user-a")
+        runCurrent()
+        assertTrue(store.state.value.upcomingMissions.first { it.mission.missionId == "a" }.skippedToday)
+        assertTrue(store.state.value.upcomingMissions.first { it.mission.missionId == "b" }.completedToday)
+        advanceTimeBy(60_000)
+        runCurrent()
+        assertTrue(store.state.value.upcomingMissions.all { !it.skippedToday && !it.completedToday })
+        store.startMission("a")
+        runCurrent()
+        assertEquals("a", store.activeMissionId())
+        store.bind(null)
+        advanceTimeBy(24 * 60 * 60_000L)
+        runCurrent()
+        assertTrue(store.state.value.upcomingMissions.isEmpty())
+    }
+
+    @Test
+    fun `rebinding the same user refreshes status after the date changes`() {
+        var current = now
+        missions.missions.value = mapOf("a" to recurring("a", MissionStatus.ACCEPTED))
+        val store = RepositoryMissionStore(missions, results, scope,
+            clock = { current }, zoneId = { ZoneId.of("UTC") })
+        store.bind("user-a")
+        store.skipMissionToday("a")
+        assertTrue(store.state.value.upcomingMissions.single().skippedToday)
+        current += 24 * 60 * 60_000L
+        store.bind("user-a")
+        assertEquals(false, store.state.value.upcomingMissions.single().skippedToday)
+    }
 
     @Test
     fun `debug seed is written once and drives the UI state`() {

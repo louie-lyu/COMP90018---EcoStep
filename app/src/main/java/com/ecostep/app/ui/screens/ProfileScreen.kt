@@ -1,5 +1,8 @@
 package com.ecostep.app.ui.screens
 
+import com.ecostep.app.ui.format.carbonGramsText
+import com.ecostep.app.ui.format.carbonKilogramsAsGramsText
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -621,25 +624,32 @@ private fun ImpactSummaryCard(
                     profileData.impactSummary
                         .totalJourneys
                         .toString(),
-                label = "Journeys",
+                label = "Counted journeys",
                 modifier = Modifier.weight(1f),
             )
 
             ImpactValue(
                 value =
-                    "${formatOneDecimal(
-                        profileData.impactSummary
-                            .carbonSavedKg,
-                    )} kg",
-                label = "CO₂ saved",
+                    carbonKilogramsAsGramsText(profileData.impactSummary.carbonSavedKg),
+                label = "Counted CO₂ saved",
                 modifier = Modifier.weight(1f),
             )
         }
 
+        Text(
+            text = "All-time server totals. CO₂ savings use a car journey of the same distance as the baseline.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
         if (profileData.impactSummary.isAwaitingServer) {
             Text(
-                text = "Journeys and CO₂ are estimated on this device until the server verifies " +
-                    "them. EcoPoints are added once verified.",
+                text = if (profileData.impactSummary.pendingJourneys > 0) {
+                    "Pending calculation: ${profileData.impactSummary.pendingJourneys} journeys · " +
+                        "${carbonGramsText(profileData.impactSummary.pendingCarbonSavedGrams)} estimated CO₂. " +
+                        "Excluded from totals and rankings until processed."
+                } else {
+                    "Server totals are updating. EcoPoints are awarded for eligible completed missions."
+                },
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -877,9 +887,7 @@ private fun RankingRow(
             ) {
                 Text(
                     text =
-                        "${formatOneDecimal(
-                            entry.carbonSavedKg,
-                        )} kg",
+                        carbonKilogramsAsGramsText(entry.carbonSavedKg),
                     style =
                         MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
@@ -1157,7 +1165,7 @@ private fun ProfileSettingsPage(
                             title =
                                 "Automatic Journey Detection",
                             supportingText =
-                                "Start recording when you begin moving while EcoStep is open",
+                                "Auto-start while EcoStep is open; end and save manually",
                             checked =
                                 preferences
                                     .automaticJourneyDetectionEnabled,
@@ -1761,19 +1769,4 @@ private fun formatReminderTime(
         120 -> "2 hours before"
         else -> "$minutes minutes before"
     }
-}
-
-private fun formatOneDecimal(
-    value: Double,
-): String {
-    val roundedTenths =
-        kotlin.math.round(value * 10.0).toInt()
-
-    val wholePart =
-        roundedTenths / 10
-
-    val decimalPart =
-        kotlin.math.abs(roundedTenths % 10)
-
-    return "$wholePart.$decimalPart"
 }

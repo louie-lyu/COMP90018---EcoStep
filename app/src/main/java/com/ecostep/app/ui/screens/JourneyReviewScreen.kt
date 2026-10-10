@@ -1,5 +1,8 @@
 package com.ecostep.app.ui.screens
 
+import com.ecostep.app.ui.format.carbonGramsText
+import com.ecostep.app.ui.format.carbonKilogramsAsGramsText
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -92,6 +95,7 @@ fun JourneyReviewScreen(
                     JourneyConfirmedDialog(
                         ecoPoints = uiState.ecoPoints,
                         carbonSavedKg = uiState.carbonSavedKg,
+                        isImpactVerified = uiState.isImpactVerified,
                         onDismiss = {
                             viewModel.dismissConfirmation()
                             onBackToMap()
@@ -294,12 +298,7 @@ private fun ConfirmJourneyButton(
             )
 
             Text(
-                text = String.format(
-                    Locale.US,
-                    "Save %.2f kg CO₂ · Earn %d EcoPoints",
-                    carbonSavedKg,
-                    ecoPoints,
-                ),
+                text = "Est. ${carbonKilogramsAsGramsText(carbonSavedKg)} CO₂ · $ecoPoints EcoPoints",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onPrimary.copy(
                     alpha = 0.85f,
@@ -580,6 +579,16 @@ private fun JourneyReviewContent(
         EnvironmentalImpactCard(
             ecoPoints = uiState.ecoPoints,
             carbonSavedKg = uiState.carbonSavedKg,
+            isImpactVerified = uiState.isImpactVerified,
+        )
+
+        Text(
+            text = "CO₂ saved vs a car journey of the same recorded distance. " +
+                if (uiState.isImpactVerified) "Calculated by the server." else
+                    "Estimate only; added to totals after server processing. EcoPoints require an eligible mission.",
+            modifier = Modifier.padding(top = 8.dp),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         if (uiState.lowerCarbonAlternatives.isNotEmpty()) {
@@ -813,6 +822,7 @@ private fun TransportModeButton(
 private fun EnvironmentalImpactCard(
     ecoPoints: Int,
     carbonSavedKg: Double,
+    isImpactVerified: Boolean,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -866,18 +876,14 @@ private fun EnvironmentalImpactCard(
                     .padding(start = 18.dp),
             ) {
                 Text(
-                    text = String.format(
-                        Locale.US,
-                        "%.2f kg",
-                        carbonSavedKg,
-                    ),
+                    text = carbonKilogramsAsGramsText(carbonSavedKg),
                     style =
                         MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary,
                 )
 
                 Text(
-                    text = "CO₂ saved",
+                    text = if (isImpactVerified) "Server CO₂ saved" else "Est. CO₂ saved",
                     style = MaterialTheme.typography.labelMedium,
                     color =
                         MaterialTheme.colorScheme.onSurfaceVariant,
@@ -924,6 +930,11 @@ private fun LowerCarbonAlternativesCard(
                 )
             }
 
+            Text(
+                text = "Extra savings vs your selected mode. Alternatives are excluded from totals.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
             alternatives.forEach { alternative ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -936,11 +947,7 @@ private fun LowerCarbonAlternativesCard(
                     )
 
                     Text(
-                        text = String.format(
-                            Locale.US,
-                            "saves %.2f kg CO₂",
-                            alternative.savingsGrams / 1000.0,
-                        ),
+                        text = "saves ${carbonGramsText(alternative.savingsGrams)} CO₂",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.primary,
                     )
@@ -954,6 +961,7 @@ private fun LowerCarbonAlternativesCard(
 private fun JourneyConfirmedDialog(
     ecoPoints: Int,
     carbonSavedKg: Double,
+    isImpactVerified: Boolean,
     onDismiss: () -> Unit,
 ) {
     AlertDialog(
@@ -1014,11 +1022,8 @@ private fun JourneyConfirmedDialog(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = String.format(
-                        Locale.US,
-                        "You saved %.2f kg of CO₂",
-                        carbonSavedKg,
-                    ),
+                    text = "${if (isImpactVerified) "Server savings" else "Estimated savings"}: " +
+                        "${carbonKilogramsAsGramsText(carbonSavedKg)} CO₂",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center,

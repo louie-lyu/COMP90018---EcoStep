@@ -1,5 +1,7 @@
 package com.ecostep.app.ui.screens
 
+import com.ecostep.app.ui.format.carbonKilogramsAsGramsText
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -211,7 +213,7 @@ fun HomeScreen(
                         ) {
                             Text(
                                 text =
-                                    "Est. ${carbonKgText(option.estimatedCarbonSavedKg)}",
+                                    "Est. ${carbonKilogramsAsGramsText(option.estimatedCarbonSavedKg)}",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.primary,
                             )
@@ -896,7 +898,7 @@ private fun SelectedRouteImpact(
                 Column {
                     Text(
                         text =
-                            carbonKgText(option.estimatedCarbonSavedKg),
+                            carbonKilogramsAsGramsText(option.estimatedCarbonSavedKg),
                         style =
                             MaterialTheme.typography.titleMedium,
                         color =
@@ -958,9 +960,6 @@ private fun distanceText(
 ): String {
     return String.format(Locale.getDefault(), "%.1f km", distanceMeters / 1000.0)
 }
-
-private fun carbonKgText(carbonKg: Double): String =
-    String.format(Locale.getDefault(), "%.2f kg", carbonKg)
 
 /** EcoPoints are only awarded for completed missions; free routes say so instead of "+0". */
 private fun ecoPointsLabel(points: Int, isMission: Boolean = false): String =

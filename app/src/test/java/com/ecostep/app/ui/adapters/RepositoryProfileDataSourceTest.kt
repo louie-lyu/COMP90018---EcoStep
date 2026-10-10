@@ -38,16 +38,17 @@ class RepositoryProfileDataSourceTest {
         )
 
     @Test
-    fun `confirmed journeys show even before the server has counted them`() = runTest {
+    fun `pending estimates are separate from counted server totals`() = runTest {
         journeys.seed("user-a", confirmed("j1", TransportMode.WALKING))
         journeys.seed("user-a", confirmed("j2", TransportMode.PUBLIC_TRANSPORT, carbon = 200.0))
         journeys.seed("user-a", testJourney(journeyId = "pending"))
 
         val impact = source().getProfileData().impactSummary
 
-        assertEquals(2, impact.totalJourneys)
-        // Unverified walk estimated at 384 g plus the verified 200 g.
-        assertEquals(0.584, impact.carbonSavedKg, 1e-9)
+        assertEquals(0, impact.totalJourneys)
+        assertEquals(0.0, impact.carbonSavedKg, 1e-9)
+        assertEquals(1, impact.pendingJourneys)
+        assertEquals(384.0, impact.pendingCarbonSavedGrams, 1e-9)
         assertEquals(0, impact.ecoPointsBalance)
         assertTrue(impact.isAwaitingServer)
     }
@@ -61,6 +62,21 @@ class RepositoryProfileDataSourceTest {
 
         assertEquals(1, impact.totalJourneys)
         assertEquals(58, impact.ecoPointsBalance)
+        assertEquals(0, impact.pendingJourneys)
         assertFalse(impact.isAwaitingServer)
+    }
+
+    @Test
+    fun `partial local history cannot overwrite larger server totals`() = runTest {
+        journeys.seed("user-a", confirmed("local", TransportMode.WALKING))
+        stats.stats = UserStats(pointsBalance = 21, totalJourneys = 5, carbonSavedGrams = 2000.5)
+
+        val impact = source().getProfileData().impactSummary
+
+        assertEquals(5, impact.totalJourneys)
+        assertEquals(2.0005, impact.carbonSavedKg, 1e-9)
+        assertEquals(1, impact.pendingJourneys)
+        assertEquals(384.0, impact.pendingCarbonSavedGrams, 1e-9)
+        assertTrue(impact.isAwaitingServer)
     }
 }

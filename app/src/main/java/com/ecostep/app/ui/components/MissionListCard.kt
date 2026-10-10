@@ -1,5 +1,7 @@
 package com.ecostep.app.ui.components
 
+import com.ecostep.app.ui.format.carbonKilogramsAsGramsText
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.unit.dp
 import com.ecostep.app.ui.viewmodels.UpcomingMissionUi
 
@@ -29,9 +30,8 @@ fun MissionListCard(
     modifier: Modifier = Modifier,
     todayStatusLabel: String? = null,
     canStartToday: Boolean = true,
+    canSkipToday: Boolean = true,
 ) {
-    val locale = LocalLocale.current.platformLocale
-
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -127,11 +127,8 @@ fun MissionListCard(
                         verticalArrangement = Arrangement.spacedBy(2.dp),
                     ) {
                         Text(
-                            text = String.format(
-                                locale,
-                                "%.2f kg CO₂ saved",
-                                mission.estimatedCarbonSavedKg,
-                            ),
+                            text =
+                                "Est. ${carbonKilogramsAsGramsText(mission.estimatedCarbonSavedKg)} CO₂ saved",
                             style = MaterialTheme.typography.titleMedium,
                             color =
                                 MaterialTheme.colorScheme.onSecondaryContainer,
@@ -170,6 +167,7 @@ fun MissionListCard(
             if (todayStatusLabel == null) {
                 TextButton(
                     onClick = onSkipToday,
+                    enabled = canSkipToday,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text("Skip today")

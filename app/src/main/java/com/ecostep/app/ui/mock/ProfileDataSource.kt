@@ -11,8 +11,11 @@ data class ProfileImpactSummary(
     val ecoPointsBalance: Int,
     val totalJourneys: Int,
     val carbonSavedKg: Double,
-    /** Journeys and CO₂ come from this device because the server has not processed them yet. */
+    /** The server is still calculating journeys or updating its aggregate totals. */
     val isAwaitingServer: Boolean = false,
+    val pendingJourneys: Int = 0,
+    /** Separate local estimate; excluded from the counted total and rankings. */
+    val pendingCarbonSavedGrams: Double = 0.0,
 )
 
 data class ProfilePreferences(

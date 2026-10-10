@@ -9,6 +9,7 @@ import com.ecostep.app.data.model.MissionResult
 import com.ecostep.app.ui.mock.WeeklyInsightDataSource
 import java.util.Calendar
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -59,15 +60,20 @@ class WeeklyInsightViewModel(
 
     private val _uiState = MutableStateFlow(WeeklyInsightUiState())
     val uiState: StateFlow<WeeklyInsightUiState> = _uiState.asStateFlow()
+    private var loadJob: Job? = null
+
+    fun retry() = loadReport()
 
     init {
         loadReport()
     }
 
     private fun loadReport() {
+        if (loadJob?.isActive == true) return
         val (weekStartMillis, weekEndMillis) = currentWeekBounds()
+        _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
-        viewModelScope.launch {
+        loadJob = viewModelScope.launch {
             // Only a data-source failure is an error; AI problems already fell back to local text.
             val results = try {
                 dataSource.getMissionResults(weekStartMillis)
