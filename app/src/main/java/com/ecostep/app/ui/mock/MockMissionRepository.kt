@@ -1,5 +1,7 @@
 package com.ecostep.app.ui.mock
 
+import com.ecostep.app.data.repository.WriteOutcome
+
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,6 +29,8 @@ interface MissionRepository {
 
     fun skipMissionToday(missionId: String)
 
+    suspend fun createMission(mission: MissionPageItem): WriteOutcome
+
     fun updateMission(updatedMission: MissionPageItem)
 
     fun endActiveMission()
@@ -53,6 +57,11 @@ class MockMissionRepository(
 
     override val state: StateFlow<MissionRepositoryState> =
         _state.asStateFlow()
+
+    override suspend fun createMission(mission: MissionPageItem): WriteOutcome {
+        _state.update { it.copy(upcomingMissions = it.upcomingMissions + mission) }
+        return WriteOutcome.SYNCED
+    }
 
     override fun acceptSuggestedMission() {
         _state.update { currentState ->

@@ -1,5 +1,7 @@
 package com.ecostep.app.ui.components
 
+import com.ecostep.app.ui.format.carbonKilogramsAsGramsText
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.material3.IconButton
-import androidx.compose.ui.platform.LocalLocale
 
 @Composable
 fun UpcomingMissionCard(
@@ -31,8 +32,6 @@ fun UpcomingMissionCard(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
 ) {
-    val locale = LocalLocale.current.platformLocale
-
     val millisUntilStart =
         mission.startTimeMillis - currentTimeMillis
 
@@ -161,11 +160,8 @@ fun UpcomingMissionCard(
                         verticalArrangement = Arrangement.spacedBy(2.dp),
                     ) {
                         Text(
-                            text = String.format(
-                                locale,
-                                "%.2f kg CO₂ saved",
-                                mission.estimatedCarbonSavedKg,
-                            ),
+                            text =
+                                "Est. ${carbonKilogramsAsGramsText(mission.estimatedCarbonSavedKg)} CO₂ saved",
                             style = MaterialTheme.typography.titleMedium,
                             color =
                                 MaterialTheme.colorScheme.onSecondaryContainer,
@@ -193,6 +189,7 @@ fun UpcomingMissionCard(
 
                 Button(
                     onClick = onStart,
+                    enabled = mission.canStartToday,
                     modifier = Modifier.weight(1f),
                 ) {
                     Text("Start")

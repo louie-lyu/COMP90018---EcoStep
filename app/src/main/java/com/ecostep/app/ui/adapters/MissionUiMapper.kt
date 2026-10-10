@@ -113,6 +113,7 @@ fun MissionPageItem.toMission(status: MissionStatus, timezone: String): Mission 
     startLabel = startLocation,
     destinationLabel = destination,
     targetTransportMode = TransportModeLabels.parse(mission.transportLabel),
+    targetDistanceMeters = distanceMeters,
     status = status,
     recurrence = MissionRecurrence.weekly(repeatDays.mapTo(mutableSetOf()) { it.toDayOfWeek() }, timezone),
     scheduledMinuteOfDay = scheduledHour * 60 + scheduledMinute,

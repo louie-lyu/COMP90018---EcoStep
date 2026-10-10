@@ -59,6 +59,7 @@ data class UpcomingMissionUi(
     val endTimeMillis: Long,
     val estimatedCarbonSavedKg: Double,
     val estimatedEcoPoints: Int,
+    val canStartToday: Boolean = true,
 )
 
 enum class JourneyTrackingState {
@@ -598,6 +599,7 @@ class HomeViewModel(
             routeTitle = mission.routeTitle,
             transportLabel = mission.transportLabel,
             startTimeMillis = nextStartTime,
+            canStartToday = dueToday && !completedToday && !skippedToday,
 
             // TODO(Missions/Routing): Replace the fixed one-hour duration
             // with the estimated duration of the selected route.

@@ -1,5 +1,7 @@
 package com.ecostep.app.ui.screens
 
+import com.ecostep.app.ui.format.carbonGramsText
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -91,6 +94,19 @@ fun WeeklyInsightScreen(
                 ),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
+                if (uiState.isLoading) {
+                    item { Text("Loading weekly insight…") }
+                }
+                uiState.errorMessage?.let { message ->
+                    item {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text(text = message, color = MaterialTheme.colorScheme.error)
+                            Button(onClick = viewModel::retry, enabled = !uiState.isLoading) {
+                                Text("Retry")
+                            }
+                        }
+                    }
+                }
                 if (report == null) {
                     return@LazyColumn
                 }
@@ -148,8 +164,8 @@ private fun StatsRow(
         ) {
             StatCard(
                 modifier = Modifier.weight(1f),
-                value = "${formatNumber(report.totalCarbonSavingGrams)} g",
-                label = "CO₂ saved",
+                value = carbonGramsText(report.totalCarbonSavingGrams),
+                label = "Completed mission CO₂",
             )
 
             StatCard(
@@ -160,6 +176,11 @@ private fun StatsRow(
                 label = "Most used mode",
             )
         }
+        Text(
+            text = "This week's completed mission occurrences only; ordinary journeys and route estimates are excluded.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }
 

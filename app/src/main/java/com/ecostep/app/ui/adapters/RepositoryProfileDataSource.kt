@@ -59,18 +59,10 @@ class RepositoryProfileDataSource(
         val preferences = userProfile?.preferences ?: UserPreferences()
         val userStats = stats.await()
         val localJourneys = confirmedJourneys.await()
-        // The server totals lag behind (or the backend is not deployed): show what this
-        // device already knows, with unverified journeys estimated by the shared formula.
-        val awaitingServer = localJourneys.size > userStats.totalJourneys
-        val totalJourneys = if (awaitingServer) localJourneys.size else userStats.totalJourneys
-        val carbonSavedGrams = if (awaitingServer) {
-            localJourneys.sumOf { journey ->
-                journey.carbonSavedGrams
-                    ?: EmissionFactors.carbonSavedVersusCarGrams(journey.distanceMeters, journey.transportMode)
-            }
-        } else {
-            userStats.carbonSavedGrams
-        }
+        // Estimates never replace the server's counted totals, including when another
+        // device has contributed journeys that are absent from this device's history.
+        val pendingJourneys = localJourneys.filter { it.carbonSavedGrams == null }
+        val awaitingServer = pendingJourneys.isNotEmpty() || localJourneys.size > userStats.totalJourneys
         ProfileData(
             user = UserProfileUi(
                 userId = uid,
@@ -83,9 +75,13 @@ class RepositoryProfileDataSource(
             impactSummary = ProfileImpactSummary(
                 // Points are only ever awarded by the trusted backend.
                 ecoPointsBalance = userStats.pointsBalance,
-                totalJourneys = totalJourneys,
-                carbonSavedKg = carbonSavedGrams / 1000.0,
+                totalJourneys = userStats.totalJourneys,
+                carbonSavedKg = userStats.carbonSavedGrams / 1000.0,
                 isAwaitingServer = awaitingServer,
+                pendingJourneys = pendingJourneys.size,
+                pendingCarbonSavedGrams = pendingJourneys.sumOf { journey ->
+                    EmissionFactors.carbonSavedVersusCarGrams(journey.distanceMeters, journey.transportMode)
+                },
             ),
             preferences = ProfilePreferences(
                 routineLearningEnabled = preferences.routineLearningEnabled,

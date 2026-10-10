@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { after, describe, test } from "node:test";
 import {
   disableNetwork,
@@ -223,6 +224,33 @@ describe("missions and EcoPoints", () => {
 });
 
 describe("reward redemption callable", () => {
+  test("demo catalog is readable and retries deduct points exactly once", async () => {
+    const user = await newUser("demo-catalog");
+    const admin = adminDb();
+    const rewards = JSON.parse(readFileSync("config/demo-rewards.json", "utf8")) as
+      Array<{ rewardId: string; pointsRequired: number; title: string }>;
+    for (const { rewardId, ...reward } of rewards) {
+      await admin.doc(`rewards/${rewardId}`).set(reward);
+      const offer = await getDoc(doc(user.db, `rewards/${rewardId}`));
+      assert.equal(offer.data()?.active, true);
+      assert.match(offer.data()?.description, /Demo only/);
+    }
+    await admin.doc(`userStats/${user.uid}`).set({ pointsBalance: 21 });
+    const request = { rewardId: rewards[0]!.rewardId, requestId: "demo-request-0001" };
+    const first = await user.call("redeemReward", request);
+    const retry = await user.call("redeemReward", request);
+    assert.equal(first.redemption.pointsSpent, 10);
+    assert.equal(first.redemption.rewardTitle, rewards[0]!.title);
+    assert.equal(retry.redemption.redemptionCode, first.redemption.redemptionCode);
+    assert.equal((await admin.doc(`userStats/${user.uid}`).get()).data()?.pointsBalance, 11);
+    assert.equal((await admin.collection(`users/${user.uid}/rewardRedemptions`).get()).size, 1);
+    const saved = await getDoc(doc(user.db, `users/${user.uid}/rewardRedemptions/${request.requestId}`));
+    assert.equal(saved.data()?.pointsSpent, 10);
+    await expectCode(user.call("redeemReward", {
+      rewardId: rewards[1]!.rewardId, requestId: "demo-request-0002",
+    }), "functions/failed-precondition");
+  });
+
   test("redeems in one transaction, is idempotent per request and checks balance, stock and state", async () => {
     const user = await newUser("rewards");
     const admin = adminDb();

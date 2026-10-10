@@ -1,5 +1,7 @@
 package com.ecostep.app.ui.components
 
+import com.ecostep.app.ui.format.carbonKilogramsAsGramsText
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +22,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
@@ -41,7 +44,6 @@ import com.ecostep.app.ui.adapters.withRouteEstimate
 import com.ecostep.app.ui.viewmodels.RouteEstimateState
 import java.util.Locale
 import kotlinx.coroutines.delay
-import androidx.compose.ui.platform.LocalLocale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,15 +52,16 @@ fun MissionEditorBottomSheet(
     onDismiss: () -> Unit,
     onSave: (MissionPageItem) -> Unit,
     isCreating: Boolean = false,
+    isSaving: Boolean = false,
+    saveError: String? = null,
     /** Recalculated impact for the start and destination being edited. */
     routeEstimate: RouteEstimateState = RouteEstimateState.Idle,
     /** Called once typing pauses on a changed start or destination. */
     onRouteChanged: (start: String, destination: String) -> Unit = { _, _ -> },
 ) {
-    val locale = LocalLocale.current.platformLocale
-
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
+        confirmValueChange = { !isSaving || it != SheetValue.Hidden },
     )
 
     var startLocation by remember(item.mission.missionId) {
@@ -122,7 +125,7 @@ fun MissionEditorBottomSheet(
                 selectedRepeatDays.isNotEmpty()
 
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { if (!isSaving) onDismiss() },
         sheetState = sheetState,
     ) {
         Column(
@@ -281,11 +284,7 @@ fun MissionEditorBottomSheet(
                             verticalArrangement = Arrangement.spacedBy(2.dp),
                         ) {
                             Text(
-                                text = String.format(
-                                    locale,
-                                    "%.2f kg CO₂ saved",
-                                    option.estimatedCarbonSavedKg,
-                                ),
+                                text = "Est. ${carbonKilogramsAsGramsText(option.estimatedCarbonSavedKg)} CO₂ saved",
                                 style = MaterialTheme.typography.titleMedium,
                                 color =
                                     MaterialTheme.colorScheme.onSecondaryContainer,
@@ -326,12 +325,17 @@ fun MissionEditorBottomSheet(
                 },
             )
 
+            saveError?.let { message ->
+                Text(text = message, color = MaterialTheme.colorScheme.error)
+            }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 OutlinedButton(
                     onClick = onDismiss,
+                    enabled = !isSaving,
                     modifier = Modifier.weight(1f),
                 ) {
                     Text("Cancel")
@@ -362,9 +366,9 @@ fun MissionEditorBottomSheet(
                         )
                     },
                     modifier = Modifier.weight(1f),
-                    enabled = canSave,
+                    enabled = canSave && !isSaving,
                 ) {
-                    Text(if (isCreating) "Create mission" else "Save")
+                    Text(if (isSaving) "Saving…" else if (isCreating) "Create mission" else "Save")
                 }
             }
         }

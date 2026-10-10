@@ -1,0 +1,29 @@
+[
+  {
+    "rewardId": "ecostep-demo-starter",
+    "merchantName": "EcoStep Demo",
+    "title": "Demo Green Starter Token",
+    "description": "Demo only: redeem 10 EcoPoints for a token in My Rewards. No monetary value, merchant discount or external benefit. Redemption spends your EcoPoints.",
+    "pointsRequired": 10,
+    "category": "other",
+    "active": true
+  },
+  {
+    "rewardId": "ecostep-demo-explorer",
+    "merchantName": "EcoStep Demo",
+    "title": "Demo Green Explorer Token",
+    "description": "Demo only: redeem 20 EcoPoints for a token in My Rewards. No monetary value, merchant discount or external benefit. Redemption spends your EcoPoints.",
+    "pointsRequired": 20,
+    "category": "other",
+    "active": true
+  },
+  {
+    "rewardId": "ecostep-demo-champion",
+    "merchantName": "EcoStep Demo",
+    "title": "Demo Green Champion Token",
+    "description": "Demo only: redeem 50 EcoPoints for a token in My Rewards. No monetary value, merchant discount or external benefit. Redemption spends your EcoPoints.",
+    "pointsRequired": 50,
+    "category": "other",
+    "active": true
+  }
+]

@@ -5,6 +5,7 @@ import com.ecostep.app.data.model.MissionOccurrence
 import com.ecostep.app.data.model.MissionStatus
 import com.ecostep.app.data.model.MissionTransitions
 import com.ecostep.app.data.repository.MissionResultRepository
+import com.ecostep.app.data.repository.WriteOutcome
 import com.ecostep.app.ui.mock.MissionPageItem
 import com.ecostep.app.ui.mock.MissionRepositoryState
 import java.time.Instant
@@ -20,6 +21,8 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import com.ecostep.app.data.repository.MissionRepository as MissionDataRepository
 import com.ecostep.app.ui.mock.MissionRepository as MissionUiRepository
 
@@ -45,16 +48,31 @@ class RepositoryMissionStore(
     private var occurrences: Map<String, MissionOccurrence> = emptyMap()
     private var boundUid: String? = null
     private var observeJob: Job? = null
+    private var midnightJob: Job? = null
 
     /** (Re)subscribes for the signed-in user; call whenever a mission screen is shown. */
     fun bind(uid: String?) {
-        if (uid == boundUid) return
+        if (uid == boundUid) {
+            if (uid != null) publish()
+            return
+        }
         boundUid = uid
         observeJob?.cancel()
+        midnightJob?.cancel()
         missions = emptyList()
         occurrences = emptyMap()
         _state.value = MissionRepositoryState()
         if (uid == null) return
+
+        midnightJob = scope.launch {
+            while (isActive) {
+                val now = Instant.ofEpochMilli(clock())
+                val nextMidnight = now.atZone(zoneId()).toLocalDate().plusDays(1)
+                    .atStartOfDay(zoneId()).toInstant()
+                delay((nextMidnight.toEpochMilli() - now.toEpochMilli()).coerceAtLeast(1L))
+                publish()
+            }
+        }
 
         observeJob = scope.launch {
             val seed = seedMissions()
@@ -92,8 +110,7 @@ class RepositoryMissionStore(
         if (missions.any { it.status == MissionStatus.ACTIVE }) return
         val mission = find(missionId, MissionStatus.ACCEPTED) ?: return
         val today = today()
-        // Today's occurrence is already done; the next one starts on its own date.
-        if (occurrence(missionId, today.toString())?.completed == true) return
+        if (!canActToday(mission, today)) return
         persist {
             missionRepository.updateMission(MissionTransitions.start(mission, today))
             missionResultRepository.markStarted(missionId, today.toString(), clock())
@@ -103,10 +120,17 @@ class RepositoryMissionStore(
     override fun skipMissionToday(missionId: String) {
         val mission = find(missionId, MissionStatus.ACCEPTED) ?: return
         val today = today()
+        if (!canActToday(mission, today)) return
         persist {
             missionResultRepository.markSkipped(missionId, today.toString(), clock())
             missionRepository.updateMission(MissionTransitions.skipToday(mission, today))
         }
+    }
+
+    override suspend fun createMission(mission: MissionPageItem): WriteOutcome {
+        check(boundUid != null) { "You must be signed in to create missions." }
+        val definition = mission.toMission(MissionStatus.SUGGESTED, zoneId().id)
+        return missionRepository.createMission(MissionTransitions.accept(definition, today()))
     }
 
     override fun updateMission(updatedMission: MissionPageItem) {
@@ -154,6 +178,7 @@ class RepositoryMissionStore(
             .map { mission ->
                 val todayOccurrence = occurrence(mission.missionId, today)
                 mission.toPageItem().copy(
+                    dueToday = mission.recurrence.occursOn(LocalDate.parse(today)),
                     completedToday = todayOccurrence?.completed == true,
                     skippedToday = todayOccurrence?.skipped == true,
                 )
@@ -183,6 +208,11 @@ class RepositoryMissionStore(
         occurrences[MissionOccurrence.resultId(missionId, date)]
 
     private fun today(): LocalDate = Instant.ofEpochMilli(clock()).atZone(zoneId()).toLocalDate()
+
+    private fun canActToday(mission: Mission, date: LocalDate): Boolean {
+        val result = occurrence(mission.missionId, date.toString())
+        return mission.recurrence.occursOn(date) && result?.completed != true && result?.skipped != true
+    }
 
     private fun persist(block: suspend () -> Unit) {
         scope.launch { runCatchingData(block) }

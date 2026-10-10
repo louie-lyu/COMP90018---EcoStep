@@ -28,6 +28,12 @@ sealed interface RouteEstimateState {
         RouteEstimateState
 }
 
+data class MissionCreationState(
+    val isCreating: Boolean = false,
+    val createError: String? = null,
+    val createdMissionId: String? = null,
+)
+
 class MissionViewModel(
     private val missionRepository: MissionRepository,
     /**
@@ -52,6 +58,12 @@ class MissionViewModel(
     val routeEstimate: StateFlow<RouteEstimateState> = _routeEstimate.asStateFlow()
 
     private var estimateJob: Job? = null
+    private val _creationState = MutableStateFlow(MissionCreationState())
+    val creationState: StateFlow<MissionCreationState> = _creationState.asStateFlow()
+
+    fun resetCreationState() {
+        if (!_creationState.value.isCreating) _creationState.value = MissionCreationState()
+    }
 
     fun acceptSuggestedMission() {
         missionRepository.acceptSuggestedMission()
@@ -114,32 +126,59 @@ class MissionViewModel(
      * for the new route first; if that fails, the previous estimates are kept.
      */
     fun updateMission(updatedMission: MissionPageItem) {
+        saveWithRouteEstimate(updatedMission, routeChanged(updatedMission), missionRepository::updateMission)
+    }
+
+    fun createMission(mission: MissionPageItem) {
+        if (_creationState.value.isCreating) return
+        _creationState.value = MissionCreationState(isCreating = true)
+        viewModelScope.launch {
+            try {
+                missionRepository.createMission(withCurrentRouteEstimate(mission, true))
+                _creationState.value = MissionCreationState(createdMissionId = mission.mission.missionId)
+            } catch (exception: CancellationException) {
+                _creationState.value = MissionCreationState()
+                throw exception
+            } catch (exception: Exception) {
+                _creationState.value = MissionCreationState(
+                    createError = exception.message ?: "Unable to create mission. Please retry.",
+                )
+            }
+        }
+    }
+
+    private fun saveWithRouteEstimate(
+        updatedMission: MissionPageItem,
+        needsEstimate: Boolean,
+        save: (MissionPageItem) -> Unit,
+    ) {
+        viewModelScope.launch { save(withCurrentRouteEstimate(updatedMission, needsEstimate)) }
+    }
+
+    private suspend fun withCurrentRouteEstimate(
+        updatedMission: MissionPageItem,
+        needsEstimate: Boolean,
+    ): MissionPageItem {
         val estimator = routeEstimator
-        if (estimator == null || !routeChanged(updatedMission)) {
-            missionRepository.updateMission(updatedMission)
-            return
+        if (estimator == null || !needsEstimate) {
+            return updatedMission
         }
 
         val ready = (_routeEstimate.value as? RouteEstimateState.Ready)?.estimate
             ?.takeIf { it.matches(updatedMission.startLocation, updatedMission.destination) }
         clearRouteEstimate()
         if (ready != null) {
-            missionRepository.updateMission(updatedMission.withRouteEstimate(ready))
-            return
+            return updatedMission.withRouteEstimate(ready)
         }
 
-        viewModelScope.launch {
-            val estimate = try {
-                estimator(updatedMission.startLocation.trim(), updatedMission.destination.trim())
-            } catch (exception: CancellationException) {
-                throw exception
-            } catch (_: Exception) {
-                null
-            }
-            missionRepository.updateMission(
-                estimate?.let(updatedMission::withRouteEstimate) ?: updatedMission,
-            )
+        val estimate = try {
+            estimator(updatedMission.startLocation.trim(), updatedMission.destination.trim())
+        } catch (exception: CancellationException) {
+            throw exception
+        } catch (_: Exception) {
+            null
         }
+        return estimate?.let(updatedMission::withRouteEstimate) ?: updatedMission
     }
 
     private fun routeChanged(updated: MissionPageItem): Boolean {

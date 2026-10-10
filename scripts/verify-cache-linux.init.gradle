@@ -1,0 +1,23 @@
+// Exports the existing Android JVM test classpath for the same cache tests on Linux.
+allprojects {
+    tasks.withType(Test).configureEach {
+        doFirst {
+            def output = rootProject.layout.buildDirectory.file('cache-verification/classpath.txt').get().asFile
+            output.parentFile.mkdirs()
+            output.text = classpath.files.collect { it.absolutePath }.join('\n')
+        }
+    }
+}
+
+gradle.projectsEvaluated {
+    def app = rootProject.project(':app')
+    def testTask = app.tasks.named('testDebugUnitTest')
+    app.tasks.register('exportCacheTestClasspath') {
+        dependsOn { testTask.get().taskDependencies.getDependencies(testTask.get()) }
+        doLast {
+            def output = rootProject.layout.buildDirectory.file('cache-verification/classpath.txt').get().asFile
+            output.parentFile.mkdirs()
+            output.text = testTask.get().classpath.files.collect { it.absolutePath }.join('\n')
+        }
+    }
+}
