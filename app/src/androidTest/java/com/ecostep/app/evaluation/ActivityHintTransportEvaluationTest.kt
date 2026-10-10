@@ -1,12 +1,18 @@
 package com.ecostep.app.evaluation
 
 import android.os.Build
+import android.os.Bundle
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.ecostep.app.BuildConfig
 import com.ecostep.app.EcoStepApp
+import com.ecostep.app.algorithm.CALIBRATED_MOTION_THRESHOLDS
 import com.ecostep.app.algorithm.DefaultTransportClassifier
+import com.ecostep.app.algorithm.MotionThresholds
+import com.ecostep.app.algorithm.TransportEvidence
+import com.ecostep.app.algorithm.TransportEvidenceProvider
+import com.ecostep.app.data.model.JourneySummary
 import com.ecostep.app.evaluation.ShlEvaluationDataset.Sample
 import com.ecostep.app.network.publictransport.DefaultTransportEvidenceProvider
 import com.ecostep.app.network.publictransport.TransitousApi
@@ -40,6 +46,7 @@ class ActivityHintTransportEvaluationTest {
         val limit = arguments.getString("samplesPerMode")?.toInt() ?: 10000
         val seed = arguments.getString("seed")?.toInt() ?: 42
         require(limit in 1..10000 && seed >= 0)
+        val motionThresholds = motionThresholdsFrom(arguments)
 
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val client = (context.applicationContext as EcoStepApp).appContainer.okHttpClient
@@ -48,7 +55,7 @@ class ActivityHintTransportEvaluationTest {
         val startedAt = System.currentTimeMillis()
         val directory = File(context.filesDir, "evaluation").apply { mkdirs() }
         val output = File(directory, "activity-hint-transport-evaluation-$startedAt.json")
-        val report = newReport(startedAt, limit, seed)
+        val report = newReport(startedAt, limit, seed, motionThresholds)
         val records = mutableListOf<JSONObject>()
         var completed = false
 
@@ -60,7 +67,7 @@ class ActivityHintTransportEvaluationTest {
             var hasRequested = false
             for (sample in dataset.samples) {
                 if (sample.recording != null && hasRequested) delay(REQUEST_INTERVAL_MS)
-                val record = evaluate(sample, api)
+                val record = evaluate(sample, api, motionThresholds)
                 if (sample.recording != null) hasRequested = true
                 records += record
                 writeProgress(report, records, output)
@@ -75,25 +82,26 @@ class ActivityHintTransportEvaluationTest {
             report.put("runError", errorJson(error))
             throw error
         } finally {
-            finishReport(report, records, completed)
+            finishReport(report, records, completed, motionThresholds)
             output.writeText(report.toString(2))
         }
         assertTrue("Evaluation incomplete; inspect JSON report", report.getBoolean("passed"))
     }
 
-    private suspend fun evaluate(sample: Sample, api: TransitousApi): JSONObject {
-        val record = newRecord(sample)
+    private suspend fun evaluate(sample: Sample, api: TransitousApi, motionThresholds: MotionThresholds?): JSONObject {
+        val record = newRecord(sample, motionThresholds)
         val recording = sample.recording ?: return record.put(
             "reason", "Recording unavailable after production filtering; App would not save it",
         )
         val observedApi = CurrentTimetableApi(api, record.getJSONObject("planner"))
+        val evidence = RememberingEvidenceProvider(DefaultTransportEvidenceProvider(recording, observedApi))
+        val journey = checkNotNull(sample.journey)
         val start = System.nanoTime()
         try {
             // Match TrackingViewModel: classify on IO, keep UNKNOWN on timeout or exception.
             val result = withContext(Dispatchers.IO) {
                 withTimeoutOrNull(CLASSIFICATION_TIMEOUT_MS) {
-                    val evidence = DefaultTransportEvidenceProvider(recording, observedApi)
-                    DefaultTransportClassifier(evidence).classify(checkNotNull(sample.journey))
+                    DefaultTransportClassifier(evidence).classify(journey)
                 }
             }
             if (result == null) {
@@ -103,6 +111,19 @@ class ActivityHintTransportEvaluationTest {
                     .put("confidence", result.confidence)
                     .put("classificationCompleted", true)
                     .put("correct", result.mode == sample.mode)
+                if (motionThresholds != null) {
+                    // Same evidence as the production run, so only the motion rule differs; no second request.
+                    val remembered = checkNotNull(evidence.evidence)
+                    val variant = DefaultTransportClassifier(
+                        object : TransportEvidenceProvider {
+                            override suspend fun getEvidence(journey: JourneySummary) = remembered
+                        },
+                        motionThresholds,
+                    ).classify(journey)
+                    record.getJSONObject("motionVariant")
+                        .put("predictedMode", variant.mode.name)
+                        .put("correct", variant.mode == sample.mode)
+                }
             }
         } catch (error: CancellationException) {
             throw error
@@ -115,7 +136,7 @@ class ActivityHintTransportEvaluationTest {
         return record
     }
 
-    private fun newRecord(sample: Sample) = JSONObject().apply {
+    private fun newRecord(sample: Sample, motionThresholds: MotionThresholds?) = JSONObject().apply {
         put("sampleId", sample.id)
         put("userId", sample.user)
         put("sourceMode", ShlEvaluationDataset.sourceNames.getValue(sample.source))
@@ -142,6 +163,34 @@ class ActivityHintTransportEvaluationTest {
         put("durationMs", JSONObject.NULL)
         put("transitRoutes", 0)
         put("planner", JSONObject().put("status", "not_called"))
+        put("sensorFeatures", sample.journey?.sensorFeatures?.let { features ->
+            JSONObject()
+                .put("averageSpeedMps", features.averageSpeedMps)
+                .put("p95SpeedMps", features.p95SpeedMps)
+                .put("maxSpeedMps", features.maxSpeedMps)
+                .put("stopRatio", features.stopRatio)
+                .put("accelSampleCount", features.accelSampleCount)
+                .put("accelMagnitudeMean", features.accelMagnitudeMean)
+                .put("accelMagnitudeStd", features.accelMagnitudeStd)
+                .put("gyroSampleCount", features.gyroSampleCount)
+                .put("gyroMagnitudeMean", features.gyroMagnitudeMean)
+                .put("gyroMagnitudeStd", features.gyroMagnitudeStd)
+        } ?: JSONObject.NULL)
+        // Timeouts and missing recordings stay UNKNOWN, as in the App.
+        if (motionThresholds != null) {
+            put("motionVariant", JSONObject().put("predictedMode", "UNKNOWN").put("correct", false))
+        }
+    }
+
+    /** Keeps the evidence of the production run for the motion variant. */
+    private class RememberingEvidenceProvider(
+        private val delegate: TransportEvidenceProvider,
+    ) : TransportEvidenceProvider {
+        var evidence: TransportEvidence? = null
+            private set
+
+        override suspend fun getEvidence(journey: JourneySummary): TransportEvidence =
+            delegate.getEvidence(journey).also { evidence = it }
     }
 
     /** Only changes the query time; all sensor timestamps and production API defaults are retained. */
@@ -199,10 +248,12 @@ class ActivityHintTransportEvaluationTest {
         }
     }
 
-    private fun newReport(startedAt: Long, limit: Int, seed: Int) = JSONObject().apply {
+    private fun newReport(startedAt: Long, limit: Int, seed: Int, motionThresholds: MotionThresholds?) = JSONObject().apply {
         val arguments = InstrumentationRegistry.getArguments()
-        put("schemaVersion", 4)
-        put("experiment", "SHL recorded Activity and GPS with live current-timetable transit plans")
+        put("schemaVersion", 5)
+        put("experiment", "SHL recorded Activity, GPS and motion (when the archive has it) with live current-timetable transit plans")
+        put("productionMotionThresholds", CALIBRATED_MOTION_THRESHOLDS?.toJson() ?: JSONObject.NULL)
+        put("motionVariantThresholds", motionThresholds?.toJson() ?: JSONObject.NULL)
         put("timetableTime", "current")
         put("startedAtMillis", startedAt)
         put("gitCommit", arguments.getString("gitCommit") ?: "unknown")
@@ -232,7 +283,12 @@ class ActivityHintTransportEvaluationTest {
         output.writeText(report.toString(2))
     }
 
-    private fun finishReport(report: JSONObject, records: List<JSONObject>, completed: Boolean) {
+    private fun finishReport(
+        report: JSONObject,
+        records: List<JSONObject>,
+        completed: Boolean,
+        motionThresholds: MotionThresholds?,
+    ) {
         val online = records.filter {
             it.getJSONObject("planner").getString("status") == "success" && it.getBoolean("classificationCompleted")
         }
@@ -253,7 +309,44 @@ class ActivityHintTransportEvaluationTest {
             .put("completed", completed)
             .put("passed", completed && records.all { it.getBoolean("runtimeSuccess") })
             .put("finishedAtMillis", System.currentTimeMillis())
+        // Motion only changes the speed fallback, used when no Activity hint reaches 60.
+        val fallback = records.filter { record ->
+            record.isNull("activityHint") || record.getJSONObject("activityHint").getInt("confidence") < 60
+        }
+        report.put("sensorFallbackSummary", TransportEvaluationMetrics.summary(fallback))
+        if (motionThresholds != null) {
+            val variant = records.map { it.asMotionVariant() }
+            report.put(
+                "motionVariant",
+                JSONObject()
+                    .put("summary", TransportEvaluationMetrics.summary(variant))
+                    .put("perMode", JSONArray(ShlEvaluationDataset.modes.map { TransportEvaluationMetrics.perMode(variant, it) }))
+                    .put("confusionMatrix", TransportEvaluationMetrics.confusionMatrix(variant))
+                    .put("sensorFallbackSummary", TransportEvaluationMetrics.summary(fallback.map { it.asMotionVariant() })),
+            )
+        }
     }
+
+    private fun JSONObject.asMotionVariant(): JSONObject {
+        val variant = getJSONObject("motionVariant")
+        return JSONObject(toString())
+            .put("predictedMode", variant.getString("predictedMode"))
+            .put("correct", variant.getBoolean("correct"))
+    }
+
+    private fun motionThresholdsFrom(arguments: Bundle): MotionThresholds? {
+        val steadyAccelStd = arguments.getString("motionSteadyAccelStd")
+        val minAccelSamples = arguments.getString("motionMinAccelSamples")
+        if (steadyAccelStd == null && minAccelSamples == null) return null
+        require(steadyAccelStd != null && minAccelSamples != null) {
+            "Supply both motionSteadyAccelStd and motionMinAccelSamples."
+        }
+        return MotionThresholds(steadyAccelStd.toDouble(), minAccelSamples.toInt())
+    }
+
+    private fun MotionThresholds.toJson() = JSONObject()
+        .put("steadyAccelStd", steadyAccelStd)
+        .put("minAccelSamples", minAccelSamples)
 
     private fun sha256(file: File): String {
         val digest = MessageDigest.getInstance("SHA-256")

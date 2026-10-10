@@ -64,7 +64,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run-activity-hint-transport-e
   The production JourneyTracker, summary builder, shared HTTP client, evidence provider, stop mapper
   and classifier are reused. The 5-second timeout and UNKNOWN fallback match TrackingViewModel.
   Only the planner query time differs. No offline transit files or local candidate filtering remain.
-  Schema 4 reports contain `summary`, `perMode` (true-label recall/precision/F1), `perPrediction`
+  Schema 5 reports contain `summary`, `perMode` (true-label recall/precision/F1), `perPrediction`
   (predicted-label share/error rate), `confusionMatrix`, per-sample records and planner diagnostics.
   `successfulOnlineSummary` covers requests that succeeded and completed classification; an HTTP
   success can still return no transit candidates. Check `withTransitCandidates`, `plannerStatusCounts`
@@ -78,8 +78,17 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run-activity-hint-transport-e
   Unexpected classifier exceptions retain UNKNOWN but fail the test. Expected network failures and
   timeouts are measured outcomes; passing is not an accuracy threshold or proof of planner success.
   Ground-truth labels split single-mode intervals; automatic segmentation and mixed walking/transit
-  trips are outside scope. Live Google recognition, IMU, Firebase saving, UI and user corrections
+  trips are outside scope. Live Google recognition, Firebase saving, UI and user corrections
   are not evaluated. Latency includes network/classification, excludes replay and request spacing.
+  Motion: when the archive contains `Hand_Motion.txt`, its accelerometer and gyroscope columns are
+  streamed into the production JourneyTracker at about 50 Hz (one row per 20 ms, like
+  SENSOR_DELAY_GAME); otherwise motion features stay empty. `dataset.motionReplay` reports files
+  found/missing and rows replayed. Each record includes its `sensorFeatures` for offline threshold
+  calibration. `sensorFallbackSummary` covers samples without an Activity hint of confidence 60 or
+  more, the only ones the motion rule can change. Passing `-MotionSteadyAccelStd` and
+  `-MotionMinAccelSamples` adds `motionVariant` (summary, perMode, confusion matrix, fallback subset):
+  the same samples and transit evidence classified with that accelerometer rule, without extra requests.
+  The main results always use `productionMotionThresholds` (`CALIBRATED_MOTION_THRESHOLDS`).
   Code is split into `ActivityHintTransportEvaluationTest` (online flow), `ShlEvaluationDataset`
   (sampling/replay), and `TransportEvaluationMetrics` (report calculations).
 - P50/P95 use successful samples only (nearest rank); unavailable metrics are `null`.

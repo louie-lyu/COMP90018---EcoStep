@@ -44,8 +44,31 @@ interface TransportEvidenceProvider {
     suspend fun getEvidence(journey: JourneySummary): TransportEvidence
 }
 
+// 加速度模长的标准差小于等于 steadyAccelStd 时，认为整段行程很平稳（没有步伐冲击或踩踏振动）。
+// 阈值必须先用带标签的录音（SHL 评估）校准；样本数不足时不参与判断。
+data class MotionThresholds(
+    val steadyAccelStd: Double,
+    val minAccelSamples: Int,
+) {
+    init {
+        require(steadyAccelStd.isFinite() && steadyAccelStd > 0.0) {
+            "steadyAccelStd must be finite and positive."
+        }
+        require(minAccelSamples > 0) { "minAccelSamples must be positive." }
+    }
+
+    fun isSteady(features: SensorFeatures): Boolean =
+        features.accelSampleCount >= minAccelSamples &&
+            features.accelMagnitudeStd.isFinite() &&
+            features.accelMagnitudeStd <= steadyAccelStd
+}
+
+// 校准后在这里填入阈值。为 null 时只用速度规则，App 和评估主结果都与之前一致。
+val CALIBRATED_MOTION_THRESHOLDS: MotionThresholds? = null
+
 class DefaultTransportClassifier(
     private val evidenceProvider: TransportEvidenceProvider,
+    private val motionThresholds: MotionThresholds? = CALIBRATED_MOTION_THRESHOLDS,
 ) : TransportClassifier {
 
     override suspend fun classify(journey: JourneySummary): TransportResult {
@@ -95,12 +118,30 @@ class DefaultTransportClassifier(
             return MotionHint.UNKNOWN
         }
 
-        return when {
+        val bySpeed = when {
             average <= 2.2 && p95 <= 3.5 -> MotionHint.WALKING
             average >= 2.2 && p95 <= 10.0 && maximum <= 15.0 ->
                 MotionHint.CYCLING
             p95 > 10.0 || maximum > 15.0 -> MotionHint.IN_VEHICLE
             else -> MotionHint.UNKNOWN
+        }
+        return correctWithMotion(bySpeed, features)
+    }
+
+    // 速度仍是主要依据；加速度只用来否决速度规则最容易判错的两种情况。
+    private fun correctWithMotion(
+        bySpeed: MotionHint,
+        features: SensorFeatures,
+    ): MotionHint {
+        val thresholds = motionThresholds ?: return bySpeed
+        if (!thresholds.isSteady(features)) return bySpeed
+
+        return when (bySpeed) {
+            // 速度像骑车却很平稳：多半是慢速行驶的公交或汽车，再用公交站点区分。
+            MotionHint.CYCLING -> MotionHint.IN_VEHICLE
+            // 速度像步行却没有步伐冲击：可能是堵车或原地等待，交给用户在确认页选择。
+            MotionHint.WALKING -> MotionHint.UNKNOWN
+            else -> bySpeed
         }
     }
 
