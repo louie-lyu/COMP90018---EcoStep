@@ -181,6 +181,25 @@ class FirebaseEmulatorJourneyRepositoryTest {
     }
 
     @Test
+    fun offlineDuplicateCreateIsQueuedThenRejectedByServer() = runBlocking {
+        val authRepository = signUp()
+        val uid = authRepository.currentUserId!!
+        val repository = FirestoreJourneyRepository(authRepository, firestore, ackTimeoutMillis = 200)
+        val original = journey(uid, "offline-duplicate")
+        repository.createJourney(original)
+        Tasks.await(firestore.waitForPendingWrites(), 15, TimeUnit.SECONDS)
+        Tasks.await(firestore.disableNetwork(), 10, TimeUnit.SECONDS)
+        assertEquals(WriteOutcome.QUEUED, repository.createJourney(original.copy(transportMode = TransportMode.CAR)))
+        val pending = withTimeout(10_000) { repository.observeJourney(original.journeyId).first { it?.hasPendingWrites == true } }!!
+        assertEquals(TransportMode.CAR, pending.journey.transportMode)
+        Tasks.await(firestore.enableNetwork(), 10, TimeUnit.SECONDS)
+        Tasks.await(firestore.waitForPendingWrites(), 15, TimeUnit.SECONDS)
+        val rolledBack = withTimeout(15_000) { repository.observeJourney(original.journeyId).first { it != null && !it.hasPendingWrites } }!!
+        assertEquals("Server rejects the replacement and restores the original", original.transportMode, rolledBack.journey.transportMode)
+        // createJourney already returned QUEUED; no exception can reach that completed call.
+    }
+
+    @Test
     fun securityRulesBlockOverwritesAndOtherUsers() = runBlocking {
         val first = signUp()
         val firstUid = first.currentUserId!!
