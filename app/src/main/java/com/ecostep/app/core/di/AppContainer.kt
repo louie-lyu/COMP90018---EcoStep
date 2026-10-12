@@ -422,7 +422,8 @@ class AppContainer(context: Context) {
             try {
                 profileRepository.ensureProfile(
                     defaultDisplayName =
-                        authRepository.currentUserEmail?.substringBefore('@').orEmpty(),
+                        authRepository.currentUserDisplayName?.takeIf { it.isNotBlank() }
+                            ?: authRepository.currentUserEmail?.substringBefore('@').orEmpty(),
                 )
             } catch (exception: CancellationException) {
                 throw exception

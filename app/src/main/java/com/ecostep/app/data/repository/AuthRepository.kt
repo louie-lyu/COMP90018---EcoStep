@@ -11,6 +11,17 @@ interface AuthRepository {
 
     suspend fun signUp(email: String, password: String)
 
+    val currentUserDisplayName: String?
+        get() = null
+
+    suspend fun signUp(email: String, password: String, displayName: String) {
+        signUp(email, password)
+    }
+
+    suspend fun sendPasswordResetEmail(email: String) {
+        throw UnsupportedOperationException("Password reset is unavailable.")
+    }
+
     fun signOut()
 
     /**

@@ -2,14 +2,11 @@ package com.ecostep.app.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ecostep.app.data.model.normalizeDisplayName
 import com.ecostep.app.ui.mock.AuthDataSource
-import com.ecostep.app.ui.mock.AuthenticatedUser
-import com.ecostep.app.ui.mock.MockAuthDataSource
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -19,7 +16,6 @@ enum class AuthMode {
     SIGN_UP,
     FORGOT_PASSWORD,
 }
-
 data class LoginUiState(
     val mode: AuthMode = AuthMode.SIGN_IN,
     val displayName: String = "",
@@ -31,18 +27,12 @@ data class LoginUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val confirmationMessage: String? = null,
+    val isAuthenticated: Boolean = false,
 )
 
-sealed interface LoginEvent {
-
-    data class AuthenticationSucceeded(
-        val user: AuthenticatedUser,
-    ) : LoginEvent
-}
 
 class LoginViewModel(
-    private val authDataSource: AuthDataSource =
-        MockAuthDataSource(),
+    private val authDataSource: AuthDataSource,
 ) : ViewModel() {
 
     private val _uiState =
@@ -50,12 +40,6 @@ class LoginViewModel(
 
     val uiState: StateFlow<LoginUiState> =
         _uiState.asStateFlow()
-
-    private val _events =
-        MutableSharedFlow<LoginEvent>()
-
-    val events: SharedFlow<LoginEvent> =
-        _events.asSharedFlow()
 
     fun updateDisplayName(value: String) {
         _uiState.update {
@@ -125,6 +109,7 @@ class LoginViewModel(
     }
 
     private fun changeMode(mode: AuthMode) {
+        if (_uiState.value.isLoading) return
         _uiState.update {
             it.copy(
                 mode = mode,
@@ -140,6 +125,7 @@ class LoginViewModel(
     }
 
     fun submit() {
+        if (_uiState.value.isLoading || _uiState.value.isAuthenticated) return
         when (_uiState.value.mode) {
             AuthMode.SIGN_IN ->
                 signIn()
@@ -166,20 +152,17 @@ class LoginViewModel(
             return
         }
 
+        setLoading(true)
         viewModelScope.launch {
-            setLoading(true)
-
             try {
-                val user = authDataSource.signIn(
+                authDataSource.signIn(
                     email = currentState.email.trim(),
                     password = currentState.password,
                 )
 
-                setLoading(false)
-
-                _events.emit(
-                    LoginEvent.AuthenticationSucceeded(user),
-                )
+                authenticationSucceeded()
+            } catch (exception: CancellationException) {
+                throw exception
             } catch (exception: Exception) {
                 showError(
                     exception.message
@@ -192,8 +175,10 @@ class LoginViewModel(
     private fun signUp() {
         val currentState = _uiState.value
 
-        if (currentState.displayName.isBlank()) {
-            showError("Enter your name.")
+        try {
+            normalizeDisplayName(currentState.displayName)
+        } catch (exception: IllegalArgumentException) {
+            showError(exception.message ?: "Enter your name.")
             return
         }
 
@@ -219,22 +204,19 @@ class LoginViewModel(
             return
         }
 
+        setLoading(true)
         viewModelScope.launch {
-            setLoading(true)
-
             try {
-                val user = authDataSource.signUp(
+                authDataSource.signUp(
                     displayName =
                         currentState.displayName.trim(),
                     email = currentState.email.trim(),
                     password = currentState.password,
                 )
 
-                setLoading(false)
-
-                _events.emit(
-                    LoginEvent.AuthenticationSucceeded(user),
-                )
+                authenticationSucceeded()
+            } catch (exception: CancellationException) {
+                throw exception
             } catch (exception: Exception) {
                 showError(
                     exception.message
@@ -253,9 +235,8 @@ class LoginViewModel(
             return
         }
 
+        setLoading(true)
         viewModelScope.launch {
-            setLoading(true)
-
             try {
                 authDataSource.sendPasswordResetEmail(
                     email = currentState.email.trim(),
@@ -266,9 +247,11 @@ class LoginViewModel(
                         isLoading = false,
                         errorMessage = null,
                         confirmationMessage =
-                            "Password reset instructions have been sent.",
+                            "If an account exists for this email, password reset instructions will be sent.",
                     )
                 }
+            } catch (exception: CancellationException) {
+                throw exception
             } catch (exception: Exception) {
                 showError(
                     exception.message
@@ -281,6 +264,12 @@ class LoginViewModel(
     fun dismissError() {
         _uiState.update {
             it.copy(errorMessage = null)
+        }
+    }
+
+    private fun authenticationSucceeded() {
+        _uiState.update {
+            it.copy(isLoading = false, isAuthenticated = true, password = "", confirmPassword = "")
         }
     }
 
