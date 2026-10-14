@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Evaluation - 12 Transport motion smoke" type="GradleRunConfiguration" factoryName="Gradle">
+    <ExternalSystemSettings>
+      <option name="externalProjectPath" value="$PROJECT_DIR$" />
+      <option name="externalSystemIdString" value="GRADLE" />
+      <option name="taskNames"><list><option value=":app:connectedDebugAndroidTest" /></list></option>
+      <option name="scriptParameters" value="-Pecostep.evaluation=transport -Pandroid.testInstrumentationRunnerArguments.samplesPerMode=1 -Pandroid.testInstrumentationRunnerArguments.motionSteadyAccelStd=0.8 -Pandroid.testInstrumentationRunnerArguments.motionMinAccelSamples=500 -Pandroid.testInstrumentationRunnerArguments.calibrateMotion=true -Pandroid.testInstrumentationRunnerArguments.motionStdCandidates=0.8,1.5 -Pandroid.testInstrumentationRunnerArguments.motionSampleCandidates=500,1000 -Pandroid.testInstrumentationRunnerArguments.motionGyroMeanCandidates=0.3,0.5" />
+    </ExternalSystemSettings>
+    <method v="2" />
+  </configuration>
+</component>

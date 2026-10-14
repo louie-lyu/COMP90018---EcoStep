@@ -108,8 +108,5 @@ internal fun evaluationError(error: Throwable): JSONObject = JSONObject().apply 
 internal fun saveWeatherEvaluationReport(prefix: String, startedAt: Long, report: JSONObject) {
     report.put("finishedAtMillis", System.currentTimeMillis())
     report.put("networkAtEnd", evaluationNetworkState())
-    val context = InstrumentationRegistry.getInstrumentation().targetContext
-    val directory = File(context.filesDir, "evaluation")
-    check(directory.isDirectory || directory.mkdirs()) { "Cannot create evaluation directory" }
-    File(directory, "$prefix-$startedAt.json").writeText(report.toString(2), Charsets.UTF_8)
+    writeDeviceReport("$prefix-$startedAt", report)
 }

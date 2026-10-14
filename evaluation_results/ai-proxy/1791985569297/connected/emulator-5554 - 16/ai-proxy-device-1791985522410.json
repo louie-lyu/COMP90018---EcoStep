@@ -1,0 +1,557 @@
+{
+  "schemaVersion": 1,
+  "startedAtMillis": 1791985522410,
+  "device": "Google sdk_gphone64_x86_64",
+  "apiLevel": 36,
+  "buildType": "debug",
+  "samplesPerCase": 3,
+  "intervalMs": 1000,
+  "timeoutMs": 35000,
+  "transport": "android-firebase-ai-proxy",
+  "proxyUrl": "https:\/\/ecostep-ai-proxy.louie415520.workers.dev\/",
+  "modelVersion": null,
+  "authentication": {
+    "success": true,
+    "durationMs": 1735.6727
+  },
+  "scope": "Existing Firebase test session; token retrieval measured separately. Synthetic prompts with schema and business validation. Android request preparation through complete body receipt; excludes validation, pacing and reporting. No retries or warm-ups. Does not measure password sign-in, raw Gemini text or semantic quality.",
+  "finishedAtMillis": 1791985568628,
+  "records": [
+    {
+      "scenario": "mission_walking_only",
+      "task": "mission",
+      "responseBodyReceived": true,
+      "proxyJsonParsed": true,
+      "proxyEnvelopeValid": true,
+      "schemaValid": true,
+      "businessValid": true,
+      "accepted": true,
+      "httpStatus": 200,
+      "requestDurationMs": 3094.7283,
+      "reply": {
+        "recommendedMode": "WALKING",
+        "explanation": "Switching from your car to walking saves 384 g of CO2 for this 2.0 km journey.",
+        "confidence": 80,
+        "notificationTitle": "Try Walking Today",
+        "notificationMessage": "Save 384 g of CO2 by walking your 2.0 km trip in clear 20 C weather."
+      },
+      "validationDurationMs": 29.7823,
+      "sample": 1
+    },
+    {
+      "scenario": "mission_walking_or_cycling",
+      "task": "mission",
+      "responseBodyReceived": true,
+      "proxyJsonParsed": true,
+      "proxyEnvelopeValid": true,
+      "schemaValid": true,
+      "businessValid": true,
+      "accepted": true,
+      "httpStatus": 200,
+      "requestDurationMs": 1184.2352,
+      "reply": {
+        "recommendedMode": "WALKING",
+        "explanation": "Clear weather at 20 C makes walking your 5.0 km route a great choice to save 960 g of CO2.",
+        "confidence": 80,
+        "notificationTitle": "Try Walking Today",
+        "notificationMessage": "Save 960 g of CO2 by walking your 5.0 km route in clear 20 C weather."
+      },
+      "validationDurationMs": 0.4957,
+      "sample": 1
+    },
+    {
+      "scenario": "mission_public_transport_only",
+      "task": "mission",
+      "responseBodyReceived": true,
+      "proxyJsonParsed": true,
+      "proxyEnvelopeValid": true,
+      "schemaValid": true,
+      "businessValid": true,
+      "accepted": true,
+      "httpStatus": 200,
+      "requestDurationMs": 1028.6773,
+      "reply": {
+        "recommendedMode": "PUBLIC_TRANSPORT",
+        "explanation": "Switching to public transport saves 1236 g CO2 on your 12.0 km journey.",
+        "confidence": 80,
+        "notificationTitle": "Go Greener Today",
+        "notificationMessage": "Take public transport and save 1236 g CO2."
+      },
+      "validationDurationMs": 0.4483,
+      "sample": 1
+    },
+    {
+      "scenario": "mission_rain_with_transit",
+      "task": "mission",
+      "responseBodyReceived": true,
+      "proxyJsonParsed": true,
+      "proxyEnvelopeValid": true,
+      "schemaValid": true,
+      "businessValid": true,
+      "accepted": true,
+      "httpStatus": 200,
+      "requestDurationMs": 1156.203,
+      "reply": {
+        "recommendedMode": "PUBLIC_TRANSPORT",
+        "explanation": "Switching to public transport saves 515 g of CO2 for your 5.0 km trip. The verified service takes 20 minutes.",
+        "confidence": 80,
+        "notificationTitle": "Greener Commute Available",
+        "notificationMessage": "Take public transport to save 515 g CO2 on your 5.0 km trip."
+      },
+      "validationDurationMs": 0.7682,
+      "sample": 1
+    },
+    {
+      "scenario": "weekly_completed",
+      "task": "weekly",
+      "responseBodyReceived": true,
+      "proxyJsonParsed": true,
+      "proxyEnvelopeValid": true,
+      "schemaValid": true,
+      "businessValid": true,
+      "accepted": true,
+      "httpStatus": 200,
+      "requestDurationMs": 1392.5,
+      "reply": {
+        "insight": "Great job completing 4 out of 5 missions this week, saving 1920.0 grams of carbon with walking as your top transport mode!",
+        "action": "Keep up the momentum next week by aiming to complete all accepted walking missions."
+      },
+      "validationDurationMs": 0.9072,
+      "sample": 1
+    },
+    {
+      "scenario": "weekly_none_completed",
+      "task": "weekly",
+      "responseBodyReceived": true,
+      "proxyJsonParsed": true,
+      "proxyEnvelopeValid": true,
+      "schemaValid": true,
+      "businessValid": true,
+      "accepted": true,
+      "httpStatus": 200,
+      "requestDurationMs": 868.7409,
+      "reply": {
+        "insight": "You accepted 3 missions last week, which is a great start to planning your greener journeys.",
+        "action": "Complete just one of your accepted missions next week as your first step."
+      },
+      "validationDurationMs": 0.3573,
+      "sample": 1
+    },
+    {
+      "scenario": "mission_walking_only",
+      "task": "mission",
+      "responseBodyReceived": true,
+      "proxyJsonParsed": true,
+      "proxyEnvelopeValid": true,
+      "schemaValid": true,
+      "businessValid": true,
+      "accepted": true,
+      "httpStatus": 200,
+      "requestDurationMs": 1161.9259,
+      "reply": {
+        "recommendedMode": "WALKING",
+        "explanation": "Switching from your car to walking for this 2.0 km journey saves 384 g of CO2. The weather is clear and 20 C, making it a great time to walk.",
+        "confidence": 80,
+        "notificationTitle": "Try Walking Today",
+        "notificationMessage": "Walk this 2.0 km trip to save 384 g CO2 in clear 20 C weather."
+      },
+      "validationDurationMs": 0.4366,
+      "sample": 2
+    },
+    {
+      "scenario": "mission_walking_or_cycling",
+      "task": "mission",
+      "responseBodyReceived": true,
+      "proxyJsonParsed": true,
+      "proxyEnvelopeValid": true,
+      "schemaValid": true,
+      "businessValid": true,
+      "accepted": true,
+      "httpStatus": 200,
+      "requestDurationMs": 10826.7357,
+      "reply": {
+        "recommendedMode": "WALKING",
+        "explanation": "Walking the 5.0 km route saves 960 g of CO2. The weather is clear and 20 C, making it a great time to walk.",
+        "confidence": 80,
+        "notificationTitle": "Switch to Walking",
+        "notificationMessage": "Save 960 g CO2 by walking your 5.0 km route today."
+      },
+      "validationDurationMs": 0.3951,
+      "sample": 2
+    },
+    {
+      "scenario": "mission_public_transport_only",
+      "task": "mission",
+      "responseBodyReceived": true,
+      "proxyJsonParsed": true,
+      "proxyEnvelopeValid": true,
+      "schemaValid": true,
+      "businessValid": true,
+      "accepted": true,
+      "httpStatus": 200,
+      "requestDurationMs": 1011.2398,
+      "reply": {
+        "recommendedMode": "PUBLIC_TRANSPORT",
+        "explanation": "Switching to public transport saves 1236 g of CO2 on your 12.0 km journey.",
+        "confidence": 80,
+        "notificationTitle": "Lower-Carbon Travel Option",
+        "notificationMessage": "Take public transport today to save 1236 g CO2."
+      },
+      "validationDurationMs": 0.8406,
+      "sample": 2
+    },
+    {
+      "scenario": "mission_rain_with_transit",
+      "task": "mission",
+      "responseBodyReceived": true,
+      "proxyJsonParsed": true,
+      "proxyEnvelopeValid": true,
+      "schemaValid": true,
+      "businessValid": true,
+      "accepted": true,
+      "httpStatus": 200,
+      "requestDurationMs": 1104.0909,
+      "reply": {
+        "recommendedMode": "PUBLIC_TRANSPORT",
+        "explanation": "Switching to public transport saves 515 g of CO2 compared to your car journey. The verified service takes 20 minutes.",
+        "confidence": 80,
+        "notificationTitle": "Greener Transit Choice",
+        "notificationMessage": "Take the verified public transport service to save 515 g CO2."
+      },
+      "validationDurationMs": 1.2073,
+      "sample": 2
+    },
+    {
+      "scenario": "weekly_completed",
+      "task": "weekly",
+      "responseBodyReceived": true,
+      "proxyJsonParsed": true,
+      "proxyEnvelopeValid": true,
+      "schemaValid": true,
+      "businessValid": true,
+      "accepted": true,
+      "httpStatus": 200,
+      "requestDurationMs": 1108.5919,
+      "reply": {
+        "insight": "Great job completing 4 out of 5 missions this week, saving 1920.0 grams of carbon with walking as your top transport mode!",
+        "action": "Keep up the momentum next week by aiming to complete all accepted walking missions."
+      },
+      "validationDurationMs": 0.2589,
+      "sample": 2
+    },
+    {
+      "scenario": "weekly_none_completed",
+      "task": "weekly",
+      "responseBodyReceived": true,
+      "proxyJsonParsed": true,
+      "proxyEnvelopeValid": true,
+      "schemaValid": true,
+      "businessValid": true,
+      "accepted": true,
+      "httpStatus": 200,
+      "requestDurationMs": 923.5301,
+      "reply": {
+        "insight": "You accepted three missions this week but haven't completed your first one yet, meaning there is plenty of opportunity ahead.",
+        "action": "Complete just one of your accepted missions next week as an achievable first step."
+      },
+      "validationDurationMs": 0.3077,
+      "sample": 2
+    },
+    {
+      "scenario": "mission_walking_only",
+      "task": "mission",
+      "responseBodyReceived": true,
+      "proxyJsonParsed": true,
+      "proxyEnvelopeValid": true,
+      "schemaValid": true,
+      "businessValid": true,
+      "accepted": true,
+      "httpStatus": 200,
+      "requestDurationMs": 2154.7697,
+      "reply": {
+        "recommendedMode": "WALKING",
+        "explanation": "Switching from your car to walking for this 2.0 km journey will save 384 g of CO2. The weather is clear and 20 C, making it a great time to walk.",
+        "confidence": 80,
+        "notificationTitle": "Try Walking Today",
+        "notificationMessage": "Walk 2.0 km and save 384 g of CO2."
+      },
+      "validationDurationMs": 0.3902,
+      "sample": 3
+    },
+    {
+      "scenario": "mission_walking_or_cycling",
+      "task": "mission",
+      "responseBodyReceived": true,
+      "proxyJsonParsed": true,
+      "proxyEnvelopeValid": true,
+      "schemaValid": true,
+      "businessValid": true,
+      "accepted": true,
+      "httpStatus": 200,
+      "requestDurationMs": 875.8482,
+      "reply": {
+        "recommendedMode": "WALKING",
+        "explanation": "Walking is a practical lower-carbon alternative for your 5.0 km journey in clear, 20 C weather.",
+        "confidence": 80,
+        "notificationTitle": "Try Walking",
+        "notificationMessage": "Save 960 g CO2 by walking your 5.0 km route today."
+      },
+      "validationDurationMs": 0.3661,
+      "sample": 3
+    },
+    {
+      "scenario": "mission_public_transport_only",
+      "task": "mission",
+      "responseBodyReceived": true,
+      "proxyJsonParsed": true,
+      "proxyEnvelopeValid": true,
+      "schemaValid": true,
+      "businessValid": true,
+      "accepted": true,
+      "httpStatus": 200,
+      "requestDurationMs": 1035.8083,
+      "reply": {
+        "recommendedMode": "PUBLIC_TRANSPORT",
+        "explanation": "Switching to public transport saves 1236 g of CO2 on your 12.0 km journey.",
+        "confidence": 80,
+        "notificationTitle": "EcoStep Coaching",
+        "notificationMessage": "Take public transport to save 1236 g CO2 today."
+      },
+      "validationDurationMs": 0.3564,
+      "sample": 3
+    },
+    {
+      "scenario": "mission_rain_with_transit",
+      "task": "mission",
+      "responseBodyReceived": true,
+      "proxyJsonParsed": true,
+      "proxyEnvelopeValid": false,
+      "schemaValid": false,
+      "businessValid": false,
+      "accepted": false,
+      "httpStatus": 429,
+      "requestDurationMs": 351.7183,
+      "workerErrorCode": "RATE_LIMITED",
+      "errorType": "HTTP_429",
+      "sample": 3
+    }
+  ],
+  "summary": {
+    "plannedRequests": 18,
+    "attemptedRequests": 16,
+    "skippedRequests": 2,
+    "acceptedResponses": 15,
+    "httpSuccessfulRequests": 15,
+    "responseBodies": 16,
+    "proxyJsonParsedResponses": 16,
+    "proxyEnvelopeValidResponses": 15,
+    "schemaValidResponses": 15,
+    "businessValidResponses": 15,
+    "completionRate": {
+      "numerator": 16,
+      "denominator": 18,
+      "value": 0.8888888888888888
+    },
+    "httpSuccessRate": {
+      "numerator": 15,
+      "denominator": 16,
+      "value": 0.9375
+    },
+    "proxyJsonParseRate": {
+      "numerator": 16,
+      "denominator": 16,
+      "value": 1
+    },
+    "schemaValidRateAmongEnvelopes": {
+      "numerator": 15,
+      "denominator": 15,
+      "value": 1
+    },
+    "businessValidRateAmongSchemaValid": {
+      "numerator": 15,
+      "denominator": 15,
+      "value": 1
+    },
+    "appUsableRate": {
+      "numerator": 15,
+      "denominator": 16,
+      "value": 0.9375
+    },
+    "geminiRawJsonParseRate": null,
+    "timeoutRequests": 0,
+    "workerTimeoutResponses": 0,
+    "workerInvalidAiResponses": 0,
+    "allAttemptLatencyMs": {
+      "count": 16,
+      "p50Ms": 1104.0909,
+      "p95Ms": 10826.7357,
+      "meanMs": 1829.9589687499997,
+      "minMs": 351.7183,
+      "maxMs": 10826.7357
+    },
+    "httpSuccessLatencyMs": {
+      "count": 15,
+      "p50Ms": 1108.5919,
+      "p95Ms": 10826.7357,
+      "meanMs": 1928.5083466666663,
+      "minMs": 868.7409,
+      "maxMs": 10826.7357
+    },
+    "appUsableLatencyMs": {
+      "count": 15,
+      "p50Ms": 1108.5919,
+      "p95Ms": 10826.7357,
+      "meanMs": 1928.5083466666663,
+      "minMs": 868.7409,
+      "maxMs": 10826.7357
+    },
+    "passed": false
+  },
+  "byTask": [
+    {
+      "plannedRequests": 12,
+      "attemptedRequests": 12,
+      "skippedRequests": 0,
+      "acceptedResponses": 11,
+      "httpSuccessfulRequests": 11,
+      "responseBodies": 12,
+      "proxyJsonParsedResponses": 12,
+      "proxyEnvelopeValidResponses": 11,
+      "schemaValidResponses": 11,
+      "businessValidResponses": 11,
+      "completionRate": {
+        "numerator": 12,
+        "denominator": 12,
+        "value": 1
+      },
+      "httpSuccessRate": {
+        "numerator": 11,
+        "denominator": 12,
+        "value": 0.9166666666666666
+      },
+      "proxyJsonParseRate": {
+        "numerator": 12,
+        "denominator": 12,
+        "value": 1
+      },
+      "schemaValidRateAmongEnvelopes": {
+        "numerator": 11,
+        "denominator": 11,
+        "value": 1
+      },
+      "businessValidRateAmongSchemaValid": {
+        "numerator": 11,
+        "denominator": 11,
+        "value": 1
+      },
+      "appUsableRate": {
+        "numerator": 11,
+        "denominator": 12,
+        "value": 0.9166666666666666
+      },
+      "geminiRawJsonParseRate": null,
+      "timeoutRequests": 0,
+      "workerTimeoutResponses": 0,
+      "workerInvalidAiResponses": 0,
+      "allAttemptLatencyMs": {
+        "count": 12,
+        "p50Ms": 1104.0909,
+        "p95Ms": 10826.7357,
+        "meanMs": 2082.16505,
+        "minMs": 351.7183,
+        "maxMs": 10826.7357
+      },
+      "httpSuccessLatencyMs": {
+        "count": 11,
+        "p50Ms": 1156.203,
+        "p95Ms": 10826.7357,
+        "meanMs": 2239.478390909091,
+        "minMs": 875.8482,
+        "maxMs": 10826.7357
+      },
+      "appUsableLatencyMs": {
+        "count": 11,
+        "p50Ms": 1156.203,
+        "p95Ms": 10826.7357,
+        "meanMs": 2239.478390909091,
+        "minMs": 875.8482,
+        "maxMs": 10826.7357
+      },
+      "passed": false,
+      "task": "mission"
+    },
+    {
+      "plannedRequests": 6,
+      "attemptedRequests": 4,
+      "skippedRequests": 2,
+      "acceptedResponses": 4,
+      "httpSuccessfulRequests": 4,
+      "responseBodies": 4,
+      "proxyJsonParsedResponses": 4,
+      "proxyEnvelopeValidResponses": 4,
+      "schemaValidResponses": 4,
+      "businessValidResponses": 4,
+      "completionRate": {
+        "numerator": 4,
+        "denominator": 6,
+        "value": 0.6666666666666666
+      },
+      "httpSuccessRate": {
+        "numerator": 4,
+        "denominator": 4,
+        "value": 1
+      },
+      "proxyJsonParseRate": {
+        "numerator": 4,
+        "denominator": 4,
+        "value": 1
+      },
+      "schemaValidRateAmongEnvelopes": {
+        "numerator": 4,
+        "denominator": 4,
+        "value": 1
+      },
+      "businessValidRateAmongSchemaValid": {
+        "numerator": 4,
+        "denominator": 4,
+        "value": 1
+      },
+      "appUsableRate": {
+        "numerator": 4,
+        "denominator": 4,
+        "value": 1
+      },
+      "geminiRawJsonParseRate": null,
+      "timeoutRequests": 0,
+      "workerTimeoutResponses": 0,
+      "workerInvalidAiResponses": 0,
+      "allAttemptLatencyMs": {
+        "count": 4,
+        "p50Ms": 923.5301,
+        "p95Ms": 1392.5,
+        "meanMs": 1073.340725,
+        "minMs": 868.7409,
+        "maxMs": 1392.5
+      },
+      "httpSuccessLatencyMs": {
+        "count": 4,
+        "p50Ms": 923.5301,
+        "p95Ms": 1392.5,
+        "meanMs": 1073.340725,
+        "minMs": 868.7409,
+        "maxMs": 1392.5
+      },
+      "appUsableLatencyMs": {
+        "count": 4,
+        "p50Ms": 923.5301,
+        "p95Ms": 1392.5,
+        "meanMs": 1073.340725,
+        "minMs": 868.7409,
+        "maxMs": 1392.5
+      },
+      "passed": false,
+      "task": "weekly"
+    }
+  ],
+  "stopReason": "HTTP_429"
+}

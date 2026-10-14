@@ -44,7 +44,7 @@ The original assignment was to replace six placeholders. A later update recorded
 
 ### Rui Fang: evaluation
 
-Measure transport classification accuracy and latency, and verify recurring-route detection. Device tests belong under `app/src/androidTest/java/com/ecostep/app/`; Espresso and Compose testing dependencies were prepared in app Gradle. Measure Duo's actual classifier once integrated. Deadline: 27 September. Current Android Studio evaluation instructions are in [the new evaluation README](../app/src/androidTest/java/com/ecostep/app/evaluation/new/README.md).
+Measure transport classification accuracy and latency, and verify recurring-route detection. Device tests belong under `app/src/androidTest/java/com/ecostep/app/`; Espresso and Compose testing dependencies were prepared in app Gradle. Measure Duo's actual classifier once integrated. Deadline: 27 September. Current Android Studio evaluation instructions are in [the evaluation README](../app/src/androidTest/java/com/ecostep/app/evaluation/README.md).
 
 ## Getting started and collaboration
 

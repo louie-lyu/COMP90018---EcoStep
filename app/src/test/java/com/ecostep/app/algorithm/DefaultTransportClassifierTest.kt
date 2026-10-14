@@ -209,7 +209,7 @@ class DefaultTransportClassifierTest {
         assertEquals(TransportMode.CYCLING, withActivity.classify(journey(steady)).mode)
     }
 
-    // 测试用的阈值，不是校准结果。
+    // Test thresholds, not calibration results.
     private val motionThresholds = MotionThresholds(
         steadyAccelStd = 0.8,
         minAccelSamples = 500,

@@ -1,0 +1,4 @@
+"scenario","durationMs","outcome","errorType"
+"weather.network.first_fetch","1495.0218","SUCCESS",""
+"weather.cache.hit","2.839","SUCCESS",""
+"weather.network.refresh","1572.8348","SUCCESS",""

@@ -7,7 +7,7 @@ import kotlinx.serialization.json.*
 internal data class ProxyChecks(val envelopeValid: Boolean = false, val schemaValid: Boolean = false,
     val businessValid: Boolean = false, val reply: JsonObject? = null)
 
-/** Same field types, limits and candidate checks as the retained host evaluator. */
+/** Proxy response field types, limits and allowed transport-mode checks. */
 internal fun checkProxyReply(data: JsonElement, task: String, allowedModes: Set<String>): ProxyChecks {
     val envelope = data as? JsonObject ?: return ProxyChecks()
     val result = envelope["result"] as? JsonObject ?: return ProxyChecks()

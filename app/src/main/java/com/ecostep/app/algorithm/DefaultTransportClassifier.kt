@@ -44,8 +44,8 @@ interface TransportEvidenceProvider {
     suspend fun getEvidence(journey: JourneySummary): TransportEvidence
 }
 
-// 加速度模长的标准差小于等于 steadyAccelStd 时，认为整段行程很平稳（没有步伐冲击或踩踏振动）。
-// 阈值必须先用带标签的录音（SHL 评估）校准；样本数不足时不参与判断。
+// An acceleration-magnitude standard deviation at or below steadyAccelStd indicates steady motion without footstep impacts or pedaling vibrations.
+// Calibrate thresholds with labeled recordings (SHL evaluation); skip this check when there are too few samples.
 data class MotionThresholds(
     val steadyAccelStd: Double,
     val minAccelSamples: Int,
@@ -140,7 +140,7 @@ class DefaultTransportClassifier(
         return correctWithMotion(bySpeed, features)
     }
 
-    // 速度仍是主要依据；加速度只用来否决速度规则最容易判错的两种情况。
+    // Speed remains the primary signal; acceleration only corrects the two most ambiguous speed-based cases.
     private fun correctWithMotion(
         bySpeed: MotionHint,
         features: SensorFeatures,
@@ -149,9 +149,9 @@ class DefaultTransportClassifier(
         if (!thresholds.isSteady(features)) return bySpeed
 
         return when (bySpeed) {
-            // 速度像骑车却很平稳：多半是慢速行驶的公交或汽车，再用公交站点区分。
+            // Smooth motion at cycling speed likely indicates a slow bus or car; transit stops distinguish them later.
             MotionHint.CYCLING -> MotionHint.IN_VEHICLE
-            // 速度像步行却没有步伐冲击：可能是堵车或原地等待，交给用户在确认页选择。
+            // Walking speed without footstep impacts may indicate traffic or waiting; let the user choose on the confirmation screen.
             MotionHint.WALKING -> MotionHint.UNKNOWN
             else -> bySpeed
         }

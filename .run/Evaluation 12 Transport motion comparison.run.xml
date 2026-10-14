@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Evaluation - 12 Transport motion comparison" type="GradleRunConfiguration" factoryName="Gradle">
+    <ExternalSystemSettings>
+      <option name="externalProjectPath" value="$PROJECT_DIR$" />
+      <option name="externalSystemIdString" value="GRADLE" />
+      <option name="taskNames"><list><option value=":app:connectedDebugAndroidTest" /></list></option>
+      <option name="scriptParameters" value="-Pecostep.evaluation=transport -Pandroid.testInstrumentationRunnerArguments.motionSteadyAccelStd=0.8 -Pandroid.testInstrumentationRunnerArguments.motionMinAccelSamples=500" />
+    </ExternalSystemSettings>
+    <method v="2" />
+  </configuration>
+</component>

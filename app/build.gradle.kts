@@ -13,7 +13,13 @@ plugins {
 val runBenchmarks = providers.gradleProperty("ecostep.benchmark").orNull == "true"
 val deviceEvaluation = providers.gradleProperty("ecostep.evaluation").orNull
 val benchmarkClasses = listOf("EcoPoints", "AiMission", "WeeklyCoach", "MissionTrigger", "LocalFlow", "RecurringJourney")
-    .joinToString(",") { "com.ecostep.app.evaluation.new.${it}Benchmark" }
+    .joinToString(",") { "com.ecostep.app.evaluation.${it}Benchmark" }
+val deviceEvaluationClasses = mapOf(
+    "weather-latency" to "WeatherLatencyDeviceTest", "weather-cache" to "WeatherCacheDeviceTest",
+    "weather-recovery" to "WeatherRecoveryDeviceTest", "ai-proxy" to "AiProxyDeviceTest",
+    "transport" to "ShlDeviceEvaluationTest",
+    "ui-responsiveness" to "UiResponsivenessEvaluationTest",
+).mapValues { (_, name) -> "com.ecostep.app.evaluation.$name" }
 
 // Reuse the original evaluation inputs in local JVM tests.
 val prepareEvaluationCases = tasks.register<Sync>("prepareEvaluationCases") {
@@ -62,13 +68,28 @@ android {
             testInstrumentationRunnerArguments["androidx.benchmark.suppressErrors"] = "EMULATOR"
             testInstrumentationRunnerArguments["androidx.benchmark.output.enable"] = "true"
         } else if (deviceEvaluation != null) {
-            val testClass = mapOf("weather-latency" to "WeatherLatencyDeviceTest",
-                "weather-cache" to "WeatherCacheDeviceTest", "weather-recovery" to "WeatherRecoveryDeviceTest",
-                "ai-proxy" to "AiProxyDeviceTest", "transport" to "ShlDeviceEvaluationTest").getValue(deviceEvaluation)
-            testInstrumentationRunnerArguments["class"] = "com.ecostep.app.evaluation.new.device.$testClass"
+            testInstrumentationRunnerArguments["class"] = deviceEvaluationClasses.getValue(deviceEvaluation)
             testInstrumentationRunnerArguments["live"] = "true"
+            if (deviceEvaluation in setOf("transport", "ui-responsiveness")) {
+                // Scope Git's ownership exception to this invocation.
+                fun gitOutput(vararg arguments: String): String? = runCatching {
+                    val result = providers.exec {
+                        workingDir(rootDir)
+                        commandLine(listOf("git", "-c", "safe.directory=${rootDir.invariantSeparatorsPath}") + arguments)
+                        isIgnoreExitValue = true
+                    }
+                    if (result.result.get().exitValue == 0) result.standardOutput.asText.get().trim() else null
+                }.getOrNull()
+                testInstrumentationRunnerArguments["gitCommit"] = gitOutput("rev-parse", "HEAD") ?: "unknown"
+                gitOutput("status", "--porcelain")?.let {
+                    testInstrumentationRunnerArguments["workingTreeDirty"] = it.isNotEmpty().toString()
+                }
+            }
         } else {
-            testInstrumentationRunnerArguments["notPackage"] = "com.ecostep.app.evaluation.new"
+            // General instrumentation still runs offline regression tests in evaluation.
+            // Measurements require the presets, which configure their variant, inputs and export.
+            testInstrumentationRunnerArguments["notClass"] =
+                (listOf(benchmarkClasses) + deviceEvaluationClasses.values).joinToString(",")
         }
     }
 
@@ -202,7 +223,7 @@ val exportEvaluationReports = tasks.register("exportEvaluationReports") {
     doLast {
         val variant = if (runBenchmarks) "benchmarkAndroidTest" else "debugAndroidTest"
         val source = layout.buildDirectory.dir("outputs/connected_android_test_additional_output/$variant").get().asFile
-        val destination = layout.buildDirectory.dir("reports/evaluation/$reportGroup/${System.currentTimeMillis()}").get().asFile
+        val destination = rootProject.layout.projectDirectory.dir("evaluation_results/$reportGroup/${System.currentTimeMillis()}").asFile
         destination.mkdirs()
         val reports = source.walkTopDown().filter {
             it.isFile && it.extension in listOf("json", "csv") && it.lastModified() >= runStartedAt

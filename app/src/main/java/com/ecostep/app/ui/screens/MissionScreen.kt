@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.ecostep.app.ui.components.MissionListCard
 import com.ecostep.app.ui.mock.MissionPageItem
@@ -131,7 +132,7 @@ fun MissionScreen(
                         color = MaterialTheme.colorScheme.onBackground,
                     )
 
-                    TextButton(onClick = onOpenWeeklyInsight) {
+                    TextButton(onClick = onOpenWeeklyInsight, modifier = Modifier.testTag("weekly.open")) {
                         Text("Weekly Insight →")
                     }
                 }
@@ -570,7 +571,7 @@ private fun SuggestedMissionCard(
     onDismiss: () -> Unit,
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().testTag("mission.suggestion:${item.mission.missionId}"),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
         ),

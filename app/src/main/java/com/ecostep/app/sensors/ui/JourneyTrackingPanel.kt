@@ -110,7 +110,7 @@ fun JourneyTrackingPanel(
                 Button(
                     onClick = onStart,
                     enabled = !isRecording && !isSaving,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).testTag("journey.start"),
                 ) { Text("Start") }
                 Button(
                     onClick = onEnd,
