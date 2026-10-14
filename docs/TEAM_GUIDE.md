@@ -26,7 +26,7 @@ Dependencies were prepared in [app/build.gradle.kts](../app/build.gradle.kts) so
 
 ## Responsibilities
 
-### Chi Hong Tam: architecture and integration
+### Chi Hong Tam: architecture and coordinated integration
 
 Set up the Android project, Gradle build with its version catalog, the shared data models, and the repository and algorithm interfaces that the other owners implement. Provided the `AppContainer`, `ViewModelFactory`, navigation and theme skeleton that every screen builds on. Coordinated integration by reviewing and build-testing pull requests from other members and merging them after checking the result against the latest `main`. Also added the OpenStreetMap map on the Home screen, which replaced the placeholder map, and the Weekly Insight screen.
 
