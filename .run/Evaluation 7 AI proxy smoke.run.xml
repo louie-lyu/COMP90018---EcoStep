@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Evaluation - 7 AI proxy smoke" type="GradleRunConfiguration" factoryName="Gradle">
+    <ExternalSystemSettings>
+      <option name="externalProjectPath" value="$PROJECT_DIR$" />
+      <option name="externalSystemIdString" value="GRADLE" />
+      <option name="taskNames"><list><option value=":app:connectedDebugAndroidTest" /></list></option>
+      <option name="scriptParameters" value="-Pecostep.evaluation=ai-proxy -Pandroid.injected.androidTest.leaveApksInstalledAfterRun=true -Pandroid.testInstrumentationRunnerArguments.samplesPerCase=1 -Pandroid.testInstrumentationRunnerArguments.caseName=mission_walking_only" />
+    </ExternalSystemSettings>
+    <method v="2" />
+  </configuration>
+</component>

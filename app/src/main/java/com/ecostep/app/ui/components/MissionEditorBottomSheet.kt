@@ -118,11 +118,13 @@ fun MissionEditorBottomSheet(
             it.label == selectedTransportMode
         }
 
-    val canSave =
-        startLocation.isNotBlank() &&
-                destination.isNotBlank() &&
-                selectedTransportOption != null &&
-                selectedRepeatDays.isNotEmpty()
+    val missingRequirements = buildList {
+        if (startLocation.isBlank()) add("enter a starting point")
+        if (destination.isBlank()) add("enter a destination")
+        if (selectedTransportOption == null) add("select a transport mode")
+        if (selectedRepeatDays.isEmpty()) add("select at least one repeat day")
+    }
+    val canSave = missingRequirements.isEmpty()
 
     ModalBottomSheet(
         onDismissRequest = { if (!isSaving) onDismiss() },
@@ -318,7 +320,7 @@ fun MissionEditorBottomSheet(
             )
 
             ScheduleSettingRow(
-                label = "Repeat",
+                label = "Repeat (required)",
                 value = formatRepeatDays(selectedRepeatDays),
                 onClick = {
                     showRepeatDialog = true
@@ -327,6 +329,14 @@ fun MissionEditorBottomSheet(
 
             saveError?.let { message ->
                 Text(text = message, color = MaterialTheme.colorScheme.error)
+            }
+
+            if (!canSave) {
+                Text(
+                    text = "To continue: ${missingRequirements.joinToString("; ")}.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
 
             Row(
@@ -605,7 +615,7 @@ private fun formatRepeatDays(
 ): String =
     when {
         repeatDays.isEmpty() ->
-            "Never"
+            "Select repeat days"
 
         repeatDays.size == MissionDay.entries.size ->
             "Every day"

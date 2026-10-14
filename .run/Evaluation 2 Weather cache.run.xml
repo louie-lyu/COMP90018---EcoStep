@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Evaluation - 2 Weather cache" type="GradleRunConfiguration" factoryName="Gradle">
+    <ExternalSystemSettings>
+      <option name="externalProjectPath" value="$PROJECT_DIR$" />
+      <option name="externalSystemIdString" value="GRADLE" />
+      <option name="taskNames"><list><option value=":app:connectedDebugAndroidTest" /></list></option>
+      <option name="scriptParameters" value="-Pecostep.evaluation=weather-cache" />
+    </ExternalSystemSettings>
+    <method v="2" />
+  </configuration>
+</component>

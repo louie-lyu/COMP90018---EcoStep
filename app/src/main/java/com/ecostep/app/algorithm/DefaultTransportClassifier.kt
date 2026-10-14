@@ -9,7 +9,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-// Google 的活动结果会在下一步转换成这四种简单类型。
+// Google activity results are mapped to these four simple types.
 enum class MotionHint {
     WALKING, CYCLING, IN_VEHICLE, UNKNOWN
 }
@@ -19,7 +19,7 @@ data class ActivityHint(
     val confidence: Int,
 )
 
-// 轨迹只用于本次分类，不加入 JourneySummary，也不保存到 Firebase。
+// The trace is used only for this classification, not added to JourneySummary or saved to Firebase.
 data class TransportTrackPoint(
     val latitude: Double,
     val longitude: Double,
@@ -36,7 +36,7 @@ data class TransitStop(
 data class TransportEvidence(
     val activity: ActivityHint? = null,
     val track: List<TransportTrackPoint> = emptyList(),
-    // 每个内部列表是一条公交或电车路线，站点按行驶顺序排列。
+    // Each inner list represents a bus or tram route, with stops in travel order.
     val transitRoutes: List<List<TransitStop>> = emptyList(),
 )
 
@@ -44,8 +44,8 @@ interface TransportEvidenceProvider {
     suspend fun getEvidence(journey: JourneySummary): TransportEvidence
 }
 
-// 加速度模长的标准差小于等于 steadyAccelStd 时，认为整段行程很平稳（没有步伐冲击或踩踏振动）。
-// 阈值必须先用带标签的录音（SHL 评估）校准；样本数不足时不参与判断。
+// An acceleration-magnitude standard deviation at or below steadyAccelStd indicates steady motion without footstep impacts or pedaling vibrations.
+// Calibrate thresholds with labeled recordings (SHL evaluation); skip this check when there are too few samples.
 data class MotionThresholds(
     val steadyAccelStd: Double,
     val minAccelSamples: Int,
@@ -140,7 +140,7 @@ class DefaultTransportClassifier(
         return correctWithMotion(bySpeed, features)
     }
 
-    // 速度仍是主要依据；加速度只用来否决速度规则最容易判错的两种情况。
+    // Speed remains the primary signal; acceleration only corrects the two most ambiguous speed-based cases.
     private fun correctWithMotion(
         bySpeed: MotionHint,
         features: SensorFeatures,
@@ -149,9 +149,9 @@ class DefaultTransportClassifier(
         if (!thresholds.isSteady(features)) return bySpeed
 
         return when (bySpeed) {
-            // 速度像骑车却很平稳：多半是慢速行驶的公交或汽车，再用公交站点区分。
+            // Smooth motion at cycling speed likely indicates a slow bus or car; transit stops distinguish them later.
             MotionHint.CYCLING -> MotionHint.IN_VEHICLE
-            // 速度像步行却没有步伐冲击：可能是堵车或原地等待，交给用户在确认页选择。
+            // Walking speed without footstep impacts may indicate traffic or waiting; let the user choose on the confirmation screen.
             MotionHint.WALKING -> MotionHint.UNKNOWN
             else -> bySpeed
         }
@@ -170,7 +170,7 @@ class DefaultTransportClassifier(
             )
         }
 
-        // 有公交候选路线但轨迹不足时，无法完成站点匹配。
+        // Transit candidates exist, but the trace is too short to match stops.
         if (evidence.transitRoutes.isNotEmpty() && evidence.track.size < 4) {
             return result(
                 TransportMode.UNKNOWN,
@@ -182,8 +182,8 @@ class DefaultTransportClassifier(
             )
         }
 
-        // 没有公交候选路线或未匹配到站点：暂判汽车，
-        // 保留较低置信度，用户仍可在行程确认页更正。
+        // With no transit candidates or matching stops, provisionally classify as car,
+        // keeping low confidence so the user can correct it on the review screen.
         return result(
             TransportMode.CAR,
             55.0,
@@ -214,7 +214,7 @@ class DefaultTransportClassifier(
                         ) <= 60.0
             }
 
-            // 至少两次定位、持续约十秒，才算在此站停靠。
+            // A stop requires at least two locations spanning about ten seconds.
             if (
                 nearby.size >= 2 &&
                 nearby.last().timeMillis -

@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.ecostep.app.algorithm.WeeklyCoachReport
 import com.ecostep.app.data.model.TransportMode
@@ -95,12 +96,12 @@ fun WeeklyInsightScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 if (uiState.isLoading) {
-                    item { Text("Loading weekly insight…") }
+                    item { Text("Loading weekly insight…", modifier = Modifier.testTag("weekly.loading")) }
                 }
                 uiState.errorMessage?.let { message ->
                     item {
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text(text = message, color = MaterialTheme.colorScheme.error)
+                            Text(text = message, color = MaterialTheme.colorScheme.error, modifier = Modifier.testTag("weekly.error"))
                             Button(onClick = viewModel::retry, enabled = !uiState.isLoading) {
                                 Text("Retry")
                             }
@@ -112,7 +113,10 @@ fun WeeklyInsightScreen(
                 }
 
                 item {
-                    StatsRow(report = report)
+                    Column(modifier = Modifier.testTag(if (uiState.isLoading) "weekly.pending"
+                        else if (uiState.usedAi) "weekly.ready.ai" else "weekly.ready.fallback")) {
+                        StatsRow(report = report)
+                    }
                 }
 
                 item {

@@ -71,6 +71,11 @@ class MissionGenerationCoordinator(
 ) {
     private val handledJourneyIds = mutableSetOf<String>()
 
+    /** Last completed generation, for diagnostics; no history, prompts or credentials. */
+    @Volatile
+    internal var lastResult: Pair<String, MissionGenerationOutcome>? = null
+        private set
+
     suspend fun onJourneyConfirmed(journey: JourneySummary): MissionGenerationOutcome {
         val outcome = try {
             generate(journey)
@@ -84,6 +89,7 @@ class MissionGenerationCoordinator(
             // Allow a later confirmation of the same journey to retry.
             synchronized(handledJourneyIds) { handledJourneyIds -= journey.journeyId }
         }
+        lastResult = journey.journeyId to outcome
         log("Mission generation: ${outcome.label()}")
         return outcome
     }

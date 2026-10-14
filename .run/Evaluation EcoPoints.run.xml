@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Evaluation - EcoPoints" type="GradleRunConfiguration" factoryName="Gradle">
+    <ExternalSystemSettings>
+      <option name="externalProjectPath" value="$PROJECT_DIR$" />
+      <option name="externalSystemIdString" value="GRADLE" />
+      <option name="taskNames"><list><option value=":app:connectedBenchmarkAndroidTest" /></list></option>
+      <option name="scriptParameters" value="-Pecostep.benchmark=true -Pandroid.testInstrumentationRunnerArguments.class=com.ecostep.app.evaluation.EcoPointsBenchmark" />
+    </ExternalSystemSettings>
+    <method v="2" />
+  </configuration>
+</component>

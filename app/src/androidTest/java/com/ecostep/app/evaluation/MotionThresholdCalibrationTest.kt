@@ -86,6 +86,13 @@ class MotionThresholdCalibrationTest {
     }
 
     @Test(expected = IllegalArgumentException::class)
+    fun rejectsGyroGridWithoutCalibration() {
+        MotionThresholdCalibration.from(Bundle().apply {
+            putString("motionGyroMeanCandidates", "0.3,0.5")
+        })
+    }
+
+    @Test(expected = IllegalArgumentException::class)
     fun rejectsInvalidThreshold() {
         MotionThresholdCalibration.from(Bundle().apply {
             putString("calibrateMotion", "true")

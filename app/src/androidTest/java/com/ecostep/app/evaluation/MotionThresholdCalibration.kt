@@ -88,6 +88,9 @@ internal class MotionThresholdCalibration(thresholds: List<MotionThresholds>) {
 
     companion object {
         fun from(arguments: Bundle): MotionThresholdCalibration? {
+            require(arguments.getString("motionGyroMeanCandidates") == null || arguments.getString("calibrateMotion") == "true") {
+                "motionGyroMeanCandidates requires calibrateMotion=true."
+            }
             if (arguments.getString("calibrateMotion") != "true") return null
             val stds = (arguments.getString("motionStdCandidates") ?: "0.2,0.4,0.6,0.8,1.0,1.5,2.0,3.0")
                 .split(',').map { it.trim().toDouble() }.distinct()

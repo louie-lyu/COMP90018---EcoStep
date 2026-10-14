@@ -35,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -98,7 +99,7 @@ fun HomeScreen(
     }
 
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().testTag(if (liveLocation != null) "home.location.ready" else "home.location.waiting"),
     ) {
         OsmMapView(
             currentLocation = liveLocation ?: uiState.currentLocation,
@@ -128,7 +129,7 @@ fun HomeScreen(
                 OutlinedTextField(
                     value = uiState.destination,
                     onValueChange = viewModel::updateDestination,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).testTag("route.destination"),
                     placeholder = {
                         Text("Where are you going?")
                     },
@@ -320,6 +321,7 @@ fun HomeScreen(
 
                         Text(
                             text = "Finding route options...",
+                            modifier = Modifier.testTag("route.loading"),
                             style =
                                 MaterialTheme.typography.bodyMedium,
                         )
@@ -335,7 +337,7 @@ fun HomeScreen(
                 ) {
                     Text(
                         text = errorMessage,
-                        modifier = Modifier.padding(
+                        modifier = Modifier.testTag("route.error").padding(
                             horizontal = 14.dp,
                             vertical = 10.dp,
                         ),
@@ -667,6 +669,7 @@ private fun RouteSelectionCard(
         ) {
             Text(
                 text = "Plan your route",
+                modifier = Modifier.testTag("route.results"),
                 style = MaterialTheme.typography.titleMedium,
             )
 

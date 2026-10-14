@@ -1,107 +1,74 @@
-# 行程记录模块开发手册（传感器 + 前台服务）
+# Journey tracking implementation guide
 
-- **负责人**：Zongcheng Jiang
-- **目标日期**：9/26 完成，9/27 功能冻结
-- **前置条件**：
-  - `feature/zongcheng-auth` 已完成（登录 + `FirestoreJourneyRepository` 已验证可用）
-  - `SensorFeatures` 数据格式已提出，见 `docs/SENSOR_DATA_FORMAT.md`
+Owner: Zongcheng. Original target: finish on 26 September, freeze on 27 September. This is the historical implementation plan following the verified authentication work on `feature/zongcheng-auth`, with [SensorFeatures](SENSOR_DATA_FORMAT.md) proposed for the shared interface. Examples are implementation sketches, not evidence that every requirement is currently complete.
 
----
+## Acceptance criteria
 
-## 0. 目标和验收标准
+1. A recording shows increasing GPS, accelerometer and gyroscope sample counts when the sensors are available.
+2. Recording continues with the screen locked, using a location foreground service.
+3. The UI updates elapsed time, distance, location accuracy and sensor counts about once per second.
+4. Sensor callbacks and network work stay off the main thread.
+5. Permission denial has a retry or application-settings path.
+6. Stop saves a real JourneySummary and opens Review with its actual ID, replacing the temporary `test_1` flow.
+7. An offline stop opens Review while Firestore queues the write and syncs after connectivity returns.
+8. Upload only aggregates, without raw GPS or motion streams.
 
-**一句话目标**：用户点击"开始记录"后，App 在前台服务里同时采集 GPS、加速度计和陀螺仪；点击"结束"后生成带 `sensorFeatures` 的 `JourneySummary`，保存到 Firestore，并跳转到行程确认页。
+## Architecture and ownership
 
-| # | 验收项 | 对应评分项 |
-|---|---|---|
-| 1 | 同时用到 GPS、加速度计、陀螺仪，Logcat 里能看到三者的采样数都在增长 | Sensors |
-| 2 | 锁屏或切到别的 App，记录不中断；通知栏显示"正在记录" | Sensors / Quality |
-| 3 | 记录页实时显示时长、距离、GPS 状态、三个传感器的采样数（至少每秒刷新一次） | Reactiveness |
-| 4 | 所有传感器处理和网络操作都不在主线程执行，界面不卡顿 | Responsiveness |
-| 5 | 权限被拒绝时，有清楚的提示和去设置页的按钮，不闪退 | Quality / UI Flow |
-| 6 | 结束后自动保存，并跳转到 `journeyReview(新的 journeyId)`，替换掉现在写死的 `test_1` | Connectivity |
-| 7 | 断网时也能结束记录并进入确认页，联网后数据自动同步到 Firestore | Connectivity |
-| 8 | 不上传原始轨迹，只上传起终点和统计特征 | 隐私 |
+TrackingRoute displays recording state and start/stop controls. TrackingViewModel exposes StateFlow<TrackingUiState>, checks permission before starting JourneyTrackingService, and on stop calls tracker.finish(), saves the result and navigates with its ID. AppContainer owns one JourneyTracker for the current recording; both the service and UI use it, without service binding. JourneyTrackingService collects LocationTracker and MotionSensorTracker flows, serializes their updates, and unregisters listeners on stop. JourneySummaryBuilder converts RecordingResult for JourneyRepository.
 
----
+New files belong in `sensors/tracking/` (RunningStats, FeatureAccumulator, JourneyTracker, TrackingState, JourneySummaryBuilder), `sensors/location/LocationTracker.kt`, `sensors/motion/MotionSensorTracker.kt`, `sensors/service/JourneyTrackingService.kt` and `sensors/ui/` (TrackingRoutes, TrackingViewModel, TrackingRoute). RunningStats and FeatureAccumulator are plain Kotlin for JVM testing. Add `data/model/SensorFeatures.kt` through the interface-change process. Use a local `TrackingRoutes.TRACKING = "tracking"` rather than modifying Yu-Han's Routes.kt.
 
-## 1. 整体架构
+Keep shared changes minimal: add service/permissions in AndroidManifest; add the approved nullable SensorFeatures to JourneySummary and its Firestore mapping; expose a lazy tracker in AppContainer; add a NavGraph route and replace the temporary post-login flow. Add coroutine Play Services `await` support only if absent and required. Do not change unrelated package ownership or dependency versions.
 
-```
-TrackingRoute（Compose 界面）
-   │  开始 / 结束按钮；显示实时状态
-   ▼
-TrackingViewModel ──── 通过 StateFlow<TrackingUiState> 暴露状态
-   │ start(): 检查权限 → 启动 JourneyTrackingService
-   │ stop():  停止服务 → tracker.finish() → saveJourney() → 返回 journeyId
-   ▼
-JourneyTracker（AppContainer 里的单例，保存本次记录的状态）
-   ▲  onLocation() / onAccel() / onGyro()
-   │
-JourneyTrackingService（前台服务，类型为 location）
-   ├── LocationTracker        FusedLocationProviderClient → Flow<Location>
-   └── MotionSensorTracker    SensorManager → Flow<SensorSample>（加速度计 + 陀螺仪）
+## Permissions and foreground service
 
-finish() 的输出：
-   RecordingResult → JourneySummaryBuilder → JourneySummary(sensorFeatures = …)
-   → journeyRepository.saveJourney() → navController.navigate(journeyReview(id))
-```
+Keep FINE and COARSE location permissions; add FOREGROUND_SERVICE, FOREGROUND_SERVICE_LOCATION and POST_NOTIFICATIONS, plus a non-exported service of type `location`. Do not request background location: recording starts explicitly while the app is visible. SENSOR_DELAY_GAME is about 50 Hz, below the rate requiring HIGH_SAMPLING_RATE_SENSORS. Accelerometer and gyroscope do not require runtime permission.
 
-**为什么把状态放在 `JourneyTracker` 单例里**：服务和界面的生命周期不同（界面可能被销毁，服务还在运行）。两边都从 `AppContainer` 拿同一个 `JourneyTracker`，服务往里写数据，界面从它的 `StateFlow` 读，不用做 Service 绑定，代码最少。
+On Start, request FINE and COARSE together, and notifications on API 33+. Fine location starts recording; coarse-only access explains why precise location is needed and does not start. Recoverable denial offers Retry; permanent denial opens app settings. Notification denial must not block recording, though the notification is not shown in the ordinary notification drawer. Check location permission before starting a location foreground service, especially on Android 14+.
 
----
+Use SupervisorJob with Dispatchers.Default and `limitedParallelism(1)` so tracker updates are serialized. Handle ACTION_START and ACTION_STOP, use ServiceCompat.startForeground with the location type, and return START_NOT_STICKY so process death does not silently create partial recordings. Create a low-importance ongoing notification whose tap returns to MainActivity. Cancel child collectors to trigger awaitClose and unregister listeners; cancel the whole scope on destroy.
 
-## 2. 文件清单
+## GPS and motion collection
 
-### 2.1 新增文件（全部在你自己的包里）
+Wrap Fused Location in callbackFlow. Request high accuracy every 2,000 ms with a 1,000 ms minimum. Forward callbacks through the flow and remove location updates in awaitClose. Reject accuracy worse than 30 m and implied speed above 60 m/s. Count distance only for displacement of at least 3 m. Prefer native speed, otherwise derive distance/time. Retain first and last accepted locations.
 
-```
-app/src/main/java/com/ecostep/app/
-├── data/model/SensorFeatures.kt                 ← 共享模型，按接口变更文档新增
-└── sensors/
-    ├── tracking/
-    │   ├── RunningStats.kt                      ← Welford 在线均值和标准差（纯 Kotlin，可单测）
-    │   ├── FeatureAccumulator.kt                ← 汇总 GPS、加速度、陀螺仪特征（纯 Kotlin，可单测）
-    │   ├── JourneyTracker.kt                    ← 记录状态机 + StateFlow
-    │   ├── TrackingState.kt                     ← 实时状态数据类
-    │   └── JourneySummaryBuilder.kt             ← RecordingResult → JourneySummary
-    ├── location/LocationTracker.kt              ← Fused Location 封装成 Flow
-    ├── motion/MotionSensorTracker.kt            ← SensorManager 封装成 Flow
-    ├── service/JourneyTrackingService.kt        ← 前台服务
-    └── ui/
-        ├── TrackingRoutes.kt                    ← const val TRACKING = "tracking"（不改 Yu-Han 的 Routes.kt）
-        ├── TrackingViewModel.kt
-        └── TrackingRoute.kt                     ← 开始/结束页面 + 权限请求
+Use a HandlerThread for SensorManager callbacks and SENSOR_DELAY_GAME for both motion sensors. Use a bounded flow buffer of 256; if full, trySend drops new samples without blocking the sensor thread. Missing gyroscope support is allowed and produces zero samples. Use raw accelerometer magnitude minus gravity as described in SensorFeatures; do not require a linear-acceleration sensor, which some devices lack. A 50 Hz stream produces about 180,000 samples/hour: aggregate online, never retain or upload that raw list.
 
-app/src/test/java/com/ecostep/app/sensors/
-├── RunningStatsTest.kt
-├── FeatureAccumulatorTest.kt
-└── JourneySummaryBuilderTest.kt
-```
+Use Welford's population mean/standard deviation. Acceleration mean uses abs(magnitude - 9.80665); standard deviation uses raw magnitude. Keep GPS speeds for p95; the example uses sorted index `((size - 1) * .95).toInt()`. Use a plain LocationSample data class for JVM tests and a haversine calculation or Android Location distance at the platform boundary.
 
-### 2.2 需要改动的共享文件（只改最少的行）
+## State, persistence and navigation
 
-| 文件 | 改动 |
-|---|---|
-| `AndroidManifest.xml` | 加 3 个权限 + 1 个 `<service>` 声明 |
-| `data/model/JourneySummary.kt` | 加 `val sensorFeatures: SensorFeatures? = null`（等接口变更确认后） |
-| `data/firebase/FirestoreJourneyRepository.kt`（你自己的文件） | Map 转换加上 `sensorFeatures` |
-| `core/di/AppContainer.kt` | 追加 `val journeyTracker by lazy { JourneyTracker() }` |
-| `core/navigation/NavGraph.kt` | ① 加 `TRACKING` 路由；② 登录成功后跳到 `TRACKING`，替换 `test_1` |
-| `app/build.gradle.kts` | 如果缺少 `kotlinx-coroutines-play-services`，就加上（用于 `await()`） |
+State transitions: Idle -> Recording -> finish -> Idle. Publish elapsed time, distance, accuracy and all three counts at most once per second. `finish()` returns null if data is insufficient and resets the tracker. A null accuracy means no location fix yet.
 
----
+Build JourneySummary using a UUID, the authenticated UID, first/last accepted locations and timestamps, and SensorFeatures. Reject/discard recordings shorter than 30 seconds or with fewer than two valid GPS samples. Use the integrated classifier when available; otherwise store UNKNOWN so Review can confirm the mode later.
 
-## 3. Manifest 和权限
+Firestore's local set occurs before its Task receives server acknowledgement. Awaiting that task offline can stall indefinitely. The proposed UI path waits at most 3 seconds, then continues to cached Review with a pending-sync state. Apply the same reasoning to Review's confirmation save; timeout is not evidence that the queued write failed. Pass the real journeyId to Review and pop the recording route. Check the actual repository's queue/acknowledgement behavior during integration.
 
-### 3.1 AndroidManifest.xml
+Persist SensorFeatures as a nested map, read missing maps as null, default featureVersion to 1 and convert Firestore Numbers to the expected Double/Int types.
+
+## Tests and manual verification
+
+JVM tests: RunningStats on `[2,4,4,4,5,5,7,9]` gives mean 5 and population standard deviation 2; empty input returns zero. Test GPS filtering, distance, p95, stop ratio and absent gyroscope; builder duration/sample minimums, endpoints and feature mapping; Firestore round-trip and missing legacy fields.
+
+Emulator: play a GPS route in Extended Controls, exercise virtual motion sensors, lock the screen for 30 seconds, finish offline in airplane mode, verify Review opens from cached data, restore connectivity and verify sync. Physical-device follow-up: walk for 5-10 minutes, then test cycling/public transport and five stationary minutes; compare distance with a map and capture tracking, review and Firestore evidence. Log a compact `EcoStepTracking` summary about every ten seconds. Rui should measure stop-to-review latency for ten online and ten offline runs each.
+
+Watch for missing foreground permissions/service type, expensive main-thread callbacks, listeners left registered, no emulator location playback, GPS drift, and offline server waits. START_NOT_STICKY intentionally does not recover a recording after process death.
+
+Original 26 September schedule: one hour for statistics/tests, 1.5 hours for sensor collectors, 1.5 hours for service/permissions, one hour for UI/persistence, then one hour for emulator verification and PR. If time is short, defer permanent-denial settings navigation or notification-tap handling first. A last-resort ViewModel-only foreground prototype must still use all three sensors and explicitly document that lock-screen recording is unsupported.
+
+## Implementation examples
+
+The following examples retain the original APIs and calculation sketches. Fill their placeholders during implementation and check against the current source tree.
+
+### Manifest
 
 ```xml
-<!-- 已有 -->
+<!-- Existing -->
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-<!-- 新增 -->
+<!-- Add -->
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />  <!-- Android 14+ -->
 <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />           <!-- Android 13+ -->
@@ -114,23 +81,7 @@ app/src/test/java/com/ecostep/app/sensors/
 </application>
 ```
 
-**不需要的权限**：
-
-- `ACCESS_BACKGROUND_LOCATION`：服务是用户在前台点按钮启动的，而且类型是 `location`，切到后台后仍然可以继续定位。申请后台定位反而会让审核和权限流程变复杂。
-- `HIGH_SAMPLING_RATE_SENSORS`：只有采样率超过 200 Hz 才需要。我们用 `SENSOR_DELAY_GAME`（约 50 Hz）就够了。
-- 加速度计和陀螺仪本身**不需要任何权限**。
-
-### 3.2 运行时权限流程
-
-```
-点击"开始记录"
-  → 没有精确定位权限？请求 FINE + COARSE（Android 13+ 同时请求 POST_NOTIFICATIONS）
-      ├── 允许了精确定位 → 启动服务
-      ├── 只允许了大致定位 → 提示"需要精确位置才能准确计算距离"，不启动服务
-      ├── 拒绝了（还能再问）→ 显示说明文字 + "重试"按钮
-      └── 永久拒绝了 → 显示"去设置开启"按钮，跳转到应用设置页
-  → 通知权限被拒绝：不阻止记录（前台服务照样运行，只是通知不在通知栏显示）
-```
+### Permission requests
 
 ```kotlin
 val permissions = buildList {
@@ -143,31 +94,27 @@ val launcher = rememberLauncherForActivityResult(
     ActivityResultContracts.RequestMultiplePermissions()
 ) { result ->
     val fineGranted = result[Manifest.permission.ACCESS_FINE_LOCATION] == true
-    viewModel.onPermissionResult(fineGranted)   // 允许后 ViewModel 再启动服务
+    viewModel.onPermissionResult(fineGranted)   // Start the service after permission is granted.
 }
 
-// 按钮点击
+// Button click
 Button(onClick = {
     if (hasFineLocation(context)) viewModel.start() else launcher.launch(permissions)
 }) { Text("Start journey") }
 
-// 跳转到应用设置页
+// Open application settings
 context.startActivity(
     Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", context.packageName, null))
 )
 ```
 
-> ⚠️ **最容易踩的坑**：Android 14 及以上，如果在没有定位权限的情况下调用 `startForeground(... TYPE_LOCATION)`，会直接抛出 `SecurityException` 导致闪退。**必须先确认权限已授予，再启动服务。**
-
----
-
-## 4. 前台服务
+### Service lifecycle
 
 ```kotlin
 class JourneyTrackingService : Service() {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-    // 所有回调串行处理，JourneyTracker 就不需要加锁
+    // Serialize callbacks so JourneyTracker does not need locks.
     private val serial = Dispatchers.Default.limitedParallelism(1)
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -177,7 +124,7 @@ class JourneyTrackingService : Service() {
             ACTION_START -> start()
             ACTION_STOP -> stop()
         }
-        return START_NOT_STICKY   // 被系统杀掉后不自动重启，避免产生残缺行程
+        return START_NOT_STICKY   // Do not restart after process death and create incomplete journeys.
     }
 
     private fun start() {
@@ -201,7 +148,7 @@ class JourneyTrackingService : Service() {
     }
 
     private fun stop() {
-        scope.coroutineContext.cancelChildren()   // 触发 awaitClose，注销所有监听
+        scope.coroutineContext.cancelChildren()   // Trigger awaitClose and unregister listeners.
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
@@ -219,7 +166,7 @@ class JourneyTrackingService : Service() {
         .setSmallIcon(android.R.drawable.ic_menu_mylocation)
         .setContentTitle("EcoStep is recording your journey")
         .setOngoing(true)
-        .setContentIntent(/* 点击回到 MainActivity 的 PendingIntent */)
+        .setContentIntent(/* PendingIntent that opens MainActivity */)
         .build()
 
     companion object {
@@ -231,7 +178,7 @@ class JourneyTrackingService : Service() {
 }
 ```
 
-从 ViewModel 启动服务：
+### Location request
 
 ```kotlin
 ContextCompat.startForegroundService(
@@ -239,17 +186,13 @@ ContextCompat.startForegroundService(
 )
 ```
 
-停止时发送 `ACTION_STOP`。
-
----
-
-## 5. GPS 采集
+### Location flow
 
 ```kotlin
 class LocationTracker(context: Context) {
     private val client = LocationServices.getFusedLocationProviderClient(context)
 
-    @SuppressLint("MissingPermission")   // 调用前已在 UI 层检查过权限
+    @SuppressLint("MissingPermission")   // The UI checks permission before calling.
     fun locations(): Flow<Location> = callbackFlow {
         val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 2_000L)
             .setMinUpdateIntervalMillis(1_000L)
@@ -265,17 +208,7 @@ class LocationTracker(context: Context) {
 }
 ```
 
-**过滤规则**（在 `FeatureAccumulator.onLocation` 里实现）：
-
-1. `accuracy > 30 m` 的点直接丢弃。
-2. 和上一个有效点比较，推算速度 > 60 m/s 的视为跳点，丢弃。
-3. 距离累加：只有当两点之间距离 ≥ 3 m 时才累加 `prev.distanceTo(cur)`，用来抑制静止时 GPS 的漂移。
-4. 速度：`hasSpeed()` 为真时用 `location.speed`，否则用"两点距离 ÷ 时间差"。
-5. 第一个有效点作为 `startLocation`，最后一个有效点作为 `endLocation`。
-
----
-
-## 6. 加速度计和陀螺仪采集
+### Motion flow
 
 ```kotlin
 data class MotionSample(val type: Int, val x: Float, val y: Float, val z: Float)
@@ -285,7 +218,7 @@ class MotionSensorTracker(context: Context) {
     val hasGyroscope = sm.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null
 
     fun samples(): Flow<MotionSample> = callbackFlow {
-        // 专用线程接收回调，保证不占用主线程
+        // Receive callbacks on a dedicated thread, off the main thread.
         val thread = HandlerThread("EcoStepSensors").apply { start() }
         val handler = Handler(thread.looper)
         val listener = object : SensorEventListener {
@@ -303,21 +236,11 @@ class MotionSensorTracker(context: Context) {
             sm.unregisterListener(listener)
             thread.quitSafely()
         }
-    }.buffer(256)   // 有界缓冲；处理不过来时 trySend 会丢弃新采样，不会阻塞传感器线程
+    }.buffer(256)   // Bounded buffer: trySend drops new samples when full without blocking sensor callbacks.
 }
 ```
 
-**说明**：
-
-- 用原始 `TYPE_ACCELEROMETER`，不用 `TYPE_LINEAR_ACCELERATION`。后者是软件合成的传感器，部分设备没有。取模长后再减去重力，既和手机朝向无关，也所有设备都能用。
-- 设备没有陀螺仪时，`getDefaultSensor` 返回 `null`，直接跳过，`gyroSampleCount` 就是 0。界面上显示"本设备没有陀螺仪"。
-- **不要把原始采样存进列表**，每来一个就更新 `RunningStats`。50 Hz × 1 小时 = 18 万个点，全部保存会浪费内存。
-
----
-
-## 7. 特征计算（纯 Kotlin，可以写单元测试）
-
-### 7.1 RunningStats：Welford 在线算法
+### Online statistics
 
 ```kotlin
 class RunningStats {
@@ -333,22 +256,22 @@ class RunningStats {
     }
 
     fun mean(): Double = if (count == 0L) 0.0 else mean
-    /** 总体标准差 */
+    /** Population standard deviation. */
     fun std(): Double = if (count == 0L) 0.0 else sqrt(m2 / count)
 }
 ```
 
-### 7.2 FeatureAccumulator 骨架
+### Feature accumulation
 
 ```kotlin
 class FeatureAccumulator {
-    private val accelMag = RunningStats()       // 模长 |a|，用来算标准差
-    private val accelDyn = RunningStats()       // | |a| − g |，用来算均值
+    private val accelMag = RunningStats()       // Raw magnitude for standard deviation.
+    private val accelDyn = RunningStats()       // abs(magnitude - gravity) for the mean.
     private val gyroMag = RunningStats()
     private val gpsAccuracy = RunningStats()
-    private val speeds = ArrayList<Double>()    // GPS 点数量少，可以保存，用于算 p95
+    private val speeds = ArrayList<Double>()    // Retain the small GPS speed list for p95.
     var distanceMeters = 0.0; private set
-    var first: LocationSample? = null; private set   // 自定义数据类，见下方说明
+    var first: LocationSample? = null; private set   // Plain Kotlin sample type described below.
     var last: LocationSample? = null; private set
 
     fun onMotion(s: MotionSample) {
@@ -362,7 +285,7 @@ class FeatureAccumulator {
         }
     }
 
-    fun onLocation(loc: LocationSample) { /* 按第 5 节的规则过滤、累加距离、记录速度 */ }
+    fun onLocation(loc: LocationSample) { /* Filter, accumulate distance and record speed as described above. */ }
 
     fun toFeatures(durationMillis: Long): SensorFeatures {
         val sorted = speeds.sorted()
@@ -385,17 +308,7 @@ class FeatureAccumulator {
 }
 ```
 
-> `Location` 和 `Sensor` 是 Android 类，本地单元测试里没法直接用。建议 `onLocation` 接收你自己定义的 `LocationSample(lat, lon, accuracy, speed?, timeMillis)`，由服务负责把 `Location` 转换过去。距离用 `Location.distanceBetween` 或自己写 haversine 公式，这样 `FeatureAccumulator` 就能完全在 JVM 上测试。
-
----
-
-## 8. JourneyTracker 状态机
-
-```
-Idle ──begin()──▶ Recording ──finish()──▶ Idle
-                     │
-                     └─ 每秒更新一次 StateFlow：时长、距离、GPS 精度、三个传感器的采样数
-```
+### Recording state and tracker
 
 ```kotlin
 data class TrackingState(
@@ -403,7 +316,7 @@ data class TrackingState(
     val startTimeMillis: Long = 0L,
     val elapsedSeconds: Long = 0L,
     val distanceMeters: Double = 0.0,
-    val lastAccuracyMeters: Float? = null,   // null 表示还没定位到
+    val lastAccuracyMeters: Float? = null,   // Null until the first location fix.
     val gpsCount: Int = 0,
     val accelCount: Long = 0,
     val gyroCount: Long = 0,
@@ -416,16 +329,12 @@ class JourneyTracker {
 
     fun begin(now: Long) { acc = FeatureAccumulator(); _state.value = TrackingState(true, now) }
     fun onLocation(l: Location) { acc.onLocation(l.toSample()); publishThrottled() }
-    fun onMotion(s: MotionSample) { acc.onMotion(s); publishThrottled() }   // 最多每秒发布一次
-    fun finish(now: Long): RecordingResult? { /* 生成结果，重置为 Idle；数据不足时返回 null */ }
+    fun onMotion(s: MotionSample) { acc.onMotion(s); publishThrottled() }   // Publish at most once per second.
+    fun finish(now: Long): RecordingResult? { /* Build a result, reset to Idle; return null for insufficient data. */ }
 }
 ```
 
----
-
-## 9. 结束、保存和跳转
-
-### 9.1 生成 JourneySummary
+### Journey construction
 
 ```kotlin
 JourneySummary(
@@ -436,179 +345,66 @@ JourneySummary(
     startTimeMillis = start,
     endTimeMillis = end,
     distanceMeters = acc.distanceMeters,
-    transportMode = TransportMode.UNKNOWN,      // 等 Duo 的识别器，见下文
+    transportMode = TransportMode.UNKNOWN,      // Until the classifier is integrated, as described above.
     sensorFeatures = acc.toFeatures(end - start),
 )
 ```
 
-- **数据太少时不保存**：时长 < 30 秒或有效 GPS 点 < 2 个时，提示"行程太短，未保存"，并提供"丢弃"按钮。
-- **交通方式**：如果 Duo 的 `TransportClassifier` 已经有实现，就调用它得到 `transportMode`；还没有的话先填 `UNKNOWN`，让用户在确认页自己选。**提前确认 Yu-Han 的确认页能正常显示 `UNKNOWN`**，比如默认不选中任何选项。
-
-### 9.2 保存：注意离线时的坑 ⚠️
-
-Firestore 开启离线缓存后，`set()` **会立刻写进本地缓存**，但返回的 Task **要等到服务器确认才会完成**。断网时如果直接 `await()`，界面会一直卡在"保存中"。
-
-推荐写法：
+### Bounded server acknowledgement
 
 ```kotlin
 viewModelScope.launch {
     _ui.update { it.copy(isSaving = true) }
     val summary = builder.build(result)
-    // 本地缓存已经写入；最多等 3 秒服务器确认，超时也继续往下走
+    // The local cache is written; wait at most 3 seconds for server acknowledgement, then continue.
     withTimeoutOrNull(3_000) { journeyRepository.saveJourney(summary) }
     _ui.update { it.copy(isSaving = false, savedJourneyId = summary.journeyId) }
 }
 ```
 
-确认页调用 `getJourney()` 读取时，断网情况下 Firestore 会自动从本地缓存返回数据，所以跳转后也能正常显示。
-
-> 顺带检查一下：`FirestoreJourneyRepository.saveJourney` 现在是不是直接 `await()`？如果是，Yu-Han 确认页上的"保存"按钮在断网时也会一直卡住。修复方法同上：在 ViewModel 层加超时，或者让仓库只等本地写入完成。
-
-### 9.3 跳转
+### Navigation
 
 ```kotlin
-// NavGraph 里新增的路由
+// Add this route in NavGraph.
 composable(TrackingRoutes.TRACKING) {
     TrackingRoute(
-        viewModel = /* 用 ViewModelFactory 创建 */,
+        viewModel = /* Construct with ViewModelFactory */,
         onJourneySaved = { id -> navController.navigate(Routes.journeyReview(id)) },
     )
 }
-// 登录成功后改为：navController.navigate(TrackingRoutes.TRACKING) { popUpTo(Routes.LOGIN) { inclusive = true } }
+// After login: navController.navigate(TrackingRoutes.TRACKING) { popUpTo(Routes.LOGIN) { inclusive = true } }
 ```
 
-在确认页按返回键，会回到记录页，可以接着开始下一次记录。
-
----
-
-## 10. FirestoreJourneyRepository 映射补充
+### Firestore mapping
 
 ```kotlin
-// 写入
+// Write
 "sensorFeatures" to journey.sensorFeatures?.let { f ->
     mapOf(
         "featureVersion" to f.featureVersion,
         "averageSpeedMps" to f.averageSpeedMps,
-        // …其余字段同名
+        // Other fields use the same property names.
     )
 }
 
-// 读取：字段不存在时返回 null
+// Read: return null when the field is absent.
 val sf = (data["sensorFeatures"] as? Map<*, *>)?.let { m ->
     SensorFeatures(
         featureVersion = (m["featureVersion"] as? Number)?.toInt() ?: 1,
         averageSpeedMps = (m["averageSpeedMps"] as Number).toDouble(),
-        // …Int 字段用 (x as Number).toInt()
+        // Convert integer fields using (x as Number).toInt().
     )
 }
 ```
 
----
+## Copyable implementation prompt
 
-## 11. 测试方案
+Implement the EcoStep journey recorder (GPS, accelerometer, gyroscope and foreground service). Read this guide and SENSOR_DATA_FORMAT.md first.
 
-### 11.1 单元测试（必做，报告里的 Quality 证据）
+Before editing, report git status and preserve existing changes without stashing/discarding them. Work on the original feature/zongcheng-auth branch, or if merged, create feature/zongcheng-tracking from current main. Fetch origin and identify incoming Yu-Han/Duo work; stop and report merge conflicts. Do not use reset --hard, clean or force-push.
 
-| 测试 | 用例 |
-|---|---|
-| `RunningStatsTest` | `[2, 4, 4, 4, 5, 5, 7, 9]` → 均值 5.0，总体标准差 2.0；空输入 → 0 |
-| `FeatureAccumulatorTest` | 精度差的点被丢弃；跳点被丢弃；静止漂移不累加距离；p95 和 stopRatio 计算正确；没有陀螺仪时计数为 0 |
-| `JourneySummaryBuilderTest` | 行程太短返回 null；起终点取第一个和最后一个有效点；`sensorFeatures` 不为空 |
-| Firestore 映射测试 | `sensorFeatures` 为 null 和不为 null 时都能正确往返转换 |
+Place new code in sensors/ and data/model/SensorFeatures.kt. Restrict shared edits to the manifest (three permissions and one service), the nullable JourneySummary field and mapper, AppContainer tracker, NavGraph tracking/login route, and dependencies only when required. Do not modify unrelated network/, data/cache/, algorithm/, evaluation/, ui/, core/theme/, Routes.kt or existing libs.versions.toml versions. Keep the implementation minimal: no map UI, background-location permission, Room or visual redesign. Process sensor callbacks off the main thread and expose StateFlow through a ViewModelFactory-created ViewModel.
 
-### 11.2 模拟器测试
+Verify assembleDebug and the new JVM tests. The original baseline noted two Windows DataStore failures unrelated to this task; establish the actual current baseline instead of hiding failures. Provide emulator manual-test steps.
 
-1. **GPS**：模拟器右侧 `⋯` → Extended Controls → **Location** → **Routes**。随便规划一条路线，点 Play Route，选一个播放速度来模拟移动。
-2. **加速度计和陀螺仪**：Extended Controls → **Virtual sensors**，拖动或旋转手机模型，采样数会增长。
-3. **锁屏测试**：记录过程中按电源键锁屏 30 秒再解锁，时长和距离应该连续没有中断。
-4. **断网测试**：记录中打开飞行模式 → 结束记录 → 应该能正常跳到确认页 → 关闭飞行模式 → 在 Firestore 控制台看到这条新数据。
-
-### 11.3 真机测试（报告证据，冻结后也可以继续做）
-
-| 场景 | 记录内容 |
-|---|---|
-| 步行 5–10 分钟 | App 算的距离 vs Google Maps 量出的距离；三个特征值 |
-| 骑车或公交各一次 | 同上 |
-| 静止放置 5 分钟 | 距离应该接近 0（验证漂移过滤是否有效） |
-
-每次记录都截图：App 记录页、确认页、Firestore 文档。在 Logcat 里用 `EcoStepTracking` 标签输出每 10 秒的采样计数，这些日志也可以当作证据。
-
-### 11.4 延迟（配合 Rui）
-
-用 `LatencyTracker` 测量 `journey.stop_to_review`，即从点击"结束"到确认页显示出来的耗时，在线和离线各测 10 次。
-
----
-
-## 12. 常见坑速查
-
-| 现象 | 原因 | 解决办法 |
-|---|---|---|
-| 点"开始"就闪退，报 `SecurityException` | 没有定位权限就启动了 location 类型的前台服务 | 先检查权限，再启动服务 |
-| 报 `MissingForegroundServiceTypeException` | Manifest 里没写 `foregroundServiceType` | 按第 3.1 节补上 |
-| 锁屏后停止记录 | 没用前台服务，或没调用 `startForeground` | 按第 4 节实现 |
-| 界面卡顿 | 传感器回调在主线程上执行 | 用 `HandlerThread`，加上 `limitedParallelism(1)` |
-| 耗电快、停止后仍然在采集 | 没有注销监听 | 在 `awaitClose` 里注销，并在 `stop()` 里取消协程 |
-| 模拟器一直没有定位 | 模拟器默认不会自动产生位置 | 用 Extended Controls → Location 设置位置 |
-| 静止时距离还在增加 | GPS 漂移 | 过滤精度差的点，并且小于 3 m 的位移不累加 |
-| 断网时一直显示"保存中" | 在等服务器确认 | 按第 9.2 节加超时 |
-| App 被系统杀掉后行程丢失 | 用的是 `START_NOT_STICKY` | 接受这个限制，在报告里写成已知限制 |
-
----
-
-## 13. 时间安排（9/26）
-
-| 时间 | 任务 | 完成标志 |
-|---|---|---|
-| 上午 1h | `SensorFeatures` 模型 + `RunningStats` + `FeatureAccumulator` + 单元测试 | 测试全部通过 |
-| 上午 1.5h | `LocationTracker` + `MotionSensorTracker` + `JourneyTracker` | Logcat 里三种采样数都在增长 |
-| 下午 1.5h | 前台服务 + Manifest + 权限流程 | 锁屏后记录不中断 |
-| 下午 1h | `TrackingRoute` 页面 + 保存 + 跳转 + Firestore 映射 | 结束后跳到确认页，控制台出现新文档 |
-| 晚上 1h | 模拟器完整测试 + 断网测试 + 提交 PR | 验收表 8 项全部通过 |
-
-**如果时间不够，按这个顺序砍**：
-
-1. 先不做"永久拒绝后跳设置页"，只显示提示文字；
-2. 先不做通知点击回到 App；
-3. **最后的保底方案**：不用前台服务，直接在 ViewModel 里采集，只保证亮屏时能记录。这样三个传感器照样都用上，评分项不受影响，只是锁屏会中断，在报告里写成已知限制。
-
----
-
-## 附录：交给 AI 的 prompt
-
-````markdown
-# 任务：实现 EcoStep 行程记录模块（GPS + 加速度计 + 陀螺仪 + 前台服务）
-
-请先完整阅读 `docs/JOURNEY_TRACKING_GUIDE.md` 和 `docs/SENSOR_DATA_FORMAT.md`，严格按照这两份文档实现。
-
-## 第 0 步：同步代码（完成后先汇报，再继续）
-1. `git status`；如果有未提交的改动，先告诉我，不要擅自 stash 或丢弃
-2. 在当前的 `feature/zongcheng-auth` 分支上（或者如果它已经合并到 main，就从最新的 main 新建 `feature/zongcheng-tracking`）
-3. `git fetch origin`，确认是否有 Yu-Han / Duo 的新提交需要合并；有冲突立刻停下告诉我
-4. 禁止使用 `reset --hard`、`clean`、`push --force`
-
-## 改动原则
-- 新代码全部放在 `sensors/` 包和 `data/model/SensorFeatures.kt`
-- 只允许对这些共享文件做最少的改动：
-  - `AndroidManifest.xml`：3 个权限 + 1 个 service
-  - `JourneySummary.kt`：加 1 个可空字段
-  - `AppContainer.kt`：追加 `journeyTracker`
-  - `NavGraph.kt`：加 TRACKING 路由；登录成功改为跳到 TRACKING
-  - `build.gradle.kts`：仅在确实需要时添加依赖
-- 以下内容禁止修改：`network/`、`data/cache/`、`algorithm/`、`evaluation/`、`ui/`、`core/theme/`、`Routes.kt`、`libs.versions.toml` 中已有的版本号
-- 最小实现：不做地图显示、不做后台定位权限、不做 Room、不做 UI 美化
-- 传感器回调不能在主线程执行；ViewModel 用 StateFlow 暴露状态，通过 ViewModelFactory 创建
-
-## 验证
-1. `./gradlew assembleDebug` 通过
-2. 新增的单元测试全部通过（已知 Windows 上 DataStore 的 2 个测试失败与本任务无关）
-3. 列出我在模拟器上手动验证的步骤（参照手册第 11.2 节）
-
-## 完成后按以下格式反馈
-1. 第 0 步结果（分支、是否合并、有无冲突）
-2. 新增文件列表，每个文件一句话说明
-3. 共享文件的完整 diff
-4. 手册第 0 节验收表 8 项逐项状态：✅ / ⚠️ / ❌，并说明原因
-5. 构建和测试结果摘要
-6. 需要我手动做的事、需要通知组员的事
-7. 建议的 commit message（不要执行 commit）
-````
+Final report: (1) branch/sync/conflict status, (2) each new file's purpose, (3) complete shared-file diff, (4) status and reason for each of the eight acceptance criteria, (5) build/test results, (6) remaining manual work and owner coordination, (7) a suggested commit message. Do not execute the commit.
