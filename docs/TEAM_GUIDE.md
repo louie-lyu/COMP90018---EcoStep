@@ -26,6 +26,10 @@ Dependencies were prepared in [app/build.gradle.kts](../app/build.gradle.kts) so
 
 ## Responsibilities
 
+### Chi Hong Tam: architecture and integration
+
+Set up the Android project, Gradle build with its version catalog, the shared data models, and the repository and algorithm interfaces that the other owners implement. Provided the `AppContainer`, `ViewModelFactory`, navigation and theme skeleton that every screen builds on. Coordinated integration by reviewing and build-testing pull requests from other members and merging them after checking the result against the latest `main`. Also added the OpenStreetMap map on the Home screen, which replaced the placeholder map, and the Weekly Insight screen.
+
 ### Zongcheng Jiang: sensors, tracking, authentication and database
 
 Collect GPS, accelerometer and gyroscope data in `sensors/`, produce JourneySummary, implement JourneyRepository, and connect Firebase Auth/Firestore. The original setup sequence was to create a Firebase project, replace `app/google-services.json.example` with ignored `app/google-services.json`, enable the Google Services plugin, and wire the repository through AppContainer. Check current code before repeating completed setup. JourneySummary was due 20 September and Firebase setup 13 September. Use `app/src/test/assets/mock_journeys.json` when integration is blocked.
