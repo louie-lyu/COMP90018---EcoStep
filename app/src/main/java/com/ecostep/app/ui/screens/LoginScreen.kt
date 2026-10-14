@@ -35,33 +35,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ecostep.app.ui.viewmodels.AuthMode
-import com.ecostep.app.ui.viewmodels.LoginEvent
 import com.ecostep.app.ui.viewmodels.LoginViewModel
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = viewModel(),
+    viewModel: LoginViewModel,
     onAuthenticated: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val focusManager = LocalFocusManager.current
 
-    LaunchedEffect(viewModel) {
-        viewModel.events.collect { event ->
-            when (event) {
-                is LoginEvent.AuthenticationSucceeded -> {
-                    onAuthenticated()
-                }
-            }
-        }
+    LaunchedEffect(uiState.isAuthenticated) {
+        if (uiState.isAuthenticated) onAuthenticated()
     }
 
     val title = when (uiState.mode) {
@@ -158,7 +151,7 @@ fun LoginScreen(
                         value = uiState.displayName,
                         onValueChange =
                             viewModel::updateDisplayName,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().testTag("auth-name"),
                         label = {
                             Text("Name")
                         },
@@ -185,7 +178,7 @@ fun LoginScreen(
                 OutlinedTextField(
                     value = uiState.email,
                     onValueChange = viewModel::updateEmail,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().testTag("auth-email"),
                     label = {
                         Text("Email")
                     },
@@ -229,7 +222,7 @@ fun LoginScreen(
                         value = uiState.password,
                         onValueChange =
                             viewModel::updatePassword,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().testTag("auth-password"),
                         label = {
                             Text("Password")
                         },
@@ -289,7 +282,7 @@ fun LoginScreen(
                         value = uiState.confirmPassword,
                         onValueChange =
                             viewModel::updateConfirmPassword,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().testTag("auth-confirm-password"),
                         label = {
                             Text("Confirm password")
                         },
