@@ -64,7 +64,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run-activity-hint-transport-e
   The production JourneyTracker, summary builder, shared HTTP client, evidence provider, stop mapper
   and classifier are reused. The 5-second timeout and UNKNOWN fallback match TrackingViewModel.
   Only the planner query time differs. No offline transit files or local candidate filtering remain.
-  Schema 5 reports contain `summary`, `perMode` (true-label recall/precision/F1), `perPrediction`
+  Schema 6 reports contain `summary`, `perMode` (true-label recall/precision/F1), `perPrediction`
   (predicted-label share/error rate), `confusionMatrix`, per-sample records and planner diagnostics.
   `successfulOnlineSummary` covers requests that succeeded and completed classification; an HTTP
   success can still return no transit candidates. Check `withTransitCandidates`, `plannerStatusCounts`
@@ -89,8 +89,57 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run-activity-hint-transport-e
   `-MotionMinAccelSamples` adds `motionVariant` (summary, perMode, confusion matrix, fallback subset):
   the same samples and transit evidence classified with that accelerometer rule, without extra requests.
   The main results always use `productionMotionThresholds` (`CALIBRATED_MOTION_THRESHOLDS`).
+  For threshold selection, add `-CalibrateMotion`. This adds a separate `sensorCalibration`
+  experiment with Activity hints masked for every sample, an explicit speed-only baseline
+  (motion thresholds null), and a grid of accelerometer thresholds. The main production results
+  and recorded Activity hints remain available. All candidates reuse the same transit evidence;
+  no additional network requests are sent. Calibration computation is excluded from `durationMs`.
+  Selection maximizes overall accuracy across the same evaluated dataset, without a training or
+  validation split. Timeouts remain UNKNOWN for every candidate and stay in the denominator.
+  Ties prefer the speed-only baseline, then lower standard deviation, then higher minimum sample
+  count. `tiedBestCandidateIds` lists all tied candidates. Incomplete runs, runtime failures or runs
+  with no completed calibration predictions do not select a winner. No production threshold is
+  changed automatically. A winning speed-only baseline has `bestThresholds: null`.
+  Defaults are standard deviations `0.2,0.4,0.6,0.8,1.0,1.5,2.0,3.0` m/s² crossed with
+  sample counts `250,500,1000` (24 candidates plus baseline); these are search candidates, not
+  calibrated values. Override them with `-MotionStdCandidates` and `-MotionSampleCandidates`
+  (PowerShell arrays, at most 200 combinations). Each record's `sensorCalibrationPredictions`
+  follows the report's `sensorCalibration.candidates` order. Candidate summaries include per-mode
+  metrics and confusion matrices, but only overall accuracy determines the winner.
+  Calibration requires matching `Hand_Motion.txt` files and nonzero accelerometer samples for
+  every selected recording. The old GPS/API-only preview archive cannot calibrate motion.
+  To extend that archive, place the official `SHLDataset_preview_v1_part1.zip`, `part2.zip`
+  and `part3.zip` beside it and run `python scripts/prepare-shl-motion-dataset.py --segments-report <existing-full-evaluation.json>`.
+  The report's dataset SHA-256 must match the original ZIP. Its original recording IDs and
+  [start,end) boundaries determine which motion samples are retained; no new journeys are added.
+  This backs up the old ZIP as `SHL-preview-evaluation.gps-only.zip`, retains all existing
+  data entries, adds matching Hand motion files with only timestamp, accelerometer XYZ and
+  gyroscope XYZ within those existing recordings, and writes DEFLATE.
+  Motion timestamps such as `1498120298000.000000` are normalized to exact integer milliseconds
+  for the existing reader. The six sensor values keep their original precision and 100 Hz
+  sampling inside selected intervals, including NaN. Other columns and rows outside the existing
+  recordings are omitted. Non-integral
+  timestamps are rejected rather than rounded. The old manifest is retained as
+  `manifest.gps-only.json`; the updated manifest records source/output hashes and normalization.
+  Every output entry is SHA-256/CRC verified before replacing the default ZIP.
+  `ShlMotionArchiveCompatibilityTest` is an opt-in offline device check (`verifyShlMotionArchive=true`)
+  using `shl-preview.zip` and `shl-preview-gps-only.zip` in the device evaluation directory.
+  It replays all selected recordings, checks that non-motion fields match, and checks that both
+  motion sensors feed the calibration path. It does not measure online classification accuracy.
+  An optional `shl-motion-full-reference.json` from a prior full-motion compatibility run also
+  checks that the compact ZIP produces exactly the same motion counts, means and standard deviations.
+  Example from PowerShell (replace the ZIP path with a motion-inclusive archive):
+
+  ```powershell
+  .\scripts\run-activity-hint-transport-evaluation.ps1 `
+      -DatasetPath 'D:\datasets\SHL-preview-with-motion.zip' `
+      -CalibrateMotion -MotionStdCandidates @(0.2, 0.4, 0.8, 1.2, 2.0) `
+      -MotionSampleCandidates @(250, 500, 1000)
+  ```
+
   Code is split into `ActivityHintTransportEvaluationTest` (online flow), `ShlEvaluationDataset`
-  (sampling/replay), and `TransportEvaluationMetrics` (report calculations).
+  (sampling/replay), `MotionThresholdCalibration` (forced-sensor sweep), and
+  `TransportEvaluationMetrics` (report calculations).
 - P50/P95 use successful samples only (nearest rank); unavailable metrics are `null`.
 - EcoPoints, AI missions, weekly coach, mission triggers and local flow report batch time and average time per call; their percentiles describe batch averages.
 - Timing excludes fixture creation, warm-up, validation and report writing. Weather source checks,

@@ -47,6 +47,7 @@ class ActivityHintTransportEvaluationTest {
         val seed = arguments.getString("seed")?.toInt() ?: 42
         require(limit in 1..10000 && seed >= 0)
         val motionThresholds = motionThresholdsFrom(arguments)
+        val calibration = MotionThresholdCalibration.from(arguments)
 
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val client = (context.applicationContext as EcoStepApp).appContainer.okHttpClient
@@ -56,6 +57,7 @@ class ActivityHintTransportEvaluationTest {
         val directory = File(context.filesDir, "evaluation").apply { mkdirs() }
         val output = File(directory, "activity-hint-transport-evaluation-$startedAt.json")
         val report = newReport(startedAt, limit, seed, motionThresholds)
+        report.put("sensorCalibrationRequested", calibration != null)
         val records = mutableListOf<JSONObject>()
         var completed = false
 
@@ -64,10 +66,15 @@ class ActivityHintTransportEvaluationTest {
             report.put("datasetSha256", sha256(archive))
             val dataset = ShlEvaluationDataset.load(archive, limit, seed)
             report.put("dataset", dataset.metadata).put("plannedSamples", dataset.samples.size)
+            if (calibration != null) {
+                check(dataset.samples.all { (it.journey?.sensorFeatures?.accelSampleCount ?: 0) > 0 }) {
+                    "Motion calibration requires accelerometer data for every selected recording; supply a ZIP with matching Hand_Motion.txt files."
+                }
+            }
             var hasRequested = false
             for (sample in dataset.samples) {
                 if (sample.recording != null && hasRequested) delay(REQUEST_INTERVAL_MS)
-                val record = evaluate(sample, api, motionThresholds)
+                val record = evaluate(sample, api, motionThresholds, calibration)
                 if (sample.recording != null) hasRequested = true
                 records += record
                 writeProgress(report, records, output)
@@ -83,13 +90,23 @@ class ActivityHintTransportEvaluationTest {
             throw error
         } finally {
             finishReport(report, records, completed, motionThresholds)
+            calibration?.let { report.put("sensorCalibration", it.report(records, completed)) }
             output.writeText(report.toString(2))
         }
         assertTrue("Evaluation incomplete; inspect JSON report", report.getBoolean("passed"))
     }
 
-    private suspend fun evaluate(sample: Sample, api: TransitousApi, motionThresholds: MotionThresholds?): JSONObject {
+    private suspend fun evaluate(
+        sample: Sample,
+        api: TransitousApi,
+        motionThresholds: MotionThresholds?,
+        calibration: MotionThresholdCalibration?,
+    ): JSONObject {
         val record = newRecord(sample, motionThresholds)
+        calibration?.let {
+            record.put("sensorCalibrationPredictions", it.pendingPredictions())
+                .put("sensorCalibrationCompleted", false)
+        }
         val recording = sample.recording ?: return record.put(
             "reason", "Recording unavailable after production filtering; App would not save it",
         )
@@ -124,13 +141,19 @@ class ActivityHintTransportEvaluationTest {
                         .put("predictedMode", variant.mode.name)
                         .put("correct", variant.mode == sample.mode)
                 }
+                // Calibration is a separate experiment; preserve the original Activity hint and main result.
+                record.put("durationMs", (System.nanoTime() - start) / 1_000_000.0)
+                calibration?.let {
+                    record.put("sensorCalibrationPredictions", it.classify(journey, checkNotNull(evidence.evidence), sample.mode))
+                        .put("sensorCalibrationCompleted", true)
+                }
             }
         } catch (error: CancellationException) {
             throw error
         } catch (error: Exception) {
             record.put("runtimeSuccess", false).put("classificationError", errorJson(error))
         } finally {
-            record.put("durationMs", (System.nanoTime() - start) / 1_000_000.0)
+            if (record.isNull("durationMs")) record.put("durationMs", (System.nanoTime() - start) / 1_000_000.0)
             record.put("transitRoutes", observedApi.routeCount)
         }
         return record
@@ -250,7 +273,7 @@ class ActivityHintTransportEvaluationTest {
 
     private fun newReport(startedAt: Long, limit: Int, seed: Int, motionThresholds: MotionThresholds?) = JSONObject().apply {
         val arguments = InstrumentationRegistry.getArguments()
-        put("schemaVersion", 5)
+        put("schemaVersion", 6)
         put("experiment", "SHL recorded Activity, GPS and motion (when the archive has it) with live current-timetable transit plans")
         put("productionMotionThresholds", CALIBRATED_MOTION_THRESHOLDS?.toJson() ?: JSONObject.NULL)
         put("motionVariantThresholds", motionThresholds?.toJson() ?: JSONObject.NULL)

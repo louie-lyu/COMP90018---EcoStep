@@ -63,8 +63,11 @@ data class MotionThresholds(
             features.accelMagnitudeStd <= steadyAccelStd
 }
 
-// 校准后在这里填入阈值。为 null 时只用速度规则，App 和评估主结果都与之前一致。
-val CALIBRATED_MOTION_THRESHOLDS: MotionThresholds? = null
+// SHL-calibrated thresholds, used only when Activity hint priority conditions are not met.
+val CALIBRATED_MOTION_THRESHOLDS: MotionThresholds? = MotionThresholds(
+    steadyAccelStd = 0.8,
+    minAccelSamples = 1000,
+)
 
 class DefaultTransportClassifier(
     private val evidenceProvider: TransportEvidenceProvider,
