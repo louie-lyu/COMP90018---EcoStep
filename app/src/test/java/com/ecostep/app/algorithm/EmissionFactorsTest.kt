@@ -10,9 +10,9 @@ class EmissionFactorsTest {
 
     @Test
     fun `saving is car emissions minus mode emissions for the same distance`() {
-        assertEquals(384.0, EmissionFactors.carbonSavedVersusCarGrams(2_000.0, TransportMode.WALKING), 1e-9)
-        assertEquals(384.0, EmissionFactors.carbonSavedVersusCarGrams(2_000.0, TransportMode.CYCLING), 1e-9)
-        assertEquals(206.0, EmissionFactors.carbonSavedVersusCarGrams(2_000.0, TransportMode.PUBLIC_TRANSPORT), 1e-9)
+        assertEquals(331.82, EmissionFactors.carbonSavedVersusCarGrams(2_000.0, TransportMode.WALKING), 1e-9)
+        assertEquals(331.82, EmissionFactors.carbonSavedVersusCarGrams(2_000.0, TransportMode.CYCLING), 1e-9)
+        assertEquals(128.8, EmissionFactors.carbonSavedVersusCarGrams(2_000.0, TransportMode.PUBLIC_TRANSPORT), 1e-9)
         assertEquals(0.0, EmissionFactors.carbonSavedVersusCarGrams(2_000.0, TransportMode.CAR), 1e-9)
     }
 

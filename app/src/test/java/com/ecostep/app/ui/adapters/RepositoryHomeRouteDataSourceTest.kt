@@ -116,8 +116,8 @@ class RepositoryHomeRouteDataSourceTest {
         val result = source(FakeExternalData(defaultRoutes)).getRouteOptions(query())
 
         val byMode = result.routes.associateBy { it.route.mode }
-        // 2.0 km walked instead of driven at 192 g/km.
-        assertEquals(0.384, byMode.getValue(TransportMode.WALKING).estimatedCarbonSavedKg, 1e-9)
+        // 2.0 km walked instead of driven at 165.91 g CO2e/km.
+        assertEquals(0.33182, byMode.getValue(TransportMode.WALKING).estimatedCarbonSavedKg, 1e-9)
         assertEquals(0.0, byMode.getValue(TransportMode.CAR).estimatedCarbonSavedKg, 1e-9)
         assertTrue(result.routes.all { it.estimatedEcoPoints == 0 })
         assertEquals(path, byMode.getValue(TransportMode.WALKING).route.path)
@@ -138,8 +138,8 @@ class RepositoryHomeRouteDataSourceTest {
         assertEquals(listOf("Tram 6", "Tram 19", "Tram 16"), result.publicTransportOptions.map { it.line })
         val transit = result.routes.single { it.route.mode == TransportMode.PUBLIC_TRANSPORT }
         assertEquals(1_000L, transit.route.durationSeconds)
-        // Road distance 2.5 km at (192 - 89) g/km.
-        assertEquals(0.2575, transit.estimatedCarbonSavedKg, 1e-9)
+        // Road distance 2.5 km at (165.91 - 101.51) g CO2e/km.
+        assertEquals(0.161, transit.estimatedCarbonSavedKg, 1e-9)
         assertFalse(result.publicTransportUnavailable)
     }
 

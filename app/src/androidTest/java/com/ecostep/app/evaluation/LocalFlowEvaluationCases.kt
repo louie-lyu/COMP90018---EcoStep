@@ -5,9 +5,9 @@ import com.ecostep.app.data.model.TransportMode
 internal data class ExpectedLocalFlow(
     val emissionsGrams: Double?,
     val missionMode: TransportMode? = TransportMode.WALKING,
-    val missionSavingGrams: Double = 960.0,
+    val missionSavingGrams: Double = 829.55,
     val actualSavingGrams: Double = missionSavingGrams,
-    val points: Int = 116,
+    val points: Int = 103,
     val weeklyAccepted: Int = 1,
     val weeklyCompleted: Int = 1,
     val weeklyRate: Double = 100.0,
@@ -28,31 +28,31 @@ internal data class LocalFlowCase(
     val timestampMillis: Long = 1500L,
 )
 
-/** Prototype factors: car 192 g/km, public transport 89 g/km; expected totals are explicit. */
+/** UK 2026 proxy factors: car 165.91 g CO2e/km, public transport 101.51 g CO2e/km; expected totals are explicit. */
 internal object LocalFlowEvaluationCases {
     fun cases(): List<LocalFlowCase> = buildList {
-        val walking = ExpectedLocalFlow(960.0)
+        val walking = ExpectedLocalFlow(829.55)
         add(LocalFlowCase("car_to_walking", walking))
-        add(LocalFlowCase("car_to_cycling", ExpectedLocalFlow(960.0, TransportMode.CYCLING, points = 111),
+        add(LocalFlowCase("car_to_cycling", ExpectedLocalFlow(829.55, TransportMode.CYCLING, points = 98),
             availableModes = setOf(TransportMode.CYCLING), actualMode = TransportMode.CYCLING))
-        add(LocalFlowCase("car_to_public_transport", ExpectedLocalFlow(960.0, TransportMode.PUBLIC_TRANSPORT, 515.0, points = 57),
+        add(LocalFlowCase("car_to_public_transport", ExpectedLocalFlow(829.55, TransportMode.PUBLIC_TRANSPORT, 322.0, points = 37),
             availableModes = setOf(TransportMode.PUBLIC_TRANSPORT), actualMode = TransportMode.PUBLIC_TRANSPORT))
-        add(LocalFlowCase("public_transport_to_walking", ExpectedLocalFlow(445.0, missionSavingGrams = 445.0, points = 65),
+        add(LocalFlowCase("public_transport_to_walking", ExpectedLocalFlow(507.55, missionSavingGrams = 507.55, points = 71),
             originalMode = TransportMode.PUBLIC_TRANSPORT))
-        add(LocalFlowCase("public_transport_to_cycling", ExpectedLocalFlow(445.0, TransportMode.CYCLING, 445.0, points = 60),
+        add(LocalFlowCase("public_transport_to_cycling", ExpectedLocalFlow(507.55, TransportMode.CYCLING, 507.55, points = 66),
             originalMode = TransportMode.PUBLIC_TRANSPORT, availableModes = setOf(TransportMode.CYCLING), actualMode = TransportMode.CYCLING))
-        add(LocalFlowCase("fractional_distance", ExpectedLocalFlow(240.096, missionSavingGrams = 240.096, points = 44), distanceMeters = 1250.5))
-        add(LocalFlowCase("points_cap", ExpectedLocalFlow(5760.0, missionSavingGrams = 5760.0, points = 500), distanceMeters = 30000.0))
+        add(LocalFlowCase("fractional_distance", ExpectedLocalFlow(207.470455, missionSavingGrams = 207.470455, points = 41), distanceMeters = 1250.5))
+        add(LocalFlowCase("points_cap", ExpectedLocalFlow(4977.3, missionSavingGrams = 4977.3, points = 500), distanceMeters = 30000.0))
         // 1 m earns 0.1% of the walking bonus, which rounds to nothing.
-        add(LocalFlowCase("short_positive_journey", ExpectedLocalFlow(0.192, missionSavingGrams = 0.192, points = 0), distanceMeters = 1.0))
+        add(LocalFlowCase("short_positive_journey", ExpectedLocalFlow(0.16591, missionSavingGrams = 0.16591, points = 0), distanceMeters = 1.0))
         val rejected = walking.copy(points = 0, weeklyAccepted = 0, weeklyCompleted = 0, weeklyRate = 0.0,
             weeklySavingGrams = 0.0, weeklyMode = null)
         add(LocalFlowCase("rejected_mission", rejected, accepted = false, completed = false))
         add(LocalFlowCase("rejected_but_marked_completed", rejected, accepted = false))
         add(LocalFlowCase("accepted_not_completed", walking.copy(points = 0, weeklyCompleted = 0, weeklyRate = 0.0,
             weeklySavingGrams = 0.0, weeklyMode = null), completed = false))
-        add(LocalFlowCase("corrected_to_public_transport", walking.copy(actualSavingGrams = 515.0,
-            points = 57, weeklySavingGrams = 515.0, weeklyMode = TransportMode.PUBLIC_TRANSPORT), actualMode = TransportMode.PUBLIC_TRANSPORT))
+        add(LocalFlowCase("corrected_to_public_transport", walking.copy(actualSavingGrams = 322.0,
+            points = 37, weeklySavingGrams = 322.0, weeklyMode = TransportMode.PUBLIC_TRANSPORT), actualMode = TransportMode.PUBLIC_TRANSPORT))
         add(LocalFlowCase("corrected_to_car", walking.copy(actualSavingGrams = 0.0,
             points = 0, weeklySavingGrams = 0.0, weeklyMode = TransportMode.CAR), actualMode = TransportMode.CAR))
         val outsideWeek = walking.copy(weeklyAccepted = 0, weeklyCompleted = 0, weeklyRate = 0.0,
@@ -66,15 +66,15 @@ internal object LocalFlowEvaluationCases {
         for (mode in listOf(TransportMode.WALKING, TransportMode.CYCLING, TransportMode.UNKNOWN)) {
             add(LocalFlowCase("no_lower_carbon_${mode.name}", noAlternative, originalMode = mode))
         }
-        add(LocalFlowCase("no_available_alternative", noAlternative.copy(emissionsGrams = 960.0), availableModes = emptySet()))
+        add(LocalFlowCase("no_available_alternative", noAlternative.copy(emissionsGrams = 829.55), availableModes = emptySet()))
         add(LocalFlowCase("negative_distance_rejected", ExpectedLocalFlow(null, missionMode = null, errorStage = "carbon"), distanceMeters = -1.0))
         add(LocalFlowCase("nonfinite_distance_rejected", ExpectedLocalFlow(null, missionMode = null, errorStage = "carbon"), distanceMeters = Double.NaN))
     }
 
     fun mixedWeek(): List<LocalFlowCase> = listOf(
-        LocalFlowCase("mixed_short_walk", ExpectedLocalFlow(192.0, missionSavingGrams = 192.0, points = 39), distanceMeters = 1000.0),
-        LocalFlowCase("mixed_walk", ExpectedLocalFlow(960.0)),
-        LocalFlowCase("mixed_cycle", ExpectedLocalFlow(960.0, TransportMode.CYCLING, points = 111),
+        LocalFlowCase("mixed_short_walk", ExpectedLocalFlow(165.91, missionSavingGrams = 165.91, points = 37), distanceMeters = 1000.0),
+        LocalFlowCase("mixed_walk", ExpectedLocalFlow(829.55)),
+        LocalFlowCase("mixed_cycle", ExpectedLocalFlow(829.55, TransportMode.CYCLING, points = 98),
             availableModes = setOf(TransportMode.CYCLING), actualMode = TransportMode.CYCLING),
     )
 }

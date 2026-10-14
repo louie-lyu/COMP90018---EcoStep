@@ -60,7 +60,7 @@ class EcoPointsEvaluationTest {
             put("buildType", BuildConfig.BUILD_TYPE)
             put("scope", "Synthetic correctness and amortized call timings; no sensors, network, account balance or UI integration.")
             put("rules", "Accepted and completed; round(savingsGrams / 10) plus WALKING=20, CYCLING=15, PUBLIC_TRANSPORT=5, others=0; cap=500. Missing data or zero savings returns zero.")
-            put("carbonFactorsGramsPerKm", "Provisional: CAR=192, PUBLIC_TRANSPORT=89, WALKING=0, CYCLING=0")
+            put("carbonFactorsGramsPerKm", "UK 2026 proxy factors (g CO2e/km): CAR=165.91, PUBLIC_TRANSPORT=101.51, WALKING=0, CYCLING=0")
             put("benchmarkMethod", "Sequential groups; System.nanoTime around batches. Includes case selection, loop and result-array writes; carbon_to_points also includes carbon calculation and MissionResult copying. Fixtures, warm-ups, validation and JSON excluded. Nearest-rank P50/P95 use successful batches only; per-call values are batch averages, not individual-call tail latency. JIT/GC and group order can affect comparisons. No latency pass/fail threshold.")
         }
         var completed = false

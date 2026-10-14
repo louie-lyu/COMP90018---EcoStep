@@ -40,8 +40,8 @@ class JourneyReviewViewModelTest {
 
         viewModel.selectTransportMode(TransportMode.PUBLIC_TRANSPORT)
 
-        // (192 - 89) g/km * 2 km
-        assertEquals(0.206, viewModel.uiState.value.carbonSavedKg, 1e-9)
+        // (165.91 - 101.51) g CO2e/km * 2 km
+        assertEquals(0.1288, viewModel.uiState.value.carbonSavedKg, 1e-9)
         assertEquals(0, viewModel.uiState.value.ecoPoints)
         assertFalse(viewModel.uiState.value.isImpactVerified)
     }
@@ -52,12 +52,12 @@ class JourneyReviewViewModelTest {
         val viewModel = JourneyReviewViewModel(repository, "j1")
 
         val state = viewModel.uiState.value
-        assertEquals(384.0, state.emissionsGrams, 1e-9)
+        assertEquals(331.82, state.emissionsGrams, 1e-9)
         assertEquals(
             listOf(TransportMode.WALKING, TransportMode.CYCLING, TransportMode.PUBLIC_TRANSPORT),
             state.lowerCarbonAlternatives.map { it.mode },
         )
-        assertEquals(206.0, state.lowerCarbonAlternatives.last().savingsGrams, 1e-9)
+        assertEquals(128.8, state.lowerCarbonAlternatives.last().savingsGrams, 1e-9)
     }
 
     @Test
@@ -83,8 +83,8 @@ class JourneyReviewViewModelTest {
 
         viewModel.selectTransportMode(TransportMode.WALKING)
 
-        // 384 g saved -> 38 base + 20 walking bonus
-        assertEquals(58, viewModel.uiState.value.ecoPoints)
+        // 331.82 g saved -> 33 base + 20 walking bonus
+        assertEquals(53, viewModel.uiState.value.ecoPoints)
     }
 
     @Test

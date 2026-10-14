@@ -21,8 +21,8 @@ class DefaultEcoPointsCalculatorTest {
                 ),
             )
 
-        // 100 g saved by cycling is about 521 m: 10 base + round(15 × 0.521) = 18.
-        assertEquals(18, points)
+        // 100 g saved by cycling is about 603 m: 10 base + round(15 × 0.603) = 19.
+        assertEquals(19, points)
     }
 
     @Test
@@ -35,10 +35,10 @@ class DefaultEcoPointsCalculatorTest {
         )
 
         // The 26 m walk from the review screen: no longer the full 20-point bonus.
-        assertEquals(1, walkingPoints(4.992, 26.0))
-        assertEquals(10 + 10, walkingPoints(96.0, 500.0))
-        assertEquals(19 + 20, walkingPoints(192.0, 1_000.0))
-        assertEquals(38 + 20, walkingPoints(384.0, 2_000.0))
+        assertEquals(1, walkingPoints(4.31366, 26.0))
+        assertEquals(8 + 10, walkingPoints(82.955, 500.0))
+        assertEquals(17 + 20, walkingPoints(165.91, 1_000.0))
+        assertEquals(33 + 20, walkingPoints(331.82, 2_000.0))
     }
 
     @Test

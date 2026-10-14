@@ -48,7 +48,7 @@ class RepositoryProfileDataSourceTest {
         assertEquals(0, impact.totalJourneys)
         assertEquals(0.0, impact.carbonSavedKg, 1e-9)
         assertEquals(1, impact.pendingJourneys)
-        assertEquals(384.0, impact.pendingCarbonSavedGrams, 1e-9)
+        assertEquals(331.82, impact.pendingCarbonSavedGrams, 1e-9)
         assertEquals(0, impact.ecoPointsBalance)
         assertTrue(impact.isAwaitingServer)
     }
@@ -76,7 +76,7 @@ class RepositoryProfileDataSourceTest {
         assertEquals(5, impact.totalJourneys)
         assertEquals(2.0005, impact.carbonSavedKg, 1e-9)
         assertEquals(1, impact.pendingJourneys)
-        assertEquals(384.0, impact.pendingCarbonSavedGrams, 1e-9)
+        assertEquals(331.82, impact.pendingCarbonSavedGrams, 1e-9)
         assertTrue(impact.isAwaitingServer)
     }
 }

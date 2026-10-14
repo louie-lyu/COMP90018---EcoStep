@@ -49,7 +49,7 @@ internal object EcoPointsEvaluationCases {
             for (completed in listOf(false, true)) {
                 add(EcoPointsCase("state_${accepted}_$completed", "state",
                     mission().copy(accepted = accepted, completed = completed),
-                    if (accepted && completed) 18 else 0))
+                    if (accepted && completed) 19 else 0))
             }
         }
         add(EcoPointsCase("missing_savings", "missing", mission().copy(actualCarbonSavingGrams = null), 0))
@@ -61,12 +61,12 @@ internal object EcoPointsEvaluationCases {
         for ((distance, references) in listOf(
             0.0 to listOf(Triple(TransportMode.WALKING, 0.0, 0), Triple(TransportMode.CYCLING, 0.0, 0),
                 Triple(TransportMode.PUBLIC_TRANSPORT, 0.0, 0)),
-            1000.0 to listOf(Triple(TransportMode.WALKING, 192.0, 39), Triple(TransportMode.CYCLING, 192.0, 34),
-                Triple(TransportMode.PUBLIC_TRANSPORT, 103.0, 15)),
-            10_000.0 to listOf(Triple(TransportMode.WALKING, 1920.0, 212), Triple(TransportMode.CYCLING, 1920.0, 207),
-                Triple(TransportMode.PUBLIC_TRANSPORT, 1030.0, 108)),
-            100_000.0 to listOf(Triple(TransportMode.WALKING, 19_200.0, 500), Triple(TransportMode.CYCLING, 19_200.0, 500),
-                Triple(TransportMode.PUBLIC_TRANSPORT, 10_300.0, 500)),
+            1000.0 to listOf(Triple(TransportMode.WALKING, 165.91, 37), Triple(TransportMode.CYCLING, 165.91, 32),
+                Triple(TransportMode.PUBLIC_TRANSPORT, 64.4, 11)),
+            10_000.0 to listOf(Triple(TransportMode.WALKING, 1659.1, 186), Triple(TransportMode.CYCLING, 1659.1, 181),
+                Triple(TransportMode.PUBLIC_TRANSPORT, 644.0, 69)),
+            100_000.0 to listOf(Triple(TransportMode.WALKING, 16_591.0, 500), Triple(TransportMode.CYCLING, 16_591.0, 500),
+                Triple(TransportMode.PUBLIC_TRANSPORT, 6_440.0, 500)),
         )) {
             for ((mode, savings, points) in references) {
                 add(EcoPointsCase("carbon_to_points_${mode.name}_$distance", "carbon_to_points",
@@ -77,12 +77,12 @@ internal object EcoPointsEvaluationCases {
 
     /**
      * The mode bonus scales with distance up to 1 km. Without a recorded distance it is
-     * derived from the saving versus driving: car 192 g/km, public transport 89 g/km.
+     * derived from the saving versus driving: car 165.91 g CO2e/km, public transport proxy 101.51 g CO2e/km.
      */
     private fun scaledBonus(mode: TransportMode, bonus: Int, savings: Double): Int {
         val savingPerKm = when (mode) {
-            TransportMode.WALKING, TransportMode.CYCLING -> 192.0
-            TransportMode.PUBLIC_TRANSPORT -> 103.0
+            TransportMode.WALKING, TransportMode.CYCLING -> 165.91
+            TransportMode.PUBLIC_TRANSPORT -> 64.4
             TransportMode.CAR, TransportMode.UNKNOWN -> return 0
         }
         val share = minOf(1.0, savings / savingPerKm)

@@ -3,8 +3,8 @@ import { test } from "node:test";
 import { calculateMissionPoints, carbonSavedVersusCarGrams, verifyConfirmedJourney } from "../../src/scoring";
 
 test("carbon saving uses the same-distance car baseline", () => {
-  assert.equal(carbonSavedVersusCarGrams(2000, "WALKING"), 384);
-  assert.equal(carbonSavedVersusCarGrams(2000, "PUBLIC_TRANSPORT"), 206);
+  assert.equal(carbonSavedVersusCarGrams(2000, "WALKING"), 331.82);
+  assert.ok(Math.abs(carbonSavedVersusCarGrams(2000, "PUBLIC_TRANSPORT") - 128.8) < 1e-9);
   assert.equal(carbonSavedVersusCarGrams(2000, "CAR"), 0);
   assert.equal(carbonSavedVersusCarGrams(2000, "UNKNOWN"), 0);
 });
@@ -17,7 +17,7 @@ test("carbon saving rejects NaN, Infinity and negative distances", () => {
 
 test("mission points mirror DefaultEcoPointsCalculator", () => {
   const completed = { accepted: true, completed: true };
-  assert.equal(calculateMissionPoints({ ...completed, actualTransportMode: "WALKING", actualCarbonSavingGrams: 384 }), 58);
+  assert.equal(calculateMissionPoints({ ...completed, actualTransportMode: "WALKING", actualCarbonSavingGrams: 331.82 }), 53);
   assert.equal(calculateMissionPoints({ ...completed, actualTransportMode: "PUBLIC_TRANSPORT", actualCarbonSavingGrams: 205 }), 26);
   assert.equal(calculateMissionPoints({ ...completed, actualTransportMode: "CYCLING", actualCarbonSavingGrams: 100_000 }), 500);
   assert.equal(calculateMissionPoints({ ...completed, actualTransportMode: "WALKING", actualCarbonSavingGrams: 0 }), 0);
@@ -27,19 +27,19 @@ test("mission points mirror DefaultEcoPointsCalculator", () => {
 
 test("the mode bonus grows with distance up to 1 km", () => {
   const walk = { accepted: true, completed: true, actualTransportMode: "WALKING" as const };
-  // 26 m on foot: base round(0.4992) = 0, bonus round(20 × 0.026) = 1.
-  assert.equal(calculateMissionPoints({ ...walk, actualCarbonSavingGrams: 4.992, actualDistanceMeters: 26 }), 1);
-  // 500 m: base 10, half the 20-point bonus.
-  assert.equal(calculateMissionPoints({ ...walk, actualCarbonSavingGrams: 96, actualDistanceMeters: 500 }), 20);
+  // 26 m on foot: base round(0.431366) = 0, bonus round(20 × 0.026) = 1.
+  assert.equal(calculateMissionPoints({ ...walk, actualCarbonSavingGrams: 4.31366, actualDistanceMeters: 26 }), 1);
+  // 500 m: base 8, half the 20-point bonus.
+  assert.equal(calculateMissionPoints({ ...walk, actualCarbonSavingGrams: 82.955, actualDistanceMeters: 500 }), 18);
   // From 1 km on the bonus is full.
-  assert.equal(calculateMissionPoints({ ...walk, actualCarbonSavingGrams: 384, actualDistanceMeters: 2000 }), 58);
+  assert.equal(calculateMissionPoints({ ...walk, actualCarbonSavingGrams: 331.82, actualDistanceMeters: 2000 }), 53);
   // Without a distance it is derived from the saving versus driving (500 m here).
-  assert.equal(calculateMissionPoints({ ...walk, actualCarbonSavingGrams: 96 }), 20);
-  assert.throws(() => calculateMissionPoints({ ...walk, actualCarbonSavingGrams: 96, actualDistanceMeters: -1 }), RangeError);
+  assert.equal(calculateMissionPoints({ ...walk, actualCarbonSavingGrams: 82.955 }), 18);
+  assert.throws(() => calculateMissionPoints({ ...walk, actualCarbonSavingGrams: 82.955, actualDistanceMeters: -1 }), RangeError);
 });
 
 test("only accepted and completed missions earn points", () => {
-  const result = { actualTransportMode: "WALKING" as const, actualCarbonSavingGrams: 384 };
+  const result = { actualTransportMode: "WALKING" as const, actualCarbonSavingGrams: 331.82 };
   assert.equal(calculateMissionPoints({ ...result, accepted: false, completed: true }), 0);
   assert.equal(calculateMissionPoints({ ...result, accepted: true, completed: false }), 0);
   assert.throws(() => calculateMissionPoints({ ...result, accepted: true, completed: true, actualCarbonSavingGrams: -1 }));
@@ -48,7 +48,7 @@ test("only accepted and completed missions earn points", () => {
 test("confirmed journey verification gives credit only to plausible journeys", () => {
   const base = { distanceMeters: 2000, startTimeMillis: 0, endTimeMillis: 1_200_000, confirmationStatus: "confirmed" };
   const ok = verifyConfirmedJourney({ ...base, confirmedTransportMode: "WALKING", transportMode: "WALKING" });
-  assert.deepEqual(ok, { status: "verified", reason: null, carbonSavedGrams: 384, mode: "WALKING" });
+  assert.deepEqual(ok, { status: "verified", reason: null, carbonSavedGrams: 331.82, mode: "WALKING" });
 
   // 2 km in 60 s is not walking.
   const tooFast = verifyConfirmedJourney({ ...base, endTimeMillis: 60_000, confirmedTransportMode: "WALKING" });

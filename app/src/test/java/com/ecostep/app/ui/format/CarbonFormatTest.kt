@@ -6,8 +6,8 @@ import org.junit.Test
 
 class CarbonFormatTest {
     @Test fun `short walking and public transport journeys retain useful precision`() {
-        assertEquals("70.7 g", formatCarbonGrams(368.0 / 1000 * 192, Locale.US))
-        assertEquals("37.9 g", formatCarbonGrams(368.0 / 1000 * (192 - 89), Locale.US))
+        assertEquals("61.1 g", formatCarbonGrams(368.0 / 1000 * 165.91, Locale.US))
+        assertEquals("23.7 g", formatCarbonGrams(368.0 / 1000 * (165.91 - 101.51), Locale.US))
         assertEquals("0.0 g", formatCarbonGrams(0.0, Locale.US))
         assertEquals("<0.1 g", formatCarbonGrams(0.01, Locale.US))
     }

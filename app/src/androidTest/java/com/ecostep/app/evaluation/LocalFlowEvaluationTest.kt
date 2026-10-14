@@ -60,8 +60,8 @@ class LocalFlowEvaluationTest {
                     }
                 }
             }
-            case("mixed_week_totals", JSONObject().put("points", 266).put("weeklyAccepted", 3)
-                .put("weeklyCompleted", 3).put("weeklySavingGrams", 2112.0).put("weeklyMode", "WALKING")) { actual ->
+            case("mixed_week_totals", JSONObject().put("points", 238).put("weeklyAccepted", 3)
+                .put("weeklyCompleted", 3).put("weeklySavingGrams", 1825.01).put("weeklyMode", "WALKING")) { actual ->
                 val flow = runFlow(mixedWeek)
                 actual.put("flow", flow.toJson())
                 verifyMixed(flow, mixedWeek)
@@ -111,8 +111,8 @@ class LocalFlowEvaluationTest {
     private fun verifyMixed(flow: FlowResult, fixtures: List<LocalFlowCase>) {
         check(flow.journeys.size == 3) { "Missing journey results" }
         flow.journeys.zip(fixtures).forEach { (actual, fixture) -> verifyJourney(actual, fixture.expected) }
-        check(flow.totalPoints == 266) { "Unexpected accumulated points" }
-        verifyWeekly(flow.weekly, 3, 3, 100.0, 2112.0, TransportMode.WALKING)
+        check(flow.totalPoints == 238) { "Unexpected accumulated points" }
+        verifyWeekly(flow.weekly, 3, 3, 100.0, 1825.01, TransportMode.WALKING)
         verifyPrivacy(flow)
     }
 

@@ -8,7 +8,15 @@ import com.ecostep.app.data.model.TransportMode
  * The trusted backend mirrors these values in `functions/src/config/scoring.json`;
  * `ScoringConfigContractTest` fails if the two drift apart.
  *
- * Provisional prototype values: the team must confirm the final values with a referenced source.
+ * Source: UK Government GHG Conversion Factors 2026, full set.
+ * https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026
+ * Car: average car, unknown fuel, 0.16591 kg CO2e per vehicle-km (Passenger vehicles, X54).
+ * Assumes one occupant, so all car emissions are attributed to the user.
+ * Public transport: average local bus, 0.10151 kg CO2e per passenger-km
+ * (Business travel- land, D81), used as a simplified proxy for all public transport modes.
+ * Walking and non-electric cycling have zero direct operational emissions.
+ * These UK-based estimates exclude full lifecycle emissions and are not
+ * Melbourne-specific measurements. Comparisons assume the same distance.
  */
 object EmissionFactors {
 
@@ -16,8 +24,8 @@ object EmissionFactors {
         mapOf(
             TransportMode.WALKING to 0.0,
             TransportMode.CYCLING to 0.0,
-            TransportMode.PUBLIC_TRANSPORT to 89.0,
-            TransportMode.CAR to 192.0,
+            TransportMode.PUBLIC_TRANSPORT to 101.51,
+            TransportMode.CAR to 165.91,
         )
 
     /**

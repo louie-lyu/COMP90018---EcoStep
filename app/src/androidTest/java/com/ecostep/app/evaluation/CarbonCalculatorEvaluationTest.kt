@@ -32,17 +32,17 @@ class CarbonCalculatorEvaluationTest {
         // Hand-calculated references, independent of the calculator's private factor table.
         checkReference(TransportMode.WALKING, 10_000.0, 0.0, emptyMap())
         checkReference(TransportMode.CYCLING, 10_000.0, 0.0, emptyMap())
-        checkReference(TransportMode.PUBLIC_TRANSPORT, 10_000.0, 890.0,
-            mapOf(TransportMode.WALKING to 890.0, TransportMode.CYCLING to 890.0))
-        checkReference(TransportMode.CAR, 10_000.0, 1920.0,
-            mapOf(TransportMode.WALKING to 1920.0, TransportMode.CYCLING to 1920.0,
-                TransportMode.PUBLIC_TRANSPORT to 1030.0))
+        checkReference(TransportMode.PUBLIC_TRANSPORT, 10_000.0, 1015.1,
+            mapOf(TransportMode.WALKING to 1015.1, TransportMode.CYCLING to 1015.1))
+        checkReference(TransportMode.CAR, 10_000.0, 1659.1,
+            mapOf(TransportMode.WALKING to 1659.1, TransportMode.CYCLING to 1659.1,
+                TransportMode.PUBLIC_TRANSPORT to 644.0))
         checkReference(TransportMode.UNKNOWN, 10_000.0, 0.0, emptyMap())
-        checkReference(TransportMode.CAR, 1250.5, 240.096,
-            mapOf(TransportMode.WALKING to 240.096, TransportMode.CYCLING to 240.096,
-                TransportMode.PUBLIC_TRANSPORT to 128.8015))
-        checkReference(TransportMode.PUBLIC_TRANSPORT, 1250.5, 111.2945,
-            mapOf(TransportMode.WALKING to 111.2945, TransportMode.CYCLING to 111.2945))
+        checkReference(TransportMode.CAR, 1250.5, 207.470455,
+            mapOf(TransportMode.WALKING to 207.470455, TransportMode.CYCLING to 207.470455,
+                TransportMode.PUBLIC_TRANSPORT to 80.5322))
+        checkReference(TransportMode.PUBLIC_TRANSPORT, 1250.5, 126.938255,
+            mapOf(TransportMode.WALKING to 126.938255, TransportMode.CYCLING to 126.938255))
 
         for (mode in TransportMode.entries) {
             evaluate("zero_distance", mode, 0.0, "Zero emissions and zero savings") { actual ->
@@ -116,7 +116,7 @@ class CarbonCalculatorEvaluationTest {
             put("startedAtMillis", startedAt)
             put("finishedAtMillis", System.currentTimeMillis())
             put("device", "${Build.MANUFACTURER} ${Build.MODEL}; Android ${Build.VERSION.RELEASE}")
-            put("scope", "Correctness with provisional factors: WALKING=0, CYCLING=0, PUBLIC_TRANSPORT=89, CAR=192 g/km. Not validation of real-world emissions or a latency benchmark.")
+            put("scope", "Correctness with UK 2026 proxy factors: WALKING=0, CYCLING=0, PUBLIC_TRANSPORT=101.51, CAR=165.91 g CO2e/km. Not validation of real-world emissions or a latency benchmark.")
             put("nonFiniteEncoding", "NaN and infinities are strings because JSON numbers must be finite.")
             put("totalCases", records.size)
             put("passedCases", records.size - failed)

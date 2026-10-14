@@ -79,24 +79,24 @@ describe("journeys", () => {
     unsubscribe();
 
     assert.deepEqual([...new Set(seen)], ["pending", "confirmed"]);
-    assert.equal(trusted.carbonSavedGrams, 384);
+    assert.equal(trusted.carbonSavedGrams, 331.82);
     assert.equal(trusted.ecoPoints, 0);
     assert.equal(trusted.verificationStatus, "verified");
     assert.equal(trusted.detectedTransportMode, "CYCLING");
 
     await waitFor(async () => {
       const data = (await adminDb().doc(`userStats/${user.uid}`).get()).data();
-      return data?.totalJourneys === 1 && data.carbonSavedGrams === 384;
+      return data?.totalJourneys === 1 && data.carbonSavedGrams === 331.82;
     }, "user stats");
     // Concurrent trigger runs must not overwrite the converged aggregate with stale data.
     await new Promise((resolve) => setTimeout(resolve, 1_500));
     const stats = (await adminDb().doc(`userStats/${user.uid}`).get()).data()!;
-    assert.equal(stats.carbonSavedGrams, 384);
+    assert.equal(stats.carbonSavedGrams, 331.82);
     assert.equal(stats.totalJourneys, 1);
 
     const week = weekId(trusted.endTimeMillis);
     const entry = await waitFor(async () => (await adminDb().doc(`leaderboards/${week}/entries/${user.uid}`).get()).data(), "weekly entry");
-    assert.equal(entry.carbonSavedGrams, 384);
+    assert.equal(entry.carbonSavedGrams, 331.82);
     assert.equal(entry.displayName, "Jay");
     const allTime = (await adminDb().doc(`leaderboards/${ALL_TIME}/entries/${user.uid}`).get()).data();
     assert.equal(allTime?.completedJourneys, 1);
@@ -170,8 +170,8 @@ describe("missions and EcoPoints", () => {
       return data?.awardStatus ? data : null;
     }, "mission award");
     assert.equal(result.awardStatus, "awarded");
-    assert.equal(result.ecoPointsAwarded, 58);
-    assert.equal(result.actualCarbonSavingGrams, 384);
+    assert.equal(result.ecoPointsAwarded, 53);
+    assert.equal(result.actualCarbonSavingGrams, 331.82);
     assert.equal(result.actualTransportMode, "WALKING");
     assert.ok(result.createdAt instanceof Timestamp);
 
@@ -185,12 +185,12 @@ describe("missions and EcoPoints", () => {
     const ledger = await adminDb().collection(`users/${user.uid}/pointTransactions`).get();
     assert.equal(ledger.size, 1);
     assert.equal(ledger.docs[0]!.id, `mission_${resultId}`);
-    assert.equal(ledger.docs[0]!.data().amount, 58);
+    assert.equal(ledger.docs[0]!.data().amount, 53);
     const stats = (await adminDb().doc(`userStats/${user.uid}`).get()).data();
-    assert.equal(stats?.pointsBalance, 58);
+    assert.equal(stats?.pointsBalance, 53);
     assert.equal(stats?.completedMissions, 1);
     const journey = (await adminDb().doc(`users/${user.uid}/journeys/mj1`).get()).data();
-    assert.equal(journey?.ecoPoints, 58);
+    assert.equal(journey?.ecoPoints, 53);
 
     // The same journey cannot be claimed by another occurrence.
     await setDoc(doc(db, `users/${user.uid}/missionResults/m1_2000-01-01`), {
@@ -203,7 +203,7 @@ describe("missions and EcoPoints", () => {
     }, "rejected reuse");
     assert.equal(reused.awardStatus, "rejected");
     assert.equal(reused.awardReason, "journey_already_used");
-    assert.equal((await adminDb().doc(`userStats/${user.uid}`).get()).data()?.pointsBalance, 58);
+    assert.equal((await adminDb().doc(`userStats/${user.uid}`).get()).data()?.pointsBalance, 53);
   });
 
   test("mission completion with an unconfirmed or unlinked journey earns nothing", async () => {

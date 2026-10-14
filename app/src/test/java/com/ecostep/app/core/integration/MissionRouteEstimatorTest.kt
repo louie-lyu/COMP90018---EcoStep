@@ -52,12 +52,12 @@ class MissionRouteEstimatorTest {
 
         assertEquals(listOf(home to cbd), routes.requests)
         val byMode = estimate.estimates.associateBy { it.mode }
-        // Walking 2.0 km: 384 g saved -> 38 + full 20 bonus.
-        assertEquals(384.0, byMode.getValue(TransportMode.WALKING).estimatedCarbonSavedGrams, 1e-9)
-        assertEquals(58, byMode.getValue(TransportMode.WALKING).estimatedEcoPoints)
-        // Public transport uses the 2.5 km road distance: 257.5 g -> 26 + 5.
-        assertEquals(257.5, byMode.getValue(TransportMode.PUBLIC_TRANSPORT).estimatedCarbonSavedGrams, 1e-9)
-        assertEquals(31, byMode.getValue(TransportMode.PUBLIC_TRANSPORT).estimatedEcoPoints)
+        // Walking 2.0 km: 331.82 g saved -> 33 + full 20 bonus.
+        assertEquals(331.82, byMode.getValue(TransportMode.WALKING).estimatedCarbonSavedGrams, 1e-9)
+        assertEquals(53, byMode.getValue(TransportMode.WALKING).estimatedEcoPoints)
+        // Public transport uses the 2.5 km road distance: 161 g -> 16 + 5.
+        assertEquals(161.0, byMode.getValue(TransportMode.PUBLIC_TRANSPORT).estimatedCarbonSavedGrams, 1e-9)
+        assertEquals(21, byMode.getValue(TransportMode.PUBLIC_TRANSPORT).estimatedEcoPoints)
         assertEquals(0, byMode.getValue(TransportMode.CAR).estimatedEcoPoints)
         assertEquals(2_300.0, estimate.distanceByMode.getValue(TransportMode.CYCLING), 1e-9)
         assertTrue(estimate.matches("Home street", " CBD "))

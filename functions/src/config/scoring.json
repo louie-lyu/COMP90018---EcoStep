@@ -2,8 +2,8 @@
   "emissionFactorsGramsPerKm": {
     "WALKING": 0,
     "CYCLING": 0,
-    "PUBLIC_TRANSPORT": 89,
-    "CAR": 192
+    "PUBLIC_TRANSPORT": 101.51,
+    "CAR": 165.91
   },
   "ecoPoints": {
     "gramsPerPoint": 10,

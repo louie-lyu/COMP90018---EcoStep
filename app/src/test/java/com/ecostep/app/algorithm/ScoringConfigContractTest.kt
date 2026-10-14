@@ -61,10 +61,10 @@ class ScoringConfigContractTest {
         )
 
         // Same cases as functions/test/unit/scoring.test.ts.
-        assertEquals(58, points(TransportMode.WALKING, 384.0))
+        assertEquals(53, points(TransportMode.WALKING, 331.82))
         assertEquals(26, points(TransportMode.PUBLIC_TRANSPORT, 205.0))
         assertEquals(500, points(TransportMode.CYCLING, 100_000.0))
-        assertEquals(20, points(TransportMode.WALKING, 96.0))
+        assertEquals(18, points(TransportMode.WALKING, 82.955))
 
         fun walk(grams: Double, meters: Double) = calculator.calculatePoints(
             MissionResult(
@@ -72,8 +72,8 @@ class ScoringConfigContractTest {
                 actualCarbonSavingGrams = grams, timestampMillis = 0L, actualDistanceMeters = meters,
             ),
         )
-        assertEquals(1, walk(4.992, 26.0))
-        assertEquals(20, walk(96.0, 500.0))
-        assertEquals(58, walk(384.0, 2_000.0))
+        assertEquals(1, walk(4.31366, 26.0))
+        assertEquals(18, walk(82.955, 500.0))
+        assertEquals(53, walk(331.82, 2_000.0))
     }
 }

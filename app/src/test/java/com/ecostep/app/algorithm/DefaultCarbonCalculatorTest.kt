@@ -21,7 +21,7 @@ class DefaultCarbonCalculatorTest {
             ),
         )
 
-        assertEquals(1920.0, result.emissionsGrams, 0.001)
+        assertEquals(1659.1, result.emissionsGrams, 0.001)
     }
 
     @Test
@@ -38,7 +38,7 @@ class DefaultCarbonCalculatorTest {
                 it.mode == TransportMode.PUBLIC_TRANSPORT
             }
 
-        assertEquals(1030.0, publicTransport.savingsGrams, 0.001)
+        assertEquals(644.0, publicTransport.savingsGrams, 0.001)
 
         assertTrue(
             result.lowerCarbonAlternatives.all {
