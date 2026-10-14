@@ -1,0 +1,19 @@
+Transport classification statistics
+Source: activity-hint-transport-evaluation-1791727356719.json
+Overall accuracy: 122/138 = 88.41%;Macro F1 = 0.8499
+
+Label | Predicted count | Prediction share | Actual count | Correct predictions | Recall | Precision
+Walking | 57 | 41.30% | 64 | 57 | 89.06% | 100.00%
+Cycling | 20 | 14.49% | 13 | 13 | 100.00% | 65.00%
+Public transport | 36 | 26.09% | 45 | 36 | 80.00% | 100.00%
+Car | 25 | 18.12% | 16 | 16 | 100.00% | 64.00%
+Unknown | 0 | 0.00% | 0 | 0 | N/A | N/A
+
+Confusion matrix (rows=actual, columns=predicted; Walking/Cycling/Public transport/Car/Unknown)
+Walking: 57 / 7 / 0 / 0 / 0
+Cycling: 0 / 13 / 0 / 0 / 0
+Public transport: 0 / 0 / 36 / 9 / 0
+Car: 0 / 0 / 0 / 16 / 0
+
+16 misclassified segments: 7 walking segments predicted as cycling and 9 public transport segments predicted as car.
+These statistics use 138 evaluable historical SHL single-mode journeys and current online timetables; they do not represent all real travel conditions.

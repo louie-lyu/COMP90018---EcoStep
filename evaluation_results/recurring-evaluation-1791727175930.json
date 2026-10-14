@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "datasetVersion": 1,
   "detector": "DefaultRecurringJourneyDetector",
-  "startedAtMillis": 1790688923533,
-  "gitCommit": "b0506c3dcd04ab9fafacbac94a0dfdc05ca47247",
+  "startedAtMillis": 1791727175930,
+  "gitCommit": "3eec40bd485fc510dda577ba1d2a627d96f1184b",
   "workingTreeDirty": true,
   "device": "Google sdk_gphone64_x86_64",
   "androidVersion": "16",
@@ -983,259 +983,259 @@
       "skippedSamples": 0,
       "successfulSamples": 50,
       "failedSamples": 0,
-      "p50Ms": 0.261445,
-      "p95Ms": 0.405164,
+      "p50Ms": 0.6538,
+      "p95Ms": 1.1852,
       "passed": true,
       "records": [
         {
           "sample": 1,
           "passed": true,
-          "durationMs": 0.405164
+          "durationMs": 0.5568
         },
         {
           "sample": 2,
           "passed": true,
-          "durationMs": 0.34146
+          "durationMs": 0.9763
         },
         {
           "sample": 3,
           "passed": true,
-          "durationMs": 0.440469
+          "durationMs": 0.5022
         },
         {
           "sample": 4,
           "passed": true,
-          "durationMs": 0.3121
+          "durationMs": 0.8426
         },
         {
           "sample": 5,
           "passed": true,
-          "durationMs": 0.201206
+          "durationMs": 0.5594
         },
         {
           "sample": 6,
           "passed": true,
-          "durationMs": 0.223146
+          "durationMs": 0.7071
         },
         {
           "sample": 7,
           "passed": true,
-          "durationMs": 0.278289
+          "durationMs": 0.7072
         },
         {
           "sample": 8,
           "passed": true,
-          "durationMs": 0.326166
+          "durationMs": 0.6257
         },
         {
           "sample": 9,
           "passed": true,
-          "durationMs": 0.318364
+          "durationMs": 0.5615
         },
         {
           "sample": 10,
           "passed": true,
-          "durationMs": 0.242515
+          "durationMs": 0.7604
         },
         {
           "sample": 11,
           "passed": true,
-          "durationMs": 0.188166
+          "durationMs": 0.5362
         },
         {
           "sample": 12,
           "passed": true,
-          "durationMs": 0.315538
+          "durationMs": 0.5445
         },
         {
           "sample": 13,
           "passed": true,
-          "durationMs": 0.343197
+          "durationMs": 0.5638
         },
         {
           "sample": 14,
           "passed": true,
-          "durationMs": 0.38519
+          "durationMs": 0.7234
         },
         {
           "sample": 15,
           "passed": true,
-          "durationMs": 0.233797
+          "durationMs": 1.4976
         },
         {
           "sample": 16,
           "passed": true,
-          "durationMs": 0.318182
+          "durationMs": 0.6671
         },
         {
           "sample": 17,
           "passed": true,
-          "durationMs": 0.25386
+          "durationMs": 0.7319
         },
         {
           "sample": 18,
           "passed": true,
-          "durationMs": 0.23842
+          "durationMs": 0.7829
         },
         {
           "sample": 19,
           "passed": true,
-          "durationMs": 0.279538
+          "durationMs": 1.1852
         },
         {
           "sample": 20,
           "passed": true,
-          "durationMs": 0.191616
+          "durationMs": 0.6246
         },
         {
           "sample": 21,
           "passed": true,
-          "durationMs": 0.217697
+          "durationMs": 0.5964
         },
         {
           "sample": 22,
           "passed": true,
-          "durationMs": 0.193101
+          "durationMs": 0.6068
         },
         {
           "sample": 23,
           "passed": true,
-          "durationMs": 0.187902
+          "durationMs": 0.6412
         },
         {
           "sample": 24,
           "passed": true,
-          "durationMs": 0.214263
+          "durationMs": 1.1953
         },
         {
           "sample": 25,
           "passed": true,
-          "durationMs": 0.200078
+          "durationMs": 0.8442
         },
         {
           "sample": 26,
           "passed": true,
-          "durationMs": 0.267623
+          "durationMs": 0.6974
         },
         {
           "sample": 27,
           "passed": true,
-          "durationMs": 0.254661
+          "durationMs": 0.6885
         },
         {
           "sample": 28,
           "passed": true,
-          "durationMs": 0.323435
+          "durationMs": 0.733
         },
         {
           "sample": 29,
           "passed": true,
-          "durationMs": 0.293175
+          "durationMs": 0.5776
         },
         {
           "sample": 30,
           "passed": true,
-          "durationMs": 0.261445
+          "durationMs": 0.7707
         },
         {
           "sample": 31,
           "passed": true,
-          "durationMs": 0.437999
+          "durationMs": 0.8925
         },
         {
           "sample": 32,
           "passed": true,
-          "durationMs": 0.24497
+          "durationMs": 0.5939
         },
         {
           "sample": 33,
           "passed": true,
-          "durationMs": 0.293645
+          "durationMs": 0.5494
         },
         {
           "sample": 34,
           "passed": true,
-          "durationMs": 0.309734
+          "durationMs": 0.5565
         },
         {
           "sample": 35,
           "passed": true,
-          "durationMs": 0.341272
+          "durationMs": 0.6895
         },
         {
           "sample": 36,
           "passed": true,
-          "durationMs": 0.274868
+          "durationMs": 0.7119
         },
         {
           "sample": 37,
           "passed": true,
-          "durationMs": 0.267243
+          "durationMs": 0.5783
         },
         {
           "sample": 38,
           "passed": true,
-          "durationMs": 0.327962
+          "durationMs": 0.5453
         },
         {
           "sample": 39,
           "passed": true,
-          "durationMs": 0.192
+          "durationMs": 0.4179
         },
         {
           "sample": 40,
           "passed": true,
-          "durationMs": 0.186711
+          "durationMs": 0.392
         },
         {
           "sample": 41,
           "passed": true,
-          "durationMs": 0.18552
+          "durationMs": 0.401
         },
         {
           "sample": 42,
           "passed": true,
-          "durationMs": 0.214032
+          "durationMs": 0.5991
         },
         {
           "sample": 43,
           "passed": true,
-          "durationMs": 0.303544
+          "durationMs": 0.5687
         },
         {
           "sample": 44,
           "passed": true,
-          "durationMs": 0.229537
+          "durationMs": 0.7032
         },
         {
           "sample": 45,
           "passed": true,
-          "durationMs": 0.191099
+          "durationMs": 0.6837
         },
         {
           "sample": 46,
           "passed": true,
-          "durationMs": 0.18709
+          "durationMs": 1.1021
         },
         {
           "sample": 47,
           "passed": true,
-          "durationMs": 0.191175
+          "durationMs": 0.6538
         },
         {
           "sample": 48,
           "passed": true,
-          "durationMs": 0.365881
+          "durationMs": 0.8236
         },
         {
           "sample": 49,
           "passed": true,
-          "durationMs": 0.270107
+          "durationMs": 0.7798
         },
         {
           "sample": 50,
           "passed": true,
-          "durationMs": 0.237699
+          "durationMs": 0.6109
         }
       ]
     },
@@ -1250,259 +1250,259 @@
       "skippedSamples": 0,
       "successfulSamples": 50,
       "failedSamples": 0,
-      "p50Ms": 0.371587,
-      "p95Ms": 0.888989,
+      "p50Ms": 0.3168,
+      "p95Ms": 0.5709,
       "passed": true,
       "records": [
         {
           "sample": 1,
           "passed": true,
-          "durationMs": 0.848867
+          "durationMs": 0.3727
         },
         {
           "sample": 2,
           "passed": true,
-          "durationMs": 0.120946
+          "durationMs": 0.2979
         },
         {
           "sample": 3,
           "passed": true,
-          "durationMs": 0.397008
+          "durationMs": 0.3632
         },
         {
           "sample": 4,
           "passed": true,
-          "durationMs": 0.38467
+          "durationMs": 0.2273
         },
         {
           "sample": 5,
           "passed": true,
-          "durationMs": 0.932784
+          "durationMs": 0.3581
         },
         {
           "sample": 6,
           "passed": true,
-          "durationMs": 0.466279
+          "durationMs": 0.3238
         },
         {
           "sample": 7,
           "passed": true,
-          "durationMs": 0.442652
+          "durationMs": 0.5709
         },
         {
           "sample": 8,
           "passed": true,
-          "durationMs": 0.454396
+          "durationMs": 0.1518
         },
         {
           "sample": 9,
           "passed": true,
-          "durationMs": 0.499846
+          "durationMs": 0.1348
         },
         {
           "sample": 10,
           "passed": true,
-          "durationMs": 0.102388
+          "durationMs": 0.1303
         },
         {
           "sample": 11,
           "passed": true,
-          "durationMs": 0.116281
+          "durationMs": 0.0997
         },
         {
           "sample": 12,
           "passed": true,
-          "durationMs": 0.490819
+          "durationMs": 0.1071
         },
         {
           "sample": 13,
           "passed": true,
-          "durationMs": 0.888989
+          "durationMs": 0.4675
         },
         {
           "sample": 14,
           "passed": true,
-          "durationMs": 0.440993
+          "durationMs": 0.2883
         },
         {
           "sample": 15,
           "passed": true,
-          "durationMs": 0.362922
+          "durationMs": 0.3494
         },
         {
           "sample": 16,
           "passed": true,
-          "durationMs": 0.172083
+          "durationMs": 0.3389
         },
         {
           "sample": 17,
           "passed": true,
-          "durationMs": 0.111924
+          "durationMs": 0.4131
         },
         {
           "sample": 18,
           "passed": true,
-          "durationMs": 1.025249
+          "durationMs": 0.2499
         },
         {
           "sample": 19,
           "passed": true,
-          "durationMs": 0.343875
+          "durationMs": 0.3042
         },
         {
           "sample": 20,
           "passed": true,
-          "durationMs": 0.49608
+          "durationMs": 0.5879
         },
         {
           "sample": 21,
           "passed": true,
-          "durationMs": 0.421354
+          "durationMs": 0.3139
         },
         {
           "sample": 22,
           "passed": true,
-          "durationMs": 0.34081
+          "durationMs": 0.3527
         },
         {
           "sample": 23,
           "passed": true,
-          "durationMs": 0.176332
+          "durationMs": 0.2784
         },
         {
           "sample": 24,
           "passed": true,
-          "durationMs": 0.153199
+          "durationMs": 0.2808
         },
         {
           "sample": 25,
           "passed": true,
-          "durationMs": 0.452164
+          "durationMs": 0.3303
         },
         {
           "sample": 26,
           "passed": true,
-          "durationMs": 0.434711
+          "durationMs": 0.3141
         },
         {
           "sample": 27,
           "passed": true,
-          "durationMs": 0.422762
+          "durationMs": 0.3111
         },
         {
           "sample": 28,
           "passed": true,
-          "durationMs": 0.349081
+          "durationMs": 0.2869
         },
         {
           "sample": 29,
           "passed": true,
-          "durationMs": 0.398861
+          "durationMs": 0.2221
         },
         {
           "sample": 30,
           "passed": true,
-          "durationMs": 0.484229
+          "durationMs": 0.2264
         },
         {
           "sample": 31,
           "passed": true,
-          "durationMs": 0.296588
+          "durationMs": 0.2117
         },
         {
           "sample": 32,
           "passed": true,
-          "durationMs": 0.274349
+          "durationMs": 0.2198
         },
         {
           "sample": 33,
           "passed": true,
-          "durationMs": 0.337185
+          "durationMs": 0.2107
         },
         {
           "sample": 34,
           "passed": true,
-          "durationMs": 0.334871
+          "durationMs": 0.5939
         },
         {
           "sample": 35,
           "passed": true,
-          "durationMs": 0.371587
+          "durationMs": 0.3168
         },
         {
           "sample": 36,
           "passed": true,
-          "durationMs": 0.288976
+          "durationMs": 0.5015
         },
         {
           "sample": 37,
           "passed": true,
-          "durationMs": 0.129326
+          "durationMs": 0.3225
         },
         {
           "sample": 38,
           "passed": true,
-          "durationMs": 0.114361
+          "durationMs": 0.4267
         },
         {
           "sample": 39,
           "passed": true,
-          "durationMs": 0.279348
+          "durationMs": 0.2999
         },
         {
           "sample": 40,
           "passed": true,
-          "durationMs": 0.322541
+          "durationMs": 0.3241
         },
         {
           "sample": 41,
           "passed": true,
-          "durationMs": 0.463417
+          "durationMs": 0.3772
         },
         {
           "sample": 42,
           "passed": true,
-          "durationMs": 0.376144
+          "durationMs": 0.3095
         },
         {
           "sample": 43,
           "passed": true,
-          "durationMs": 0.411847
+          "durationMs": 0.4561
         },
         {
           "sample": 44,
           "passed": true,
-          "durationMs": 0.416468
+          "durationMs": 0.4504
         },
         {
           "sample": 45,
           "passed": true,
-          "durationMs": 0.389275
+          "durationMs": 0.3595
         },
         {
           "sample": 46,
           "passed": true,
-          "durationMs": 0.296513
+          "durationMs": 0.4381
         },
         {
           "sample": 47,
           "passed": true,
-          "durationMs": 0.331402
+          "durationMs": 0.5409
         },
         {
           "sample": 48,
           "passed": true,
-          "durationMs": 0.508361
+          "durationMs": 0.4996
         },
         {
           "sample": 49,
           "passed": true,
-          "durationMs": 0.184741
+          "durationMs": 0.5486
         },
         {
           "sample": 50,
           "passed": true,
-          "durationMs": 0.308817
+          "durationMs": 0.3104
         }
       ]
     },
@@ -1517,259 +1517,259 @@
       "skippedSamples": 0,
       "successfulSamples": 50,
       "failedSamples": 0,
-      "p50Ms": 2.124044,
-      "p95Ms": 3.43079,
+      "p50Ms": 2.6863,
+      "p95Ms": 5.7282,
       "passed": true,
       "records": [
         {
           "sample": 1,
           "passed": true,
-          "durationMs": 2.29881
+          "durationMs": 5.2452
         },
         {
           "sample": 2,
           "passed": true,
-          "durationMs": 2.211785
+          "durationMs": 4.578
         },
         {
           "sample": 3,
           "passed": true,
-          "durationMs": 2.285232
+          "durationMs": 5.7282
         },
         {
           "sample": 4,
           "passed": true,
-          "durationMs": 2.294309
+          "durationMs": 4.8753
         },
         {
           "sample": 5,
           "passed": true,
-          "durationMs": 2.310454
+          "durationMs": 6.0596
         },
         {
           "sample": 6,
           "passed": true,
-          "durationMs": 2.025847
+          "durationMs": 4.719
         },
         {
           "sample": 7,
           "passed": true,
-          "durationMs": 2.368648
+          "durationMs": 4.4087
         },
         {
           "sample": 8,
           "passed": true,
-          "durationMs": 2.277906
+          "durationMs": 4.6371
         },
         {
           "sample": 9,
           "passed": true,
-          "durationMs": 2.091379
+          "durationMs": 4.0597
         },
         {
           "sample": 10,
           "passed": true,
-          "durationMs": 2.563225
+          "durationMs": 4.8726
         },
         {
           "sample": 11,
           "passed": true,
-          "durationMs": 2.118452
+          "durationMs": 4.678
         },
         {
           "sample": 12,
           "passed": true,
-          "durationMs": 2.104989
+          "durationMs": 5.085
         },
         {
           "sample": 13,
           "passed": true,
-          "durationMs": 1.886304
+          "durationMs": 4.7291
         },
         {
           "sample": 14,
           "passed": true,
-          "durationMs": 2.398898
+          "durationMs": 4.6958
         },
         {
           "sample": 15,
           "passed": true,
-          "durationMs": 2.069779
+          "durationMs": 5.1951
         },
         {
           "sample": 16,
           "passed": true,
-          "durationMs": 2.519592
+          "durationMs": 8.8974
         },
         {
           "sample": 17,
           "passed": true,
-          "durationMs": 2.251805
+          "durationMs": 5.5129
         },
         {
           "sample": 18,
           "passed": true,
-          "durationMs": 2.184876
+          "durationMs": 3.3003
         },
         {
           "sample": 19,
           "passed": true,
-          "durationMs": 2.391492
+          "durationMs": 1.7028
         },
         {
           "sample": 20,
           "passed": true,
-          "durationMs": 2.124044
+          "durationMs": 2.3461
         },
         {
           "sample": 21,
           "passed": true,
-          "durationMs": 2.043662
+          "durationMs": 1.2557
         },
         {
           "sample": 22,
           "passed": true,
-          "durationMs": 2.518548
+          "durationMs": 3.0926
         },
         {
           "sample": 23,
           "passed": true,
-          "durationMs": 2.218891
+          "durationMs": 3.8661
         },
         {
           "sample": 24,
           "passed": true,
-          "durationMs": 1.683266
+          "durationMs": 4.021
         },
         {
           "sample": 25,
           "passed": true,
-          "durationMs": 2.205047
+          "durationMs": 3.2952
         },
         {
           "sample": 26,
           "passed": true,
-          "durationMs": 2.508516
+          "durationMs": 3.0813
         },
         {
           "sample": 27,
           "passed": true,
-          "durationMs": 2.409622
+          "durationMs": 2.9038
         },
         {
           "sample": 28,
           "passed": true,
-          "durationMs": 2.311522
+          "durationMs": 1.893
         },
         {
           "sample": 29,
           "passed": true,
-          "durationMs": 1.962334
+          "durationMs": 2.1146
         },
         {
           "sample": 30,
           "passed": true,
-          "durationMs": 2.201158
+          "durationMs": 2.6863
         },
         {
           "sample": 31,
           "passed": true,
-          "durationMs": 2.054011
+          "durationMs": 2.1639
         },
         {
           "sample": 32,
           "passed": true,
-          "durationMs": 2.916983
+          "durationMs": 2.4707
         },
         {
           "sample": 33,
           "passed": true,
-          "durationMs": 4.752338
+          "durationMs": 2.1878
         },
         {
           "sample": 34,
           "passed": true,
-          "durationMs": 2.215868
+          "durationMs": 1.9855
         },
         {
           "sample": 35,
           "passed": true,
-          "durationMs": 1.088761
+          "durationMs": 2.4032
         },
         {
           "sample": 36,
           "passed": true,
-          "durationMs": 0.986018
+          "durationMs": 2.2426
         },
         {
           "sample": 37,
           "passed": true,
-          "durationMs": 0.663328
+          "durationMs": 1.5564
         },
         {
           "sample": 38,
           "passed": true,
-          "durationMs": 0.711876
+          "durationMs": 1.9684
         },
         {
           "sample": 39,
           "passed": true,
-          "durationMs": 1.128639
+          "durationMs": 1.5368
         },
         {
           "sample": 40,
           "passed": true,
-          "durationMs": 1.02119
+          "durationMs": 2.329
         },
         {
           "sample": 41,
           "passed": true,
-          "durationMs": 0.889175
+          "durationMs": 1.7423
         },
         {
           "sample": 42,
           "passed": true,
-          "durationMs": 0.92012
+          "durationMs": 2.1155
         },
         {
           "sample": 43,
           "passed": true,
-          "durationMs": 0.72206
+          "durationMs": 1.6741
         },
         {
           "sample": 44,
           "passed": true,
-          "durationMs": 0.765102
+          "durationMs": 1.3877
         },
         {
           "sample": 45,
           "passed": true,
-          "durationMs": 0.673599
+          "durationMs": 1.6323
         },
         {
           "sample": 46,
           "passed": true,
-          "durationMs": 0.773903
+          "durationMs": 1.2634
         },
         {
           "sample": 47,
           "passed": true,
-          "durationMs": 0.770183
+          "durationMs": 1.381
         },
         {
           "sample": 48,
           "passed": true,
-          "durationMs": 0.814484
+          "durationMs": 1.5946
         },
         {
           "sample": 49,
           "passed": true,
-          "durationMs": 3.43079
+          "durationMs": 1.3941
         },
         {
           "sample": 50,
           "passed": true,
-          "durationMs": 3.643745
+          "durationMs": 2.7162
         }
       ]
     },
@@ -1784,259 +1784,259 @@
       "skippedSamples": 0,
       "successfulSamples": 50,
       "failedSamples": 0,
-      "p50Ms": 2.227322,
-      "p95Ms": 3.556087,
+      "p50Ms": 0.8112,
+      "p95Ms": 1.2491,
       "passed": true,
       "records": [
         {
           "sample": 1,
           "passed": true,
-          "durationMs": 2.365179
+          "durationMs": 0.7997
         },
         {
           "sample": 2,
           "passed": true,
-          "durationMs": 2.533471
+          "durationMs": 0.8132
         },
         {
           "sample": 3,
           "passed": true,
-          "durationMs": 1.095812
+          "durationMs": 0.9169
         },
         {
           "sample": 4,
           "passed": true,
-          "durationMs": 2.522616
+          "durationMs": 0.9284
         },
         {
           "sample": 5,
           "passed": true,
-          "durationMs": 2.343427
+          "durationMs": 1.1344
         },
         {
           "sample": 6,
           "passed": true,
-          "durationMs": 2.717707
+          "durationMs": 0.8128
         },
         {
           "sample": 7,
           "passed": true,
-          "durationMs": 2.69349
+          "durationMs": 0.671
         },
         {
           "sample": 8,
           "passed": true,
-          "durationMs": 1.572436
+          "durationMs": 0.676
         },
         {
           "sample": 9,
           "passed": true,
-          "durationMs": 0.76512
+          "durationMs": 0.7883
         },
         {
           "sample": 10,
           "passed": true,
-          "durationMs": 0.738961
+          "durationMs": 0.6016
         },
         {
           "sample": 11,
           "passed": true,
-          "durationMs": 0.65967
+          "durationMs": 0.9086
         },
         {
           "sample": 12,
           "passed": true,
-          "durationMs": 0.645051
+          "durationMs": 0.6539
         },
         {
           "sample": 13,
           "passed": true,
-          "durationMs": 0.792179
+          "durationMs": 0.6788
         },
         {
           "sample": 14,
           "passed": true,
-          "durationMs": 0.601519
+          "durationMs": 0.6619
         },
         {
           "sample": 15,
           "passed": true,
-          "durationMs": 2.490255
+          "durationMs": 0.8204
         },
         {
           "sample": 16,
           "passed": true,
-          "durationMs": 2.311138
+          "durationMs": 0.9339
         },
         {
           "sample": 17,
           "passed": true,
-          "durationMs": 2.72435
+          "durationMs": 0.9026
         },
         {
           "sample": 18,
           "passed": true,
-          "durationMs": 4.071374
+          "durationMs": 0.8473
         },
         {
           "sample": 19,
           "passed": true,
-          "durationMs": 2.353476
+          "durationMs": 1.0412
         },
         {
           "sample": 20,
           "passed": true,
-          "durationMs": 3.640388
+          "durationMs": 0.6518
         },
         {
           "sample": 21,
           "passed": true,
-          "durationMs": 0.633972
+          "durationMs": 0.6928
         },
         {
           "sample": 22,
           "passed": true,
-          "durationMs": 2.761104
+          "durationMs": 1.0521
         },
         {
           "sample": 23,
           "passed": true,
-          "durationMs": 3.406856
+          "durationMs": 0.7734
         },
         {
           "sample": 24,
           "passed": true,
-          "durationMs": 3.556087
+          "durationMs": 1.0044
         },
         {
           "sample": 25,
           "passed": true,
-          "durationMs": 2.697334
+          "durationMs": 0.8112
         },
         {
           "sample": 26,
           "passed": true,
-          "durationMs": 2.418496
+          "durationMs": 0.7538
         },
         {
           "sample": 27,
           "passed": true,
-          "durationMs": 2.227322
+          "durationMs": 0.8671
         },
         {
           "sample": 28,
           "passed": true,
-          "durationMs": 2.322554
+          "durationMs": 0.6579
         },
         {
           "sample": 29,
           "passed": true,
-          "durationMs": 2.602179
+          "durationMs": 0.6175
         },
         {
           "sample": 30,
           "passed": true,
-          "durationMs": 0.77071
+          "durationMs": 0.6531
         },
         {
           "sample": 31,
           "passed": true,
-          "durationMs": 0.730749
+          "durationMs": 1.2491
         },
         {
           "sample": 32,
           "passed": true,
-          "durationMs": 1.471814
+          "durationMs": 0.6316
         },
         {
           "sample": 33,
           "passed": true,
-          "durationMs": 1.767974
+          "durationMs": 1.19
         },
         {
           "sample": 34,
           "passed": true,
-          "durationMs": 2.516684
+          "durationMs": 0.6457
         },
         {
           "sample": 35,
           "passed": true,
-          "durationMs": 2.397128
+          "durationMs": 1.4372
         },
         {
           "sample": 36,
           "passed": true,
-          "durationMs": 2.047881
+          "durationMs": 0.9407
         },
         {
           "sample": 37,
           "passed": true,
-          "durationMs": 2.590852
+          "durationMs": 0.9125
         },
         {
           "sample": 38,
           "passed": true,
-          "durationMs": 0.749612
+          "durationMs": 0.808
         },
         {
           "sample": 39,
           "passed": true,
-          "durationMs": 0.63237
+          "durationMs": 0.862
         },
         {
           "sample": 40,
           "passed": true,
-          "durationMs": 0.854313
+          "durationMs": 2.4938
         },
         {
           "sample": 41,
           "passed": true,
-          "durationMs": 0.790935
+          "durationMs": 0.7266
         },
         {
           "sample": 42,
           "passed": true,
-          "durationMs": 0.788342
+          "durationMs": 0.6247
         },
         {
           "sample": 43,
           "passed": true,
-          "durationMs": 0.79795
+          "durationMs": 1.0346
         },
         {
           "sample": 44,
           "passed": true,
-          "durationMs": 1.277876
+          "durationMs": 0.5566
         },
         {
           "sample": 45,
           "passed": true,
-          "durationMs": 2.504199
+          "durationMs": 0.7045
         },
         {
           "sample": 46,
           "passed": true,
-          "durationMs": 1.015853
+          "durationMs": 0.7013
         },
         {
           "sample": 47,
           "passed": true,
-          "durationMs": 0.827679
+          "durationMs": 0.8527
         },
         {
           "sample": 48,
           "passed": true,
-          "durationMs": 1.045402
+          "durationMs": 0.8472
         },
         {
           "sample": 49,
           "passed": true,
-          "durationMs": 2.944693
+          "durationMs": 0.6189
         },
         {
           "sample": 50,
           "passed": true,
-          "durationMs": 2.405946
+          "durationMs": 0.9031
         }
       ]
     },
@@ -2051,259 +2051,259 @@
       "skippedSamples": 0,
       "successfulSamples": 50,
       "failedSamples": 0,
-      "p50Ms": 13.807653,
-      "p95Ms": 32.800965,
+      "p50Ms": 8.3088,
+      "p95Ms": 10.7139,
       "passed": true,
       "records": [
         {
           "sample": 1,
           "passed": true,
-          "durationMs": 12.234033
+          "durationMs": 10.5777
         },
         {
           "sample": 2,
           "passed": true,
-          "durationMs": 12.307751
+          "durationMs": 10.6107
         },
         {
           "sample": 3,
           "passed": true,
-          "durationMs": 24.130403
+          "durationMs": 5.9819
         },
         {
           "sample": 4,
           "passed": true,
-          "durationMs": 6.8479
+          "durationMs": 11.7414
         },
         {
           "sample": 5,
           "passed": true,
-          "durationMs": 5.956205
+          "durationMs": 7.9165
         },
         {
           "sample": 6,
           "passed": true,
-          "durationMs": 5.453778
+          "durationMs": 9.2583
         },
         {
           "sample": 7,
           "passed": true,
-          "durationMs": 5.125006
+          "durationMs": 10.7139
         },
         {
           "sample": 8,
           "passed": true,
-          "durationMs": 5.590977
+          "durationMs": 10.3561
         },
         {
           "sample": 9,
           "passed": true,
-          "durationMs": 29.666084
+          "durationMs": 9.4114
         },
         {
           "sample": 10,
           "passed": true,
-          "durationMs": 22.348832
+          "durationMs": 8.3543
         },
         {
           "sample": 11,
           "passed": true,
-          "durationMs": 13.807653
+          "durationMs": 7.9746
         },
         {
           "sample": 12,
           "passed": true,
-          "durationMs": 14.495158
+          "durationMs": 9.5872
         },
         {
           "sample": 13,
           "passed": true,
-          "durationMs": 14.295763
+          "durationMs": 7.7532
         },
         {
           "sample": 14,
           "passed": true,
-          "durationMs": 22.13688
+          "durationMs": 8.3088
         },
         {
           "sample": 15,
           "passed": true,
-          "durationMs": 23.544511
+          "durationMs": 9.0728
         },
         {
           "sample": 16,
           "passed": true,
-          "durationMs": 32.581961
+          "durationMs": 13.473
         },
         {
           "sample": 17,
           "passed": true,
-          "durationMs": 32.800965
+          "durationMs": 8.2775
         },
         {
           "sample": 18,
           "passed": true,
-          "durationMs": 28.217214
+          "durationMs": 10.4954
         },
         {
           "sample": 19,
           "passed": true,
-          "durationMs": 22.11782
+          "durationMs": 7.6935
         },
         {
           "sample": 20,
           "passed": true,
-          "durationMs": 14.403504
+          "durationMs": 6.9043
         },
         {
           "sample": 21,
           "passed": true,
-          "durationMs": 29.009318
+          "durationMs": 8.4103
         },
         {
           "sample": 22,
           "passed": true,
-          "durationMs": 12.901759
+          "durationMs": 9.8775
         },
         {
           "sample": 23,
           "passed": true,
-          "durationMs": 21.912587
+          "durationMs": 9.5897
         },
         {
           "sample": 24,
           "passed": true,
-          "durationMs": 29.118253
+          "durationMs": 8.292
         },
         {
           "sample": 25,
           "passed": true,
-          "durationMs": 6.95027
+          "durationMs": 8.3617
         },
         {
           "sample": 26,
           "passed": true,
-          "durationMs": 6.944289
+          "durationMs": 6.762
         },
         {
           "sample": 27,
           "passed": true,
-          "durationMs": 24.069395
+          "durationMs": 7.1024
         },
         {
           "sample": 28,
           "passed": true,
-          "durationMs": 21.394196
+          "durationMs": 7.2669
         },
         {
           "sample": 29,
           "passed": true,
-          "durationMs": 25.559048
+          "durationMs": 8.9901
         },
         {
           "sample": 30,
           "passed": true,
-          "durationMs": 33.178107
+          "durationMs": 7.8398
         },
         {
           "sample": 31,
           "passed": true,
-          "durationMs": 36.012804
+          "durationMs": 8.1743
         },
         {
           "sample": 32,
           "passed": true,
-          "durationMs": 32.372825
+          "durationMs": 9.2225
         },
         {
           "sample": 33,
           "passed": true,
-          "durationMs": 14.378062
+          "durationMs": 9.9781
         },
         {
           "sample": 34,
           "passed": true,
-          "durationMs": 22.888073
+          "durationMs": 8.4115
         },
         {
           "sample": 35,
           "passed": true,
-          "durationMs": 19.31464
+          "durationMs": 8.7271
         },
         {
           "sample": 36,
           "passed": true,
-          "durationMs": 26.49494
+          "durationMs": 7.4368
         },
         {
           "sample": 37,
           "passed": true,
-          "durationMs": 8.360589
+          "durationMs": 8.6141
         },
         {
           "sample": 38,
           "passed": true,
-          "durationMs": 3.771812
+          "durationMs": 7.6895
         },
         {
           "sample": 39,
           "passed": true,
-          "durationMs": 4.016745
+          "durationMs": 6.316
         },
         {
           "sample": 40,
           "passed": true,
-          "durationMs": 4.286506
+          "durationMs": 9.5748
         },
         {
           "sample": 41,
           "passed": true,
-          "durationMs": 4.310263
+          "durationMs": 5.7825
         },
         {
           "sample": 42,
           "passed": true,
-          "durationMs": 4.279857
+          "durationMs": 6.2197
         },
         {
           "sample": 43,
           "passed": true,
-          "durationMs": 3.81783
+          "durationMs": 7.9377
         },
         {
           "sample": 44,
           "passed": true,
-          "durationMs": 3.929729
+          "durationMs": 9.5399
         },
         {
           "sample": 45,
           "passed": true,
-          "durationMs": 4.032628
+          "durationMs": 9.833
         },
         {
           "sample": 46,
           "passed": true,
-          "durationMs": 4.314679
+          "durationMs": 7.9033
         },
         {
           "sample": 47,
           "passed": true,
-          "durationMs": 4.113942
+          "durationMs": 8.0504
         },
         {
           "sample": 48,
           "passed": true,
-          "durationMs": 3.983591
+          "durationMs": 8.2441
         },
         {
           "sample": 49,
           "passed": true,
-          "durationMs": 4.267824
+          "durationMs": 7.64
         },
         {
           "sample": 50,
           "passed": true,
-          "durationMs": 9.520736
+          "durationMs": 8.1569
         }
       ]
     },
@@ -2318,259 +2318,259 @@
       "skippedSamples": 0,
       "successfulSamples": 50,
       "failedSamples": 0,
-      "p50Ms": 3.637854,
-      "p95Ms": 5.844978,
+      "p50Ms": 7.3143,
+      "p95Ms": 11.9211,
       "passed": true,
       "records": [
         {
           "sample": 1,
           "passed": true,
-          "durationMs": 3.679918
+          "durationMs": 8.5892
         },
         {
           "sample": 2,
           "passed": true,
-          "durationMs": 2.180276
+          "durationMs": 13.3841
         },
         {
           "sample": 3,
           "passed": true,
-          "durationMs": 3.252712
+          "durationMs": 6.4582
         },
         {
           "sample": 4,
           "passed": true,
-          "durationMs": 5.192732
+          "durationMs": 9.1837
         },
         {
           "sample": 5,
           "passed": true,
-          "durationMs": 3.394722
+          "durationMs": 5.2463
         },
         {
           "sample": 6,
           "passed": true,
-          "durationMs": 3.599196
+          "durationMs": 11.0825
         },
         {
           "sample": 7,
           "passed": true,
-          "durationMs": 3.580622
+          "durationMs": 8.0304
         },
         {
           "sample": 8,
           "passed": true,
-          "durationMs": 4.922083
+          "durationMs": 7.1855
         },
         {
           "sample": 9,
           "passed": true,
-          "durationMs": 3.637854
+          "durationMs": 8.8801
         },
         {
           "sample": 10,
           "passed": true,
-          "durationMs": 5.181959
+          "durationMs": 8.5317
         },
         {
           "sample": 11,
           "passed": true,
-          "durationMs": 3.163943
+          "durationMs": 5.3524
         },
         {
           "sample": 12,
           "passed": true,
-          "durationMs": 3.805835
+          "durationMs": 7.2763
         },
         {
           "sample": 13,
           "passed": true,
-          "durationMs": 5.153494
+          "durationMs": 11.9211
         },
         {
           "sample": 14,
           "passed": true,
-          "durationMs": 3.233381
+          "durationMs": 6.7223
         },
         {
           "sample": 15,
           "passed": true,
-          "durationMs": 3.695952
+          "durationMs": 8.4387
         },
         {
           "sample": 16,
           "passed": true,
-          "durationMs": 3.279193
+          "durationMs": 6.2072
         },
         {
           "sample": 17,
           "passed": true,
-          "durationMs": 4.830837
+          "durationMs": 9.1649
         },
         {
           "sample": 18,
           "passed": true,
-          "durationMs": 3.318027
+          "durationMs": 5.7345
         },
         {
           "sample": 19,
           "passed": true,
-          "durationMs": 3.659017
+          "durationMs": 7.6013
         },
         {
           "sample": 20,
           "passed": true,
-          "durationMs": 5.844978
+          "durationMs": 8.3319
         },
         {
           "sample": 21,
           "passed": true,
-          "durationMs": 3.021943
+          "durationMs": 9.8221
         },
         {
           "sample": 22,
           "passed": true,
-          "durationMs": 3.59576
+          "durationMs": 11.0334
         },
         {
           "sample": 23,
           "passed": true,
-          "durationMs": 5.612367
+          "durationMs": 7.4399
         },
         {
           "sample": 24,
           "passed": true,
-          "durationMs": 2.929322
+          "durationMs": 4.9513
         },
         {
           "sample": 25,
           "passed": true,
-          "durationMs": 3.817795
+          "durationMs": 10.1389
         },
         {
           "sample": 26,
           "passed": true,
-          "durationMs": 4.983327
+          "durationMs": 6.1516
         },
         {
           "sample": 27,
           "passed": true,
-          "durationMs": 3.243199
+          "durationMs": 9.2312
         },
         {
           "sample": 28,
           "passed": true,
-          "durationMs": 3.74512
+          "durationMs": 4.786
         },
         {
           "sample": 29,
           "passed": true,
-          "durationMs": 4.783838
+          "durationMs": 10.076
         },
         {
           "sample": 30,
           "passed": true,
-          "durationMs": 3.386146
+          "durationMs": 7.4735
         },
         {
           "sample": 31,
           "passed": true,
-          "durationMs": 3.270019
+          "durationMs": 6.012
         },
         {
           "sample": 32,
           "passed": true,
-          "durationMs": 3.461826
+          "durationMs": 3.3769
         },
         {
           "sample": 33,
           "passed": true,
-          "durationMs": 5.308234
+          "durationMs": 6.9937
         },
         {
           "sample": 34,
           "passed": true,
-          "durationMs": 4.609496
+          "durationMs": 9.9655
         },
         {
           "sample": 35,
           "passed": true,
-          "durationMs": 6.285909
+          "durationMs": 6.6617
         },
         {
           "sample": 36,
           "passed": true,
-          "durationMs": 4.585541
+          "durationMs": 7.002
         },
         {
           "sample": 37,
           "passed": true,
-          "durationMs": 4.567072
+          "durationMs": 11.7018
         },
         {
           "sample": 38,
           "passed": true,
-          "durationMs": 5.42853
+          "durationMs": 6.8442
         },
         {
           "sample": 39,
           "passed": true,
-          "durationMs": 2.955996
+          "durationMs": 7.3143
         },
         {
           "sample": 40,
           "passed": true,
-          "durationMs": 2.699316
+          "durationMs": 9.1187
         },
         {
           "sample": 41,
           "passed": true,
-          "durationMs": 3.259021
+          "durationMs": 7.3045
         },
         {
           "sample": 42,
           "passed": true,
-          "durationMs": 5.86497
+          "durationMs": 6.3726
         },
         {
           "sample": 43,
           "passed": true,
-          "durationMs": 2.928369
+          "durationMs": 4.8503
         },
         {
           "sample": 44,
           "passed": true,
-          "durationMs": 3.23799
+          "durationMs": 6.7509
         },
         {
           "sample": 45,
           "passed": true,
-          "durationMs": 5.173382
+          "durationMs": 8.3744
         },
         {
           "sample": 46,
           "passed": true,
-          "durationMs": 3.46526
+          "durationMs": 5.6412
         },
         {
           "sample": 47,
           "passed": true,
-          "durationMs": 3.67198
+          "durationMs": 6.9128
         },
         {
           "sample": 48,
           "passed": true,
-          "durationMs": 3.417208
+          "durationMs": 12.9237
         },
         {
           "sample": 49,
           "passed": true,
-          "durationMs": 4.277131
+          "durationMs": 5.944
         },
         {
           "sample": 50,
           "passed": true,
-          "durationMs": 2.535498
+          "durationMs": 10.7637
         }
       ]
     },
@@ -2585,259 +2585,259 @@
       "skippedSamples": 0,
       "successfulSamples": 50,
       "failedSamples": 0,
-      "p50Ms": 44.350463,
-      "p95Ms": 48.047071,
+      "p50Ms": 97,
+      "p95Ms": 111.8291,
       "passed": true,
       "records": [
         {
           "sample": 1,
           "passed": true,
-          "durationMs": 43.975939
+          "durationMs": 75.587
         },
         {
           "sample": 2,
           "passed": true,
-          "durationMs": 43.34889
+          "durationMs": 111.8291
         },
         {
           "sample": 3,
           "passed": true,
-          "durationMs": 45.813167
+          "durationMs": 96.2826
         },
         {
           "sample": 4,
           "passed": true,
-          "durationMs": 46.576656
+          "durationMs": 104.9815
         },
         {
           "sample": 5,
           "passed": true,
-          "durationMs": 45.702346
+          "durationMs": 94.7049
         },
         {
           "sample": 6,
           "passed": true,
-          "durationMs": 45.941485
+          "durationMs": 95.2127
         },
         {
           "sample": 7,
           "passed": true,
-          "durationMs": 48.047071
+          "durationMs": 86.6321
         },
         {
           "sample": 8,
           "passed": true,
-          "durationMs": 46.8732
+          "durationMs": 104.1308
         },
         {
           "sample": 9,
           "passed": true,
-          "durationMs": 45.1913
+          "durationMs": 88.7877
         },
         {
           "sample": 10,
           "passed": true,
-          "durationMs": 44.380085
+          "durationMs": 86.7352
         },
         {
           "sample": 11,
           "passed": true,
-          "durationMs": 41.049892
+          "durationMs": 98.4612
         },
         {
           "sample": 12,
           "passed": true,
-          "durationMs": 40.850366
+          "durationMs": 87.8643
         },
         {
           "sample": 13,
           "passed": true,
-          "durationMs": 43.118864
+          "durationMs": 95.6754
         },
         {
           "sample": 14,
           "passed": true,
-          "durationMs": 42.267382
+          "durationMs": 97.5419
         },
         {
           "sample": 15,
           "passed": true,
-          "durationMs": 45.412792
+          "durationMs": 111.9168
         },
         {
           "sample": 16,
           "passed": true,
-          "durationMs": 43.23619
+          "durationMs": 105.4065
         },
         {
           "sample": 17,
           "passed": true,
-          "durationMs": 46.0279
+          "durationMs": 98.9027
         },
         {
           "sample": 18,
           "passed": true,
-          "durationMs": 44.406558
+          "durationMs": 104.0152
         },
         {
           "sample": 19,
           "passed": true,
-          "durationMs": 43.749636
+          "durationMs": 104.053
         },
         {
           "sample": 20,
           "passed": true,
-          "durationMs": 45.152947
+          "durationMs": 89.6579
         },
         {
           "sample": 21,
           "passed": true,
-          "durationMs": 44.717015
+          "durationMs": 92.9185
         },
         {
           "sample": 22,
           "passed": true,
-          "durationMs": 44.22477
+          "durationMs": 94.994
         },
         {
           "sample": 23,
           "passed": true,
-          "durationMs": 45.603719
+          "durationMs": 97
         },
         {
           "sample": 24,
           "passed": true,
-          "durationMs": 46.874078
+          "durationMs": 89.8655
         },
         {
           "sample": 25,
           "passed": true,
-          "durationMs": 46.159603
+          "durationMs": 101.3072
         },
         {
           "sample": 26,
           "passed": true,
-          "durationMs": 45.221704
+          "durationMs": 90.0462
         },
         {
           "sample": 27,
           "passed": true,
-          "durationMs": 47.290152
+          "durationMs": 111.3208
         },
         {
           "sample": 28,
           "passed": true,
-          "durationMs": 48.533818
+          "durationMs": 95.9323
         },
         {
           "sample": 29,
           "passed": true,
-          "durationMs": 44.896351
+          "durationMs": 82.3198
         },
         {
           "sample": 30,
           "passed": true,
-          "durationMs": 43.003928
+          "durationMs": 81.4778
         },
         {
           "sample": 31,
           "passed": true,
-          "durationMs": 46.701939
+          "durationMs": 80.2948
         },
         {
           "sample": 32,
           "passed": true,
-          "durationMs": 44.085051
+          "durationMs": 92.8296
         },
         {
           "sample": 33,
           "passed": true,
-          "durationMs": 42.589357
+          "durationMs": 98.9987
         },
         {
           "sample": 34,
           "passed": true,
-          "durationMs": 40.841926
+          "durationMs": 102.198
         },
         {
           "sample": 35,
           "passed": true,
-          "durationMs": 41.133034
+          "durationMs": 94.7263
         },
         {
           "sample": 36,
           "passed": true,
-          "durationMs": 40.605592
+          "durationMs": 115.6478
         },
         {
           "sample": 37,
           "passed": true,
-          "durationMs": 41.82484
+          "durationMs": 101.9753
         },
         {
           "sample": 38,
           "passed": true,
-          "durationMs": 46.233818
+          "durationMs": 107.4641
         },
         {
           "sample": 39,
           "passed": true,
-          "durationMs": 48.970882
+          "durationMs": 97.7454
         },
         {
           "sample": 40,
           "passed": true,
-          "durationMs": 42.706459
+          "durationMs": 91.1732
         },
         {
           "sample": 41,
           "passed": true,
-          "durationMs": 44.350463
+          "durationMs": 89.3395
         },
         {
           "sample": 42,
           "passed": true,
-          "durationMs": 46.114691
+          "durationMs": 110.5058
         },
         {
           "sample": 43,
           "passed": true,
-          "durationMs": 43.773709
+          "durationMs": 105.6872
         },
         {
           "sample": 44,
           "passed": true,
-          "durationMs": 43.912253
+          "durationMs": 102.6653
         },
         {
           "sample": 45,
           "passed": true,
-          "durationMs": 42.574356
+          "durationMs": 102.2148
         },
         {
           "sample": 46,
           "passed": true,
-          "durationMs": 44.561226
+          "durationMs": 97.8547
         },
         {
           "sample": 47,
           "passed": true,
-          "durationMs": 42.141757
+          "durationMs": 110.9032
         },
         {
           "sample": 48,
           "passed": true,
-          "durationMs": 43.399451
+          "durationMs": 99.4784
         },
         {
           "sample": 49,
           "passed": true,
-          "durationMs": 42.818717
+          "durationMs": 89.0164
         },
         {
           "sample": 50,
           "passed": true,
-          "durationMs": 43.715215
+          "durationMs": 89.1271
         }
       ]
     },
@@ -2852,263 +2852,263 @@
       "skippedSamples": 0,
       "successfulSamples": 50,
       "failedSamples": 0,
-      "p50Ms": 31.278697,
-      "p95Ms": 35.664393,
+      "p50Ms": 64.8118,
+      "p95Ms": 75.7321,
       "passed": true,
       "records": [
         {
           "sample": 1,
           "passed": true,
-          "durationMs": 31.120284
+          "durationMs": 75.7321
         },
         {
           "sample": 2,
           "passed": true,
-          "durationMs": 30.602572
+          "durationMs": 67.7825
         },
         {
           "sample": 3,
           "passed": true,
-          "durationMs": 32.364622
+          "durationMs": 68.5286
         },
         {
           "sample": 4,
           "passed": true,
-          "durationMs": 31.595894
+          "durationMs": 76.9649
         },
         {
           "sample": 5,
           "passed": true,
-          "durationMs": 31.985951
+          "durationMs": 75.8071
         },
         {
           "sample": 6,
           "passed": true,
-          "durationMs": 31.29875
+          "durationMs": 72.6497
         },
         {
           "sample": 7,
           "passed": true,
-          "durationMs": 33.252342
+          "durationMs": 66.1773
         },
         {
           "sample": 8,
           "passed": true,
-          "durationMs": 32.115749
+          "durationMs": 61.3028
         },
         {
           "sample": 9,
           "passed": true,
-          "durationMs": 31.905493
+          "durationMs": 59.6262
         },
         {
           "sample": 10,
           "passed": true,
-          "durationMs": 32.98008
+          "durationMs": 63.5477
         },
         {
           "sample": 11,
           "passed": true,
-          "durationMs": 31.714687
+          "durationMs": 69.3222
         },
         {
           "sample": 12,
           "passed": true,
-          "durationMs": 30.478272
+          "durationMs": 67.249
         },
         {
           "sample": 13,
           "passed": true,
-          "durationMs": 30.942111
+          "durationMs": 56.3174
         },
         {
           "sample": 14,
           "passed": true,
-          "durationMs": 31.508615
+          "durationMs": 44.527
         },
         {
           "sample": 15,
           "passed": true,
-          "durationMs": 30.490043
+          "durationMs": 64.6169
         },
         {
           "sample": 16,
           "passed": true,
-          "durationMs": 31.914705
+          "durationMs": 64.5076
         },
         {
           "sample": 17,
           "passed": true,
-          "durationMs": 30.890474
+          "durationMs": 65.6505
         },
         {
           "sample": 18,
           "passed": true,
-          "durationMs": 31.51125
+          "durationMs": 68.662
         },
         {
           "sample": 19,
           "passed": true,
-          "durationMs": 31.184491
+          "durationMs": 61.1322
         },
         {
           "sample": 20,
           "passed": true,
-          "durationMs": 30.998425
+          "durationMs": 54.0362
         },
         {
           "sample": 21,
           "passed": true,
-          "durationMs": 30.343728
+          "durationMs": 66.8965
         },
         {
           "sample": 22,
           "passed": true,
-          "durationMs": 30.628836
+          "durationMs": 58.3286
         },
         {
           "sample": 23,
           "passed": true,
-          "durationMs": 30.859115
+          "durationMs": 64.3574
         },
         {
           "sample": 24,
           "passed": true,
-          "durationMs": 30.252163
+          "durationMs": 65.3957
         },
         {
           "sample": 25,
           "passed": true,
-          "durationMs": 31.736028
+          "durationMs": 67.7499
         },
         {
           "sample": 26,
           "passed": true,
-          "durationMs": 31.785919
+          "durationMs": 65.3577
         },
         {
           "sample": 27,
           "passed": true,
-          "durationMs": 30.883129
+          "durationMs": 62.3698
         },
         {
           "sample": 28,
           "passed": true,
-          "durationMs": 29.95915
+          "durationMs": 67.5
         },
         {
           "sample": 29,
           "passed": true,
-          "durationMs": 30.830425
+          "durationMs": 58.5257
         },
         {
           "sample": 30,
           "passed": true,
-          "durationMs": 30.726357
+          "durationMs": 37.0468
         },
         {
           "sample": 31,
           "passed": true,
-          "durationMs": 30.824093
+          "durationMs": 56.9072
         },
         {
           "sample": 32,
           "passed": true,
-          "durationMs": 32.526583
+          "durationMs": 67.9107
         },
         {
           "sample": 33,
           "passed": true,
-          "durationMs": 29.064092
+          "durationMs": 71.4213
         },
         {
           "sample": 34,
           "passed": true,
-          "durationMs": 29.880393
+          "durationMs": 64.8118
         },
         {
           "sample": 35,
           "passed": true,
-          "durationMs": 29.976078
+          "durationMs": 58.8805
         },
         {
           "sample": 36,
           "passed": true,
-          "durationMs": 34.172184
+          "durationMs": 69.3767
         },
         {
           "sample": 37,
           "passed": true,
-          "durationMs": 35.831841
+          "durationMs": 57.4075
         },
         {
           "sample": 38,
           "passed": true,
-          "durationMs": 35.664393
+          "durationMs": 63.9601
         },
         {
           "sample": 39,
           "passed": true,
-          "durationMs": 31.718403
+          "durationMs": 68.9849
         },
         {
           "sample": 40,
           "passed": true,
-          "durationMs": 31.278697
+          "durationMs": 67.8219
         },
         {
           "sample": 41,
           "passed": true,
-          "durationMs": 30.165984
+          "durationMs": 67.1286
         },
         {
           "sample": 42,
           "passed": true,
-          "durationMs": 30.408597
+          "durationMs": 57.4569
         },
         {
           "sample": 43,
           "passed": true,
-          "durationMs": 31.365254
+          "durationMs": 67.7416
         },
         {
           "sample": 44,
           "passed": true,
-          "durationMs": 38.458927
+          "durationMs": 69.2771
         },
         {
           "sample": 45,
           "passed": true,
-          "durationMs": 31.387291
+          "durationMs": 55.0857
         },
         {
           "sample": 46,
           "passed": true,
-          "durationMs": 30.8445
+          "durationMs": 52.642
         },
         {
           "sample": 47,
           "passed": true,
-          "durationMs": 31.509658
+          "durationMs": 46.5125
         },
         {
           "sample": 48,
           "passed": true,
-          "durationMs": 31.733566
+          "durationMs": 60.6925
         },
         {
           "sample": 49,
           "passed": true,
-          "durationMs": 30.858564
+          "durationMs": 48.1558
         },
         {
           "sample": 50,
           "passed": true,
-          "durationMs": 31.382641
+          "durationMs": 67.8721
         }
       ]
     }
   ],
   "passed": true,
-  "finishedAtMillis": 1790688929822
+  "finishedAtMillis": 1791727187272
 }

@@ -1,13 +1,13 @@
 {
   "schemaVersion": 2,
-  "startedAtMillis": 1790680664833,
-  "gitCommit": "a11b41eb92aa8dcf5d2fe37fdadbfd8fd82c5db6",
+  "startedAtMillis": 1791727273833,
+  "gitCommit": "3eec40bd485fc510dda577ba1d2a627d96f1184b",
   "workingTreeDirty": true,
   "device": "Google sdk_gphone64_x86_64",
   "androidVersion": "16",
   "apiLevel": 36,
   "buildType": "debug",
-  "networkConditions": "unspecified",
+  "networkConditions": "emulator-host-network",
   "networkAtStart": {
     "wifi": true,
     "cellular": false,
@@ -25,7 +25,7 @@
   "records": [
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 2179.118887,
+      "durationMs": 2019.9371,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -34,7 +34,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 941.551141,
+      "durationMs": 392.3598,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -43,7 +43,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 453.815041,
+      "durationMs": 377.1782,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -52,7 +52,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 436.746328,
+      "durationMs": 370.4459,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -61,7 +61,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 436.503197,
+      "durationMs": 385.0284,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -70,7 +70,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 429.33292,
+      "durationMs": 379.1559,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -79,7 +79,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 448.680161,
+      "durationMs": 378.0148,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -88,7 +88,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 432.511326,
+      "durationMs": 387.3085,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -97,7 +97,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 431.863903,
+      "durationMs": 389.0725,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -106,7 +106,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 717.797184,
+      "durationMs": 383.7602,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -115,7 +115,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 443.07832,
+      "durationMs": 388.3495,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -124,7 +124,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 475.287878,
+      "durationMs": 378.9436,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -133,7 +133,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 442.016971,
+      "durationMs": 385.8682,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -142,7 +142,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 499.579304,
+      "durationMs": 390.1679,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -151,7 +151,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 436.118974,
+      "durationMs": 384.3961,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -160,7 +160,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 427.197587,
+      "durationMs": 370.7044,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -169,7 +169,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 429.548641,
+      "durationMs": 395.1051,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -178,7 +178,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 452.599548,
+      "durationMs": 384.2344,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -187,7 +187,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 469.979671,
+      "durationMs": 376.6134,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -196,7 +196,7 @@
     },
     {
       "scenario": "weather.network.fetch",
-      "durationMs": 457.635886,
+      "durationMs": 385.6785,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -205,7 +205,7 @@
     },
     {
       "scenario": "weather.cache.warmup",
-      "durationMs": 430.502877,
+      "durationMs": 372.3162,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 1,
       "providerCalls": 1,
@@ -214,7 +214,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.488434,
+      "durationMs": 1.336,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -223,7 +223,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.545626,
+      "durationMs": 1.5371,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -232,7 +232,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.624319,
+      "durationMs": 1.6132,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -241,7 +241,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.573582,
+      "durationMs": 1.625,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -250,7 +250,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.581184,
+      "durationMs": 1.8793,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -259,7 +259,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.449864,
+      "durationMs": 1.7147,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -268,7 +268,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.83778,
+      "durationMs": 1.4799,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -277,7 +277,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.496886,
+      "durationMs": 1.2503,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -286,7 +286,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.47759,
+      "durationMs": 1.4517,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -295,7 +295,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.501884,
+      "durationMs": 0.79,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -304,7 +304,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.436127,
+      "durationMs": 1.3103,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -313,7 +313,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.521187,
+      "durationMs": 1.1967,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -322,7 +322,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.462971,
+      "durationMs": 1.0552,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -331,7 +331,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.536088,
+      "durationMs": 0.9292,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -340,7 +340,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.416813,
+      "durationMs": 1.0234,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -349,7 +349,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.528659,
+      "durationMs": 0.9309,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -358,7 +358,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.476418,
+      "durationMs": 1.0364,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -367,7 +367,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.613761,
+      "durationMs": 1.173,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -376,7 +376,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.593167,
+      "durationMs": 1.3227,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -385,7 +385,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.586419,
+      "durationMs": 1.7676,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -394,7 +394,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.577327,
+      "durationMs": 1.2857,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -403,7 +403,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.644335,
+      "durationMs": 0.986,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -412,7 +412,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.617571,
+      "durationMs": 1.0704,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -421,7 +421,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.471794,
+      "durationMs": 1.1062,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -430,7 +430,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.58914,
+      "durationMs": 1.0251,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -439,7 +439,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.428928,
+      "durationMs": 0.9155,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -448,7 +448,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.427025,
+      "durationMs": 1.0058,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -457,7 +457,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.374359,
+      "durationMs": 2.5786,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -466,7 +466,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.416034,
+      "durationMs": 1.1333,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -475,7 +475,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.40907,
+      "durationMs": 0.9864,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -484,7 +484,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.41858,
+      "durationMs": 1.2292,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -493,7 +493,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.381519,
+      "durationMs": 1.0113,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -502,7 +502,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.378874,
+      "durationMs": 1.6834,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -511,7 +511,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.374268,
+      "durationMs": 1.0929,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -520,7 +520,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.401784,
+      "durationMs": 1.1791,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -529,7 +529,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.493767,
+      "durationMs": 0.5862,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -538,7 +538,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.371924,
+      "durationMs": 0.6816,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -547,7 +547,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.370286,
+      "durationMs": 0.9349,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -556,7 +556,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.376161,
+      "durationMs": 0.8599,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -565,7 +565,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.621923,
+      "durationMs": 0.8213,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -574,7 +574,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.416668,
+      "durationMs": 1.3895,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -583,7 +583,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.385272,
+      "durationMs": 2.3234,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -592,7 +592,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.465986,
+      "durationMs": 1.0448,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -601,7 +601,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.42701,
+      "durationMs": 1.1885,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -610,7 +610,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.453547,
+      "durationMs": 0.9784,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -619,7 +619,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.448963,
+      "durationMs": 1.0487,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -628,7 +628,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.561634,
+      "durationMs": 1.0419,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -637,7 +637,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.448645,
+      "durationMs": 0.9924,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -646,7 +646,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.394648,
+      "durationMs": 1.1933,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -655,7 +655,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.454474,
+      "durationMs": 1.3432,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -664,7 +664,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.504497,
+      "durationMs": 0.8709,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -673,7 +673,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.482113,
+      "durationMs": 0.9208,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -682,7 +682,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.405624,
+      "durationMs": 3.8023,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -691,7 +691,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.718133,
+      "durationMs": 1.4788,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -700,7 +700,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 1.044517,
+      "durationMs": 1.0989,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -709,7 +709,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.482805,
+      "durationMs": 0.9713,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -718,7 +718,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.3986,
+      "durationMs": 1.1373,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -727,7 +727,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.398423,
+      "durationMs": 1.3661,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -736,7 +736,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.35149,
+      "durationMs": 1.1371,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -745,7 +745,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.885291,
+      "durationMs": 1.7042,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -754,7 +754,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.335908,
+      "durationMs": 0.9877,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -763,7 +763,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.339612,
+      "durationMs": 1.1628,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -772,7 +772,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.527292,
+      "durationMs": 1.1318,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -781,7 +781,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 2.161279,
+      "durationMs": 1.8807,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -790,7 +790,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.954832,
+      "durationMs": 1.1129,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -799,7 +799,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.474408,
+      "durationMs": 1.2177,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -808,7 +808,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.568448,
+      "durationMs": 3.4646,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -817,7 +817,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.495,
+      "durationMs": 3.3431,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -826,7 +826,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.363307,
+      "durationMs": 2.1831,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -835,7 +835,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.406635,
+      "durationMs": 1.7045,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -844,7 +844,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.397893,
+      "durationMs": 1.1348,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -853,7 +853,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.351474,
+      "durationMs": 0.9036,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -862,7 +862,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.342449,
+      "durationMs": 0.9367,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -871,7 +871,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.328128,
+      "durationMs": 1.1187,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -880,7 +880,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.462118,
+      "durationMs": 1.146,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -889,7 +889,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.388085,
+      "durationMs": 1.1606,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -898,7 +898,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.411121,
+      "durationMs": 1.3269,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -907,7 +907,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.347417,
+      "durationMs": 1.0543,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -916,7 +916,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.364723,
+      "durationMs": 1.0434,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -925,7 +925,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.332231,
+      "durationMs": 0.775,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -934,7 +934,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.318879,
+      "durationMs": 0.7242,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -943,7 +943,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.321229,
+      "durationMs": 1.2761,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -952,7 +952,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.319073,
+      "durationMs": 1.3083,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -961,7 +961,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.319199,
+      "durationMs": 1.1589,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -970,7 +970,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.386698,
+      "durationMs": 1.0914,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -979,7 +979,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.516858,
+      "durationMs": 1.0797,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -988,7 +988,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.530873,
+      "durationMs": 1.0158,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -997,7 +997,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.54989,
+      "durationMs": 1.3735,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -1006,7 +1006,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.477061,
+      "durationMs": 0.9472,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -1015,7 +1015,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.461146,
+      "durationMs": 0.8018,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -1024,7 +1024,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.418557,
+      "durationMs": 0.7139,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -1033,7 +1033,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.403465,
+      "durationMs": 1.6035,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -1042,7 +1042,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.381765,
+      "durationMs": 1.2068,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -1051,7 +1051,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.356874,
+      "durationMs": 1.0991,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -1060,7 +1060,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.384616,
+      "durationMs": 1.5199,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -1069,7 +1069,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.402114,
+      "durationMs": 1.3011,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -1078,7 +1078,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.372117,
+      "durationMs": 1.255,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -1087,7 +1087,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.318904,
+      "durationMs": 1.4985,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -1096,7 +1096,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.317819,
+      "durationMs": 1.1311,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -1105,7 +1105,7 @@
     },
     {
       "scenario": "weather.cache.hit",
-      "durationMs": 0.436354,
+      "durationMs": 1.1634,
       "outcome": "SUCCESS",
       "expectedProviderCalls": 0,
       "providerCalls": 0,
@@ -1123,8 +1123,8 @@
       "failedSamples": 0,
       "timeoutSamples": 0,
       "successRate": 1,
-      "p50Ms": 443.07832,
-      "p95Ms": 941.551141,
+      "p50Ms": 384.3961,
+      "p95Ms": 395.1051,
       "skipReason": null
     },
     {
@@ -1136,12 +1136,12 @@
       "failedSamples": 0,
       "timeoutSamples": 0,
       "successRate": 1,
-      "p50Ms": 0.436127,
-      "p95Ms": 0.718133,
+      "p50Ms": 1.1371,
+      "p95Ms": 2.1831,
       "skipReason": null
     }
   ],
-  "finishedAtMillis": 1790680696874,
+  "finishedAtMillis": 1791727304266,
   "networkAtEnd": {
     "wifi": true,
     "cellular": false,

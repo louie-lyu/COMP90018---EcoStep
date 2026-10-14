@@ -127,7 +127,8 @@ class JourneyUiLatencyEvaluationTest {
                 check(initial != null && initial.userId == uid && initial.linkedMissionId == null) { "Unexpected journey ownership or mission link" }
                 stopRecord.put("detectedMode", initial.detectedTransportMode?.name ?: initial.transportMode.name)
                 // Exercise the actual mode selector; explicitly choose walking even after network fallback.
-                val walking = scrollTo { it.text?.toString() == "Walk" && it.isVisibleToUser }
+                scrollTo { it.text?.toString() == "Walk" && it.isVisibleToUser }
+                val walking = stableNode { it.text?.toString() == "Walk" && it.isVisibleToUser }
                 click(clickableAncestor(walking))
                 scrollTo { it.tag() == "journey.confirm" && it.readyToClick() }
                 val confirm = stableNode { it.tag() == "journey.confirm" && it.readyToClick() }
@@ -159,6 +160,21 @@ class JourneyUiLatencyEvaluationTest {
             report.put("passed", records.size == samples * 2 && records.all { it.getString("outcome") == "SUCCESS" })
         } catch (error: Throwable) {
             report.put("runErrorType", error.javaClass.simpleName)
+            // Capture only evaluation controls, never arbitrary account or location text.
+            runCatching {
+                report.put("failureControls", JSONArray(nodes().filter {
+                    it.tag().startsWith("journey.") || it.isScrollable ||
+                        it.text?.toString() in listOf("Walk", "Journey saved!", "Confirm Journey", "Saving Journey...")
+                }.map {
+                    JSONObject().put("tag", it.tag()).put("visible", it.isVisibleToUser)
+                        .put("enabled", it.isEnabled).put("clickable", it.isClickable)
+                        .put("scrollable", it.isScrollable)
+                        .put("bounds", Rect().also(it::getBoundsInScreen).toShortString())
+                        .put("controlText", it.text?.toString()?.takeIf { text ->
+                            text in listOf("Walk", "Journey saved!", "Confirm Journey", "Saving Journey...")
+                        } ?: JSONObject.NULL)
+                }))
+            }
             // Test-authored assertion messages contain no credentials or user data.
             if (error is IllegalStateException || error is UiWaitTimeout) report.put("runError", error.message)
             throw error
@@ -278,18 +294,24 @@ class JourneyUiLatencyEvaluationTest {
         }
     }
     private fun scrollTo(predicate: (AccessibilityNodeInfo) -> Boolean): AccessibilityNodeInfo {
-        repeat(12) {
-            nodes().firstOrNull(predicate)?.let { return it }
-            val list = nodes().firstOrNull { it.isScrollable && it.isVisibleToUser }
-                ?: throw IllegalStateException("No scrollable Review content")
-            if (!list.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)) {
+        var found: AccessibilityNodeInfo? = null
+        var successfulScrolls = 0
+        waitFor("Review control after scrolling") {
+            val current = nodes()
+            found = current.firstOrNull(predicate)
+            if (found == null) {
+                // At the bottom, a rejected scroll can precede the accessibility update
+                // that exposes Confirm. Keep polling until the normal UI deadline.
+                val list = current.firstOrNull { it.isScrollable && it.isVisibleToUser }
+                if (successfulScrolls < 12 &&
+                    list?.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD) == true) {
+                    successfulScrolls++
+                }
                 SystemClock.sleep(300)
-                nodes().firstOrNull(predicate)?.let { return it }
-                error("Review control not found")
             }
-            SystemClock.sleep(300)
+            found != null
         }
-        error("Review control not found after scrolling")
+        return checkNotNull(found)
     }
     private class UiWaitTimeout(message: String) : RuntimeException(message)
     private companion object { const val POLL_MS = 50L }

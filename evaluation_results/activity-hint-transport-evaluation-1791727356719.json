@@ -2,8 +2,8 @@
   "schemaVersion": 4,
   "experiment": "SHL recorded Activity and GPS with live current-timetable transit plans",
   "timetableTime": "current",
-  "startedAtMillis": 1791511803776,
-  "gitCommit": "fbe5266d89baee707bc6b25399d0df05de4a9182",
+  "startedAtMillis": 1791727356719,
+  "gitCommit": "3eec40bd485fc510dda577ba1d2a627d96f1184b",
   "workingTreeDirty": true,
   "device": "Google sdk_gphone64_x86_64",
   "androidVersion": "16",
@@ -466,16 +466,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 2124.0322,
-      "transitRoutes": 1,
+      "durationMs": 1567.0929,
+      "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511841566,
-        "itineraries": 1,
-        "routeStopCounts": [
-          4
-        ],
-        "durationMs": 2118.9191
+        "requestStartedAtMillis": 1791727393247,
+        "itineraries": 0,
+        "routeStopCounts": [],
+        "durationMs": 1559.7664
       }
     },
     {
@@ -503,20 +501,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 465.791,
+      "durationMs": 452.0621,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511845692,
+        "requestStartedAtMillis": 1791727396813,
         "itineraries": 5,
         "routeStopCounts": [
-          9,
           8,
-          9,
+          8,
+          7,
           8,
           9
         ],
-        "durationMs": 463.5949
+        "durationMs": 449.3795
       }
     },
     {
@@ -544,14 +542,19 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 430.3407,
-      "transitRoutes": 0,
+      "durationMs": 444.2681,
+      "transitRoutes": 4,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511848162,
-        "itineraries": 0,
-        "routeStopCounts": [],
-        "durationMs": 429.4645
+        "requestStartedAtMillis": 1791727399268,
+        "itineraries": 4,
+        "routeStopCounts": [
+          2,
+          3,
+          2,
+          4
+        ],
+        "durationMs": 443.4471
       }
     },
     {
@@ -579,24 +582,22 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 487.8768,
-      "transitRoutes": 9,
+      "durationMs": 424.6547,
+      "transitRoutes": 7,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511850595,
+        "requestStartedAtMillis": 1791727401715,
         "itineraries": 5,
         "routeStopCounts": [
+          2,
+          2,
           3,
-          5,
-          5,
-          13,
-          3,
-          5,
-          6,
-          3,
-          4
+          4,
+          11,
+          11,
+          6
         ],
-        "durationMs": 478.0262
+        "durationMs": 419.4931
       }
     },
     {
@@ -624,26 +625,26 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 490.3189,
+      "durationMs": 430.0406,
       "transitRoutes": 11,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511853085,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727404141,
+        "itineraries": 6,
         "routeStopCounts": [
+          4,
           13,
-          9,
-          5,
-          14,
           5,
           3,
-          10,
-          10,
-          5,
-          3,
-          12
+          6,
+          6,
+          13,
+          18,
+          18,
+          7,
+          9
         ],
-        "durationMs": 471.3212
+        "durationMs": 411.7292
       }
     },
     {
@@ -671,23 +672,24 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 466.5168,
-      "transitRoutes": 8,
+      "durationMs": 438.3972,
+      "transitRoutes": 9,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511855579,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727406575,
+        "itineraries": 6,
         "routeStopCounts": [
-          16,
-          14,
-          4,
-          12,
-          4,
+          15,
+          5,
+          3,
+          13,
+          13,
+          3,
           16,
           17,
           3
         ],
-        "durationMs": 463.6406
+        "durationMs": 433.708
       }
     },
     {
@@ -715,14 +717,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 423.9672,
+      "durationMs": 357.9368,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511858048,
+        "requestStartedAtMillis": 1791727409015,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 422.8384
+        "durationMs": 356.7502
       }
     },
     {
@@ -750,14 +752,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 416.3526,
+      "durationMs": 343.8046,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511860475,
+        "requestStartedAtMillis": 1791727411375,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 415.5548
+        "durationMs": 343.0928
       }
     },
     {
@@ -785,14 +787,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 410.8954,
+      "durationMs": 352.2678,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511862895,
+        "requestStartedAtMillis": 1791727413722,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 409.7911
+        "durationMs": 350.4671
       }
     },
     {
@@ -820,14 +822,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 407.2972,
+      "durationMs": 351.5507,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511865308,
+        "requestStartedAtMillis": 1791727416078,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 406.4473
+        "durationMs": 350.3413
       }
     },
     {
@@ -855,14 +857,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 407.4352,
+      "durationMs": 350.0252,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511867717,
+        "requestStartedAtMillis": 1791727418434,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 406.2624
+        "durationMs": 348.5796
       }
     },
     {
@@ -890,14 +892,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 578.1756,
+      "durationMs": 358.3571,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511870127,
+        "requestStartedAtMillis": 1791727420788,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 577.2686
+        "durationMs": 357.2521
       }
     },
     {
@@ -925,11 +927,11 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 828.0361,
+      "durationMs": 721.8705,
       "transitRoutes": 12,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511872708,
+        "requestStartedAtMillis": 1791727423149,
         "itineraries": 5,
         "routeStopCounts": [
           5,
@@ -945,7 +947,7 @@
           16,
           20
         ],
-        "durationMs": 826.4762
+        "durationMs": 719.4094
       }
     },
     {
@@ -973,14 +975,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 409.0621,
+      "durationMs": 349.2437,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511875540,
+        "requestStartedAtMillis": 1791727425876,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 407.8356
+        "durationMs": 347.8364
       }
     },
     {
@@ -1008,14 +1010,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 409.7997,
+      "durationMs": 346.9062,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511877951,
+        "requestStartedAtMillis": 1791727428227,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 408.9934
+        "durationMs": 346.1407
       }
     },
     {
@@ -1043,22 +1045,24 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 453.1546,
-      "transitRoutes": 7,
+      "durationMs": 427.9709,
+      "transitRoutes": 9,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511880363,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727430576,
+        "itineraries": 6,
         "routeStopCounts": [
-          25,
-          25,
+          24,
+          24,
           2,
-          25,
-          25,
-          25,
+          24,
+          24,
+          2,
+          24,
+          24,
           2
         ],
-        "durationMs": 449.6115
+        "durationMs": 425.3609
       }
     },
     {
@@ -1086,20 +1090,21 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 445.2797,
-      "transitRoutes": 5,
+      "durationMs": 392.5584,
+      "transitRoutes": 6,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511882820,
+        "requestStartedAtMillis": 1791727433007,
         "itineraries": 5,
         "routeStopCounts": [
-          9,
-          9,
-          9,
           11,
+          11,
+          11,
+          9,
+          3,
           3
         ],
-        "durationMs": 443.1973
+        "durationMs": 390.4204
       }
     },
     {
@@ -1127,16 +1132,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 444.08,
-      "transitRoutes": 1,
+      "durationMs": 364.7477,
+      "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511885888,
-        "itineraries": 1,
-        "routeStopCounts": [
-          3
-        ],
-        "durationMs": 443.149
+        "requestStartedAtMillis": 1791727435403,
+        "itineraries": 0,
+        "routeStopCounts": [],
+        "durationMs": 363.3332
       }
     },
     {
@@ -1164,20 +1167,23 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 460.196,
-      "transitRoutes": 5,
+      "durationMs": 446.4429,
+      "transitRoutes": 8,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511888336,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727437772,
+        "itineraries": 6,
         "routeStopCounts": [
-          16,
           13,
-          16,
-          13,
-          16
+          11,
+          11,
+          3,
+          9,
+          6,
+          6,
+          13
         ],
-        "durationMs": 458.4734
+        "durationMs": 444.8071
       }
     },
     {
@@ -1205,19 +1211,21 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 448.2953,
-      "transitRoutes": 4,
+      "durationMs": 412.5514,
+      "transitRoutes": 6,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511890800,
-        "itineraries": 4,
+        "requestStartedAtMillis": 1791727440221,
+        "itineraries": 6,
         "routeStopCounts": [
+          3,
+          3,
           2,
           3,
-          3,
-          2
+          2,
+          3
         ],
-        "durationMs": 447.3977
+        "durationMs": 411.7989
       }
     },
     {
@@ -1245,22 +1253,21 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 457.478,
-      "transitRoutes": 7,
+      "durationMs": 421.0467,
+      "transitRoutes": 6,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511893252,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727442638,
+        "itineraries": 4,
         "routeStopCounts": [
-          21,
-          3,
-          21,
           21,
           2,
           21,
-          21
+          21,
+          5,
+          19
         ],
-        "durationMs": 455.7309
+        "durationMs": 419.5383
       }
     },
     {
@@ -1288,14 +1295,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 450.485,
+      "durationMs": 356.9703,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511895714,
+        "requestStartedAtMillis": 1791727445063,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 449.1061
+        "durationMs": 355.2286
       }
     },
     {
@@ -1323,21 +1330,18 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 477.4263,
-      "transitRoutes": 6,
+      "durationMs": 371.1635,
+      "transitRoutes": 3,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511898167,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727447423,
+        "itineraries": 3,
         "routeStopCounts": [
-          22,
-          22,
-          2,
           22,
           22,
           22
         ],
-        "durationMs": 475.4076
+        "durationMs": 369.1645
       }
     },
     {
@@ -1365,20 +1369,21 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 444.72,
-      "transitRoutes": 5,
+      "durationMs": 415.0093,
+      "transitRoutes": 6,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511900647,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727449798,
+        "itineraries": 6,
         "routeStopCounts": [
-          9,
           10,
           10,
-          9,
-          10
+          10,
+          10,
+          10,
+          8
         ],
-        "durationMs": 443.4556
+        "durationMs": 413.8479
       }
     },
     {
@@ -1406,20 +1411,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 456.2297,
+      "durationMs": 393.2881,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511903095,
+        "requestStartedAtMillis": 1791727452216,
         "itineraries": 5,
         "routeStopCounts": [
-          11,
-          9,
-          9,
-          11,
-          9
+          13,
+          10,
+          10,
+          10,
+          3
         ],
-        "durationMs": 454.8202
+        "durationMs": 391.9422
       }
     },
     {
@@ -1447,20 +1452,21 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 444.1306,
-      "transitRoutes": 5,
+      "durationMs": 449.4738,
+      "transitRoutes": 6,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511905554,
+        "requestStartedAtMillis": 1791727454612,
         "itineraries": 5,
         "routeStopCounts": [
+          3,
+          3,
+          11,
           5,
-          11,
-          11,
-          11,
-          12
+          5,
+          11
         ],
-        "durationMs": 442.8013
+        "durationMs": 448.1893
       }
     },
     {
@@ -1488,11 +1494,11 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 445.7956,
+      "durationMs": 398.6749,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511908003,
+        "requestStartedAtMillis": 1791727457065,
         "itineraries": 5,
         "routeStopCounts": [
           4,
@@ -1501,7 +1507,7 @@
           4,
           4
         ],
-        "durationMs": 445.0659
+        "durationMs": 397.6281
       }
     },
     {
@@ -1529,19 +1535,18 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 442.6161,
-      "transitRoutes": 4,
+      "durationMs": 386.6689,
+      "transitRoutes": 3,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511910453,
-        "itineraries": 3,
+        "requestStartedAtMillis": 1791727459468,
+        "itineraries": 2,
         "routeStopCounts": [
-          11,
-          5,
-          9,
-          11
+          8,
+          2,
+          7
         ],
-        "durationMs": 441.3828
+        "durationMs": 385.2679
       }
     },
     {
@@ -1569,14 +1574,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 431.5445,
+      "durationMs": 363.2642,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511912898,
+        "requestStartedAtMillis": 1791727461857,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 430.6557
+        "durationMs": 361.9802
       }
     },
     {
@@ -1604,21 +1609,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 489.8076,
-      "transitRoutes": 6,
+      "durationMs": 398.7098,
+      "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511915332,
+        "requestStartedAtMillis": 1791727464225,
         "itineraries": 5,
         "routeStopCounts": [
-          14,
-          20,
-          14,
-          20,
           11,
-          5
+          11,
+          19,
+          14,
+          11
         ],
-        "durationMs": 488.4012
+        "durationMs": 397.2189
       }
     },
     {
@@ -1646,20 +1650,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 448.9403,
+      "durationMs": 405.1623,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511917829,
+        "requestStartedAtMillis": 1791727466626,
         "itineraries": 5,
         "routeStopCounts": [
           4,
-          7,
-          7,
+          4,
+          2,
           4,
           4
         ],
-        "durationMs": 448.1253
+        "durationMs": 404.2496
       }
     },
     {
@@ -1687,20 +1691,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 446.7257,
+      "durationMs": 382.0914,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511920281,
+        "requestStartedAtMillis": 1791727469036,
         "itineraries": 5,
         "routeStopCounts": [
+          5,
+          10,
           8,
           8,
-          8,
-          8,
-          8
+          10
         ],
-        "durationMs": 445.8455
+        "durationMs": 380.8903
       }
     },
     {
@@ -1728,20 +1732,21 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 459.4799,
-      "transitRoutes": 5,
+      "durationMs": 448.3798,
+      "transitRoutes": 6,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511922731,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727471421,
+        "itineraries": 6,
         "routeStopCounts": [
+          10,
+          3,
+          10,
+          10,
           9,
-          7,
-          14,
-          2,
-          8
+          9
         ],
-        "durationMs": 458.0916
+        "durationMs": 446.8214
       }
     },
     {
@@ -1769,14 +1774,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 432.238,
+      "durationMs": 365.6418,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511925194,
+        "requestStartedAtMillis": 1791727473873,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 430.9311
+        "durationMs": 364.8926
       }
     },
     {
@@ -1804,20 +1809,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 462.5945,
+      "durationMs": 397.9477,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511927629,
+        "requestStartedAtMillis": 1791727476241,
         "itineraries": 5,
         "routeStopCounts": [
+          3,
           8,
-          13,
-          2,
+          3,
           8,
-          13
+          3
         ],
-        "durationMs": 461.0303
+        "durationMs": 396.5077
       }
     },
     {
@@ -1845,26 +1850,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 534.0119,
-      "transitRoutes": 11,
+      "durationMs": 412.7091,
+      "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511930097,
+        "requestStartedAtMillis": 1791727478643,
         "itineraries": 5,
         "routeStopCounts": [
-          3,
-          2,
-          3,
-          2,
-          3,
-          2,
+          8,
+          9,
           6,
-          2,
-          2,
-          12,
-          2
+          8,
+          9
         ],
-        "durationMs": 532.5783
+        "durationMs": 411.8101
       }
     },
     {
@@ -1892,25 +1891,25 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 465.2906,
+      "durationMs": 421.6006,
       "transitRoutes": 10,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511932634,
+        "requestStartedAtMillis": 1791727481060,
         "itineraries": 5,
         "routeStopCounts": [
+          5,
           4,
-          6,
-          9,
-          3,
-          2,
-          3,
-          11,
           8,
+          5,
+          8,
+          2,
+          5,
+          4,
           8,
           7
         ],
-        "durationMs": 464.5422
+        "durationMs": 420.37
       }
     },
     {
@@ -1938,17 +1937,17 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 435.2175,
+      "durationMs": 386.2751,
       "transitRoutes": 2,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511935106,
+        "requestStartedAtMillis": 1791727483483,
         "itineraries": 2,
         "routeStopCounts": [
           8,
-          5
+          6
         ],
-        "durationMs": 433.9335
+        "durationMs": 385.2193
       }
     },
     {
@@ -1976,20 +1975,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 450.9357,
+      "durationMs": 390.5668,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511937545,
+        "requestStartedAtMillis": 1791727485874,
         "itineraries": 5,
         "routeStopCounts": [
-          13,
-          11,
-          13,
-          11,
-          12
+          5,
+          8,
+          8,
+          12,
+          11
         ],
-        "durationMs": 449.6932
+        "durationMs": 389.5943
       }
     },
     {
@@ -2017,23 +2016,27 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 498.2034,
-      "transitRoutes": 8,
+      "durationMs": 811.1208,
+      "transitRoutes": 12,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511940809,
+        "requestStartedAtMillis": 1791727488268,
         "itineraries": 5,
         "routeStopCounts": [
-          4,
-          7,
-          7,
-          11,
-          8,
+          3,
           2,
-          11,
-          7
+          3,
+          3,
+          3,
+          34,
+          13,
+          34,
+          17,
+          3,
+          9,
+          3
         ],
-        "durationMs": 495.7037
+        "durationMs": 809.0479
       }
     },
     {
@@ -2061,14 +2064,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 412.4939,
+      "durationMs": 358.5599,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511943312,
+        "requestStartedAtMillis": 1791727491085,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 410.768
+        "durationMs": 357.3663
       }
     },
     {
@@ -2096,14 +2099,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 433.609,
+      "durationMs": 387.9088,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511945728,
+        "requestStartedAtMillis": 1791727493448,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 432.6822
+        "durationMs": 386.9368
       }
     },
     {
@@ -2123,29 +2126,28 @@
         "type": "IN_VEHICLE",
         "confidence": 100
       },
-      "predictedMode": "CAR",
-      "confidence": 55,
-      "correct": false,
+      "predictedMode": "PUBLIC_TRANSPORT",
+      "confidence": 75,
+      "correct": true,
       "recordingAvailable": true,
       "classifierCalled": true,
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 828.2297,
-      "transitRoutes": 6,
+      "durationMs": 391.6708,
+      "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511948166,
+        "requestStartedAtMillis": 1791727495841,
         "itineraries": 5,
         "routeStopCounts": [
-          34,
-          12,
-          17,
-          34,
-          34,
-          34
+          6,
+          6,
+          6,
+          6,
+          6
         ],
-        "durationMs": 824.4915
+        "durationMs": 390.2221
       }
     },
     {
@@ -2165,28 +2167,32 @@
         "type": "IN_VEHICLE",
         "confidence": 100
       },
-      "predictedMode": "CAR",
-      "confidence": 55,
-      "correct": false,
+      "predictedMode": "PUBLIC_TRANSPORT",
+      "confidence": 75,
+      "correct": true,
       "recordingAvailable": true,
       "classifierCalled": true,
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 449.4631,
-      "transitRoutes": 5,
+      "durationMs": 404.3435,
+      "transitRoutes": 9,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511951002,
+        "requestStartedAtMillis": 1791727498236,
         "itineraries": 5,
         "routeStopCounts": [
-          34,
-          34,
-          34,
-          30,
-          34
+          6,
+          2,
+          26,
+          6,
+          2,
+          6,
+          2,
+          6,
+          2
         ],
-        "durationMs": 444.4331
+        "durationMs": 402.877
       }
     },
     {
@@ -2206,33 +2212,31 @@
         "type": "IN_VEHICLE",
         "confidence": 100
       },
-      "predictedMode": "CAR",
-      "confidence": 55,
-      "correct": false,
+      "predictedMode": "PUBLIC_TRANSPORT",
+      "confidence": 75,
+      "correct": true,
       "recordingAvailable": true,
       "classifierCalled": true,
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 866.3773,
-      "transitRoutes": 10,
+      "durationMs": 457.6471,
+      "transitRoutes": 8,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511953455,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727500644,
+        "itineraries": 7,
         "routeStopCounts": [
-          24,
-          8,
-          7,
-          27,
-          23,
           7,
           7,
-          27,
-          23,
+          7,
+          7,
+          3,
+          2,
+          7,
           7
         ],
-        "durationMs": 862.815
+        "durationMs": 456.6681
       }
     },
     {
@@ -2252,28 +2256,28 @@
         "type": "IN_VEHICLE",
         "confidence": 100
       },
-      "predictedMode": "CAR",
-      "confidence": 55,
-      "correct": false,
+      "predictedMode": "PUBLIC_TRANSPORT",
+      "confidence": 75,
+      "correct": true,
       "recordingAvailable": true,
       "classifierCalled": true,
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 453.9297,
+      "durationMs": 400.9393,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511956328,
+        "requestStartedAtMillis": 1791727503105,
         "itineraries": 5,
         "routeStopCounts": [
-          12,
-          12,
-          12,
-          16,
-          12
+          3,
+          3,
+          3,
+          3,
+          3
         ],
-        "durationMs": 451.1225
+        "durationMs": 399.9953
       }
     },
     {
@@ -2293,31 +2297,31 @@
         "type": "IN_VEHICLE",
         "confidence": 100
       },
-      "predictedMode": "CAR",
-      "confidence": 55,
-      "correct": false,
+      "predictedMode": "PUBLIC_TRANSPORT",
+      "confidence": 75,
+      "correct": true,
       "recordingAvailable": true,
       "classifierCalled": true,
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 867.3588,
+      "durationMs": 451.7818,
       "transitRoutes": 8,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511958785,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727505510,
+        "itineraries": 7,
         "routeStopCounts": [
-          10,
-          19,
-          27,
-          27,
-          4,
+          8,
+          8,
+          8,
           6,
-          29,
-          27
+          2,
+          8,
+          8,
+          8
         ],
-        "durationMs": 859.16
+        "durationMs": 450.7633
       }
     },
     {
@@ -2345,14 +2349,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 447.4283,
+      "durationMs": 458.5286,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511961655,
+        "requestStartedAtMillis": 1791727507966,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 445.8441
+        "durationMs": 457.2982
       }
     },
     {
@@ -2380,23 +2384,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 862.191,
-      "transitRoutes": 8,
+      "durationMs": 462.2219,
+      "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511964107,
+        "requestStartedAtMillis": 1791727510429,
         "itineraries": 5,
         "routeStopCounts": [
-          2,
-          32,
-          3,
-          8,
-          5,
           4,
-          2,
-          2
+          3,
+          3,
+          4,
+          3
         ],
-        "durationMs": 855.6549
+        "durationMs": 459.8907
       }
     },
     {
@@ -2424,22 +2425,23 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 465.2764,
-      "transitRoutes": 7,
+      "durationMs": 471.5201,
+      "transitRoutes": 8,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511966974,
+        "requestStartedAtMillis": 1791727512894,
         "itineraries": 5,
         "routeStopCounts": [
-          3,
-          6,
-          3,
+          8,
+          2,
+          5,
+          2,
+          7,
           2,
           2,
-          2,
-          5
+          6
         ],
-        "durationMs": 464.3504
+        "durationMs": 470.2054
       }
     },
     {
@@ -2459,29 +2461,32 @@
         "type": "IN_VEHICLE",
         "confidence": 100
       },
-      "predictedMode": "PUBLIC_TRANSPORT",
-      "confidence": 75,
-      "correct": true,
+      "predictedMode": "CAR",
+      "confidence": 55,
+      "correct": false,
       "recordingAvailable": true,
       "classifierCalled": true,
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 480.2167,
-      "transitRoutes": 6,
+      "durationMs": 442.4997,
+      "transitRoutes": 9,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511969444,
+        "requestStartedAtMillis": 1791727515371,
         "itineraries": 5,
         "routeStopCounts": [
           2,
           6,
-          3,
           8,
-          7,
-          8
+          2,
+          3,
+          2,
+          5,
+          2,
+          35
         ],
-        "durationMs": 478.1847
+        "durationMs": 438.3604
       }
     },
     {
@@ -2509,21 +2514,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 477.9568,
-      "transitRoutes": 6,
+      "durationMs": 392.3761,
+      "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511971929,
+        "requestStartedAtMillis": 1791727517818,
         "itineraries": 5,
         "routeStopCounts": [
+          11,
           6,
-          9,
           10,
           10,
-          6,
-          10
+          11
         ],
-        "durationMs": 476.6041
+        "durationMs": 390.9309
       }
     },
     {
@@ -2551,14 +2555,16 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 438.1376,
-      "transitRoutes": 0,
+      "durationMs": 793.6498,
+      "transitRoutes": 1,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511974411,
-        "itineraries": 0,
-        "routeStopCounts": [],
-        "durationMs": 436.5477
+        "requestStartedAtMillis": 1791727520216,
+        "itineraries": 1,
+        "routeStopCounts": [
+          3
+        ],
+        "durationMs": 792.6588
       }
     },
     {
@@ -2586,14 +2592,16 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 441.5024,
-      "transitRoutes": 0,
+      "durationMs": 987.6058,
+      "transitRoutes": 1,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511976855,
-        "itineraries": 0,
-        "routeStopCounts": [],
-        "durationMs": 439.4746
+        "requestStartedAtMillis": 1791727523014,
+        "itineraries": 1,
+        "routeStopCounts": [
+          3
+        ],
+        "durationMs": 985.9266
       }
     },
     {
@@ -2621,14 +2629,16 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 435.6732,
-      "transitRoutes": 0,
+      "durationMs": 1001.3651,
+      "transitRoutes": 1,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511979301,
-        "itineraries": 0,
-        "routeStopCounts": [],
-        "durationMs": 434.0341
+        "requestStartedAtMillis": 1791727526007,
+        "itineraries": 1,
+        "routeStopCounts": [
+          2
+        ],
+        "durationMs": 999.4741
       }
     },
     {
@@ -2656,19 +2666,19 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 453.403,
+      "durationMs": 1011.0655,
       "transitRoutes": 4,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511981742,
-        "itineraries": 2,
+        "requestStartedAtMillis": 1791727529011,
+        "itineraries": 4,
         "routeStopCounts": [
-          5,
-          3,
-          5,
-          4
+          6,
+          9,
+          4,
+          3
         ],
-        "durationMs": 451.71
+        "durationMs": 1009.8676
       }
     },
     {
@@ -2696,20 +2706,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 452.2997,
+      "durationMs": 1005.2195,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511984201,
+        "requestStartedAtMillis": 1791727532026,
         "itineraries": 5,
         "routeStopCounts": [
-          4,
+          3,
           5,
           4,
-          4,
+          5,
           4
         ],
-        "durationMs": 450.2619
+        "durationMs": 1003.7846
       }
     },
     {
@@ -2737,14 +2747,16 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 439.457,
-      "transitRoutes": 0,
+      "durationMs": 1022.9995,
+      "transitRoutes": 1,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511986659,
-        "itineraries": 0,
-        "routeStopCounts": [],
-        "durationMs": 437.7297
+        "requestStartedAtMillis": 1791727535036,
+        "itineraries": 1,
+        "routeStopCounts": [
+          2
+        ],
+        "durationMs": 1021.5979
       }
     },
     {
@@ -2772,20 +2784,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 444.8099,
+      "durationMs": 995.4346,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511989107,
+        "requestStartedAtMillis": 1791727538062,
         "itineraries": 5,
         "routeStopCounts": [
-          2,
-          2,
-          2,
           4,
+          4,
+          2,
+          2,
           2
         ],
-        "durationMs": 443.6509
+        "durationMs": 994.4695
       }
     },
     {
@@ -2813,20 +2825,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 460.4543,
+      "durationMs": 984.7143,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511991557,
+        "requestStartedAtMillis": 1791727541061,
         "itineraries": 5,
         "routeStopCounts": [
-          6,
           2,
+          6,
           6,
           6,
           6
         ],
-        "durationMs": 459.0252
+        "durationMs": 983.6052
       }
     },
     {
@@ -2854,14 +2866,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 432.2982,
+      "durationMs": 1011.8276,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511994022,
+        "requestStartedAtMillis": 1791727544051,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 431.2788
+        "durationMs": 1011.1913
       }
     },
     {
@@ -2889,14 +2901,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 440.0282,
+      "durationMs": 978.1831,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511996460,
+        "requestStartedAtMillis": 1791727547068,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 438.2935
+        "durationMs": 976.9506
       }
     },
     {
@@ -2924,14 +2936,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 993.9172,
+      "durationMs": 976.7417,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791511998903,
+        "requestStartedAtMillis": 1791727550049,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 992.7782
+        "durationMs": 975.8697
       }
     },
     {
@@ -2959,20 +2971,22 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 1038.6317,
-      "transitRoutes": 5,
+      "durationMs": 1017.3156,
+      "transitRoutes": 7,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512001900,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727553032,
+        "itineraries": 6,
         "routeStopCounts": [
           6,
           6,
           6,
           6,
-          6
+          6,
+          5,
+          2
         ],
-        "durationMs": 1037.9781
+        "durationMs": 1015.9131
       }
     },
     {
@@ -3000,20 +3014,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 1463.0237,
+      "durationMs": 1011.1823,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512004944,
+        "requestStartedAtMillis": 1791727556054,
         "itineraries": 5,
         "routeStopCounts": [
-          4,
-          2,
           5,
-          4,
-          4
+          3,
+          5,
+          5,
+          5
         ],
-        "durationMs": 1461.239
+        "durationMs": 1009.7434
       }
     },
     {
@@ -3041,17 +3055,21 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 506.3158,
-      "transitRoutes": 2,
+      "durationMs": 1005.3483,
+      "transitRoutes": 6,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512008411,
-        "itineraries": 2,
+        "requestStartedAtMillis": 1791727559070,
+        "itineraries": 6,
         "routeStopCounts": [
+          2,
+          2,
+          2,
+          2,
           2,
           2
         ],
-        "durationMs": 505.1801
+        "durationMs": 1003.7865
       }
     },
     {
@@ -3079,17 +3097,23 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 1067.76,
-      "transitRoutes": 2,
+      "durationMs": 1037.6922,
+      "transitRoutes": 8,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512010922,
-        "itineraries": 2,
+        "requestStartedAtMillis": 1791727562079,
+        "itineraries": 8,
         "routeStopCounts": [
+          2,
+          3,
+          5,
           4,
-          4
+          2,
+          2,
+          2,
+          5
         ],
-        "durationMs": 1066.4477
+        "durationMs": 1036.8119
       }
     },
     {
@@ -3117,14 +3141,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 930.9085,
+      "durationMs": 973.0198,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512013993,
+        "requestStartedAtMillis": 1791727565121,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 930.1751
+        "durationMs": 971.598
       }
     },
     {
@@ -3152,20 +3176,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 1007.6764,
+      "durationMs": 975.7085,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512016929,
+        "requestStartedAtMillis": 1791727568099,
         "itineraries": 5,
         "routeStopCounts": [
           9,
+          3,
           9,
           10,
-          9,
           9
         ],
-        "durationMs": 1006.0383
+        "durationMs": 974.0719
       }
     },
     {
@@ -3193,14 +3217,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 997.5331,
+      "durationMs": 991.3236,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512019940,
+        "requestStartedAtMillis": 1791727571077,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 996.8262
+        "durationMs": 990.0807
       }
     },
     {
@@ -3228,20 +3252,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 1006.091,
+      "durationMs": 996.0794,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512022943,
+        "requestStartedAtMillis": 1791727574074,
         "itineraries": 5,
         "routeStopCounts": [
           2,
-          3,
+          2,
           2,
           2,
           2
         ],
-        "durationMs": 1004.0399
+        "durationMs": 994.9747
       }
     },
     {
@@ -3269,14 +3293,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 990.758,
+      "durationMs": 1006.8002,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512025953,
+        "requestStartedAtMillis": 1791727577074,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 989.5836
+        "durationMs": 1005.9965
       }
     },
     {
@@ -3304,14 +3328,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 994.3248,
+      "durationMs": 1002.7865,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512028947,
+        "requestStartedAtMillis": 1791727580087,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 993.2729
+        "durationMs": 1001.1379
       }
     },
     {
@@ -3339,25 +3363,26 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 1019.1107,
-      "transitRoutes": 10,
+      "durationMs": 1034.3116,
+      "transitRoutes": 11,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512031946,
+        "requestStartedAtMillis": 1791727583093,
         "itineraries": 5,
         "routeStopCounts": [
+          8,
+          12,
+          3,
+          2,
           7,
           12,
-          7,
-          12,
-          7,
-          12,
-          7,
-          12,
+          3,
+          5,
+          2,
           7,
           12
         ],
-        "durationMs": 1017.2058
+        "durationMs": 1033.3453
       }
     },
     {
@@ -3385,11 +3410,11 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 991.4953,
+      "durationMs": 967.182,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512034971,
+        "requestStartedAtMillis": 1791727586134,
         "itineraries": 5,
         "routeStopCounts": [
           5,
@@ -3398,7 +3423,7 @@
           5,
           5
         ],
-        "durationMs": 990.3496
+        "durationMs": 965.5143
       }
     },
     {
@@ -3426,11 +3451,11 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 1003.0346,
+      "durationMs": 1009.3027,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512037967,
+        "requestStartedAtMillis": 1791727589104,
         "itineraries": 5,
         "routeStopCounts": [
           12,
@@ -3439,7 +3464,7 @@
           12,
           12
         ],
-        "durationMs": 1000.9133
+        "durationMs": 1007.6885
       }
     },
     {
@@ -3467,14 +3492,19 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 988.4124,
-      "transitRoutes": 0,
+      "durationMs": 989.912,
+      "transitRoutes": 4,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512040976,
-        "itineraries": 0,
-        "routeStopCounts": [],
-        "durationMs": 986.958
+        "requestStartedAtMillis": 1791727592122,
+        "itineraries": 3,
+        "routeStopCounts": [
+          4,
+          6,
+          5,
+          3
+        ],
+        "durationMs": 988.4419
       }
     },
     {
@@ -3502,22 +3532,22 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 1029.0505,
+      "durationMs": 1030.1824,
       "transitRoutes": 7,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512043969,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727595117,
+        "itineraries": 6,
         "routeStopCounts": [
           9,
+          7,
+          11,
+          6,
           9,
-          9,
-          9,
-          3,
-          3,
-          3
+          6,
+          4
         ],
-        "durationMs": 1027.3374
+        "durationMs": 1028.6259
       }
     },
     {
@@ -3545,24 +3575,27 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 1088.5743,
-      "transitRoutes": 9,
+      "durationMs": 1350.2655,
+      "transitRoutes": 12,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512047003,
+        "requestStartedAtMillis": 1791727598152,
         "itineraries": 5,
         "routeStopCounts": [
-          6,
-          8,
+          34,
+          4,
           6,
           3,
-          5,
-          10,
           4,
-          11,
-          4
+          3,
+          2,
+          2,
+          7,
+          2,
+          4,
+          12
         ],
-        "durationMs": 1086.9666
+        "durationMs": 1346.7669
       }
     },
     {
@@ -3590,14 +3623,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 903.4235,
+      "durationMs": 634.927,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512050098,
+        "requestStartedAtMillis": 1791727601508,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 902.6492
+        "durationMs": 633.7672
       }
     },
     {
@@ -3625,26 +3658,26 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 1383.8835,
+      "durationMs": 1039.6395,
       "transitRoutes": 11,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512053007,
+        "requestStartedAtMillis": 1791727604147,
         "itineraries": 5,
         "routeStopCounts": [
-          10,
-          29,
-          10,
-          29,
-          10,
-          29,
-          13,
-          4,
+          5,
+          3,
+          5,
+          7,
+          5,
+          5,
           2,
-          10,
-          29
+          5,
+          3,
+          5,
+          7
         ],
-        "durationMs": 1378.3578
+        "durationMs": 1036.1662
       }
     },
     {
@@ -3672,14 +3705,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 562.0653,
+      "durationMs": 891.5102,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512056395,
+        "requestStartedAtMillis": 1791727607194,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 561.0066
+        "durationMs": 890.2527
       }
     },
     {
@@ -3699,35 +3732,31 @@
         "type": "IN_VEHICLE",
         "confidence": 100
       },
-      "predictedMode": "CAR",
-      "confidence": 55,
-      "correct": false,
+      "predictedMode": "PUBLIC_TRANSPORT",
+      "confidence": 75,
+      "correct": true,
       "recordingAvailable": true,
       "classifierCalled": true,
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 1860.8317,
-      "transitRoutes": 12,
+      "durationMs": 1378.627,
+      "transitRoutes": 8,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512058963,
+        "requestStartedAtMillis": 1791727610090,
         "itineraries": 5,
         "routeStopCounts": [
-          37,
-          72,
-          37,
-          54,
+          12,
           18,
-          37,
-          72,
-          37,
-          54,
+          4,
           18,
-          37,
-          72
+          31,
+          5,
+          18,
+          31
         ],
-        "durationMs": 1851.8835
+        "durationMs": 1376.7381
       }
     },
     {
@@ -3755,14 +3784,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 439.1805,
+      "durationMs": 662.0297,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512062829,
+        "requestStartedAtMillis": 1791727613473,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 437.7709
+        "durationMs": 661.1792
       }
     },
     {
@@ -3782,28 +3811,28 @@
         "type": "IN_VEHICLE",
         "confidence": 96
       },
-      "predictedMode": "CAR",
-      "confidence": 55,
-      "correct": false,
+      "predictedMode": "PUBLIC_TRANSPORT",
+      "confidence": 75,
+      "correct": true,
       "recordingAvailable": true,
       "classifierCalled": true,
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 774.2335,
+      "durationMs": 1084.6982,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512065274,
+        "requestStartedAtMillis": 1791727616139,
         "itineraries": 5,
         "routeStopCounts": [
-          42,
-          42,
-          42,
-          42,
-          42
+          10,
+          10,
+          10,
+          10,
+          10
         ],
-        "durationMs": 768.1417
+        "durationMs": 1083.6004
       }
     },
     {
@@ -3831,14 +3860,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 976.7859,
+      "durationMs": 927.0362,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791512068054,
+        "requestStartedAtMillis": 1791727619230,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 975.6083
+        "durationMs": 924.0972
       }
     },
     {
@@ -3858,24 +3887,28 @@
         "type": "IN_VEHICLE",
         "confidence": 100
       },
-      "predictedMode": "CAR",
-      "confidence": 55,
-      "correct": false,
+      "predictedMode": "PUBLIC_TRANSPORT",
+      "confidence": 75,
+      "correct": true,
       "recordingAvailable": true,
       "classifierCalled": true,
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 16927.6798,
-      "transitRoutes": 0,
+      "durationMs": 1013.7183,
+      "transitRoutes": 5,
       "planner": {
-        "status": "error",
-        "requestStartedAtMillis": 1791512071036,
-        "error": {
-          "type": "SocketTimeoutException",
-          "message": "timeout"
-        },
-        "durationMs": 16925.7443
+        "status": "success",
+        "requestStartedAtMillis": 1791727622207,
+        "itineraries": 5,
+        "routeStopCounts": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "durationMs": 1012.8433
       }
     },
     {
@@ -3903,14 +3936,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 1958.7609,
+      "durationMs": 919.9126,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513164026,
+        "requestStartedAtMillis": 1791727625226,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 1957.7223
+        "durationMs": 919.143
       }
     },
     {
@@ -3938,16 +3971,19 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 511.2118,
-      "transitRoutes": 1,
+      "durationMs": 1066.5619,
+      "transitRoutes": 4,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513167989,
-        "itineraries": 1,
+        "requestStartedAtMillis": 1791727628152,
+        "itineraries": 4,
         "routeStopCounts": [
+          2,
+          2,
+          2,
           2
         ],
-        "durationMs": 510.6037
+        "durationMs": 1065.4782
       }
     },
     {
@@ -3975,14 +4011,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 429.9287,
+      "durationMs": 970.7445,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513170505,
+        "requestStartedAtMillis": 1791727631225,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 429.2858
+        "durationMs": 969.5764
       }
     },
     {
@@ -4002,34 +4038,28 @@
         "type": "IN_VEHICLE",
         "confidence": 100
       },
-      "predictedMode": "CAR",
-      "confidence": 55,
-      "correct": false,
+      "predictedMode": "PUBLIC_TRANSPORT",
+      "confidence": 75,
+      "correct": true,
       "recordingAvailable": true,
       "classifierCalled": true,
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 990.3623,
-      "transitRoutes": 11,
+      "durationMs": 1007.1474,
+      "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513172940,
-        "itineraries": 6,
+        "requestStartedAtMillis": 1791727634202,
+        "itineraries": 5,
         "routeStopCounts": [
-          9,
-          14,
-          15,
-          9,
-          9,
-          14,
-          15,
-          16,
-          20,
-          12,
-          9
+          4,
+          4,
+          4,
+          4,
+          4
         ],
-        "durationMs": 986.1441
+        "durationMs": 1006.0791
       }
     },
     {
@@ -4057,14 +4087,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 444.5346,
+      "durationMs": 948.997,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513175937,
+        "requestStartedAtMillis": 1791727637214,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 443.5976
+        "durationMs": 947.7447
       }
     },
     {
@@ -4084,32 +4114,31 @@
         "type": "IN_VEHICLE",
         "confidence": 100
       },
-      "predictedMode": "CAR",
-      "confidence": 55,
-      "correct": false,
+      "predictedMode": "PUBLIC_TRANSPORT",
+      "confidence": 75,
+      "correct": true,
       "recordingAvailable": true,
       "classifierCalled": true,
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 930.037,
-      "transitRoutes": 9,
+      "durationMs": 1105.0159,
+      "transitRoutes": 8,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513178385,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727640169,
+        "itineraries": 7,
         "routeStopCounts": [
-          14,
-          7,
-          16,
-          12,
-          10,
-          11,
-          16,
-          2,
-          17
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          2
         ],
-        "durationMs": 926.7101
+        "durationMs": 1104.1307
       }
     },
     {
@@ -4137,14 +4166,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 407.2527,
+      "durationMs": 863.077,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513181326,
+        "requestStartedAtMillis": 1791727643281,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 405.8152
+        "durationMs": 861.8873
       }
     },
     {
@@ -4172,28 +4201,28 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 886.3121,
+      "durationMs": 1117.2418,
       "transitRoutes": 13,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513183738,
+        "requestStartedAtMillis": 1791727646150,
         "itineraries": 5,
         "routeStopCounts": [
-          29,
-          12,
-          22,
+          5,
           2,
-          12,
-          23,
-          10,
           3,
-          22,
+          5,
+          10,
+          5,
           2,
-          9,
-          29,
-          10
+          5,
+          5,
+          10,
+          5,
+          2,
+          6
         ],
-        "durationMs": 881.4263
+        "durationMs": 1113.8234
       }
     },
     {
@@ -4221,14 +4250,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 428.4358,
+      "durationMs": 935.8489,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513186629,
+        "requestStartedAtMillis": 1791727649275,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 427.714
+        "durationMs": 934.2164
       }
     },
     {
@@ -4256,14 +4285,17 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 433.9039,
-      "transitRoutes": 0,
+      "durationMs": 1057.2695,
+      "transitRoutes": 2,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513189065,
-        "itineraries": 0,
-        "routeStopCounts": [],
-        "durationMs": 432.8439
+        "requestStartedAtMillis": 1791727652216,
+        "itineraries": 2,
+        "routeStopCounts": [
+          2,
+          4
+        ],
+        "durationMs": 1055.6086
       }
     },
     {
@@ -4291,20 +4323,26 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 451.6847,
-      "transitRoutes": 5,
+      "durationMs": 932.1023,
+      "transitRoutes": 11,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513191505,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727655279,
+        "itineraries": 7,
         "routeStopCounts": [
           7,
+          6,
+          5,
+          4,
           7,
-          7,
-          7,
-          7
+          2,
+          6,
+          12,
+          17,
+          3,
+          2
         ],
-        "durationMs": 449.564
+        "durationMs": 930.6491
       }
     },
     {
@@ -4332,14 +4370,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 467.0421,
+      "durationMs": 965.0774,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513193962,
+        "requestStartedAtMillis": 1791727658217,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 466.3804
+        "durationMs": 963.985
       }
     },
     {
@@ -4367,14 +4405,16 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 423.5322,
-      "transitRoutes": 0,
+      "durationMs": 1026.508,
+      "transitRoutes": 1,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513196434,
-        "itineraries": 0,
-        "routeStopCounts": [],
-        "durationMs": 422.9586
+        "requestStartedAtMillis": 1791727661187,
+        "itineraries": 1,
+        "routeStopCounts": [
+          2
+        ],
+        "durationMs": 1024.8462
       }
     },
     {
@@ -4402,20 +4442,22 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 459.798,
-      "transitRoutes": 5,
+      "durationMs": 1017.988,
+      "transitRoutes": 7,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513198864,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727664220,
+        "itineraries": 6,
         "routeStopCounts": [
+          9,
+          8,
+          4,
           2,
           2,
           7,
-          2,
-          2
+          3
         ],
-        "durationMs": 458.2464
+        "durationMs": 1016.3639
       }
     },
     {
@@ -4443,14 +4485,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 426.8602,
+      "durationMs": 973.1922,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513201330,
+        "requestStartedAtMillis": 1791727667243,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 425.958
+        "durationMs": 971.8401
       }
     },
     {
@@ -4478,14 +4520,16 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 432.3042,
-      "transitRoutes": 0,
+      "durationMs": 999.4611,
+      "transitRoutes": 1,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513203765,
-        "itineraries": 0,
-        "routeStopCounts": [],
-        "durationMs": 431.5356
+        "requestStartedAtMillis": 1791727670223,
+        "itineraries": 1,
+        "routeStopCounts": [
+          2
+        ],
+        "durationMs": 998.4397
       }
     },
     {
@@ -4513,27 +4557,24 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 864.0279,
-      "transitRoutes": 12,
+      "durationMs": 1365.9855,
+      "transitRoutes": 9,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513206201,
+        "requestStartedAtMillis": 1791727673226,
         "itineraries": 5,
         "routeStopCounts": [
-          73,
-          56,
-          3,
-          3,
-          37,
+          57,
+          4,
+          57,
+          2,
           6,
-          37,
-          82,
-          38,
-          3,
-          6,
-          37
+          36,
+          57,
+          4,
+          57
         ],
-        "durationMs": 843.9892
+        "durationMs": 1351.5016
       }
     },
     {
@@ -4561,14 +4602,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 405.7103,
+      "durationMs": 605.238,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513209072,
+        "requestStartedAtMillis": 1791727676598,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 404.8501
+        "durationMs": 603.5135
       }
     },
     {
@@ -4596,14 +4637,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 419.3498,
+      "durationMs": 1017.9953,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513211483,
+        "requestStartedAtMillis": 1791727679208,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 418.3803
+        "durationMs": 1016.8646
       }
     },
     {
@@ -4631,14 +4672,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 432.024,
+      "durationMs": 1008.0113,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513213908,
+        "requestStartedAtMillis": 1791727682232,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 431.2637
+        "durationMs": 1006.7691
       }
     },
     {
@@ -4666,14 +4707,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 429.7968,
+      "durationMs": 988.6008,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513216345,
+        "requestStartedAtMillis": 1791727685245,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 429.0439
+        "durationMs": 987.8387
       }
     },
     {
@@ -4701,14 +4742,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 410.2221,
+      "durationMs": 981.1961,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513218779,
+        "requestStartedAtMillis": 1791727688241,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 408.8671
+        "durationMs": 979.6896
       }
     },
     {
@@ -4736,14 +4777,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 404.9085,
+      "durationMs": 1004.5265,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513221194,
+        "requestStartedAtMillis": 1791727691227,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 404.0612
+        "durationMs": 1002.8534
       }
     },
     {
@@ -4771,14 +4812,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 417.1593,
+      "durationMs": 1007.2208,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513223605,
+        "requestStartedAtMillis": 1791727694236,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 415.3771
+        "durationMs": 1005.4565
       }
     },
     {
@@ -4806,14 +4847,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 389.8613,
+      "durationMs": 974.9145,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513226027,
+        "requestStartedAtMillis": 1791727697249,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 389.1024
+        "durationMs": 973.5028
       }
     },
     {
@@ -4841,14 +4882,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 405.005,
+      "durationMs": 1011.714,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513228424,
+        "requestStartedAtMillis": 1791727700231,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 403.8441
+        "durationMs": 1009.4726
       }
     },
     {
@@ -4876,14 +4917,16 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 446.3274,
-      "transitRoutes": 0,
+      "durationMs": 1060.0784,
+      "transitRoutes": 1,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513230836,
-        "itineraries": 0,
-        "routeStopCounts": [],
-        "durationMs": 445.5079
+        "requestStartedAtMillis": 1791727703250,
+        "itineraries": 1,
+        "routeStopCounts": [
+          2
+        ],
+        "durationMs": 1058.8868
       }
     },
     {
@@ -4911,26 +4954,29 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 480.2272,
-      "transitRoutes": 11,
+      "durationMs": 1371.4732,
+      "transitRoutes": 14,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513233289,
-        "itineraries": 6,
+        "requestStartedAtMillis": 1791727706315,
+        "itineraries": 5,
         "routeStopCounts": [
-          20,
-          7,
           5,
-          9,
-          5,
+          3,
           4,
           4,
           6,
+          4,
+          2,
+          2,
+          25,
+          9,
           10,
-          5,
-          6
+          4,
+          3,
+          3
         ],
-        "durationMs": 474.9659
+        "durationMs": 1364.4464
       }
     },
     {
@@ -4958,14 +5004,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 438.9106,
+      "durationMs": 604.088,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513235776,
+        "requestStartedAtMillis": 1791727709692,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 438.1196
+        "durationMs": 603.0615
       }
     },
     {
@@ -4993,26 +5039,33 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 840.917,
-      "transitRoutes": 11,
+      "durationMs": 1359.0765,
+      "transitRoutes": 18,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513238219,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727712303,
+        "itineraries": 9,
         "routeStopCounts": [
-          27,
-          24,
-          54,
-          51,
-          57,
-          43,
-          11,
-          14,
           31,
+          12,
           20,
+          10,
+          8,
+          11,
+          31,
+          12,
+          20,
+          10,
+          8,
+          11,
+          31,
+          12,
+          20,
+          10,
+          8,
           11
         ],
-        "durationMs": 837.0634
+        "durationMs": 1357.234
       }
     },
     {
@@ -5032,31 +5085,34 @@
         "type": "IN_VEHICLE",
         "confidence": 100
       },
-      "predictedMode": "CAR",
-      "confidence": 55,
-      "correct": false,
+      "predictedMode": "PUBLIC_TRANSPORT",
+      "confidence": 75,
+      "correct": true,
       "recordingAvailable": true,
       "classifierCalled": true,
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 867.8605,
-      "transitRoutes": 8,
+      "durationMs": 654.7794,
+      "transitRoutes": 11,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513241066,
-        "itineraries": 5,
+        "requestStartedAtMillis": 1791727715668,
+        "itineraries": 8,
         "routeStopCounts": [
-          36,
-          17,
-          15,
-          22,
-          11,
-          36,
-          17,
-          15
+          6,
+          6,
+          2,
+          6,
+          6,
+          6,
+          2,
+          6,
+          6,
+          6,
+          2
         ],
-        "durationMs": 864.8613
+        "durationMs": 652.6934
       }
     },
     {
@@ -5081,24 +5137,27 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 479.7039,
-      "transitRoutes": 9,
+      "durationMs": 1354.4125,
+      "transitRoutes": 12,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513243942,
+        "requestStartedAtMillis": 1791727718327,
         "itineraries": 5,
         "routeStopCounts": [
-          4,
-          7,
+          12,
+          36,
           2,
-          3,
-          3,
+          12,
+          36,
           5,
-          11,
           2,
-          11
+          5,
+          2,
+          2,
+          5,
+          2
         ],
-        "durationMs": 478.0836
+        "durationMs": 1350.1243
       }
     },
     {
@@ -5118,32 +5177,28 @@
         "type": "IN_VEHICLE",
         "confidence": 100
       },
-      "predictedMode": "PUBLIC_TRANSPORT",
-      "confidence": 75,
-      "correct": true,
+      "predictedMode": "CAR",
+      "confidence": 55,
+      "correct": false,
       "recordingAvailable": true,
       "classifierCalled": true,
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 480.0421,
-      "transitRoutes": 9,
+      "durationMs": 629.0339,
+      "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513246429,
+        "requestStartedAtMillis": 1791727721687,
         "itineraries": 5,
         "routeStopCounts": [
-          2,
-          5,
-          6,
           3,
-          6,
-          5,
-          5,
-          2,
-          5
+          3,
+          3,
+          3,
+          3
         ],
-        "durationMs": 478.4777
+        "durationMs": 625.4403
       }
     },
     {
@@ -5171,14 +5226,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 422.2173,
+      "durationMs": 992.0857,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513248915,
+        "requestStartedAtMillis": 1791727724320,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 421.1068
+        "durationMs": 991.3185
       }
     },
     {
@@ -5206,20 +5261,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 518.851,
+      "durationMs": 997.4037,
       "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513251345,
+        "requestStartedAtMillis": 1791727727319,
         "itineraries": 5,
         "routeStopCounts": [
           7,
-          7,
+          4,
           4,
           7,
           4
         ],
-        "durationMs": 517.7789
+        "durationMs": 996.1673
       }
     },
     {
@@ -5247,14 +5302,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 417.0789,
+      "durationMs": 985.0274,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513253869,
+        "requestStartedAtMillis": 1791727730321,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 415.8224
+        "durationMs": 983.922
       }
     },
     {
@@ -5282,14 +5337,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 415.5612,
+      "durationMs": 996.8595,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513256294,
+        "requestStartedAtMillis": 1791727733313,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 414.5614
+        "durationMs": 994.8294
       }
     },
     {
@@ -5317,21 +5372,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 449.0111,
-      "transitRoutes": 6,
+      "durationMs": 1041.9586,
+      "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513258715,
+        "requestStartedAtMillis": 1791727736320,
         "itineraries": 5,
         "routeStopCounts": [
+          4,
           6,
           6,
-          2,
-          9,
           6,
           6
         ],
-        "durationMs": 448.09
+        "durationMs": 1040.6098
       }
     },
     {
@@ -5359,21 +5413,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 466.8039,
-      "transitRoutes": 6,
+      "durationMs": 971.5573,
+      "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513261171,
+        "requestStartedAtMillis": 1791727739367,
         "itineraries": 5,
         "routeStopCounts": [
-          17,
-          17,
-          17,
-          2,
+          19,
+          18,
+          18,
           19,
           18
         ],
-        "durationMs": 465.7319
+        "durationMs": 969.5196
       }
     },
     {
@@ -5401,20 +5454,22 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 476.6399,
-      "transitRoutes": 5,
+      "durationMs": 1013.4626,
+      "transitRoutes": 7,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513263645,
+        "requestStartedAtMillis": 1791727742347,
         "itineraries": 5,
         "routeStopCounts": [
+          8,
+          2,
+          7,
           30,
-          43,
-          30,
-          30,
-          30
+          2,
+          29,
+          8
         ],
-        "durationMs": 473.991
+        "durationMs": 1010.2381
       }
     },
     {
@@ -5442,14 +5497,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 415.0053,
+      "durationMs": 962.2426,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513266127,
+        "requestStartedAtMillis": 1791727745368,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 413.3999
+        "durationMs": 960.6124
       }
     },
     {
@@ -5477,27 +5532,26 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 843.9736,
-      "transitRoutes": 12,
+      "durationMs": 1371.7052,
+      "transitRoutes": 11,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513268548,
+        "requestStartedAtMillis": 1791727748336,
         "itineraries": 5,
         "routeStopCounts": [
           27,
-          20,
-          38,
-          23,
-          14,
           22,
-          6,
-          14,
+          13,
+          2,
+          5,
+          7,
+          21,
           27,
           21,
           7,
-          21
+          22
         ],
-        "durationMs": 837.4302
+        "durationMs": 1366.0338
       }
     },
     {
@@ -5525,14 +5579,16 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 415.1326,
-      "transitRoutes": 0,
+      "durationMs": 634.5725,
+      "transitRoutes": 1,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513271401,
-        "itineraries": 0,
-        "routeStopCounts": [],
-        "durationMs": 414.1161
+        "requestStartedAtMillis": 1791727751713,
+        "itineraries": 1,
+        "routeStopCounts": [
+          2
+        ],
+        "durationMs": 633.0775
       }
     },
     {
@@ -5557,14 +5613,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 418.7698,
+      "durationMs": 964.0074,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513273821,
+        "requestStartedAtMillis": 1791727754352,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 418.0231
+        "durationMs": 963.5372
       }
     },
     {
@@ -5592,21 +5648,23 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 444.2066,
-      "transitRoutes": 6,
+      "durationMs": 1060.248,
+      "transitRoutes": 8,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513276247,
+        "requestStartedAtMillis": 1791727757323,
         "itineraries": 5,
         "routeStopCounts": [
-          11,
-          4,
+          5,
           7,
-          12,
-          12,
-          9
+          11,
+          5,
+          7,
+          11,
+          5,
+          7
         ],
-        "durationMs": 442.55
+        "durationMs": 1057.7467
       }
     },
     {
@@ -5634,14 +5692,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 428.4374,
+      "durationMs": 971.8144,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513278698,
+        "requestStartedAtMillis": 1791727760388,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 427.7812
+        "durationMs": 970.7368
       }
     },
     {
@@ -5669,21 +5727,21 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 446.9504,
+      "durationMs": 1021.9618,
       "transitRoutes": 6,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513281134,
+        "requestStartedAtMillis": 1791727763366,
         "itineraries": 5,
         "routeStopCounts": [
-          3,
-          19,
           11,
           11,
           11,
+          14,
+          2,
           11
         ],
-        "durationMs": 445.7952
+        "durationMs": 1020.7546
       }
     },
     {
@@ -5711,23 +5769,21 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 444.085,
-      "transitRoutes": 8,
+      "durationMs": 986.9691,
+      "transitRoutes": 6,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513283588,
+        "requestStartedAtMillis": 1791727766394,
         "itineraries": 5,
         "routeStopCounts": [
           11,
           11,
-          19,
-          3,
-          19,
-          3,
           2,
+          14,
+          11,
           11
         ],
-        "durationMs": 443.3871
+        "durationMs": 985.4113
       }
     },
     {
@@ -5755,19 +5811,20 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 439.8315,
-      "transitRoutes": 4,
+      "durationMs": 1041.8513,
+      "transitRoutes": 5,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513286039,
-        "itineraries": 4,
+        "requestStartedAtMillis": 1791727769387,
+        "itineraries": 5,
         "routeStopCounts": [
           2,
           2,
           2,
-          3
+          2,
+          2
         ],
-        "durationMs": 438.7997
+        "durationMs": 1040.4542
       }
     },
     {
@@ -5795,22 +5852,22 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 443.9363,
+      "durationMs": 962.9072,
       "transitRoutes": 7,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513288484,
+        "requestStartedAtMillis": 1791727772434,
         "itineraries": 5,
         "routeStopCounts": [
-          13,
+          11,
           7,
           5,
-          13,
+          11,
           7,
           5,
-          13
+          11
         ],
-        "durationMs": 439.6895
+        "durationMs": 960.1873
       }
     },
     {
@@ -5838,14 +5895,14 @@
       "classificationCompleted": true,
       "runtimeSuccess": true,
       "timedOut": false,
-      "durationMs": 477.7319,
+      "durationMs": 971.8349,
       "transitRoutes": 0,
       "planner": {
         "status": "success",
-        "requestStartedAtMillis": 1791513290938,
+        "requestStartedAtMillis": 1791727775406,
         "itineraries": 0,
         "routeStopCounts": [],
-        "durationMs": 476.0065
+        "durationMs": 970.7008
       }
     }
   ],
@@ -5853,20 +5910,20 @@
   "skippedSamples": 0,
   "summary": {
     "totalSamples": 138,
-    "correctSamples": 113,
-    "incorrectSamples": 25,
-    "accuracy": 0.8188405797101449,
+    "correctSamples": 122,
+    "incorrectSamples": 16,
+    "accuracy": 0.8840579710144928,
     "unknownSamples": 0,
     "unknownRate": 0,
     "classifiedSamples": 138,
     "coverage": 1,
-    "accuracyAmongClassified": 0.8188405797101449,
+    "accuracyAmongClassified": 0.8840579710144928,
     "runtimeErrors": 0,
     "recordingFailures": 0,
     "latencySamples": 138,
-    "p50Ms": 453.1546,
-    "p95Ms": 1088.5743,
-    "macroF1": 0.7800068870523417
+    "p50Ms": 964.0074,
+    "p95Ms": 1354.4125,
+    "macroF1": 0.8498510604940759
   },
   "perMode": [
     {
@@ -5892,11 +5949,11 @@
     {
       "mode": "PUBLIC_TRANSPORT",
       "totalSamples": 45,
-      "correctSamples": 27,
-      "accuracy": 0.6,
+      "correctSamples": 36,
+      "accuracy": 0.8,
       "precision": 1,
-      "recall": 0.6,
-      "f1": 0.75,
+      "recall": 0.8,
+      "f1": 0.8888888888888888,
       "unknownRate": 0
     },
     {
@@ -5904,9 +5961,9 @@
       "totalSamples": 16,
       "correctSamples": 16,
       "accuracy": 1,
-      "precision": 0.47058823529411764,
+      "precision": 0.64,
       "recall": 1,
-      "f1": 0.64,
+      "f1": 0.7804878048780488,
       "unknownRate": 0
     }
   ],
@@ -5927,17 +5984,17 @@
     },
     {
       "mode": "PUBLIC_TRANSPORT",
-      "count": 27,
-      "share": 0.1956521739130435,
+      "count": 36,
+      "share": 0.2608695652173913,
       "incorrect": 0,
       "errorRate": 0
     },
     {
       "mode": "CAR",
-      "count": 34,
-      "share": 0.2463768115942029,
-      "incorrect": 18,
-      "errorRate": 0.5294117647058824
+      "count": 25,
+      "share": 0.18115942028985507,
+      "incorrect": 9,
+      "errorRate": 0.36
     },
     {
       "mode": "UNKNOWN",
@@ -5967,8 +6024,8 @@
     "PUBLIC_TRANSPORT": {
       "WALKING": 0,
       "CYCLING": 0,
-      "PUBLIC_TRANSPORT": 27,
-      "CAR": 18,
+      "PUBLIC_TRANSPORT": 36,
+      "CAR": 9,
       "UNKNOWN": 0,
       "ERROR": 0
     },
@@ -5982,28 +6039,27 @@
     }
   },
   "successfulOnlineSummary": {
-    "totalSamples": 137,
-    "correctSamples": 113,
-    "incorrectSamples": 24,
-    "accuracy": 0.8248175182481752,
+    "totalSamples": 138,
+    "correctSamples": 122,
+    "incorrectSamples": 16,
+    "accuracy": 0.8840579710144928,
     "unknownSamples": 0,
     "unknownRate": 0,
-    "classifiedSamples": 137,
+    "classifiedSamples": 138,
     "coverage": 1,
-    "accuracyAmongClassified": 0.8248175182481752,
+    "accuracyAmongClassified": 0.8840579710144928,
     "runtimeErrors": 0,
     "recordingFailures": 0,
-    "latencySamples": 137,
-    "p50Ms": 453.1546,
-    "p95Ms": 1067.76,
-    "macroF1": 0.7859130382452131
+    "latencySamples": 138,
+    "p50Ms": 964.0074,
+    "p95Ms": 1354.4125,
+    "macroF1": 0.8498510604940759
   },
   "plannerStatusCounts": {
-    "success": 137,
-    "error": 1
+    "success": 138
   },
-  "withTransitCandidates": 77,
+  "withTransitCandidates": 87,
   "timeouts": 0,
   "completed": true,
-  "finishedAtMillis": 1791513291424
+  "finishedAtMillis": 1791727776392
 }

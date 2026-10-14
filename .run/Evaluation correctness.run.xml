@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Evaluation - correctness" type="GradleRunConfiguration" factoryName="Gradle">
+    <ExternalSystemSettings>
+      <option name="externalProjectPath" value="$PROJECT_DIR$" />
+      <option name="externalSystemIdString" value="GRADLE" />
+      <option name="taskNames"><list><option value=":app:testDebugUnitTest" /></list></option>
+      <option name="scriptParameters" value="--tests &quot;com.ecostep.app.evaluation.*CorrectnessTest&quot;" />
+    </ExternalSystemSettings>
+    <method v="2" />
+  </configuration>
+</component>

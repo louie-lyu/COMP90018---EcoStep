@@ -1,0 +1,361 @@
+{
+  "generatedAt": "2026-10-12T23:25:17.638Z",
+  "timeZone": "Australia/Sydney",
+  "branch": "feature/evaluation",
+  "gitCommit": "880b16b8f58f8337433812dbcd13d7a490ee9dc2",
+  "originMain": "880b16b8f58f8337433812dbcd13d7a490ee9dc2",
+  "workingTreeDirty": true,
+  "historicalReportsInitiallyRemoved": 15,
+  "restoredHistoricalReports": [
+    "ai-proxy-live-evaluation-1790955335748.json"
+  ],
+  "uiTestChanges": [
+    "Poll Review controls until the configured timeout instead of failing 300ms after a rejected scroll.",
+    "Wait for Walk bounds to stabilize before clicking.",
+    "Record limited evaluation-control diagnostics on failure."
+  ],
+  "existingUncommittedSource": {
+    "path": "app/src/main/java/com/ecostep/app/ui/components/MissionEditorBottomSheet.kt",
+    "sha256": "aa743894c9023cfd8929bde7ce921a7619bd101940a9ed5aae637b9fcaeff731"
+  },
+  "environment": {
+    "device": "Pixel_8 emulator / Google sdk_gphone64_x86_64",
+    "androidVersion": "16",
+    "apiLevel": 36,
+    "buildType": "debug",
+    "networkConditions": "Host network; connection type not independently identified"
+  },
+  "offlineRunnerTests": {
+    "passed": 15,
+    "total": 15
+  },
+  "controlledChecks": {
+    "total": 323,
+    "passed": 323
+  },
+  "reportCount": 13,
+  "passedReports": 13,
+  "allReportsPassed": true,
+  "notes": [
+    "Fetched origin; current HEAD equals origin/main. No merge was needed.",
+    "Existing MissionEditorBottomSheet.kt changes were included in the build and left intact. UI evaluation source was updated to fix premature scroll failures; application source was not changed by this task.",
+    "Historical reports were removed from the local evaluation_results directory; original tracked files remain recoverable from Git history.",
+    "All Android evaluations were run sequentially with existing scripts and default sample counts. UI used 20 journeys; SHL used SamplesPerMode=10000 and Seed=42, limited by available dataset intervals.",
+    "UI test account journey creation and sending SHL endpoints to Transitous were explicitly authorized by the user.",
+    "At user request, live AI uses the restored historical proxy report (18/18); local AI uses the latest local mission evaluation (34/34), replacing the older local baseline. The historical live report is not evidence that the latest source passed live AI evaluation. The removed latest live AI run had 15 usable replies, one HTTP 429 and two skipped requests.",
+    "The original UI run and initial reruns failed while locating Confirm. Failure-control diagnostics showed Confirm was visible, enabled and clickable immediately after the premature failure. Fixed only test setup polling/stabilization; measurement boundaries are unchanged. Superseded UI report files are removed at user request; created account journeys remain.",
+    "Performance describes this debug emulator/host run, not real-phone performance. Transport test passing does not imply an accuracy target was met.",
+    "Reports have not been committed or pushed."
+  ],
+  "reports": [
+    {
+      "file": "activity-hint-transport-evaluation-1791727356719.json",
+      "startedAtMillis": 1791727356719,
+      "gitCommit": "3eec40bd485fc510dda577ba1d2a627d96f1184b",
+      "provenance": "Current evaluation run",
+      "passed": true,
+      "summary": {
+        "totalSamples": 138,
+        "correctSamples": 122,
+        "incorrectSamples": 16,
+        "accuracy": 0.8840579710144928,
+        "unknownSamples": 0,
+        "unknownRate": 0,
+        "classifiedSamples": 138,
+        "coverage": 1,
+        "accuracyAmongClassified": 0.8840579710144928,
+        "runtimeErrors": 0,
+        "recordingFailures": 0,
+        "latencySamples": 138,
+        "p50Ms": 964.0074,
+        "p95Ms": 1354.4125,
+        "macroF1": 0.8498510604940759
+      },
+      "totalSamples": 138,
+      "plannedSamples": 138,
+      "successfulOnlineSummary": {
+        "totalSamples": 138,
+        "correctSamples": 122,
+        "incorrectSamples": 16,
+        "accuracy": 0.8840579710144928,
+        "unknownSamples": 0,
+        "unknownRate": 0,
+        "classifiedSamples": 138,
+        "coverage": 1,
+        "accuracyAmongClassified": 0.8840579710144928,
+        "runtimeErrors": 0,
+        "recordingFailures": 0,
+        "latencySamples": 138,
+        "p50Ms": 964.0074,
+        "p95Ms": 1354.4125,
+        "macroF1": 0.8498510604940759
+      },
+      "plannerStatusCounts": {
+        "success": 138
+      },
+      "withTransitCandidates": 87,
+      "timeouts": 0
+    },
+    {
+      "file": "ai-mission-evaluation-1791727138705.json",
+      "startedAtMillis": 1791727138705,
+      "gitCommit": "3eec40bd485fc510dda577ba1d2a627d96f1184b",
+      "provenance": "Current evaluation run",
+      "passed": true,
+      "totalCases": 34,
+      "passedCases": 34,
+      "failedCases": 0
+    },
+    {
+      "file": "ai-proxy-live-evaluation-1790955335748.json",
+      "startedAtMillis": 1790955335748,
+      "gitCommit": "5f0144bf0bf64a76c3ed5715a1a500cb692e5c76",
+      "provenance": "Restored historical live AI baseline by user request",
+      "passed": true,
+      "configuration": {
+        "samplesPerCase": 3,
+        "intervalMs": 1000,
+        "timeoutMs": 35000,
+        "warmups": 0,
+        "retries": 0
+      },
+      "summary": {
+        "plannedRequests": 18,
+        "attemptedRequests": 18,
+        "skippedRequests": 0,
+        "httpSuccessfulRequests": 18,
+        "responseBodies": 18,
+        "proxyJsonParsedResponses": 18,
+        "proxyEnvelopeValidResponses": 18,
+        "schemaValidResponses": 18,
+        "businessValidResponses": 18,
+        "acceptedResponses": 18,
+        "timeoutRequests": 0,
+        "workerTimeoutResponses": 0,
+        "workerInvalidAiResponses": 0,
+        "completionRate": {
+          "numerator": 18,
+          "denominator": 18,
+          "value": 1
+        },
+        "httpSuccessRate": {
+          "numerator": 18,
+          "denominator": 18,
+          "value": 1
+        },
+        "proxyJsonParseRate": {
+          "numerator": 18,
+          "denominator": 18,
+          "value": 1
+        },
+        "schemaValidRateAmongEnvelopes": {
+          "numerator": 18,
+          "denominator": 18,
+          "value": 1
+        },
+        "geminiRawJsonParseRate": null,
+        "businessValidRateAmongSchemaValid": {
+          "numerator": 18,
+          "denominator": 18,
+          "value": 1
+        },
+        "appUsableRate": {
+          "numerator": 18,
+          "denominator": 18,
+          "value": 1
+        },
+        "allAttemptLatencyMs": {
+          "count": 18,
+          "meanMs": 1170.4705055555553,
+          "p50Ms": 1154.063400000001,
+          "p95Ms": 1359.4875,
+          "minMs": 1000.9305000000022,
+          "maxMs": 1359.4875
+        },
+        "httpSuccessLatencyMs": {
+          "count": 18,
+          "meanMs": 1170.4705055555553,
+          "p50Ms": 1154.063400000001,
+          "p95Ms": 1359.4875,
+          "minMs": 1000.9305000000022,
+          "maxMs": 1359.4875
+        },
+        "appUsableLatencyMs": {
+          "count": 18,
+          "meanMs": 1170.4705055555553,
+          "p50Ms": 1154.063400000001,
+          "p95Ms": 1359.4875,
+          "minMs": 1000.9305000000022,
+          "maxMs": 1359.4875
+        },
+        "passed": true
+      },
+      "stopReason": null
+    },
+    {
+      "file": "carbon-evaluation-1791727121297.json",
+      "startedAtMillis": 1791727121297,
+      "provenance": "Current evaluation run",
+      "passed": true,
+      "totalCases": 56,
+      "passedCases": 56,
+      "failedCases": 0
+    },
+    {
+      "file": "ecopoints-evaluation-1791727129822.json",
+      "startedAtMillis": 1791727129822,
+      "gitCommit": "3eec40bd485fc510dda577ba1d2a627d96f1184b",
+      "provenance": "Current evaluation run",
+      "passed": true,
+      "totalCases": 110,
+      "passedCases": 110,
+      "failedCases": 0
+    },
+    {
+      "file": "journey-ui-latency-1791728962660.json",
+      "startedAtMillis": 1791728962660,
+      "gitCommit": "3eec40bd485fc510dda577ba1d2a627d96f1184b",
+      "provenance": "Current evaluation run",
+      "passed": true,
+      "summaries": [
+        {
+          "scenario": "stop_to_review",
+          "planned": 20,
+          "attempted": 20,
+          "successful": 20,
+          "failed": 0,
+          "timeouts": 0,
+          "skipped": 0,
+          "successRate": 1,
+          "p50Ms": 770.4209,
+          "p95Ms": 1148.4654,
+          "maxMs": 2324.7319
+        },
+        {
+          "scenario": "confirm_to_feedback",
+          "planned": 20,
+          "attempted": 20,
+          "successful": 20,
+          "failed": 0,
+          "timeouts": 0,
+          "skipped": 0,
+          "successRate": 1,
+          "p50Ms": 256.1043,
+          "p95Ms": 313.7164,
+          "maxMs": 321.9779
+        }
+      ]
+    },
+    {
+      "file": "local-flow-evaluation-1791727167661.json",
+      "startedAtMillis": 1791727167661,
+      "gitCommit": "3eec40bd485fc510dda577ba1d2a627d96f1184b",
+      "provenance": "Current evaluation run",
+      "passed": true,
+      "totalCases": 25,
+      "passedCases": 25,
+      "failedCases": 0
+    },
+    {
+      "file": "mission-trigger-evaluation-1791727159083.json",
+      "startedAtMillis": 1791727159083,
+      "gitCommit": "3eec40bd485fc510dda577ba1d2a627d96f1184b",
+      "provenance": "Current evaluation run",
+      "passed": true,
+      "totalCases": 29,
+      "passedCases": 29,
+      "failedCases": 0
+    },
+    {
+      "file": "recurring-evaluation-1791727175930.json",
+      "startedAtMillis": 1791727175930,
+      "gitCommit": "3eec40bd485fc510dda577ba1d2a627d96f1184b",
+      "provenance": "Current evaluation run",
+      "passed": true,
+      "totalCases": 41,
+      "passedCases": 41,
+      "failedCases": 0
+    },
+    {
+      "file": "weather-cache-1791727194940.json",
+      "startedAtMillis": 1791727194940,
+      "gitCommit": "3eec40bd485fc510dda577ba1d2a627d96f1184b",
+      "provenance": "Current evaluation run",
+      "passed": true,
+      "totalCases": 9,
+      "passedCases": 9,
+      "failedCases": 0
+    },
+    {
+      "file": "weather-latency-1791727273833.json",
+      "startedAtMillis": 1791727273833,
+      "gitCommit": "3eec40bd485fc510dda577ba1d2a627d96f1184b",
+      "provenance": "Current evaluation run",
+      "passed": true,
+      "summaries": [
+        {
+          "scenario": "weather.network.fetch",
+          "plannedSamples": 20,
+          "recordedSamples": 20,
+          "skippedSamples": 0,
+          "successfulSamples": 20,
+          "failedSamples": 0,
+          "timeoutSamples": 0,
+          "successRate": 1,
+          "p50Ms": 384.3961,
+          "p95Ms": 395.1051,
+          "skipReason": null
+        },
+        {
+          "scenario": "weather.cache.hit",
+          "plannedSamples": 100,
+          "recordedSamples": 100,
+          "skippedSamples": 0,
+          "successfulSamples": 100,
+          "failedSamples": 0,
+          "timeoutSamples": 0,
+          "successRate": 1,
+          "p50Ms": 1.1371,
+          "p95Ms": 2.1831,
+          "skipReason": null
+        }
+      ]
+    },
+    {
+      "file": "weather-recovery-1791727311136.json",
+      "startedAtMillis": 1791727311136,
+      "provenance": "Current evaluation run",
+      "passed": true,
+      "records": [
+        {
+          "scenario": "weather.network.first_fetch",
+          "durationMs": 1352.5615,
+          "outcome": "SUCCESS",
+          "errorType": null
+        },
+        {
+          "scenario": "weather.cache.hit",
+          "durationMs": 1.288,
+          "outcome": "SUCCESS",
+          "errorType": null
+        },
+        {
+          "scenario": "weather.network.refresh",
+          "durationMs": 1414.1063,
+          "outcome": "SUCCESS",
+          "errorType": null
+        }
+      ]
+    },
+    {
+      "file": "weekly-coach-evaluation-1791727146881.json",
+      "startedAtMillis": 1791727146881,
+      "gitCommit": "3eec40bd485fc510dda577ba1d2a627d96f1184b",
+      "provenance": "Current evaluation run",
+      "passed": true,
+      "totalCases": 19,
+      "passedCases": 19,
+      "failedCases": 0
+    }
+  ]
+}

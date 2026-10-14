@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "calculator": "DefaultCarbonCalculator",
-  "startedAtMillis": 1790680817503,
-  "finishedAtMillis": 1790680817507,
+  "startedAtMillis": 1791727121297,
+  "finishedAtMillis": 1791727121318,
   "device": "Google sdk_gphone64_x86_64; Android 16",
   "scope": "Correctness with provisional factors: WALKING=0, CYCLING=0, PUBLIC_TRANSPORT=89, CAR=192 g\/km. Not validation of real-world emissions or a latency benchmark.",
   "nonFiniteEncoding": "NaN and infinities are strings because JSON numbers must be finite.",

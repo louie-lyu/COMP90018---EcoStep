@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "datasetVersion": 1,
-  "startedAtMillis": 1790785308986,
-  "gitCommit": "7b26fa8ec554e6f23db06c52fdc8dd7fa17de4bf",
+  "startedAtMillis": 1791727167661,
+  "gitCommit": "3eec40bd485fc510dda577ba1d2a627d96f1184b",
   "workingTreeDirty": true,
   "device": "Google sdk_gphone64_x86_64",
   "androidVersion": "16",
@@ -387,7 +387,7 @@
         "missionMode": "WALKING",
         "missionSavingGrams": 0.192,
         "actualSavingGrams": 0.192,
-        "points": 20,
+        "points": 0,
         "weeklyAccepted": 1,
         "weeklyCompleted": 1,
         "weeklyRate": 100,
@@ -416,10 +416,10 @@
               "missionSavingGrams": 0.192,
               "actualMode": "WALKING",
               "actualSavingGrams": 0.192,
-              "points": 20
+              "points": 0
             }
           ],
-          "totalPoints": 20,
+          "totalPoints": 0,
           "weekly": {
             "acceptedMissions": 1,
             "completedMissions": 1,
@@ -1135,311 +1135,311 @@
       "successfulSamples": 50,
       "failedSamples": 0,
       "skippedSamples": 0,
-      "p50BatchMs": 0.692843,
-      "p95BatchMs": 4.433364,
-      "p50AveragePerCallUs": 69.2843,
-      "p95AveragePerCallUs": 443.3364,
+      "p50BatchMs": 1.9571,
+      "p95BatchMs": 7.8094,
+      "p50AveragePerCallUs": 195.71,
+      "p95AveragePerCallUs": 780.94,
       "passed": true,
       "records": [
         {
           "sample": 1,
           "passed": true,
-          "batchDurationMs": 4.076588,
-          "averagePerCallUs": 407.65880000000004
+          "batchDurationMs": 8.9933,
+          "averagePerCallUs": 899.3299999999999
         },
         {
           "sample": 2,
           "passed": true,
-          "batchDurationMs": 4.195618,
-          "averagePerCallUs": 419.56179999999995
+          "batchDurationMs": 8.8328,
+          "averagePerCallUs": 883.2800000000001
         },
         {
           "sample": 3,
           "passed": true,
-          "batchDurationMs": 4.286316,
-          "averagePerCallUs": 428.6316
+          "batchDurationMs": 6.7451,
+          "averagePerCallUs": 674.51
         },
         {
           "sample": 4,
           "passed": true,
-          "batchDurationMs": 4.202822,
-          "averagePerCallUs": 420.2822
+          "batchDurationMs": 7.8094,
+          "averagePerCallUs": 780.94
         },
         {
           "sample": 5,
           "passed": true,
-          "batchDurationMs": 3.932918,
-          "averagePerCallUs": 393.2918
+          "batchDurationMs": 6.7914,
+          "averagePerCallUs": 679.1400000000001
         },
         {
           "sample": 6,
           "passed": true,
-          "batchDurationMs": 4.042193,
-          "averagePerCallUs": 404.21930000000003
+          "batchDurationMs": 5.4244,
+          "averagePerCallUs": 542.44
         },
         {
           "sample": 7,
           "passed": true,
-          "batchDurationMs": 4.845102,
-          "averagePerCallUs": 484.5102
+          "batchDurationMs": 3.5368,
+          "averagePerCallUs": 353.67999999999995
         },
         {
           "sample": 8,
           "passed": true,
-          "batchDurationMs": 4.746415,
-          "averagePerCallUs": 474.6415
+          "batchDurationMs": 2.8012,
+          "averagePerCallUs": 280.12
         },
         {
           "sample": 9,
           "passed": true,
-          "batchDurationMs": 4.433364,
-          "averagePerCallUs": 443.3364
+          "batchDurationMs": 3.4222,
+          "averagePerCallUs": 342.22
         },
         {
           "sample": 10,
           "passed": true,
-          "batchDurationMs": 3.844038,
-          "averagePerCallUs": 384.4038
+          "batchDurationMs": 1.8537,
+          "averagePerCallUs": 185.36999999999998
         },
         {
           "sample": 11,
           "passed": true,
-          "batchDurationMs": 3.408668,
-          "averagePerCallUs": 340.8668
+          "batchDurationMs": 1.7975,
+          "averagePerCallUs": 179.75
         },
         {
           "sample": 12,
           "passed": true,
-          "batchDurationMs": 1.849342,
-          "averagePerCallUs": 184.9342
+          "batchDurationMs": 0.8195,
+          "averagePerCallUs": 81.95
         },
         {
           "sample": 13,
           "passed": true,
-          "batchDurationMs": 1.245122,
-          "averagePerCallUs": 124.5122
+          "batchDurationMs": 1.9707,
+          "averagePerCallUs": 197.07
         },
         {
           "sample": 14,
           "passed": true,
-          "batchDurationMs": 1.376878,
-          "averagePerCallUs": 137.6878
+          "batchDurationMs": 2.2218,
+          "averagePerCallUs": 222.18
         },
         {
           "sample": 15,
           "passed": true,
-          "batchDurationMs": 0.913177,
-          "averagePerCallUs": 91.3177
+          "batchDurationMs": 2.5725,
+          "averagePerCallUs": 257.25
         },
         {
           "sample": 16,
           "passed": true,
-          "batchDurationMs": 0.661266,
-          "averagePerCallUs": 66.12660000000001
+          "batchDurationMs": 1.8304,
+          "averagePerCallUs": 183.04000000000002
         },
         {
           "sample": 17,
           "passed": true,
-          "batchDurationMs": 0.658354,
-          "averagePerCallUs": 65.8354
+          "batchDurationMs": 2.0784,
+          "averagePerCallUs": 207.83999999999997
         },
         {
           "sample": 18,
           "passed": true,
-          "batchDurationMs": 0.748857,
-          "averagePerCallUs": 74.8857
+          "batchDurationMs": 2.0225,
+          "averagePerCallUs": 202.25
         },
         {
           "sample": 19,
           "passed": true,
-          "batchDurationMs": 0.677081,
-          "averagePerCallUs": 67.7081
+          "batchDurationMs": 2.2111,
+          "averagePerCallUs": 221.10999999999999
         },
         {
           "sample": 20,
           "passed": true,
-          "batchDurationMs": 0.634013,
-          "averagePerCallUs": 63.401300000000006
+          "batchDurationMs": 1.7625,
+          "averagePerCallUs": 176.25
         },
         {
           "sample": 21,
           "passed": true,
-          "batchDurationMs": 0.635626,
-          "averagePerCallUs": 63.562599999999996
+          "batchDurationMs": 2.1311,
+          "averagePerCallUs": 213.10999999999999
         },
         {
           "sample": 22,
           "passed": true,
-          "batchDurationMs": 0.619177,
-          "averagePerCallUs": 61.9177
+          "batchDurationMs": 2.3668,
+          "averagePerCallUs": 236.68
         },
         {
           "sample": 23,
           "passed": true,
-          "batchDurationMs": 0.693786,
-          "averagePerCallUs": 69.3786
+          "batchDurationMs": 1.8322,
+          "averagePerCallUs": 183.22
         },
         {
           "sample": 24,
           "passed": true,
-          "batchDurationMs": 0.650781,
-          "averagePerCallUs": 65.0781
+          "batchDurationMs": 1.8811,
+          "averagePerCallUs": 188.10999999999999
         },
         {
           "sample": 25,
           "passed": true,
-          "batchDurationMs": 0.855945,
-          "averagePerCallUs": 85.5945
+          "batchDurationMs": 1.9542,
+          "averagePerCallUs": 195.42000000000002
         },
         {
           "sample": 26,
           "passed": true,
-          "batchDurationMs": 0.677574,
-          "averagePerCallUs": 67.75739999999999
+          "batchDurationMs": 1.7481,
+          "averagePerCallUs": 174.81
         },
         {
           "sample": 27,
           "passed": true,
-          "batchDurationMs": 0.648755,
-          "averagePerCallUs": 64.8755
+          "batchDurationMs": 2.1499,
+          "averagePerCallUs": 214.99
         },
         {
           "sample": 28,
           "passed": true,
-          "batchDurationMs": 0.976127,
-          "averagePerCallUs": 97.61269999999999
+          "batchDurationMs": 1.8987,
+          "averagePerCallUs": 189.87
         },
         {
           "sample": 29,
           "passed": true,
-          "batchDurationMs": 0.655925,
-          "averagePerCallUs": 65.5925
+          "batchDurationMs": 2.9535,
+          "averagePerCallUs": 295.35
         },
         {
           "sample": 30,
           "passed": true,
-          "batchDurationMs": 0.685613,
-          "averagePerCallUs": 68.5613
+          "batchDurationMs": 1.7628,
+          "averagePerCallUs": 176.28
         },
         {
           "sample": 31,
           "passed": true,
-          "batchDurationMs": 0.757804,
-          "averagePerCallUs": 75.78040000000001
+          "batchDurationMs": 1.9571,
+          "averagePerCallUs": 195.71
         },
         {
           "sample": 32,
           "passed": true,
-          "batchDurationMs": 1.03883,
-          "averagePerCallUs": 103.883
+          "batchDurationMs": 2.0557,
+          "averagePerCallUs": 205.57
         },
         {
           "sample": 33,
           "passed": true,
-          "batchDurationMs": 0.593899,
-          "averagePerCallUs": 59.3899
+          "batchDurationMs": 1.7663,
+          "averagePerCallUs": 176.63
         },
         {
           "sample": 34,
           "passed": true,
-          "batchDurationMs": 0.571543,
-          "averagePerCallUs": 57.1543
+          "batchDurationMs": 2.1273,
+          "averagePerCallUs": 212.73000000000002
         },
         {
           "sample": 35,
           "passed": true,
-          "batchDurationMs": 0.692843,
-          "averagePerCallUs": 69.2843
+          "batchDurationMs": 1.6337,
+          "averagePerCallUs": 163.36999999999998
         },
         {
           "sample": 36,
           "passed": true,
-          "batchDurationMs": 0.641356,
-          "averagePerCallUs": 64.1356
+          "batchDurationMs": 1.6792,
+          "averagePerCallUs": 167.92000000000002
         },
         {
           "sample": 37,
           "passed": true,
-          "batchDurationMs": 0.634988,
-          "averagePerCallUs": 63.498799999999996
+          "batchDurationMs": 1.6655,
+          "averagePerCallUs": 166.55
         },
         {
           "sample": 38,
           "passed": true,
-          "batchDurationMs": 0.582831,
-          "averagePerCallUs": 58.283100000000005
+          "batchDurationMs": 1.9308,
+          "averagePerCallUs": 193.08
         },
         {
           "sample": 39,
           "passed": true,
-          "batchDurationMs": 0.565606,
-          "averagePerCallUs": 56.56060000000001
+          "batchDurationMs": 2.0116,
+          "averagePerCallUs": 201.16000000000003
         },
         {
           "sample": 40,
           "passed": true,
-          "batchDurationMs": 0.631871,
-          "averagePerCallUs": 63.1871
+          "batchDurationMs": 2.1388,
+          "averagePerCallUs": 213.87999999999997
         },
         {
           "sample": 41,
           "passed": true,
-          "batchDurationMs": 0.638188,
-          "averagePerCallUs": 63.818799999999996
+          "batchDurationMs": 2.0466,
+          "averagePerCallUs": 204.66000000000003
         },
         {
           "sample": 42,
           "passed": true,
-          "batchDurationMs": 0.644558,
-          "averagePerCallUs": 64.4558
+          "batchDurationMs": 1.6708,
+          "averagePerCallUs": 167.07999999999998
         },
         {
           "sample": 43,
           "passed": true,
-          "batchDurationMs": 0.609978,
-          "averagePerCallUs": 60.997800000000005
+          "batchDurationMs": 1.5792,
+          "averagePerCallUs": 157.92000000000002
         },
         {
           "sample": 44,
           "passed": true,
-          "batchDurationMs": 0.543596,
-          "averagePerCallUs": 54.3596
+          "batchDurationMs": 1.6783,
+          "averagePerCallUs": 167.82999999999998
         },
         {
           "sample": 45,
           "passed": true,
-          "batchDurationMs": 0.786606,
-          "averagePerCallUs": 78.6606
+          "batchDurationMs": 1.591,
+          "averagePerCallUs": 159.1
         },
         {
           "sample": 46,
           "passed": true,
-          "batchDurationMs": 0.624193,
-          "averagePerCallUs": 62.4193
+          "batchDurationMs": 1.591,
+          "averagePerCallUs": 159.1
         },
         {
           "sample": 47,
           "passed": true,
-          "batchDurationMs": 0.807604,
-          "averagePerCallUs": 80.7604
+          "batchDurationMs": 1.6023,
+          "averagePerCallUs": 160.23
         },
         {
           "sample": 48,
           "passed": true,
-          "batchDurationMs": 0.577952,
-          "averagePerCallUs": 57.7952
+          "batchDurationMs": 1.6135,
+          "averagePerCallUs": 161.35
         },
         {
           "sample": 49,
           "passed": true,
-          "batchDurationMs": 0.718306,
-          "averagePerCallUs": 71.8306
+          "batchDurationMs": 2.2788,
+          "averagePerCallUs": 227.87999999999997
         },
         {
           "sample": 50,
           "passed": true,
-          "batchDurationMs": 0.841843,
-          "averagePerCallUs": 84.1843
+          "batchDurationMs": 1.3089,
+          "averagePerCallUs": 130.89
         }
       ]
     },
@@ -1454,311 +1454,311 @@
       "successfulSamples": 50,
       "failedSamples": 0,
       "skippedSamples": 0,
-      "p50BatchMs": 0.494704,
-      "p95BatchMs": 0.724762,
-      "p50AveragePerCallUs": 49.4704,
-      "p95AveragePerCallUs": 72.4762,
+      "p50BatchMs": 1.7036,
+      "p95BatchMs": 2.9909,
+      "p50AveragePerCallUs": 170.35999999999999,
+      "p95AveragePerCallUs": 299.09000000000003,
       "passed": true,
       "records": [
         {
           "sample": 1,
           "passed": true,
-          "batchDurationMs": 0.520615,
-          "averagePerCallUs": 52.0615
+          "batchDurationMs": 1.4873,
+          "averagePerCallUs": 148.73
         },
         {
           "sample": 2,
           "passed": true,
-          "batchDurationMs": 0.499277,
-          "averagePerCallUs": 49.9277
+          "batchDurationMs": 1.5077,
+          "averagePerCallUs": 150.77
         },
         {
           "sample": 3,
           "passed": true,
-          "batchDurationMs": 0.481016,
-          "averagePerCallUs": 48.101600000000005
+          "batchDurationMs": 2.0343,
+          "averagePerCallUs": 203.43
         },
         {
           "sample": 4,
           "passed": true,
-          "batchDurationMs": 0.485859,
-          "averagePerCallUs": 48.585899999999995
+          "batchDurationMs": 1.9706,
+          "averagePerCallUs": 197.06
         },
         {
           "sample": 5,
           "passed": true,
-          "batchDurationMs": 0.576549,
-          "averagePerCallUs": 57.6549
+          "batchDurationMs": 1.689,
+          "averagePerCallUs": 168.9
         },
         {
           "sample": 6,
           "passed": true,
-          "batchDurationMs": 0.727667,
-          "averagePerCallUs": 72.76669999999999
+          "batchDurationMs": 1.6238,
+          "averagePerCallUs": 162.38
         },
         {
           "sample": 7,
           "passed": true,
-          "batchDurationMs": 0.512296,
-          "averagePerCallUs": 51.22959999999999
+          "batchDurationMs": 1.5567,
+          "averagePerCallUs": 155.67000000000002
         },
         {
           "sample": 8,
           "passed": true,
-          "batchDurationMs": 0.494704,
-          "averagePerCallUs": 49.4704
+          "batchDurationMs": 1.5936,
+          "averagePerCallUs": 159.35999999999999
         },
         {
           "sample": 9,
           "passed": true,
-          "batchDurationMs": 0.471147,
-          "averagePerCallUs": 47.1147
+          "batchDurationMs": 2.0917,
+          "averagePerCallUs": 209.17
         },
         {
           "sample": 10,
           "passed": true,
-          "batchDurationMs": 0.551808,
-          "averagePerCallUs": 55.1808
+          "batchDurationMs": 1.6642,
+          "averagePerCallUs": 166.42
         },
         {
           "sample": 11,
           "passed": true,
-          "batchDurationMs": 0.497394,
-          "averagePerCallUs": 49.7394
+          "batchDurationMs": 1.4949,
+          "averagePerCallUs": 149.48999999999998
         },
         {
           "sample": 12,
           "passed": true,
-          "batchDurationMs": 0.724762,
-          "averagePerCallUs": 72.4762
+          "batchDurationMs": 1.026,
+          "averagePerCallUs": 102.6
         },
         {
           "sample": 13,
           "passed": true,
-          "batchDurationMs": 0.487323,
-          "averagePerCallUs": 48.732299999999995
+          "batchDurationMs": 0.7826,
+          "averagePerCallUs": 78.25999999999999
         },
         {
           "sample": 14,
           "passed": true,
-          "batchDurationMs": 0.492817,
-          "averagePerCallUs": 49.2817
+          "batchDurationMs": 1.8452,
+          "averagePerCallUs": 184.52
         },
         {
           "sample": 15,
           "passed": true,
-          "batchDurationMs": 0.49411,
-          "averagePerCallUs": 49.411
+          "batchDurationMs": 2.9909,
+          "averagePerCallUs": 299.09000000000003
         },
         {
           "sample": 16,
           "passed": true,
-          "batchDurationMs": 0.497281,
-          "averagePerCallUs": 49.7281
+          "batchDurationMs": 2.7362,
+          "averagePerCallUs": 273.62
         },
         {
           "sample": 17,
           "passed": true,
-          "batchDurationMs": 0.689653,
-          "averagePerCallUs": 68.96529999999998
+          "batchDurationMs": 2.3833,
+          "averagePerCallUs": 238.33
         },
         {
           "sample": 18,
           "passed": true,
-          "batchDurationMs": 0.522279,
-          "averagePerCallUs": 52.2279
+          "batchDurationMs": 1.9077,
+          "averagePerCallUs": 190.77
         },
         {
           "sample": 19,
           "passed": true,
-          "batchDurationMs": 0.494297,
-          "averagePerCallUs": 49.4297
+          "batchDurationMs": 2.8349,
+          "averagePerCallUs": 283.49
         },
         {
           "sample": 20,
           "passed": true,
-          "batchDurationMs": 0.542423,
-          "averagePerCallUs": 54.2423
+          "batchDurationMs": 4.2684,
+          "averagePerCallUs": 426.84
         },
         {
           "sample": 21,
           "passed": true,
-          "batchDurationMs": 0.486698,
-          "averagePerCallUs": 48.6698
+          "batchDurationMs": 3.2882,
+          "averagePerCallUs": 328.82
         },
         {
           "sample": 22,
           "passed": true,
-          "batchDurationMs": 0.495596,
-          "averagePerCallUs": 49.5596
+          "batchDurationMs": 2.6969,
+          "averagePerCallUs": 269.68999999999994
         },
         {
           "sample": 23,
           "passed": true,
-          "batchDurationMs": 0.499698,
-          "averagePerCallUs": 49.9698
+          "batchDurationMs": 1.8323,
+          "averagePerCallUs": 183.23
         },
         {
           "sample": 24,
           "passed": true,
-          "batchDurationMs": 0.498773,
-          "averagePerCallUs": 49.877300000000005
+          "batchDurationMs": 1.6475,
+          "averagePerCallUs": 164.75
         },
         {
           "sample": 25,
           "passed": true,
-          "batchDurationMs": 0.471619,
-          "averagePerCallUs": 47.1619
+          "batchDurationMs": 1.7957,
+          "averagePerCallUs": 179.57
         },
         {
           "sample": 26,
           "passed": true,
-          "batchDurationMs": 0.559213,
-          "averagePerCallUs": 55.921299999999995
+          "batchDurationMs": 1.4437,
+          "averagePerCallUs": 144.37
         },
         {
           "sample": 27,
           "passed": true,
-          "batchDurationMs": 0.504486,
-          "averagePerCallUs": 50.4486
+          "batchDurationMs": 1.4764,
+          "averagePerCallUs": 147.64
         },
         {
           "sample": 28,
           "passed": true,
-          "batchDurationMs": 0.489166,
-          "averagePerCallUs": 48.9166
+          "batchDurationMs": 1.5299,
+          "averagePerCallUs": 152.99
         },
         {
           "sample": 29,
           "passed": true,
-          "batchDurationMs": 0.707888,
-          "averagePerCallUs": 70.7888
+          "batchDurationMs": 1.5053,
+          "averagePerCallUs": 150.53000000000003
         },
         {
           "sample": 30,
           "passed": true,
-          "batchDurationMs": 0.486588,
-          "averagePerCallUs": 48.6588
+          "batchDurationMs": 1.482,
+          "averagePerCallUs": 148.2
         },
         {
           "sample": 31,
           "passed": true,
-          "batchDurationMs": 0.576791,
-          "averagePerCallUs": 57.679100000000005
+          "batchDurationMs": 2.0044,
+          "averagePerCallUs": 200.44
         },
         {
           "sample": 32,
           "passed": true,
-          "batchDurationMs": 0.447033,
-          "averagePerCallUs": 44.7033
+          "batchDurationMs": 2.3346,
+          "averagePerCallUs": 233.45999999999998
         },
         {
           "sample": 33,
           "passed": true,
-          "batchDurationMs": 0.472306,
-          "averagePerCallUs": 47.230599999999995
+          "batchDurationMs": 1.9127,
+          "averagePerCallUs": 191.27
         },
         {
           "sample": 34,
           "passed": true,
-          "batchDurationMs": 0.463425,
-          "averagePerCallUs": 46.342499999999994
+          "batchDurationMs": 1.6539,
+          "averagePerCallUs": 165.39
         },
         {
           "sample": 35,
           "passed": true,
-          "batchDurationMs": 0.463139,
-          "averagePerCallUs": 46.313900000000004
+          "batchDurationMs": 1.9798,
+          "averagePerCallUs": 197.98
         },
         {
           "sample": 36,
           "passed": true,
-          "batchDurationMs": 0.468023,
-          "averagePerCallUs": 46.8023
+          "batchDurationMs": 1.3863,
+          "averagePerCallUs": 138.63000000000002
         },
         {
           "sample": 37,
           "passed": true,
-          "batchDurationMs": 0.488862,
-          "averagePerCallUs": 48.8862
+          "batchDurationMs": 1.881,
+          "averagePerCallUs": 188.1
         },
         {
           "sample": 38,
           "passed": true,
-          "batchDurationMs": 0.554109,
-          "averagePerCallUs": 55.41089999999999
+          "batchDurationMs": 1.3813,
+          "averagePerCallUs": 138.13
         },
         {
           "sample": 39,
           "passed": true,
-          "batchDurationMs": 0.497085,
-          "averagePerCallUs": 49.7085
+          "batchDurationMs": 1.5522,
+          "averagePerCallUs": 155.22
         },
         {
           "sample": 40,
           "passed": true,
-          "batchDurationMs": 0.499765,
-          "averagePerCallUs": 49.9765
+          "batchDurationMs": 0.7321,
+          "averagePerCallUs": 73.21000000000001
         },
         {
           "sample": 41,
           "passed": true,
-          "batchDurationMs": 0.478684,
-          "averagePerCallUs": 47.8684
+          "batchDurationMs": 2.1749,
+          "averagePerCallUs": 217.49
         },
         {
           "sample": 42,
           "passed": true,
-          "batchDurationMs": 0.497082,
-          "averagePerCallUs": 49.708200000000005
+          "batchDurationMs": 2.134,
+          "averagePerCallUs": 213.4
         },
         {
           "sample": 43,
           "passed": true,
-          "batchDurationMs": 1.051459,
-          "averagePerCallUs": 105.14589999999998
+          "batchDurationMs": 2.942,
+          "averagePerCallUs": 294.2
         },
         {
           "sample": 44,
           "passed": true,
-          "batchDurationMs": 0.481403,
-          "averagePerCallUs": 48.1403
+          "batchDurationMs": 2.4941,
+          "averagePerCallUs": 249.41
         },
         {
           "sample": 45,
           "passed": true,
-          "batchDurationMs": 0.467317,
-          "averagePerCallUs": 46.731700000000004
+          "batchDurationMs": 1.6967,
+          "averagePerCallUs": 169.67000000000002
         },
         {
           "sample": 46,
           "passed": true,
-          "batchDurationMs": 0.464786,
-          "averagePerCallUs": 46.4786
+          "batchDurationMs": 1.7036,
+          "averagePerCallUs": 170.35999999999999
         },
         {
           "sample": 47,
           "passed": true,
-          "batchDurationMs": 0.457089,
-          "averagePerCallUs": 45.7089
+          "batchDurationMs": 1.9931,
+          "averagePerCallUs": 199.31
         },
         {
           "sample": 48,
           "passed": true,
-          "batchDurationMs": 0.452323,
-          "averagePerCallUs": 45.232299999999995
+          "batchDurationMs": 2.2692,
+          "averagePerCallUs": 226.92000000000002
         },
         {
           "sample": 49,
           "passed": true,
-          "batchDurationMs": 0.474673,
-          "averagePerCallUs": 47.4673
+          "batchDurationMs": 1.4078,
+          "averagePerCallUs": 140.78
         },
         {
           "sample": 50,
           "passed": true,
-          "batchDurationMs": 0.578328,
-          "averagePerCallUs": 57.8328
+          "batchDurationMs": 1.4141,
+          "averagePerCallUs": 141.41
         }
       ]
     },
@@ -1773,311 +1773,311 @@
       "successfulSamples": 50,
       "failedSamples": 0,
       "skippedSamples": 0,
-      "p50BatchMs": 0.575622,
-      "p95BatchMs": 1.338442,
-      "p50AveragePerCallUs": 57.5622,
-      "p95AveragePerCallUs": 133.8442,
+      "p50BatchMs": 1.6625,
+      "p95BatchMs": 2.367,
+      "p50AveragePerCallUs": 166.25,
+      "p95AveragePerCallUs": 236.7,
       "passed": true,
       "records": [
         {
           "sample": 1,
           "passed": true,
-          "batchDurationMs": 0.452615,
-          "averagePerCallUs": 45.2615
+          "batchDurationMs": 1.9688,
+          "averagePerCallUs": 196.88000000000002
         },
         {
           "sample": 2,
           "passed": true,
-          "batchDurationMs": 0.604778,
-          "averagePerCallUs": 60.4778
+          "batchDurationMs": 1.5844,
+          "averagePerCallUs": 158.44
         },
         {
           "sample": 3,
           "passed": true,
-          "batchDurationMs": 0.438574,
-          "averagePerCallUs": 43.8574
+          "batchDurationMs": 2.2724,
+          "averagePerCallUs": 227.24
         },
         {
           "sample": 4,
           "passed": true,
-          "batchDurationMs": 0.5513,
-          "averagePerCallUs": 55.13000000000001
+          "batchDurationMs": 1.9075,
+          "averagePerCallUs": 190.75
         },
         {
           "sample": 5,
           "passed": true,
-          "batchDurationMs": 0.575622,
-          "averagePerCallUs": 57.5622
+          "batchDurationMs": 1.7114,
+          "averagePerCallUs": 171.14000000000001
         },
         {
           "sample": 6,
           "passed": true,
-          "batchDurationMs": 0.434295,
-          "averagePerCallUs": 43.4295
+          "batchDurationMs": 1.994,
+          "averagePerCallUs": 199.4
         },
         {
           "sample": 7,
           "passed": true,
-          "batchDurationMs": 0.458853,
-          "averagePerCallUs": 45.8853
+          "batchDurationMs": 1.682,
+          "averagePerCallUs": 168.2
         },
         {
           "sample": 8,
           "passed": true,
-          "batchDurationMs": 0.463274,
-          "averagePerCallUs": 46.3274
+          "batchDurationMs": 1.6794,
+          "averagePerCallUs": 167.94
         },
         {
           "sample": 9,
           "passed": true,
-          "batchDurationMs": 0.451596,
-          "averagePerCallUs": 45.1596
+          "batchDurationMs": 1.5878,
+          "averagePerCallUs": 158.78000000000003
         },
         {
           "sample": 10,
           "passed": true,
-          "batchDurationMs": 0.658656,
-          "averagePerCallUs": 65.8656
+          "batchDurationMs": 0.8886,
+          "averagePerCallUs": 88.85999999999999
         },
         {
           "sample": 11,
           "passed": true,
-          "batchDurationMs": 0.486421,
-          "averagePerCallUs": 48.6421
+          "batchDurationMs": 1.6625,
+          "averagePerCallUs": 166.25
         },
         {
           "sample": 12,
           "passed": true,
-          "batchDurationMs": 0.61485,
-          "averagePerCallUs": 61.485
+          "batchDurationMs": 3.2446,
+          "averagePerCallUs": 324.46000000000004
         },
         {
           "sample": 13,
           "passed": true,
-          "batchDurationMs": 0.4589,
-          "averagePerCallUs": 45.89
+          "batchDurationMs": 1.5706,
+          "averagePerCallUs": 157.06
         },
         {
           "sample": 14,
           "passed": true,
-          "batchDurationMs": 0.496036,
-          "averagePerCallUs": 49.6036
+          "batchDurationMs": 1.5788,
+          "averagePerCallUs": 157.88
         },
         {
           "sample": 15,
           "passed": true,
-          "batchDurationMs": 0.460133,
-          "averagePerCallUs": 46.0133
+          "batchDurationMs": 1.7087,
+          "averagePerCallUs": 170.87
         },
         {
           "sample": 16,
           "passed": true,
-          "batchDurationMs": 0.470023,
-          "averagePerCallUs": 47.002300000000005
+          "batchDurationMs": 2.1429,
+          "averagePerCallUs": 214.29000000000002
         },
         {
           "sample": 17,
           "passed": true,
-          "batchDurationMs": 0.408199,
-          "averagePerCallUs": 40.8199
+          "batchDurationMs": 1.638,
+          "averagePerCallUs": 163.8
         },
         {
           "sample": 18,
           "passed": true,
-          "batchDurationMs": 0.476469,
-          "averagePerCallUs": 47.6469
+          "batchDurationMs": 1.8318,
+          "averagePerCallUs": 183.18
         },
         {
           "sample": 19,
           "passed": true,
-          "batchDurationMs": 0.576064,
-          "averagePerCallUs": 57.606399999999994
+          "batchDurationMs": 2.2935,
+          "averagePerCallUs": 229.35
         },
         {
           "sample": 20,
           "passed": true,
-          "batchDurationMs": 0.472666,
-          "averagePerCallUs": 47.2666
+          "batchDurationMs": 1.9156,
+          "averagePerCallUs": 191.56
         },
         {
           "sample": 21,
           "passed": true,
-          "batchDurationMs": 0.480798,
-          "averagePerCallUs": 48.0798
+          "batchDurationMs": 2.2697,
+          "averagePerCallUs": 226.96999999999997
         },
         {
           "sample": 22,
           "passed": true,
-          "batchDurationMs": 0.468755,
-          "averagePerCallUs": 46.8755
+          "batchDurationMs": 1.4459,
+          "averagePerCallUs": 144.58999999999997
         },
         {
           "sample": 23,
           "passed": true,
-          "batchDurationMs": 0.486884,
-          "averagePerCallUs": 48.688399999999994
+          "batchDurationMs": 1.3481,
+          "averagePerCallUs": 134.81
         },
         {
           "sample": 24,
           "passed": true,
-          "batchDurationMs": 0.607863,
-          "averagePerCallUs": 60.786300000000004
+          "batchDurationMs": 1.3474,
+          "averagePerCallUs": 134.73999999999998
         },
         {
           "sample": 25,
           "passed": true,
-          "batchDurationMs": 0.602219,
-          "averagePerCallUs": 60.22189999999999
+          "batchDurationMs": 1.4027,
+          "averagePerCallUs": 140.27
         },
         {
           "sample": 26,
           "passed": true,
-          "batchDurationMs": 1.625235,
-          "averagePerCallUs": 162.52349999999998
+          "batchDurationMs": 1.3339,
+          "averagePerCallUs": 133.39000000000001
         },
         {
           "sample": 27,
           "passed": true,
-          "batchDurationMs": 1.338442,
-          "averagePerCallUs": 133.8442
+          "batchDurationMs": 1.3742,
+          "averagePerCallUs": 137.42000000000002
         },
         {
           "sample": 28,
           "passed": true,
-          "batchDurationMs": 1.014663,
-          "averagePerCallUs": 101.46630000000002
+          "batchDurationMs": 1.3305,
+          "averagePerCallUs": 133.05
         },
         {
           "sample": 29,
           "passed": true,
-          "batchDurationMs": 1.342054,
-          "averagePerCallUs": 134.2054
+          "batchDurationMs": 1.4184,
+          "averagePerCallUs": 141.84
         },
         {
           "sample": 30,
           "passed": true,
-          "batchDurationMs": 0.653392,
-          "averagePerCallUs": 65.33919999999999
+          "batchDurationMs": 1.3186,
+          "averagePerCallUs": 131.85999999999999
         },
         {
           "sample": 31,
           "passed": true,
-          "batchDurationMs": 0.91538,
-          "averagePerCallUs": 91.538
+          "batchDurationMs": 1.7589,
+          "averagePerCallUs": 175.89
         },
         {
           "sample": 32,
           "passed": true,
-          "batchDurationMs": 0.617708,
-          "averagePerCallUs": 61.77080000000001
+          "batchDurationMs": 1.5658,
+          "averagePerCallUs": 156.58
         },
         {
           "sample": 33,
           "passed": true,
-          "batchDurationMs": 0.877496,
-          "averagePerCallUs": 87.74960000000002
+          "batchDurationMs": 1.7236,
+          "averagePerCallUs": 172.35999999999999
         },
         {
           "sample": 34,
           "passed": true,
-          "batchDurationMs": 0.96883,
-          "averagePerCallUs": 96.883
+          "batchDurationMs": 1.733,
+          "averagePerCallUs": 173.3
         },
         {
           "sample": 35,
           "passed": true,
-          "batchDurationMs": 1.222156,
-          "averagePerCallUs": 122.2156
+          "batchDurationMs": 1.7437,
+          "averagePerCallUs": 174.37
         },
         {
           "sample": 36,
           "passed": true,
-          "batchDurationMs": 0.973686,
-          "averagePerCallUs": 97.3686
+          "batchDurationMs": 1.336,
+          "averagePerCallUs": 133.6
         },
         {
           "sample": 37,
           "passed": true,
-          "batchDurationMs": 1.093423,
-          "averagePerCallUs": 109.3423
+          "batchDurationMs": 1.3673,
+          "averagePerCallUs": 136.73
         },
         {
           "sample": 38,
           "passed": true,
-          "batchDurationMs": 0.82554,
-          "averagePerCallUs": 82.554
+          "batchDurationMs": 1.5871,
+          "averagePerCallUs": 158.70999999999998
         },
         {
           "sample": 39,
           "passed": true,
-          "batchDurationMs": 0.523789,
-          "averagePerCallUs": 52.3789
+          "batchDurationMs": 1.3786,
+          "averagePerCallUs": 137.86
         },
         {
           "sample": 40,
           "passed": true,
-          "batchDurationMs": 0.916392,
-          "averagePerCallUs": 91.63919999999999
+          "batchDurationMs": 1.328,
+          "averagePerCallUs": 132.8
         },
         {
           "sample": 41,
           "passed": true,
-          "batchDurationMs": 0.978478,
-          "averagePerCallUs": 97.84779999999999
+          "batchDurationMs": 1.522,
+          "averagePerCallUs": 152.2
         },
         {
           "sample": 42,
           "passed": true,
-          "batchDurationMs": 0.969399,
-          "averagePerCallUs": 96.9399
+          "batchDurationMs": 1.5782,
+          "averagePerCallUs": 157.82
         },
         {
           "sample": 43,
           "passed": true,
-          "batchDurationMs": 0.675556,
-          "averagePerCallUs": 67.5556
+          "batchDurationMs": 2.367,
+          "averagePerCallUs": 236.7
         },
         {
           "sample": 44,
           "passed": true,
-          "batchDurationMs": 0.548282,
-          "averagePerCallUs": 54.8282
+          "batchDurationMs": 2.1987,
+          "averagePerCallUs": 219.87000000000003
         },
         {
           "sample": 45,
           "passed": true,
-          "batchDurationMs": 0.468342,
-          "averagePerCallUs": 46.834199999999996
+          "batchDurationMs": 1.8428,
+          "averagePerCallUs": 184.28
         },
         {
           "sample": 46,
           "passed": true,
-          "batchDurationMs": 0.472308,
-          "averagePerCallUs": 47.2308
+          "batchDurationMs": 1.8597,
+          "averagePerCallUs": 185.96999999999997
         },
         {
           "sample": 47,
           "passed": true,
-          "batchDurationMs": 0.529981,
-          "averagePerCallUs": 52.9981
+          "batchDurationMs": 1.3002,
+          "averagePerCallUs": 130.02
         },
         {
           "sample": 48,
           "passed": true,
-          "batchDurationMs": 0.839427,
-          "averagePerCallUs": 83.9427
+          "batchDurationMs": 1.7046,
+          "averagePerCallUs": 170.45999999999998
         },
         {
           "sample": 49,
           "passed": true,
-          "batchDurationMs": 0.613707,
-          "averagePerCallUs": 61.3707
+          "batchDurationMs": 2.221,
+          "averagePerCallUs": 222.1
         },
         {
           "sample": 50,
           "passed": true,
-          "batchDurationMs": 0.470098,
-          "averagePerCallUs": 47.0098
+          "batchDurationMs": 2.4209,
+          "averagePerCallUs": 242.09
         }
       ]
     },
@@ -2092,315 +2092,315 @@
       "successfulSamples": 50,
       "failedSamples": 0,
       "skippedSamples": 0,
-      "p50BatchMs": 0.723137,
-      "p95BatchMs": 1.626574,
-      "p50AveragePerCallUs": 72.31370000000001,
-      "p95AveragePerCallUs": 162.6574,
+      "p50BatchMs": 1.8492,
+      "p95BatchMs": 2.7963,
+      "p50AveragePerCallUs": 184.92000000000002,
+      "p95AveragePerCallUs": 279.63,
       "passed": true,
       "records": [
         {
           "sample": 1,
           "passed": true,
-          "batchDurationMs": 0.629894,
-          "averagePerCallUs": 62.9894
+          "batchDurationMs": 1.8157,
+          "averagePerCallUs": 181.57
         },
         {
           "sample": 2,
           "passed": true,
-          "batchDurationMs": 0.617954,
-          "averagePerCallUs": 61.795399999999994
+          "batchDurationMs": 2.2685,
+          "averagePerCallUs": 226.85
         },
         {
           "sample": 3,
           "passed": true,
-          "batchDurationMs": 0.978388,
-          "averagePerCallUs": 97.8388
+          "batchDurationMs": 1.8492,
+          "averagePerCallUs": 184.92000000000002
         },
         {
           "sample": 4,
           "passed": true,
-          "batchDurationMs": 0.626443,
-          "averagePerCallUs": 62.6443
+          "batchDurationMs": 1.8908,
+          "averagePerCallUs": 189.07999999999998
         },
         {
           "sample": 5,
           "passed": true,
-          "batchDurationMs": 0.723137,
-          "averagePerCallUs": 72.31370000000001
+          "batchDurationMs": 1.8871,
+          "averagePerCallUs": 188.70999999999998
         },
         {
           "sample": 6,
           "passed": true,
-          "batchDurationMs": 0.728989,
-          "averagePerCallUs": 72.8989
+          "batchDurationMs": 1.8763,
+          "averagePerCallUs": 187.63000000000002
         },
         {
           "sample": 7,
           "passed": true,
-          "batchDurationMs": 0.815235,
-          "averagePerCallUs": 81.5235
+          "batchDurationMs": 1.8457,
+          "averagePerCallUs": 184.57
         },
         {
           "sample": 8,
           "passed": true,
-          "batchDurationMs": 1.384353,
-          "averagePerCallUs": 138.43529999999998
+          "batchDurationMs": 1.8244,
+          "averagePerCallUs": 182.44
         },
         {
           "sample": 9,
           "passed": true,
-          "batchDurationMs": 1.377995,
-          "averagePerCallUs": 137.79950000000002
+          "batchDurationMs": 2.3113,
+          "averagePerCallUs": 231.13000000000002
         },
         {
           "sample": 10,
           "passed": true,
-          "batchDurationMs": 1.48067,
-          "averagePerCallUs": 148.06699999999998
+          "batchDurationMs": 1.8036,
+          "averagePerCallUs": 180.36
         },
         {
           "sample": 11,
           "passed": true,
-          "batchDurationMs": 0.612025,
-          "averagePerCallUs": 61.20250000000001
+          "batchDurationMs": 1.8897,
+          "averagePerCallUs": 188.97
         },
         {
           "sample": 12,
           "passed": true,
-          "batchDurationMs": 0.599269,
-          "averagePerCallUs": 59.9269
+          "batchDurationMs": 2.2805,
+          "averagePerCallUs": 228.05
         },
         {
           "sample": 13,
           "passed": true,
-          "batchDurationMs": 0.588402,
-          "averagePerCallUs": 58.840199999999996
+          "batchDurationMs": 1.8366,
+          "averagePerCallUs": 183.66
         },
         {
           "sample": 14,
           "passed": true,
-          "batchDurationMs": 0.595821,
-          "averagePerCallUs": 59.582100000000004
+          "batchDurationMs": 2.0245,
+          "averagePerCallUs": 202.45000000000002
         },
         {
           "sample": 15,
           "passed": true,
-          "batchDurationMs": 0.967756,
-          "averagePerCallUs": 96.7756
+          "batchDurationMs": 1.9482,
+          "averagePerCallUs": 194.82
         },
         {
           "sample": 16,
           "passed": true,
-          "batchDurationMs": 0.627014,
-          "averagePerCallUs": 62.7014
+          "batchDurationMs": 1.9195,
+          "averagePerCallUs": 191.95
         },
         {
           "sample": 17,
           "passed": true,
-          "batchDurationMs": 0.610306,
-          "averagePerCallUs": 61.03060000000001
+          "batchDurationMs": 2.7963,
+          "averagePerCallUs": 279.63
         },
         {
           "sample": 18,
           "passed": true,
-          "batchDurationMs": 0.748393,
-          "averagePerCallUs": 74.83930000000001
+          "batchDurationMs": 1.0208,
+          "averagePerCallUs": 102.08
         },
         {
           "sample": 19,
           "passed": true,
-          "batchDurationMs": 0.701439,
-          "averagePerCallUs": 70.1439
+          "batchDurationMs": 0.7531,
+          "averagePerCallUs": 75.31
         },
         {
           "sample": 20,
           "passed": true,
-          "batchDurationMs": 0.795793,
-          "averagePerCallUs": 79.5793
+          "batchDurationMs": 0.7902,
+          "averagePerCallUs": 79.02000000000001
         },
         {
           "sample": 21,
           "passed": true,
-          "batchDurationMs": 0.645771,
-          "averagePerCallUs": 64.5771
+          "batchDurationMs": 0.749,
+          "averagePerCallUs": 74.9
         },
         {
           "sample": 22,
           "passed": true,
-          "batchDurationMs": 0.743896,
-          "averagePerCallUs": 74.3896
+          "batchDurationMs": 2.1877,
+          "averagePerCallUs": 218.76999999999998
         },
         {
           "sample": 23,
           "passed": true,
-          "batchDurationMs": 0.589554,
-          "averagePerCallUs": 58.9554
+          "batchDurationMs": 3.612,
+          "averagePerCallUs": 361.2
         },
         {
           "sample": 24,
           "passed": true,
-          "batchDurationMs": 0.985115,
-          "averagePerCallUs": 98.5115
+          "batchDurationMs": 1.8695,
+          "averagePerCallUs": 186.95
         },
         {
           "sample": 25,
           "passed": true,
-          "batchDurationMs": 0.731917,
-          "averagePerCallUs": 73.1917
+          "batchDurationMs": 2.1663,
+          "averagePerCallUs": 216.63000000000002
         },
         {
           "sample": 26,
           "passed": true,
-          "batchDurationMs": 0.618165,
-          "averagePerCallUs": 61.8165
+          "batchDurationMs": 2.5988,
+          "averagePerCallUs": 259.88
         },
         {
           "sample": 27,
           "passed": true,
-          "batchDurationMs": 0.658442,
-          "averagePerCallUs": 65.8442
+          "batchDurationMs": 1.9915,
+          "averagePerCallUs": 199.15
         },
         {
           "sample": 28,
           "passed": true,
-          "batchDurationMs": 0.644701,
-          "averagePerCallUs": 64.4701
+          "batchDurationMs": 2.3822,
+          "averagePerCallUs": 238.22000000000003
         },
         {
           "sample": 29,
           "passed": true,
-          "batchDurationMs": 0.731775,
-          "averagePerCallUs": 73.1775
+          "batchDurationMs": 1.8346,
+          "averagePerCallUs": 183.45999999999998
         },
         {
           "sample": 30,
           "passed": true,
-          "batchDurationMs": 0.664535,
-          "averagePerCallUs": 66.45349999999999
+          "batchDurationMs": 2.0355,
+          "averagePerCallUs": 203.54999999999998
         },
         {
           "sample": 31,
           "passed": true,
-          "batchDurationMs": 0.621217,
-          "averagePerCallUs": 62.1217
+          "batchDurationMs": 1.773,
+          "averagePerCallUs": 177.3
         },
         {
           "sample": 32,
           "passed": true,
-          "batchDurationMs": 0.64795,
-          "averagePerCallUs": 64.795
+          "batchDurationMs": 1.9221,
+          "averagePerCallUs": 192.20999999999998
         },
         {
           "sample": 33,
           "passed": true,
-          "batchDurationMs": 1.951257,
-          "averagePerCallUs": 195.1257
+          "batchDurationMs": 1.9842,
+          "averagePerCallUs": 198.42000000000002
         },
         {
           "sample": 34,
           "passed": true,
-          "batchDurationMs": 1.761083,
-          "averagePerCallUs": 176.10829999999999
+          "batchDurationMs": 2.8459,
+          "averagePerCallUs": 284.59000000000003
         },
         {
           "sample": 35,
           "passed": true,
-          "batchDurationMs": 1.626574,
-          "averagePerCallUs": 162.6574
+          "batchDurationMs": 1.9742,
+          "averagePerCallUs": 197.42000000000002
         },
         {
           "sample": 36,
           "passed": true,
-          "batchDurationMs": 0.94433,
-          "averagePerCallUs": 94.433
+          "batchDurationMs": 1.8015,
+          "averagePerCallUs": 180.15
         },
         {
           "sample": 37,
           "passed": true,
-          "batchDurationMs": 0.590305,
-          "averagePerCallUs": 59.030499999999996
+          "batchDurationMs": 1.098,
+          "averagePerCallUs": 109.8
         },
         {
           "sample": 38,
           "passed": true,
-          "batchDurationMs": 0.584632,
-          "averagePerCallUs": 58.46320000000001
+          "batchDurationMs": 0.7177,
+          "averagePerCallUs": 71.77000000000001
         },
         {
           "sample": 39,
           "passed": true,
-          "batchDurationMs": 0.736426,
-          "averagePerCallUs": 73.6426
+          "batchDurationMs": 0.8165,
+          "averagePerCallUs": 81.65
         },
         {
           "sample": 40,
           "passed": true,
-          "batchDurationMs": 0.794666,
-          "averagePerCallUs": 79.4666
+          "batchDurationMs": 2.1857,
+          "averagePerCallUs": 218.57000000000002
         },
         {
           "sample": 41,
           "passed": true,
-          "batchDurationMs": 0.628269,
-          "averagePerCallUs": 62.8269
+          "batchDurationMs": 0.9778,
+          "averagePerCallUs": 97.78
         },
         {
           "sample": 42,
           "passed": true,
-          "batchDurationMs": 0.767783,
-          "averagePerCallUs": 76.7783
+          "batchDurationMs": 2.3207,
+          "averagePerCallUs": 232.07
         },
         {
           "sample": 43,
           "passed": true,
-          "batchDurationMs": 0.749622,
-          "averagePerCallUs": 74.9622
+          "batchDurationMs": 0.8888,
+          "averagePerCallUs": 88.88000000000001
         },
         {
           "sample": 44,
           "passed": true,
-          "batchDurationMs": 0.757968,
-          "averagePerCallUs": 75.79679999999999
+          "batchDurationMs": 0.655,
+          "averagePerCallUs": 65.5
         },
         {
           "sample": 45,
           "passed": true,
-          "batchDurationMs": 0.832616,
-          "averagePerCallUs": 83.2616
+          "batchDurationMs": 1.5281,
+          "averagePerCallUs": 152.81
         },
         {
           "sample": 46,
           "passed": true,
-          "batchDurationMs": 0.730458,
-          "averagePerCallUs": 73.04580000000001
+          "batchDurationMs": 1.4224,
+          "averagePerCallUs": 142.24
         },
         {
           "sample": 47,
           "passed": true,
-          "batchDurationMs": 0.919205,
-          "averagePerCallUs": 91.9205
+          "batchDurationMs": 1.2567,
+          "averagePerCallUs": 125.66999999999999
         },
         {
           "sample": 48,
           "passed": true,
-          "batchDurationMs": 0.041605,
-          "averagePerCallUs": 4.160500000000001
+          "batchDurationMs": 0.8599,
+          "averagePerCallUs": 85.99
         },
         {
           "sample": 49,
           "passed": true,
-          "batchDurationMs": 0.553322,
-          "averagePerCallUs": 55.3322
+          "batchDurationMs": 0.8132,
+          "averagePerCallUs": 81.32000000000001
         },
         {
           "sample": 50,
           "passed": true,
-          "batchDurationMs": 0.535843,
-          "averagePerCallUs": 53.5843
+          "batchDurationMs": 0.7352,
+          "averagePerCallUs": 73.52
         }
       ]
     }
   ],
   "passed": true,
-  "finishedAtMillis": 1790785309268
+  "finishedAtMillis": 1791727168338
 }

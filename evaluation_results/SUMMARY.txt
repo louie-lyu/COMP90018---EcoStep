@@ -1,0 +1,38 @@
+EcoStep evaluation summary (current results + historical live AI baseline)
+Generated: 2026/10/13 10:25:17 (Australia/Sydney)
+Branch: feature/evaluation
+Commit: 880b16b8f58f8337433812dbcd13d7a490ee9dc2 (matches the fetched origin/main)
+Environment: Pixel_8 emulator, Android 16 / API 36, debug build, host network.
+Preserved the existing uncommitted MissionEditorBottomSheet.kt changes. Fixed UI-test scrolling waits and click stability; no application behavior was changed.
+Initial cleanup replaced 15 historical reports. Kept the historical live AI report and latest local AI results; removed the superseded UI report. Nothing committed or pushed.
+
+Reports: 13/13 passed; AI runner offline tests: 15/15 passed.
+Local controlled checks: 323/323 passed.
+PASS  activity-hint-transport-evaluation-1791727356719.json
+PASS  ai-mission-evaluation-1791727138705.json  (34/34 cases)
+PASS  ai-proxy-live-evaluation-1790955335748.json
+PASS  carbon-evaluation-1791727121297.json  (56/56 cases)
+PASS  ecopoints-evaluation-1791727129822.json  (110/110 cases)
+PASS  journey-ui-latency-1791728962660.json
+PASS  local-flow-evaluation-1791727167661.json  (25/25 cases)
+PASS  mission-trigger-evaluation-1791727159083.json  (29/29 cases)
+PASS  recurring-evaluation-1791727175930.json  (41/41 cases)
+PASS  weather-cache-1791727194940.json  (9/9 cases)
+PASS  weather-latency-1791727273833.json
+PASS  weather-recovery-1791727311136.json
+PASS  weekly-coach-evaluation-1791727146881.json  (19/19 cases)
+
+AI: retained the historical live proxy report (18/18 passed); local missions use the latest results (34/34 passed). Reports retain their original dates and commit identifiers. Historical live AI results do not establish a fresh pass for the new version.
+The superseded latest AI run encountered HTTP 429 (15 successes, 1 rate limit, 2 skipped requests).
+UI: failure diagnostics showed the button was visible and clickable after the exception. Reran after fixing the premature test exit without changing timing boundaries. See the current UI report.
+UI evaluation leaves newly created journeys in the test account. Transport classification uses historical SHL coordinates and current online timetables; a passing run does not imply an accuracy threshold was met.
+See run-summary.json and the original JSON reports for counts, latency and network results. Statistics from different runs are not combined.
+See TRANSPORT_STATISTICS.txt / transport-statistics.json for prediction distributions, per-label recall/precision and the confusion matrix.
+
+Latency and online classification results (P50/P95, milliseconds):
+Transport: 138/138; accuracy=0.8840579710144928; macroF1=0.8498510604940759; UNKNOWN=0; P50=964.0074, P95=1354.4125; planner={"success":138}
+AI proxy: 18/18 replies usable; 0 skipped; usable P50=1154.063400000001, P95=1359.4875
+journey-ui-latency-1791728962660.json: stop_to_review; P50=770.4209, P95=1148.4654; success=20; attempts=20
+journey-ui-latency-1791728962660.json: confirm_to_feedback; P50=256.1043, P95=313.7164; success=20; attempts=20
+weather-latency-1791727273833.json: weather.network.fetch; P50=384.3961, P95=395.1051; success=20; attempts=20
+weather-latency-1791727273833.json: weather.cache.hit; P50=1.1371, P95=2.1831; success=100; attempts=100

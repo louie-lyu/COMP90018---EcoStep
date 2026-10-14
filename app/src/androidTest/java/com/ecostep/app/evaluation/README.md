@@ -1,5 +1,7 @@
 # Evaluation tests
 
+Android Studio configurations for device evaluations 1, 2, 3, 7 and 12, plus 33 algorithm Microbenchmark groups, are documented in [`new/`](new/README.md). They export JSON/CSV without host scripts. Evaluation 13 is unchanged. The original script-based evaluations below are retained.
+
 Start one emulator (API 26+) and run from the project root. Run evaluations sequentially.
 Scripts build/install the app and export JSON to `evaluation_results/`, including failed results.
 
@@ -138,6 +140,11 @@ results include input dispatch, accessibility propagation and observation overhe
 frame-exact rendering timestamps. Scrolling/button-position stabilization happens before
 starting confirmation timing. Fixture preparation, scrolling, verification, CSV/JSON writes
 and a two-second inter-journey pause are excluded.
+
+Review scrolling waits for accessibility updates up to the configured UI timeout, even
+when a scroll action returns false at the bottom. Walk and Confirm coordinates must settle
+before clicking. Failure reports include evaluation-control tags, bounds and availability
+flags to diagnose locating failures without collecting arbitrary screen text.
 
 Each scenario reports planned/attempted/successful/failed/timed-out/skipped counts, success
 rate among attempts, and nearest-rank P50/P95/max of successful individual operations.

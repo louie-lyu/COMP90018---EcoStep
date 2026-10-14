@@ -1,0 +1,47 @@
+[
+  {
+    "name": "mission_walking_only",
+    "task": "mission",
+    "allowedModes": [
+      "WALKING"
+    ],
+    "prompt": "You are EcoStep's mobility coach.\n\nRecommend one lower-carbon transport option using only the verified information below.\nDo not invent routes, weather, public transport services, carbon values, or user details.\n\nJourney information:\n- Current transport mode: CAR\n- Route distance: 2.0 km\n- Estimated duration: 15 minutes\n- Weather: Clear, 20 C\n- Public transport: No verified public transport option\n- Recent transport modes: car, walking\n\nVerified lower-carbon alternatives:\n- WALKING: 384 g CO2 saving\n\nRules:\n1. Choose exactly one mode from the verified alternatives.\n2. Do not calculate or change the carbon-saving value.\n3. Keep the explanation practical and concise.\n4. Keep the notification message short.\n5. Return JSON only, without Markdown or additional text.\n\nRequired JSON format:\n{\n  \"recommendedMode\": \"MODE_FROM_VERIFIED_ALTERNATIVES\",\n  \"explanation\": \"One or two short sentences\",\n  \"confidence\": 0,\n  \"notificationTitle\": \"Short title\",\n  \"notificationMessage\": \"Short message\"\n}"
+  },
+  {
+    "name": "mission_walking_or_cycling",
+    "task": "mission",
+    "allowedModes": [
+      "WALKING",
+      "CYCLING"
+    ],
+    "prompt": "You are EcoStep's mobility coach.\n\nRecommend one lower-carbon transport option using only the verified information below.\nDo not invent routes, weather, public transport services, carbon values, or user details.\n\nJourney information:\n- Current transport mode: CAR\n- Route distance: 5.0 km\n- Estimated duration: 15 minutes\n- Weather: Clear, 20 C\n- Public transport: No verified public transport option\n- Recent transport modes: car, walking\n\nVerified lower-carbon alternatives:\n- WALKING: 960 g CO2 saving\n- CYCLING: 960 g CO2 saving\n\nRules:\n1. Choose exactly one mode from the verified alternatives.\n2. Do not calculate or change the carbon-saving value.\n3. Keep the explanation practical and concise.\n4. Keep the notification message short.\n5. Return JSON only, without Markdown or additional text.\n\nRequired JSON format:\n{\n  \"recommendedMode\": \"MODE_FROM_VERIFIED_ALTERNATIVES\",\n  \"explanation\": \"One or two short sentences\",\n  \"confidence\": 0,\n  \"notificationTitle\": \"Short title\",\n  \"notificationMessage\": \"Short message\"\n}"
+  },
+  {
+    "name": "mission_public_transport_only",
+    "task": "mission",
+    "allowedModes": [
+      "PUBLIC_TRANSPORT"
+    ],
+    "prompt": "You are EcoStep's mobility coach.\n\nRecommend one lower-carbon transport option using only the verified information below.\nDo not invent routes, weather, public transport services, carbon values, or user details.\n\nJourney information:\n- Current transport mode: CAR\n- Route distance: 12.0 km\n- Estimated duration: 15 minutes\n- Weather: Clear, 20 C\n- Public transport: Verified service (25 minutes)\n- Recent transport modes: car, walking\n\nVerified lower-carbon alternatives:\n- PUBLIC_TRANSPORT: 1236 g CO2 saving\n\nRules:\n1. Choose exactly one mode from the verified alternatives.\n2. Do not calculate or change the carbon-saving value.\n3. Keep the explanation practical and concise.\n4. Keep the notification message short.\n5. Return JSON only, without Markdown or additional text.\n\nRequired JSON format:\n{\n  \"recommendedMode\": \"MODE_FROM_VERIFIED_ALTERNATIVES\",\n  \"explanation\": \"One or two short sentences\",\n  \"confidence\": 0,\n  \"notificationTitle\": \"Short title\",\n  \"notificationMessage\": \"Short message\"\n}"
+  },
+  {
+    "name": "mission_rain_with_transit",
+    "task": "mission",
+    "allowedModes": [
+      "WALKING",
+      "CYCLING",
+      "PUBLIC_TRANSPORT"
+    ],
+    "prompt": "You are EcoStep's mobility coach.\n\nRecommend one lower-carbon transport option using only the verified information below.\nDo not invent routes, weather, public transport services, carbon values, or user details.\n\nJourney information:\n- Current transport mode: CAR\n- Route distance: 5.0 km\n- Estimated duration: 15 minutes\n- Weather: Rain, 12 C\n- Public transport: Verified service (20 minutes)\n- Recent transport modes: car, walking\n\nVerified lower-carbon alternatives:\n- WALKING: 960 g CO2 saving\n- CYCLING: 960 g CO2 saving\n- PUBLIC_TRANSPORT: 515 g CO2 saving\n\nRules:\n1. Choose exactly one mode from the verified alternatives.\n2. Do not calculate or change the carbon-saving value.\n3. Keep the explanation practical and concise.\n4. Keep the notification message short.\n5. Return JSON only, without Markdown or additional text.\n\nRequired JSON format:\n{\n  \"recommendedMode\": \"MODE_FROM_VERIFIED_ALTERNATIVES\",\n  \"explanation\": \"One or two short sentences\",\n  \"confidence\": 0,\n  \"notificationTitle\": \"Short title\",\n  \"notificationMessage\": \"Short message\"\n}"
+  },
+  {
+    "name": "weekly_completed",
+    "task": "weekly",
+    "prompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 5\n- Completed missions: 4\n- Completion rate: 80.0%\n- Recorded estimated carbon saved: 1920.0 grams\n- Most used completed transport mode: WALKING\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+  },
+  {
+    "name": "weekly_none_completed",
+    "task": "weekly",
+    "prompt": "You are the EcoStep Weekly Coach.\nWrite one short encouraging weekly insight and one realistic action for next week.\n\nAggregated weekly information:\n- Accepted missions: 3\n- Completed missions: 0\n- Completion rate: 0.0%\n- Recorded estimated carbon saved: 0.0 grams\n- Most used completed transport mode: NONE\n\nUse only the information provided.\nDo not invent routes, locations, carbon values or personal information.\nIf there are no completed missions, encourage one achievable first step.\nKeep the response under 80 words."
+  }
+]
