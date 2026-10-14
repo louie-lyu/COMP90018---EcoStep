@@ -44,4 +44,3 @@ internal fun verifyTrigger(actual: MissionTrigger?, fixture: MissionTriggerCase)
         check(departureDay in fixture.activeDays) { "Departure is on an inactive day" }
     }
 }
-

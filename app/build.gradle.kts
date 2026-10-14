@@ -159,6 +159,10 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     if (name.endsWith("UnitTestKotlin")) dependsOn(prepareEvaluationCases)
     if (name.endsWith("AndroidTestKotlin")) dependsOn(prepareEvaluationChecks)
 }
+// Lint also reads the generated test sources, including when run without compilation.
+tasks.matching { it.name.contains("lint", ignoreCase = true) }.configureEach {
+    dependsOn(prepareEvaluationCases, prepareEvaluationChecks)
+}
 // The benchmark application has no Firebase initialization or account state.
 tasks.matching { it.name == "processBenchmarkGoogleServices" }.configureEach { enabled = false }
 

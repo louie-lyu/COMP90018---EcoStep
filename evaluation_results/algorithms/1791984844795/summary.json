@@ -3,6 +3,6 @@
     "measuredGroups": 0,
     "scope": "AndroidX warmed measurements. EcoPoints is a 1000-call batch; other groups are one operation. p95 is nearest rank over measurement averages, not individual-call tail latency. Dry runs produce no timing rows. Emulator results describe this host/device only.",
     "benchmarks": [
-        
+
     ]
 }

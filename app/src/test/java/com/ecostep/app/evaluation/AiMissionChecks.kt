@@ -32,4 +32,3 @@ internal fun validateRecommendation(result: MissionRecommendation, expected: Exp
         }
     }
 }
-
