@@ -7,6 +7,8 @@ import com.ecostep.app.data.model.TransportMode
 import com.ecostep.app.sensors.tracking.JourneySummaryBuilder
 import com.ecostep.app.sensors.tracking.JourneyTracker
 import com.ecostep.app.sensors.tracking.LocationSample
+import com.ecostep.app.sensors.tracking.MotionSample
+import com.ecostep.app.sensors.tracking.MotionType
 import com.ecostep.app.sensors.tracking.RecordingResult
 import java.io.File
 import java.util.Random
@@ -95,6 +97,7 @@ internal object ShlEvaluationDataset {
         var gpsRows = 0
         var activityRows = 0
         var activityTies = 0
+        val motion = MotionReplay()
         for ((prefix, group) in intervals.groupBy { it.prefix }) {
             fun entry(name: String) = checkNotNull(zip.getEntry("$prefix$name")) { "Missing $prefix$name" }
             val gps = readRows(zip, entry("Hand_Location.txt"), 7) { fields ->
@@ -116,12 +119,14 @@ internal object ShlEvaluationDataset {
             gpsRows += gps.size
             activityRows += activities.size
             activityTies += activities.count { it.tied }
+            val trackers = group.map { interval -> JourneyTracker().also { check(it.begin(interval.start)) } }
+            // Motion is optional: archives without Hand_Motion.txt replay GPS and Activity only.
+            val motionEntry = zip.getEntry("${prefix}Hand_Motion.txt")
+            if (motionEntry == null) motion.missingFiles++ else replayMotion(zip, motionEntry, group, trackers, motion)
             // Replay GPS and recorded Google Activity in timestamp order through production code.
-            for (interval in group) {
+            for ((interval, tracker) in group.zip(trackers)) {
                 val locations = gps.filter { it.timeMillis >= interval.start && it.timeMillis < interval.end }
                 val hints = activities.filter { it.time >= interval.start && it.time < interval.end }
-                val tracker = JourneyTracker()
-                check(tracker.begin(interval.start))
                 var activityIndex = 0
                 for (location in locations) {
                     while (activityIndex < hints.size && hints[activityIndex].time <= location.timeMillis) {
@@ -130,6 +135,8 @@ internal object ShlEvaluationDataset {
                     tracker.onLocation(location)
                 }
                 while (activityIndex < hints.size) hints[activityIndex++].hint?.let { tracker.onActivityHint(it) }
+                // State is published at most once per wall-clock second; force it before reading counts.
+                tracker.tick(System.currentTimeMillis())
                 val acceptedGps = tracker.state.value.gpsCount
                 val recording = tracker.finish(interval.end)
                 val id = "${interval.user}_${prefix.trimEnd('/').substringAfterLast('/')}_${interval.start}"
@@ -169,12 +176,74 @@ internal object ShlEvaluationDataset {
             .put("users", JSONArray(labelFiles.map { it.name.split('/').first { part -> part.startsWith("User") } }.distinct()))
             .put("loadedGpsPoints", gpsRows).put("loadedActivitySamples", activityRows)
             .put("supportedConfidenceTieSamples", activityTies)
+            .put("motionReplay", motion.toJson())
             .put("shortIntervals", shortIntervals).put("unsupportedIntervals", unsupportedIntervals)
             .put("eligibleSegmentsPerMode", JSONObject().apply { eligible.forEach { (mode, count) -> put(mode.name, count) } })
             .put("selectedSegmentsPerMode", JSONObject().apply { selected.forEach { (mode, cases) -> put(mode.name, cases.size) } })
         zip.getEntry("manifest.json")?.let { metadata.put("downloadManifest", JSONObject(zip.getInputStream(it).bufferedReader().use { reader -> reader.readText() })) }
         Dataset(evaluatedSamples, metadata)
     }
+
+    private class MotionReplay {
+        var filesFound = 0
+        var missingFiles = 0
+        var rowsRead = 0L
+        var samplesReplayed = 0L
+        var outOfOrderRows = 0L
+        var invalidRows = 0L
+
+        fun toJson(): JSONObject = JSONObject().put("filesFound", filesFound).put("missingFiles", missingFiles)
+            .put("rowsRead", rowsRead).put("samplesReplayed", samplesReplayed)
+            .put("outOfOrderRows", outOfOrderRows).put("invalidRows", invalidRows)
+            .put("sampleIntervalMs", MOTION_SAMPLE_INTERVAL_MS)
+            .put("columns", "time ms, accelerometer x/y/z m/s², gyroscope x/y/z rad/s (first seven SHL motion columns)")
+    }
+
+    /**
+     * Streams the SHL motion file once, feeding accelerometer and gyroscope rows that fall inside
+     * [intervals] (sorted, non-overlapping) to the matching tracker. SHL records at 100 Hz; keeping
+     * one row per [MOTION_SAMPLE_INTERVAL_MS] approximates the App's SENSOR_DELAY_GAME rate.
+     */
+    private fun replayMotion(
+        zip: ZipFile,
+        entry: ZipEntry,
+        intervals: List<Interval>,
+        trackers: List<JourneyTracker>,
+        stats: MotionReplay,
+    ) {
+        stats.filesFound++
+        var index = 0
+        var previous = Long.MIN_VALUE
+        var lastKept: Long? = null
+        zip.getInputStream(entry).bufferedReader().useLines { lines ->
+            for (line in lines) {
+                if (line.isBlank()) continue
+                stats.rowsRead++
+                val fields = StringTokenizer(line)
+                val time = fields.nextToken().toLongOrNull()
+                if (time == null) { stats.invalidRows++; continue }
+                if (time < previous) { stats.outOfOrderRows++; continue }
+                previous = time
+                while (index < intervals.size && time >= intervals[index].end) {
+                    index++
+                    lastKept = null
+                }
+                if (index == intervals.size) break
+                if (time < intervals[index].start) continue
+                if (lastKept?.let { time - it < MOTION_SAMPLE_INTERVAL_MS } == true) continue
+                if (fields.countTokens() < 6) { stats.invalidRows++; continue }
+                val values = FloatArray(6) { fields.nextToken().toFloatOrNull() ?: Float.NaN }
+                if (!values.all { it.isFinite() }) { stats.invalidRows++; continue }
+                lastKept = time
+                val tracker = trackers[index]
+                tracker.onMotion(MotionSample(MotionType.ACCELEROMETER, values[0], values[1], values[2]))
+                tracker.onMotion(MotionSample(MotionType.GYROSCOPE, values[3], values[4], values[5]))
+                stats.samplesReplayed++
+            }
+        }
+    }
+
+    private const val MOTION_SAMPLE_INTERVAL_MS = 20L
 
     private fun <T> readRows(zip: ZipFile, entry: ZipEntry, columns: Int, parse: (List<String>) -> T): List<T> =
         zip.getInputStream(entry).bufferedReader().useLines { lines ->

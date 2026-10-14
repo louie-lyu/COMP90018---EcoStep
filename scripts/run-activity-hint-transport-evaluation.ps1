@@ -2,10 +2,54 @@ param(
     [string]$AdbPath = "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe",
     [string]$DatasetPath = '',
     [ValidateRange(1, 10000)][int]$SamplesPerMode = 10000,
-    [ValidateRange(0, 2147483647)][int]$Seed = 42
+    [ValidateRange(0, 2147483647)][int]$Seed = 42,
+    # Optional motion variant: supply both to compare speed-only and speed + accelerometer rules.
+    [double]$MotionSteadyAccelStd = 0,
+    [ValidateRange(0, 2147483647)][int]$MotionMinAccelSamples = 0,
+    # Separate forced-sensor sweep; all candidates reuse each sample's single transit request.
+    [switch]$CalibrateMotion,
+    [double[]]$MotionStdCandidates = @(0.2, 0.4, 0.6, 0.8, 1.0, 1.5, 2.0, 3.0),
+    [ValidateRange(1, 2147483647)][int[]]$MotionSampleCandidates = @(250, 500, 1000),
+    # Optional gyro mean limits in rad/s; each grid also includes gyro disabled.
+    [double[]]$MotionGyroMeanCandidates = @()
 )
 
 $ErrorActionPreference = 'Stop'
+$motionArguments = @()
+if ($MotionGyroMeanCandidates.Count -gt 0 -and -not $CalibrateMotion) {
+    throw 'MotionGyroMeanCandidates requires -CalibrateMotion.'
+}
+if ($MotionSteadyAccelStd -gt 0 -and $MotionMinAccelSamples -gt 0) {
+    $motionArguments = @(
+        '-e', 'motionSteadyAccelStd', $MotionSteadyAccelStd.ToString([System.Globalization.CultureInfo]::InvariantCulture),
+        '-e', 'motionMinAccelSamples', $MotionMinAccelSamples
+    )
+} elseif ($MotionSteadyAccelStd -ne 0 -or $MotionMinAccelSamples -ne 0) {
+    throw 'Supply both -MotionSteadyAccelStd and -MotionMinAccelSamples with positive values, or neither.'
+}
+if ($CalibrateMotion) {
+    if ($MotionStdCandidates.Count -eq 0 -or $MotionSampleCandidates.Count -eq 0 -or
+        @($MotionStdCandidates | Where-Object { $_ -le 0 -or [double]::IsNaN($_) -or [double]::IsInfinity($_) }).Count -gt 0) {
+        throw 'Calibration candidates must contain finite positive standard deviations and positive sample counts.'
+    }
+    $stdCandidates = @($MotionStdCandidates | Sort-Object -Unique)
+    $sampleCandidates = @($MotionSampleCandidates | Sort-Object -Unique)
+    if (@($MotionGyroMeanCandidates | Where-Object { $_ -le 0 -or [double]::IsNaN($_) -or [double]::IsInfinity($_) }).Count -gt 0) {
+        throw 'Gyro mean candidates must be finite and positive.'
+    }
+    $gyroCandidates = @($MotionGyroMeanCandidates | Sort-Object -Unique)
+    if ($stdCandidates.Count * $sampleCandidates.Count * (1 + $gyroCandidates.Count) -gt 200) {
+        throw 'At most 200 threshold combinations are supported, including gyro-disabled candidates.'
+    }
+    $motionArguments += @(
+        '-e', 'calibrateMotion', 'true',
+        '-e', 'motionStdCandidates', (($stdCandidates | ForEach-Object { $_.ToString([System.Globalization.CultureInfo]::InvariantCulture) }) -join ','),
+        '-e', 'motionSampleCandidates', ($sampleCandidates -join ',')
+    )
+    if ($gyroCandidates.Count -gt 0) {
+        $motionArguments += @('-e', 'motionGyroMeanCandidates', (($gyroCandidates | ForEach-Object { $_.ToString([System.Globalization.CultureInfo]::InvariantCulture) }) -join ','))
+    }
+}
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $package = 'com.ecostep.app'
 $remoteDirectory = 'files/evaluation'
@@ -19,6 +63,15 @@ if (-not (Test-Path -LiteralPath $DatasetPath -PathType Leaf)) {
     throw 'SHL preview ZIP not found. Download the evaluation archive into evaluation/data or supply -DatasetPath.'
 }
 $DatasetPath = (Resolve-Path -LiteralPath $DatasetPath).ProviderPath
+if ($CalibrateMotion) {
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $archive = [System.IO.Compression.ZipFile]::OpenRead($DatasetPath)
+    try {
+        if (@($archive.Entries | Where-Object { $_.FullName.EndsWith('/Hand_Motion.txt') }).Count -eq 0) {
+            throw 'Calibration requires Hand_Motion.txt; this ZIP contains no motion files.'
+        }
+    } finally { $archive.Dispose() }
+}
 if (-not (Test-Path -LiteralPath $AdbPath)) { throw 'adb.exe not found. Supply -AdbPath with its full path.' }
 $deviceOutput = & $AdbPath devices
 if ($LASTEXITCODE -ne 0) { throw 'Could not list Android devices.' }
@@ -56,7 +109,7 @@ try {
     $testOutput = & $AdbPath -s $serial shell am instrument -w -r `
         -e class com.ecostep.app.evaluation.ActivityHintTransportEvaluationTest `
         -e gitCommit $gitCommit -e workingTreeDirty $workingTreeDirty `
-        -e live true -e samplesPerMode $SamplesPerMode -e seed $Seed `
+        -e live true -e samplesPerMode $SamplesPerMode -e seed $Seed @motionArguments `
         com.ecostep.app.test/androidx.test.runner.AndroidJUnitRunner
     $instrumentExitCode = $LASTEXITCODE
     $testOutput | Write-Host
@@ -83,7 +136,25 @@ try {
         foreach ($mode in $report.perMode) {
             Write-Host "$($mode.mode): n=$($mode.totalSamples); precision=$($mode.precision); recall=$($mode.recall); F1=$($mode.f1); UNKNOWN rate=$($mode.unknownRate)"
         }
-        if ($report.passed -ne $true -or $report.datasetSha256 -ne $datasetSha256 -or $report.schemaVersion -ne 4 -or $report.timetableTime -ne "current") { $evaluationFailed = $true }
+        Write-Host "Motion replay: $($report.dataset.motionReplay | ConvertTo-Json -Compress)"
+        Write-Host "Sensor-fallback subset (no Activity hint >= 60): accuracy=$($report.sensorFallbackSummary.accuracy) (n=$($report.sensorFallbackSummary.totalSamples))"
+        if ($report.motionVariant) {
+            Write-Host "Motion variant $($report.motionVariantThresholds | ConvertTo-Json -Compress): accuracy=$($report.motionVariant.summary.accuracy); macro F1=$($report.motionVariant.summary.macroF1); UNKNOWN rate=$($report.motionVariant.summary.unknownRate)"
+            Write-Host "Motion variant sensor-fallback subset: accuracy=$($report.motionVariant.sensorFallbackSummary.accuracy)"
+            foreach ($mode in $report.motionVariant.perMode) {
+                Write-Host "  $($mode.mode): precision=$($mode.precision); recall=$($mode.recall); F1=$($mode.f1); UNKNOWN rate=$($mode.unknownRate)"
+            }
+        }
+        if ($report.sensorCalibration) {
+            Write-Host 'Forced-sensor calibration: Activity hints masked; select by overall accuracy on this same dataset.'
+            foreach ($candidate in $report.sensorCalibration.candidates) {
+                Write-Host "  $($candidate.id): thresholds=$($candidate.thresholds | ConvertTo-Json -Compress); accuracy=$($candidate.summary.accuracy); n=$($candidate.summary.totalSamples)"
+            }
+            Write-Host "Best=$($report.sensorCalibration.bestCandidateId); accuracy=$($report.sensorCalibration.bestAccuracy); thresholds=$($report.sensorCalibration.bestThresholds | ConvertTo-Json -Compress)"
+            Write-Host "Tied best candidates: $($report.sensorCalibration.tiedBestCandidateIds -join ', ')"
+        }
+        if ($report.passed -ne $true -or $report.datasetSha256 -ne $datasetSha256 -or $report.schemaVersion -ne 6 -or $report.timetableTime -ne "current") { $evaluationFailed = $true }
+        if ($CalibrateMotion -and $report.sensorCalibration.selectionAvailable -ne $true) { $evaluationFailed = $true }
     }
     if ($evaluationFailed -or $instrumentExitCode -ne 0 -or ($testOutput -join "`n") -notmatch 'OK \(\d+ tests?\)') {
         throw 'Activity hint transport evaluation did not complete or a dataset hash/schema differs. JSON results were exported for inspection.'
