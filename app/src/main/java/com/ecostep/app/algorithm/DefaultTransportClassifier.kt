@@ -49,24 +49,33 @@ interface TransportEvidenceProvider {
 data class MotionThresholds(
     val steadyAccelStd: Double,
     val minAccelSamples: Int,
+    val steadyGyroMean: Double? = null,
 ) {
     init {
         require(steadyAccelStd.isFinite() && steadyAccelStd > 0.0) {
             "steadyAccelStd must be finite and positive."
         }
         require(minAccelSamples > 0) { "minAccelSamples must be positive." }
+        require(steadyGyroMean == null || (steadyGyroMean.isFinite() && steadyGyroMean > 0.0)) {
+            "steadyGyroMean must be finite and positive."
+        }
     }
 
     fun isSteady(features: SensorFeatures): Boolean =
         features.accelSampleCount >= minAccelSamples &&
             features.accelMagnitudeStd.isFinite() &&
-            features.accelMagnitudeStd <= steadyAccelStd
+            features.accelMagnitudeStd <= steadyAccelStd &&
+            // Reuse the sample minimum; unavailable gyro data preserves the accelerometer rule.
+            (steadyGyroMean == null || features.gyroSampleCount < minAccelSamples ||
+                !features.gyroMagnitudeMean.isFinite() || features.gyroMagnitudeMean < 0.0 ||
+                features.gyroMagnitudeMean <= steadyGyroMean)
 }
 
 // SHL-calibrated thresholds, used only when Activity hint priority conditions are not met.
 val CALIBRATED_MOTION_THRESHOLDS: MotionThresholds? = MotionThresholds(
-    steadyAccelStd = 0.8,
+    steadyAccelStd = 1.5,
     minAccelSamples = 1000,
+    steadyGyroMean = 0.5, // rad/s; selected by the joint SHL threshold scan.
 )
 
 class DefaultTransportClassifier(

@@ -12,9 +12,10 @@ import org.json.JSONObject
 
 /** Evaluation only: mask Activity hints and compare all candidates on the same evidence. */
 internal class MotionThresholdCalibration(thresholds: List<MotionThresholds>) {
-    // Stable accuracy ties: prefer disabled, then lower std, then higher minimum sample count.
+    // Stable accuracy ties: speed-only, lower std, higher count, gyro disabled, lower gyro mean.
     private val candidates: List<MotionThresholds?> = listOf(null) + thresholds.distinct()
-        .sortedWith(compareBy<MotionThresholds> { it.steadyAccelStd }.thenByDescending { it.minAccelSamples })
+        .sortedWith(compareBy<MotionThresholds> { it.steadyAccelStd }
+            .thenByDescending { it.minAccelSamples }.thenBy { it.steadyGyroMean })
 
     init {
         require(thresholds.isNotEmpty()) { "Supply at least one motion threshold candidate." }
@@ -49,6 +50,7 @@ internal class MotionThresholdCalibration(thresholds: List<MotionThresholds>) {
                 .put("id", if (index == 0) "speed_only" else "motion_$index")
                 .put("thresholds", thresholds?.let {
                     JSONObject().put("steadyAccelStd", it.steadyAccelStd).put("minAccelSamples", it.minAccelSamples)
+                        .put("steadyGyroMean", it.steadyGyroMean ?: JSONObject.NULL)
                 } ?: JSONObject.NULL)
                 .put("summary", TransportEvaluationMetrics.summary(predictions))
                 .put("perMode", JSONArray(ShlEvaluationDataset.modes.map { TransportEvaluationMetrics.perMode(predictions, it) }))
@@ -56,6 +58,12 @@ internal class MotionThresholdCalibration(thresholds: List<MotionThresholds>) {
                 .put("motionEligibleSamples", if (thresholds == null) 0 else records.count {
                     val features = it.optJSONObject("sensorFeatures")
                     features != null && features.optInt("accelSampleCount") >= thresholds.minAccelSamples
+                })
+                .put("gyroEligibleSamples", if (thresholds?.steadyGyroMean == null) 0 else records.count {
+                    val features = it.optJSONObject("sensorFeatures")
+                    features != null && features.optInt("accelSampleCount") >= thresholds.minAccelSamples &&
+                        features.optInt("gyroSampleCount") >= thresholds.minAccelSamples &&
+                        features.optDouble("gyroMagnitudeMean").let { mean -> mean.isFinite() && mean >= 0.0 }
                 })
         }
         val usable = completed && records.isNotEmpty() && records.all { it.getBoolean("runtimeSuccess") } &&
@@ -65,7 +73,7 @@ internal class MotionThresholdCalibration(thresholds: List<MotionThresholds>) {
         return JSONObject()
             .put("activityHintsMasked", true)
             .put("selectionMetric", "overall accuracy on all evaluated samples; no train/validation split")
-            .put("tieBreak", "Prefer speed_only, then lower steadyAccelStd, then higher minAccelSamples")
+            .put("tieBreak", "Prefer speed_only, then lower steadyAccelStd, then higher minAccelSamples, then gyro disabled, then lower steadyGyroMean")
             .put("timeoutPolicy", "Same production timeout for all candidates; timed-out samples remain UNKNOWN")
             .put("baselineId", "speed_only")
             .put("candidates", JSONArray(results))
@@ -85,8 +93,14 @@ internal class MotionThresholdCalibration(thresholds: List<MotionThresholds>) {
                 .split(',').map { it.trim().toDouble() }.distinct()
             val counts = (arguments.getString("motionSampleCandidates") ?: "250,500,1000")
                 .split(',').map { it.trim().toInt() }.distinct()
-            require(stds.size * counts.size <= 200) { "At most 200 threshold combinations are supported." }
-            return MotionThresholdCalibration(stds.flatMap { std -> counts.map { MotionThresholds(std, it) } })
+            val gyros: List<Double?> = listOf(null) + arguments.getString("motionGyroMeanCandidates")
+                ?.split(',')?.map { it.trim().toDouble() }?.distinct().orEmpty()
+            require(stds.size.toLong() * counts.size * gyros.size <= 200) {
+                "At most 200 threshold combinations are supported, including gyro-disabled candidates."
+            }
+            return MotionThresholdCalibration(stds.flatMap { std -> counts.flatMap { count ->
+                gyros.map { MotionThresholds(std, count, it) }
+            } })
         }
     }
 }

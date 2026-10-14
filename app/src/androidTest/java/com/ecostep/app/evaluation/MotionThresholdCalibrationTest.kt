@@ -93,13 +93,66 @@ class MotionThresholdCalibrationTest {
         })
     }
 
+    @Test fun gyroGridIncludesDisabledDeduplicatesAndReportsThresholds() {
+        val configured = gyroCalibration("0.5,0.3,0.5")
+        val candidates = configured.report(emptyList(), false).getJSONArray("candidates")
+        assertEquals(4, candidates.length())
+        assertTrue(candidates.getJSONObject(1).getJSONObject("thresholds").isNull("steadyGyroMean"))
+        assertEquals(0.3, candidates.getJSONObject(2).getJSONObject("thresholds").getDouble("steadyGyroMean"), 0.0)
+        assertEquals(0.5, candidates.getJSONObject(3).getJSONObject("thresholds").getDouble("steadyGyroMean"), 0.0)
+    }
+
+    @Test fun gyroSweepSelectsOverallAccuracyUsingMaskedActivity() = runBlocking {
+        val configured = gyroCalibration("0.3,0.5")
+        val evidence = TransportEvidence(activity = ActivityHint(MotionHint.WALKING, 100))
+        val records = listOf(TransportMode.CAR to 0.4, TransportMode.CYCLING to 0.8).map { (mode, mean) ->
+            record(mode, configured.classify(journey(gyroMean = mean), evidence, mode), true)
+                .put("sensorFeatures", JSONObject().put("accelSampleCount", 3000)
+                    .put("gyroSampleCount", 3000).put("gyroMagnitudeMean", mean))
+        }
+        val report = configured.report(records, true)
+        assertEquals("motion_3", report.getString("bestCandidateId"))
+        assertEquals(1.0, report.getDouble("bestAccuracy"), 0.0)
+        assertEquals(0.5, report.getJSONObject("bestThresholds").getDouble("steadyGyroMean"), 0.0)
+        assertEquals(2, report.getJSONArray("candidates").getJSONObject(3).getInt("gyroEligibleSamples"))
+        val withTimeout = configured.report(records + record(
+            TransportMode.WALKING, configured.pendingPredictions(), false,
+        ), true)
+        assertEquals(2.0 / 3.0, withTimeout.getDouble("bestAccuracy"), 0.0)
+    }
+
+    @Test fun gyroAccuracyTiesPreferDisabledAndMissingGyroIsNotEligible() = runBlocking {
+        val configured = gyroCalibration("0.3,0.5")
+        val sample = journey(gyroMean = 1.0)
+        val missingGyro = sample.copy(sensorFeatures = sample.sensorFeatures!!.copy(gyroSampleCount = 0))
+        val predictions = configured.classify(missingGyro, TransportEvidence(), TransportMode.CAR)
+        val report = configured.report(listOf(record(TransportMode.CAR, predictions, true)), true)
+        assertEquals("motion_1", report.getString("bestCandidateId"))
+        assertTrue(report.getJSONObject("bestThresholds").isNull("steadyGyroMean"))
+        assertEquals(3, report.getJSONArray("tiedBestCandidateIds").length())
+        assertEquals(0, report.getJSONArray("candidates").getJSONObject(2).getInt("gyroEligibleSamples"))
+    }
+
+    @Test fun rejectsInvalidGyroLimitsAndOversizedGrid() {
+        for (value in listOf("0", "-1", "NaN", "Infinity", "", (1..200).joinToString(","))) {
+            assertThrows(IllegalArgumentException::class.java) { gyroCalibration(value) }
+        }
+    }
+
+    private fun gyroCalibration(values: String) = MotionThresholdCalibration.from(Bundle().apply {
+        putString("calibrateMotion", "true")
+        putString("motionStdCandidates", "0.8")
+        putString("motionSampleCandidates", "1000")
+        putString("motionGyroMeanCandidates", values)
+    })!!
+
     private fun record(mode: TransportMode, predictions: JSONArray, completed: Boolean) = JSONObject()
         .put("trueMode", mode.name).put("runtimeSuccess", true).put("recordingAvailable", true)
         .put("durationMs", JSONObject.NULL).put("sensorCalibrationCompleted", completed)
         .put("sensorCalibrationPredictions", predictions)
         .put("sensorFeatures", JSONObject().put("accelSampleCount", 3000))
 
-    private fun journey(accelStd: Double = 0.3) = JourneySummary(
+    private fun journey(accelStd: Double = 0.3, gyroMean: Double = 0.0) = JourneySummary(
         journeyId = "calibration-fixture", userId = "fixture",
         startLocation = GeoPoint(-37.8136, 144.9631), endLocation = GeoPoint(-37.8150, 144.9690),
         startTimeMillis = 0, endTimeMillis = 60_000, distanceMeters = 240.0,
@@ -108,7 +161,7 @@ class MotionThresholdCalibrationTest {
             averageSpeedMps = 4.0, p95SpeedMps = 8.0, maxSpeedMps = 12.0,
             stopRatio = 0.1, averageGpsAccuracyMeters = 10.0, gpsSampleCount = 60,
             accelMagnitudeMean = 0.0, accelMagnitudeStd = accelStd, accelSampleCount = 3000,
-            gyroMagnitudeMean = 0.0, gyroMagnitudeStd = 0.0, gyroSampleCount = 3000,
+            gyroMagnitudeMean = gyroMean, gyroMagnitudeStd = 0.0, gyroSampleCount = 3000,
         ),
     )
 }

@@ -97,7 +97,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run-activity-hint-transport-e
   Selection maximizes overall accuracy across the same evaluated dataset, without a training or
   validation split. Timeouts remain UNKNOWN for every candidate and stay in the denominator.
   Ties prefer the speed-only baseline, then lower standard deviation, then higher minimum sample
-  count. `tiedBestCandidateIds` lists all tied candidates. Incomplete runs, runtime failures or runs
+  count, then gyro disabled, then lower gyro mean threshold. `tiedBestCandidateIds` lists all tied candidates. Incomplete runs, runtime failures or runs
   with no completed calibration predictions do not select a winner. No production threshold is
   changed automatically. A winning speed-only baseline has `bestThresholds: null`.
   Defaults are standard deviations `0.2,0.4,0.6,0.8,1.0,1.5,2.0,3.0` m/s² crossed with
@@ -106,8 +106,39 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run-activity-hint-transport-e
   (PowerShell arrays, at most 200 combinations). Each record's `sensorCalibrationPredictions`
   follows the report's `sensorCalibration.candidates` order. Candidate summaries include per-mode
   metrics and confusion matrices, but only overall accuracy determines the winner.
+  Optionally add `-MotionGyroMeanCandidates @(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 1.0)` to scan
+  angular-speed magnitude mean limits in rad/s. Each std/count pair includes gyro disabled
+  (`steadyGyroMean: null`) plus every supplied gyro limit. Omitting this parameter preserves
+  the accelerometer-only sweep. The 200-combination limit includes gyro-disabled candidates
+  and excludes the single speed-only baseline. Gyro uses the same minimum sample count as
+  accelerometer; insufficient or invalid gyro data preserves the accelerometer rule.
+  `gyroEligibleSamples` counts records with sufficient accelerometer and gyro samples and a
+  valid gyro mean; it does not count only records below the thresholds. The script reuses
+  each recording's transit evidence, so adding gyro candidates adds no network requests.
+  To scan only gyro while holding the calibrated accelerometer settings fixed, run:
+
+  ```powershell
+  .\scripts\run-activity-hint-transport-evaluation.ps1 `
+      -CalibrateMotion `
+      -MotionStdCandidates @(0.8) `
+      -MotionSampleCandidates @(1000) `
+      -MotionGyroMeanCandidates @(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 1.0)
+  ```
+
   Calibration requires matching `Hand_Motion.txt` files and nonzero accelerometer samples for
   every selected recording. The old GPS/API-only preview archive cannot calibrate motion.
+  To rescan a completed schema-6 report without replaying sensors or calling the API, use
+  `python scripts/calibrate-motion-from-report.py --report <report.json> --output <new-result.json>`.
+  Defaults jointly scan the eight std limits above, sample counts `250,500,1000`, and gyro mean
+  limits `0.1,0.2,0.3,0.4,0.5,0.6,1.0` plus gyro disabled (193 candidates including speed-only).
+  Override with `--std-candidates`, `--sample-candidates`, and `--gyro-mean-candidates`
+  followed by space-separated numbers. The script verifies every saved candidate prediction
+  before scanning. It reuses observed vehicle outputs from the same report, never ground-truth
+  labels to predict modes. Reports do not store complete transit evidence: unobserved vehicle
+  outputs remain ambiguous. Such a record can still be scored exactly if every possible vehicle
+  output is incorrect; otherwise the script stops rather than guessing accuracy.
+  Offline results embed the source report with its SHA-256 and can themselves be supplied via
+  `--report` for later scans, so the standalone source file need not be retained.
   To extend that archive, place the official `SHLDataset_preview_v1_part1.zip`, `part2.zip`
   and `part3.zip` beside it and run `python scripts/prepare-shl-motion-dataset.py --segments-report <existing-full-evaluation.json>`.
   The report's dataset SHA-256 must match the original ZIP. Its original recording IDs and

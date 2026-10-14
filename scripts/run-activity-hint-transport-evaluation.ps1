@@ -9,11 +9,16 @@ param(
     # Separate forced-sensor sweep; all candidates reuse each sample's single transit request.
     [switch]$CalibrateMotion,
     [double[]]$MotionStdCandidates = @(0.2, 0.4, 0.6, 0.8, 1.0, 1.5, 2.0, 3.0),
-    [ValidateRange(1, 2147483647)][int[]]$MotionSampleCandidates = @(250, 500, 1000)
+    [ValidateRange(1, 2147483647)][int[]]$MotionSampleCandidates = @(250, 500, 1000),
+    # Optional gyro mean limits in rad/s; each grid also includes gyro disabled.
+    [double[]]$MotionGyroMeanCandidates = @()
 )
 
 $ErrorActionPreference = 'Stop'
 $motionArguments = @()
+if ($MotionGyroMeanCandidates.Count -gt 0 -and -not $CalibrateMotion) {
+    throw 'MotionGyroMeanCandidates requires -CalibrateMotion.'
+}
 if ($MotionSteadyAccelStd -gt 0 -and $MotionMinAccelSamples -gt 0) {
     $motionArguments = @(
         '-e', 'motionSteadyAccelStd', $MotionSteadyAccelStd.ToString([System.Globalization.CultureInfo]::InvariantCulture),
@@ -29,12 +34,21 @@ if ($CalibrateMotion) {
     }
     $stdCandidates = @($MotionStdCandidates | Sort-Object -Unique)
     $sampleCandidates = @($MotionSampleCandidates | Sort-Object -Unique)
-    if ($stdCandidates.Count * $sampleCandidates.Count -gt 200) { throw 'At most 200 threshold combinations are supported.' }
+    if (@($MotionGyroMeanCandidates | Where-Object { $_ -le 0 -or [double]::IsNaN($_) -or [double]::IsInfinity($_) }).Count -gt 0) {
+        throw 'Gyro mean candidates must be finite and positive.'
+    }
+    $gyroCandidates = @($MotionGyroMeanCandidates | Sort-Object -Unique)
+    if ($stdCandidates.Count * $sampleCandidates.Count * (1 + $gyroCandidates.Count) -gt 200) {
+        throw 'At most 200 threshold combinations are supported, including gyro-disabled candidates.'
+    }
     $motionArguments += @(
         '-e', 'calibrateMotion', 'true',
         '-e', 'motionStdCandidates', (($stdCandidates | ForEach-Object { $_.ToString([System.Globalization.CultureInfo]::InvariantCulture) }) -join ','),
         '-e', 'motionSampleCandidates', ($sampleCandidates -join ',')
     )
+    if ($gyroCandidates.Count -gt 0) {
+        $motionArguments += @('-e', 'motionGyroMeanCandidates', (($gyroCandidates | ForEach-Object { $_.ToString([System.Globalization.CultureInfo]::InvariantCulture) }) -join ','))
+    }
 }
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $package = 'com.ecostep.app'

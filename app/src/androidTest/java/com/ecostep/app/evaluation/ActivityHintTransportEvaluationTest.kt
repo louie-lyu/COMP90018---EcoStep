@@ -370,6 +370,7 @@ class ActivityHintTransportEvaluationTest {
     private fun MotionThresholds.toJson() = JSONObject()
         .put("steadyAccelStd", steadyAccelStd)
         .put("minAccelSamples", minAccelSamples)
+        .put("steadyGyroMean", steadyGyroMean ?: JSONObject.NULL)
 
     private fun sha256(file: File): String {
         val digest = MessageDigest.getInstance("SHA-256")
